@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Laravel\Passport\HasApiTokens;
+
 
 class User extends Authenticatable
 {
@@ -15,39 +16,33 @@ class User extends Authenticatable
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var array
      */
-
-    protected $table = 'web_member_data';
-    public $timestamps = false;
-
-    public $id = 'ID';
-
     protected $fillable = [
         'UserName',
-        'LoginName',
-        'PassWord',
-        'E_Mail',
-        'Bank_Account',
-        'Phone'
+        'password',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * The attributes that should be hidden for arrays.
      *
-     * @var array<int, string>
+     * @var array
      */
     protected $hidden = [
-        'PassWord',
+        'password',
         // 'remember_token',
     ];
 
     /**
-     * The attributes that should be cast.
+     * The attributes that should be cast to native types.
      *
-     * @var array<string, string>
+     * @var array
      */
     // protected $casts = [
     //     'email_verified_at' => 'datetime',
     // ];
+    protected $table = 'web_member_data';
+    //protected $table = 'userstable';
+
+    public $timestamps = false;
 }
