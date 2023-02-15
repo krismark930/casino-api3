@@ -16,9 +16,11 @@ class AlterPasswordLengthIncrease extends Migration
         //
         Schema::table('web_system_data', function (Blueprint $table) {
             $table->string('PassWord', 255)->change();
+            $table->renameColumn('PassWord', 'password');
         });
         Schema::table('web_member_data', function (Blueprint $table) {
             $table->string('PassWord', 255)->change();
+            $table->renameColumn('PassWord', 'password');
         });
     }
 
@@ -32,9 +34,11 @@ class AlterPasswordLengthIncrease extends Migration
         //
         Schema::table('web_system_data', function (Blueprint $table) {
             $table->string('PassWord', 15)->change();
+            $table->renameColumn('password', 'PassWord');
         });
         Schema::table('web_member_data', function (Blueprint $table) {
             $table->string('PassWord', 15)->change();
+            $table->renameColumn('password', 'PassWord');
         });
     }
 }
