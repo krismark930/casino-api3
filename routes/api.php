@@ -4,6 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
+/* Admin controllers. */
+use App\Http\Controllers\Admin\AuthController;
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,10 +23,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
 Route::group(['prefix' => 'users', 'middleware' => 'CORS'], function ($router) {
     Route::post('/register', [UserController::class, 'register'])->name('register.user');
     Route::post('/login', [UserController::class, 'login'])->name('login.user');
     Route::get('/view-profile', [UserController::class, 'viewProfile'])->name('profile.user');
     Route::get('/logout', [UserController::class, 'logout'])->name('logout.user');
+});
+
+/* Admin routes. */
+Route::group(['prefix'=>'admin', 'middleware'=>'CORS'], function ($router) {
+    Route::post('/login', [AuthController::class, 'login'])->name('admin.auth.login');
+    Route::post('/register', [AuthController::class, 'register'])->name('admin.auth.register');
+    Route::get('/logout', [AuthController::class, 'logout'])->name('admin.auth.logout')->middleware('auth:admin');
+    Route::get('/user', [AuthController::class, 'user'])->name('admin.auth.user')->middleware('auth:admin');
 });
