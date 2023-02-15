@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SportController;
+use GuzzleHttp\Middleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +20,7 @@ use App\Http\Controllers\UserController;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-
+Route::get('/test',[UserController::class,'test']);
 
 Route::group(['prefix' => 'users', 'middleware' => 'CORS'], function ($router) {
     Route::post('/register', [UserController::class, 'register'])->name('register.user');
@@ -26,3 +28,7 @@ Route::group(['prefix' => 'users', 'middleware' => 'CORS'], function ($router) {
     Route::get('/view-profile', [UserController::class, 'viewProfile'])->name('profile.user');
     Route::get('/logout', [UserController::class, 'logout'])->name('logout.user');
 });
+Route::group(['prefix' => 'sport', 'middleware' => 'CORS'], function ($router){
+    Route::resource('/get_data', SportController::class);
+});
+

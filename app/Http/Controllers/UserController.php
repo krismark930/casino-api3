@@ -9,7 +9,7 @@ class UserController extends Controller {
     protected $user;
 
     public function __construct(){
-        $this->middleware("auth:api",["except" => ["login","register"]]);
+        $this->middleware("auth:api",["except" => ["login","register","test"]]);
         $this->user = new User;
     }
     
@@ -82,7 +82,12 @@ class UserController extends Controller {
         }
     }
     
-  
+    public function test(){
+        $data = Auth::guard("api")->user();
+        return response()->json([
+            'data'=>$data
+        ]);
+    }
     public function viewProfile(){
         $responseMessage = "user profile";
         
