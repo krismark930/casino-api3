@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
-
+use App\Http\Controllers\Web\DepositController;
 /* Admin controllers. */
 use App\Http\Controllers\Admin\AuthController;
 
@@ -37,3 +37,8 @@ Route::group(['prefix'=>'admin', 'middleware'=>'CORS'], function ($router) {
     Route::get('/logout', [AuthController::class, 'logout'])->name('admin.auth.logout')->middleware('auth:admin');
     Route::get('/user', [AuthController::class, 'user'])->name('admin.auth.user')->middleware('auth:admin');
 });
+
+Route::group(['prefix' => 'deposit'], function ($router) {
+    Route::get('/getBank', [DepositController::class, 'getBank'])->name('web.deposit.getBank');
+});
+
