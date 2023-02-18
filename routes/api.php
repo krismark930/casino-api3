@@ -32,3 +32,5 @@ Route::group(['prefix' => 'sport', 'middleware' => 'CORS'], function ($router){
     Route::resource('/get_data', SportController::class);
 });
 
+Route::post('/get_item_date', [SportController::class, 'get_item_date']);
+
