@@ -6,6 +6,10 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SportController;
 use GuzzleHttp\Middleware;
 
+/* Admin controllers. */
+use App\Http\Controllers\Admin\AuthController;
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -34,3 +38,11 @@ Route::group(['prefix' => 'sport', 'middleware' => 'CORS'], function ($router){
 
 Route::post('/get_item_date', [SportController::class, 'get_item_date']);
 
+
+/* Admin routes. */
+Route::group(['prefix'=>'admin', 'middleware'=>'CORS'], function ($router) {
+    Route::post('/login', [AuthController::class, 'login'])->name('admin.auth.login');
+    Route::post('/register', [AuthController::class, 'register'])->name('admin.auth.register');
+    Route::get('/logout', [AuthController::class, 'logout'])->name('admin.auth.logout')->middleware('auth:admin');
+    Route::get('/user', [AuthController::class, 'user'])->name('admin.auth.user')->middleware('auth:admin');
+});

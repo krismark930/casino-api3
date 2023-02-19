@@ -695,7 +695,10 @@
                     "type": "github"
                 }
             ],
+<<<<<<< HEAD
             "abandoned": true,
+=======
+>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
             "time": "2022-02-23T14:25:13+00:00"
         },
         {
@@ -1339,7 +1342,79 @@
                 "issues": "https://github.com/laravel/passport/issues",
                 "source": "https://github.com/laravel/passport"
             },
+<<<<<<< HEAD
             "time": "2022-04-16T13:38:08+00:00"
+=======
+<<<<<<<< HEAD:vendor/composer/installed.json
+            "install-path": "../laravel/passport"
+        },
+        {
+            "name": "laravel/sail",
+            "version": "v1.20.2",
+            "version_normalized": "1.20.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/sail.git",
+                "reference": "5ae072b182b1efbec927409e8a3ce3b1078cc42c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/sail/zipball/5ae072b182b1efbec927409e8a3ce3b1078cc42c",
+                "reference": "5ae072b182b1efbec927409e8a3ce3b1078cc42c",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "^8.0|^9.0|^10.0",
+                "illuminate/contracts": "^8.0|^9.0|^10.0",
+                "illuminate/support": "^8.0|^9.0|^10.0",
+                "php": "^7.3|^8.0",
+                "symfony/yaml": "^6.0"
+            },
+            "time": "2023-02-08T20:22:21+00:00",
+            "bin": [
+                "bin/sail"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Sail\\SailServiceProvider"
+                    ]
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Sail\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "Docker files for running a basic Laravel application.",
+            "keywords": [
+                "docker",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel/sail/issues",
+                "source": "https://github.com/laravel/sail"
+            },
+            "install-path": "../laravel/sail"
+========
+            "time": "2022-04-16T13:38:08+00:00"
+>>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281:composer.lock
+>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
         },
         {
             "name": "laravel/serializable-closure",
@@ -1611,7 +1686,16 @@
         },
         {
             "name": "league/commonmark",
+<<<<<<< HEAD
             "version": "2.3.9",
+=======
+<<<<<<<< HEAD:vendor/composer/installed.json
+            "version": "2.3.9",
+            "version_normalized": "2.3.9.0",
+========
+            "version": "2.3.8",
+>>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281:composer.lock
+>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
@@ -1653,6 +1737,13 @@
             "suggest": {
                 "symfony/yaml": "v2.3+ required if using the Front Matter extension"
             },
+<<<<<<< HEAD
+=======
+<<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2023-02-15T14:07:24+00:00",
+========
+>>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281:composer.lock
+>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1713,7 +1804,11 @@
                     "type": "tidelift"
                 }
             ],
+<<<<<<< HEAD
             "time": "2023-02-15T14:07:24+00:00"
+=======
+            "time": "2022-12-10T16:02:17+00:00"
+>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
         },
         {
             "name": "league/config",
@@ -2003,7 +2098,16 @@
         },
         {
             "name": "league/oauth2-server",
+<<<<<<< HEAD
             "version": "8.4.0",
+=======
+<<<<<<<< HEAD:vendor/composer/installed.json
+            "version": "8.4.0",
+            "version_normalized": "8.4.0.0",
+========
+            "version": "8.3.6",
+>>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281:composer.lock
+>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/oauth2-server.git",
@@ -2036,6 +2140,13 @@
                 "phpunit/phpunit": "^8.5.13",
                 "roave/security-advisories": "dev-master"
             },
+<<<<<<< HEAD
+=======
+<<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2023-02-15T16:08:35+00:00",
+========
+>>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281:composer.lock
+>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -2087,7 +2198,11 @@
                     "type": "github"
                 }
             ],
+<<<<<<< HEAD
             "time": "2023-02-15T16:08:35+00:00"
+=======
+            "time": "2022-11-14T19:42:00+00:00"
+>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
         },
         {
             "name": "league/uri",
@@ -3168,6 +3283,58 @@
             "time": "2022-12-17T18:26:50+00:00"
         },
         {
+<<<<<<< HEAD
+=======
+            "name": "psr/cache",
+            "version": "3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/cache.git",
+                "reference": "aa5030cfa5405eccfdcb1083ce040c2cb8d253bf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/cache/zipball/aa5030cfa5405eccfdcb1083ce040c2cb8d253bf",
+                "reference": "aa5030cfa5405eccfdcb1083ce040c2cb8d253bf",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Cache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for caching libraries",
+            "keywords": [
+                "cache",
+                "psr",
+                "psr-6"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/cache/tree/3.0.0"
+            },
+            "time": "2021-02-03T23:26:27+00:00"
+        },
+        {
+>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
             "name": "psr/clock",
             "version": "1.0.0",
             "source": {
