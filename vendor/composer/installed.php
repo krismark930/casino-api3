@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'laravel/laravel',
-        'pretty_version' => 'dev-master',
-        'version' => 'dev-master',
-        'reference' => '58427174984ca7af11767d6e31b6de3236b47790',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => 'ba3bee6c5bbf1edb53dc5bd0a88dd74d6543df6a',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -413,9 +413,9 @@
             'dev_requirement' => false,
         ),
         'laravel/laravel' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'reference' => '58427174984ca7af11767d6e31b6de3236b47790',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => 'ba3bee6c5bbf1edb53dc5bd0a88dd74d6543df6a',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -431,9 +431,9 @@
             'dev_requirement' => false,
         ),
         'laravel/sail' => array(
-            'pretty_version' => 'v1.20.1',
-            'version' => '1.20.1.0',
-            'reference' => '4b85dbfa3dceeaf7227e3029707562fd60297e86',
+            'pretty_version' => 'v1.20.2',
+            'version' => '1.20.2.0',
+            'reference' => '5ae072b182b1efbec927409e8a3ce3b1078cc42c',
             'type' => 'library',
             'install_path' => __DIR__ . '/../laravel/sail',
             'aliases' => array(),
@@ -476,9 +476,9 @@
             'dev_requirement' => false,
         ),
         'league/commonmark' => array(
-            'pretty_version' => '2.3.8',
-            'version' => '2.3.8.0',
-            'reference' => 'c493585c130544c4e91d2e0e131e6d35cb0cbc47',
+            'pretty_version' => '2.3.9',
+            'version' => '2.3.9.0',
+            'reference' => 'c1e114f74e518daca2729ea8c4bf1167038fa4b5',
             'type' => 'library',
             'install_path' => __DIR__ . '/../league/commonmark',
             'aliases' => array(),
@@ -521,9 +521,9 @@
             'dev_requirement' => false,
         ),
         'league/oauth2-server' => array(
-            'pretty_version' => '8.3.6',
-            'version' => '8.3.6.0',
-            'reference' => '28c5441716c10d0c936bd731860dc385d0f6d1a8',
+            'pretty_version' => '8.4.0',
+            'version' => '8.4.0.0',
+            'reference' => '539f4340c14eca8d44578fd118f6bdc0ad16d1ce',
             'type' => 'library',
             'install_path' => __DIR__ . '/../league/oauth2-server',
             'aliases' => array(),
@@ -874,8 +874,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0',
-                1 => '1.0.0 || 2.0.0 || 3.0.0',
+                0 => '1.0.0 || 2.0.0 || 3.0.0',
+                1 => '1.0|2.0',
             ),
         ),
         'psr/simple-cache' => array(

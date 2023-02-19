@@ -18,7 +18,7 @@ class SportController extends Controller
     {
         //
         $limit = $request->query('limit');
-        // if ($limit == '' || $limit == null) $limit = 10;
+        if ($limit == '' || $limit == null) $limit = 10;
         return Sport::paginate($limit);
     }
     public function match_count()
@@ -35,35 +35,65 @@ class SportController extends Controller
 
         if($m_date == '')
         {
-            $m_date = date('Y-m-d'); //////current date
-            $m_date = '2021-07-10';  //////temp date
+            $m_date = '2021-07-11';  //////temp date
+            if($get_type == 'count') //////get number of item
+            {
+                if($type != '')
+                {
+                    $items = Sport::selectRaw('*')->whereRaw("Type='$type' and `M_Date` >='$m_date'")->count();
+                }
+                else
+                {
+                    $items = Sport::selectRaw('MID')->whereRaw("`M_Date` >='$m_date'")->count();
+                }
+
+                return $items;
+            }
+
+            if($get_type == '')  //////get data
+            {
+                if($type != '')
+                {
+                    $items = Sport::selectRaw('*')->whereRaw("Type='$type' and `M_Date` >='$m_date'")->get();
+                }
+                else
+                {
+                    $items = Sport::selectRaw('*')->whereRaw("`M_Date` >='$m_date'")->get();
+                }
+
+                return $items;
+            }
         }
-        if($get_type == 'count') //////get number of item
+        else
         {
-            if($type != '')
+            if($get_type == 'count') //////get number of item
             {
-                $items = Sport::selectRaw('*')->whereRaw("Type='$type' and `M_Date` >'$m_date'")->count();
-            }
-            else
-            {
-                $items = Sport::selectRaw('MID')->whereRaw("`M_Date` >'$m_date'")->count();
+                if($type != '')
+                {
+                    $items = Sport::selectRaw('*')->whereRaw("Type='$type' and `M_Date` = '$m_date'")->count();
+                }
+                else
+                {
+                    $items = Sport::selectRaw('MID')->whereRaw("`M_Date` = '$m_date'")->count();
+                }
+
+                return $items;
             }
 
-            return $items;
-        }
-
-        if($get_type == '')  //////get data
-        {
-            if($type != '')
+            if($get_type == '')  //////get data
             {
-                $items = Sport::selectRaw('*')->whereRaw("Type='$type' and `M_Date` >'$m_date'")->get();
-            }
-            else
-            {
-                $items = Sport::selectRaw('*')->whereRaw("`M_Date` >'$m_date'")->get();
-            }
+                
+                if($type != '')
+                {
+                    $items = Sport::selectRaw('*')->whereRaw("Type='$type' and `M_Date` = '$m_date'")->get();
+                }
+                else
+                {
+                    $items = Sport::selectRaw('*')->whereRaw("`M_Date` = '$m_date'")->get();
+                }
 
-            return $items;
+                return $items;
+            }
         }
 
     }
