@@ -1,20 +1,18 @@
 <?php
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\Models\User;
 use Auth;
 use Validator;
 use Illuminate\Support\Facades\Hash;
-
 class UserController extends Controller {
     protected $user;
 
     public function __construct(){
-        $this->middleware("auth:api",["except" => ["login","register","test"]]);
+        $this->middleware("auth:api",["except" => ["login","register"]]);
         $this->user = new User;
     }
-
+    
     public function register(Request $request){
         $validator = Validator::make($request->all(),[
             'UserName' => 'required|string',
@@ -46,19 +44,19 @@ class UserController extends Controller {
             'UserName' => 'required|string',
             'password' => 'required|min:6',
         ]);
-
+        
         if($validator->fails()){
             return response()->json([
                 'success' => false,
                 'message' => $validator->messages()->toArray()
             ], 500);
         }
-
+  
         $credentials = $request->only(["UserName","password"]);
         $user = User::where('UserName',$credentials['UserName'])->first();
 
         if($user) {
-            if(!auth()->guard('api')->attempt($credentials)) {
+            if(!auth()->attempt($credentials)) {
                 $responseMessage = "Invalid username or password";
 
                 return response()->json([
@@ -67,12 +65,12 @@ class UserController extends Controller {
                     "error" => $responseMessage
                 ], 422);
             }
-
-            $accessToken = auth()->guard('api')->user()->createToken('authToken')->accessToken;
+    
+            $accessToken = auth()->user()->createToken('authToken')->accessToken;
 
             $responseMessage = "Login Successful";
-
-            return $this->respondWithToken($accessToken, $responseMessage, auth()->guard('api')->user());
+         
+            return $this->respondWithToken($accessToken, $responseMessage, auth()->user());
         } else {
             $responseMessage = "Sorry, this user does not exist";
 
@@ -83,11 +81,11 @@ class UserController extends Controller {
             ], 422);
         }
     }
-
-
+    
+  
     public function viewProfile(){
         $responseMessage = "user profile";
-
+        
         $data = Auth::guard("api")->user();
         return response()->json([
             "success" => true,
