@@ -22,7 +22,9 @@ use App\Http\Controllers\Admin\AuthController;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-
+Route::middleware('auth:api')->get('/deposit', function (Request $request) {
+    return $request->user();
+});
 Route::group(['prefix' => 'users', 'middleware' => 'CORS'], function ($router) {
     Route::post('/register', [UserController::class, 'register'])->name('register.user');
     Route::post('/login', [UserController::class, 'login'])->name('login.user');
@@ -38,7 +40,8 @@ Route::group(['prefix'=>'admin', 'middleware'=>'CORS'], function ($router) {
     Route::get('/user', [AuthController::class, 'user'])->name('admin.auth.user')->middleware('auth:admin');
 });
 
-Route::group(['prefix' => 'deposit'], function ($router) {
-    Route::get('/getBank', [DepositController::class, 'getBank'])->name('web.deposit.getBank');
+Route::group(['prefix' => 'deposit', 'middleware' => 'CORS'], function ($router) {
+    Route::get('/getBank', [DepositController::class, 'getBank'])->name('web.deposit.getBank')->middleware('auth:api');
+    Route::post('/addMoney', [DepositController::class, 'addMoney'])->name('web.deposit.addMoney');
 });
 
