@@ -695,10 +695,6 @@
                     "type": "github"
                 }
             ],
-<<<<<<< HEAD
-            "abandoned": true,
-=======
->>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
             "time": "2022-02-23T14:25:13+00:00"
         },
         {
@@ -1342,10 +1338,7 @@
                 "issues": "https://github.com/laravel/passport/issues",
                 "source": "https://github.com/laravel/passport"
             },
-<<<<<<< HEAD
-            "time": "2022-04-16T13:38:08+00:00"
-=======
-<<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2022-04-16T13:38:08+00:00",
             "install-path": "../laravel/passport"
         },
         {
@@ -1410,11 +1403,8 @@
                 "issues": "https://github.com/laravel/sail/issues",
                 "source": "https://github.com/laravel/sail"
             },
-            "install-path": "../laravel/sail"
-========
+            "install-path": "../laravel/sail",
             "time": "2022-04-16T13:38:08+00:00"
->>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281:composer.lock
->>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
         },
         {
             "name": "laravel/serializable-closure",
@@ -1686,16 +1676,8 @@
         },
         {
             "name": "league/commonmark",
-<<<<<<< HEAD
-            "version": "2.3.9",
-=======
-<<<<<<<< HEAD:vendor/composer/installed.json
             "version": "2.3.9",
             "version_normalized": "2.3.9.0",
-========
-            "version": "2.3.8",
->>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281:composer.lock
->>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
@@ -1737,13 +1719,7 @@
             "suggest": {
                 "symfony/yaml": "v2.3+ required if using the Front Matter extension"
             },
-<<<<<<< HEAD
-=======
-<<<<<<<< HEAD:vendor/composer/installed.json
             "time": "2023-02-15T14:07:24+00:00",
-========
->>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281:composer.lock
->>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1804,11 +1780,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< HEAD
-            "time": "2023-02-15T14:07:24+00:00"
-=======
             "time": "2022-12-10T16:02:17+00:00"
->>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
         },
         {
             "name": "league/config",
@@ -2098,16 +2070,8 @@
         },
         {
             "name": "league/oauth2-server",
-<<<<<<< HEAD
-            "version": "8.4.0",
-=======
-<<<<<<<< HEAD:vendor/composer/installed.json
             "version": "8.4.0",
             "version_normalized": "8.4.0.0",
-========
-            "version": "8.3.6",
->>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281:composer.lock
->>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/oauth2-server.git",
@@ -2140,13 +2104,7 @@
                 "phpunit/phpunit": "^8.5.13",
                 "roave/security-advisories": "dev-master"
             },
-<<<<<<< HEAD
-=======
-<<<<<<<< HEAD:vendor/composer/installed.json
             "time": "2023-02-15T16:08:35+00:00",
-========
->>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281:composer.lock
->>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -2198,11 +2156,7 @@
                     "type": "github"
                 }
             ],
-<<<<<<< HEAD
-            "time": "2023-02-15T16:08:35+00:00"
-=======
             "time": "2022-11-14T19:42:00+00:00"
->>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
         },
         {
             "name": "league/uri",
@@ -3283,8 +3237,6 @@
             "time": "2022-12-17T18:26:50+00:00"
         },
         {
-<<<<<<< HEAD
-=======
             "name": "psr/cache",
             "version": "3.0.0",
             "source": {
@@ -3334,7 +3286,6 @@
             "time": "2021-02-03T23:26:27+00:00"
         },
         {
->>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
             "name": "psr/clock",
             "version": "1.0.0",
             "source": {
