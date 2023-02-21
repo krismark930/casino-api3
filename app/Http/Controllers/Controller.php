@@ -46,4 +46,11 @@ class Controller extends BaseController
             "token_type" => "bearer",
         ] ,200);
     }
+
+    public function respondData($data){
+        return \response()->json([
+            "success" => true,
+            "data" => $data,
+        ] ,200);
+    }
 }

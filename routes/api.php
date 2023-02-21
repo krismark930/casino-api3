@@ -8,6 +8,7 @@ use GuzzleHttp\Middleware;
 
 /* Admin controllers. */
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\SystemSetting\SystemParametersController;
 
 
 /*
@@ -41,8 +42,16 @@ Route::post('/get_item_date', [SportController::class, 'get_item_date']);
 
 /* Admin routes. */
 Route::group(['prefix'=>'admin', 'middleware'=>'CORS'], function ($router) {
+    /* Authentication */
     Route::post('/login', [AuthController::class, 'login'])->name('admin.auth.login');
     Route::post('/register', [AuthController::class, 'register'])->name('admin.auth.register');
-    Route::get('/logout', [AuthController::class, 'logout'])->name('admin.auth.logout')->middleware('auth:admin');
-    Route::get('/user', [AuthController::class, 'user'])->name('admin.auth.user')->middleware('auth:admin');
+
+    Route::group(['prefix'=>'system-setting'], function ($router) {
+        /* System Setting */
+        // System Parameters
+        Route::post('/system-parameters/get-urls', [SystemParametersController::class, 'get_urls'])->name('admin.system-setting.system-parameters.get-urls');
+        Route::post('/system-parameters/set-urls', [SystemParametersController::class, 'set_urls'])->name('admin.system-setting.system-parameters.set-urls');
+    });
 });
+
+
