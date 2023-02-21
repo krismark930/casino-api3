@@ -49,8 +49,14 @@ Route::group(['prefix'=>'admin', 'middleware'=>'CORS'], function ($router) {
     Route::group(['prefix'=>'system-setting'], function ($router) {
         /* System Setting */
         // System Parameters
+        // Website URL
         Route::post('/system-parameters/get-urls', [SystemParametersController::class, 'get_urls'])->name('admin.system-setting.system-parameters.get-urls');
         Route::post('/system-parameters/set-urls', [SystemParametersController::class, 'set_urls'])->name('admin.system-setting.system-parameters.set-urls');
+
+        //Turn on/off services
+        Route::post('/system-parameters/get-turnservices', [SystemParametersController::class, 'get_turnservices'])->name('admin.system-setting.system-parameters.get-turnservices');
+        Route::post('/system-parameters/set-turnservices', [SystemParametersController::class, 'set_turnservices'])->name('admin.system-setting.system-parameters.set-turnservices');
+
     });
 });
 

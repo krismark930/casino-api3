@@ -5,10 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class Config extends Model
+class SysConfig extends Model
 {
-    protected $table = 'config';
-
+    protected $table = 'sys_config';
     protected $primaryKey = 'id';
-
 }
