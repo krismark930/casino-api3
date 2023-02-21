@@ -9,8 +9,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\User;
 
 class AuthController extends Controller {
-
-
     /**
     * @OA\Post(
     * path="/api/admin/login",
@@ -49,6 +47,7 @@ class AuthController extends Controller {
     *      @OA\Response(response=404, description="Resource Not Found"),
     * )
     */
+
     /* Login action. */
     public function login(Request $request) {
         $username = $request->input('username');
@@ -119,6 +118,7 @@ class AuthController extends Controller {
      *      )
      *)
      **/
+
     /* Register action. */
     public function register(Request $request) {
         $username = $request->input('username');
