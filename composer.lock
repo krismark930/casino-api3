@@ -1338,6 +1338,7 @@
                 "issues": "https://github.com/laravel/passport/issues",
                 "source": "https://github.com/laravel/passport"
             },
+<<<<<<< HEAD
             "time": "2022-04-16T13:38:08+00:00",
             "install-path": "../laravel/passport"
         },
@@ -1404,6 +1405,8 @@
                 "source": "https://github.com/laravel/sail"
             },
             "install-path": "../laravel/sail",
+=======
+>>>>>>> b12ec02db2bf3186b3ea357396479d10ea5e7455
             "time": "2022-04-16T13:38:08+00:00"
         },
         {
@@ -1676,17 +1679,21 @@
         },
         {
             "name": "league/commonmark",
+<<<<<<< HEAD
             "version": "2.3.9",
             "version_normalized": "2.3.9.0",
+=======
+            "version": "2.3.8",
+>>>>>>> b12ec02db2bf3186b3ea357396479d10ea5e7455
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "c1e114f74e518daca2729ea8c4bf1167038fa4b5"
+                "reference": "c493585c130544c4e91d2e0e131e6d35cb0cbc47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/c1e114f74e518daca2729ea8c4bf1167038fa4b5",
-                "reference": "c1e114f74e518daca2729ea8c4bf1167038fa4b5",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/c493585c130544c4e91d2e0e131e6d35cb0cbc47",
+                "reference": "c493585c130544c4e91d2e0e131e6d35cb0cbc47",
                 "shasum": ""
             },
             "require": {
@@ -1719,7 +1726,10 @@
             "suggest": {
                 "symfony/yaml": "v2.3+ required if using the Front Matter extension"
             },
+<<<<<<< HEAD
             "time": "2023-02-15T14:07:24+00:00",
+=======
+>>>>>>> b12ec02db2bf3186b3ea357396479d10ea5e7455
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -2070,17 +2080,21 @@
         },
         {
             "name": "league/oauth2-server",
+<<<<<<< HEAD
             "version": "8.4.0",
             "version_normalized": "8.4.0.0",
+=======
+            "version": "8.3.6",
+>>>>>>> b12ec02db2bf3186b3ea357396479d10ea5e7455
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/oauth2-server.git",
-                "reference": "539f4340c14eca8d44578fd118f6bdc0ad16d1ce"
+                "reference": "28c5441716c10d0c936bd731860dc385d0f6d1a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/oauth2-server/zipball/539f4340c14eca8d44578fd118f6bdc0ad16d1ce",
-                "reference": "539f4340c14eca8d44578fd118f6bdc0ad16d1ce",
+                "url": "https://api.github.com/repos/thephpleague/oauth2-server/zipball/28c5441716c10d0c936bd731860dc385d0f6d1a8",
+                "reference": "28c5441716c10d0c936bd731860dc385d0f6d1a8",
                 "shasum": ""
             },
             "require": {
@@ -2104,7 +2118,10 @@
                 "phpunit/phpunit": "^8.5.13",
                 "roave/security-advisories": "dev-master"
             },
+<<<<<<< HEAD
             "time": "2023-02-15T16:08:35+00:00",
+=======
+>>>>>>> b12ec02db2bf3186b3ea357396479d10ea5e7455
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -2148,7 +2165,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/oauth2-server/issues",
-                "source": "https://github.com/thephpleague/oauth2-server/tree/8.4.0"
+                "source": "https://github.com/thephpleague/oauth2-server/tree/8.3.6"
             },
             "funding": [
                 {
@@ -3237,6 +3254,7 @@
             "time": "2022-12-17T18:26:50+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "psr/cache",
             "version": "3.0.0",
             "source": {
@@ -3286,6 +3304,8 @@
             "time": "2021-02-03T23:26:27+00:00"
         },
         {
+=======
+>>>>>>> b12ec02db2bf3186b3ea357396479d10ea5e7455
             "name": "psr/clock",
             "version": "1.0.0",
             "source": {
@@ -7059,16 +7079,16 @@
         },
         {
             "name": "laravel/sail",
-            "version": "v1.20.2",
+            "version": "v1.20.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/sail.git",
-                "reference": "5ae072b182b1efbec927409e8a3ce3b1078cc42c"
+                "reference": "4b85dbfa3dceeaf7227e3029707562fd60297e86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/sail/zipball/5ae072b182b1efbec927409e8a3ce3b1078cc42c",
-                "reference": "5ae072b182b1efbec927409e8a3ce3b1078cc42c",
+                "url": "https://api.github.com/repos/laravel/sail/zipball/4b85dbfa3dceeaf7227e3029707562fd60297e86",
+                "reference": "4b85dbfa3dceeaf7227e3029707562fd60297e86",
                 "shasum": ""
             },
             "require": {
@@ -7116,7 +7136,7 @@
                 "issues": "https://github.com/laravel/sail/issues",
                 "source": "https://github.com/laravel/sail"
             },
-            "time": "2023-02-08T20:22:21+00:00"
+            "time": "2023-02-08T02:08:37+00:00"
         },
         {
             "name": "mockery/mockery",
