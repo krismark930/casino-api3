@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SportController;
 use App\Http\Controllers\Web\DepositController;
 /* Admin controllers. */
 use App\Http\Controllers\Admin\AuthController;
@@ -31,6 +32,13 @@ Route::group(['prefix' => 'users', 'middleware' => 'CORS'], function ($router) {
     Route::get('/view-profile', [UserController::class, 'viewProfile'])->name('profile.user');
     Route::get('/logout', [UserController::class, 'logout'])->name('logout.user');
 });
+/* Sports routes */
+Route::group(['prefix' => 'sport', 'middleware' => 'CORS'], function ($router){
+    Route::resource('/get_data', SportController::class);
+    Route::post('/get_item_date', [SportController::class, 'get_item_date']);
+});
+
+Route::post('/get_item_date', [SportController::class, 'get_item_date']);// Test_API
 
 /* Admin routes. */
 Route::group(['prefix'=>'admin', 'middleware'=>'CORS'], function ($router) {
