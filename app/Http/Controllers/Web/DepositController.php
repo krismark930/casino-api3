@@ -19,15 +19,13 @@ class DepositController extends Controller {
         $user = Bank::all();
         return response()->json(['success'=>true, 'bankList' => $user]);
     }
+    /* Deposit function. */
     public function addMoney(Request $request) {
-        error_log($request->money);
-        error_log($request->bankName);
-        error_log($request->bankAddress);
-        error_log($request->bankNo);
         $Order_Code='CK'.date("YmdHis",time()+12*3600).mt_rand(1000,9999);
-        error_log($Order_Code);
         $validator = Validator::make($request->all(),[
+            'isCrypto' => 'required',
             'money' => 'required',
+            'name' => 'required',
             'bankName' => 'required',
             'bankAddress' => 'required',
             'bankNo' => 'required',
@@ -38,6 +36,7 @@ class DepositController extends Controller {
                 'message' => $validator->messages()->toArray()
             ], 500);
         }
+        error_log($request->isCrypto);
         //$user = Auth::guard("api")->user();
         $date=date("Y-m-d",time());
         $payWay="W";
@@ -55,7 +54,7 @@ class DepositController extends Controller {
             "Super" => "test",//$user->Super,
             "Admin" => "test",//$user->Admin,
             "CurType" => 'RMB',
-            "Name" => "test",//$user->Alias,
+            "Name" => $request->isCrypto ? "test" : $request->name,//$user->Alias,
             "Bank" => "test",//$user->bankName,
             "Bank_Address" => $request->bankAddress,
             "Bank_Account" => $request->bankNo,
@@ -88,12 +87,12 @@ class DepositController extends Controller {
                     "Order_Code" => $Order_Code,
                 ];
                 if ($deposit->create($data)){
-                    return response()->json(['success'=>true, 'message'=>'deposit successfully.'], 200);
+                    return response()->json(['success'=>true, 'order_code'=> $Order_Code, 'message'=>'deposit successfully.'], 200);
                 }else {
                     return response()->json(['success'=>false, 'message'=>'rebate deposit operation failure.']);
                 }
             }else{
-                return response()->json(['success'=>true, 'message'=>'deposit successfully.'], 200);
+                return response()->json(['success'=>true, 'order_code'=> $Order_Code, 'message'=>'deposit successfully.'], 200);
             }
         }
         else
