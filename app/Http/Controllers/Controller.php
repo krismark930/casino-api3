@@ -38,6 +38,7 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     public function respondWithToken($token, $responseMessage, $data){
+
         return \response()->json([
             "success" => true,
             "message" => $responseMessage,

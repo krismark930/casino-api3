@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5de2a032d1911608c19b870904f9653f",
+    "content-hash": "27095416b295d4b3c9f8097900fd2f2d",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -339,82 +339,6 @@
             "time": "2022-10-27T11:44:00+00:00"
         },
         {
-            "name": "doctrine/annotations",
-            "version": "1.14.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doctrine/annotations.git",
-                "reference": "fb0d71a7393298a7b232cbf4c8b1f73f3ec3d5af"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/annotations/zipball/fb0d71a7393298a7b232cbf4c8b1f73f3ec3d5af",
-                "reference": "fb0d71a7393298a7b232cbf4c8b1f73f3ec3d5af",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/lexer": "^1 || ^2",
-                "ext-tokenizer": "*",
-                "php": "^7.1 || ^8.0",
-                "psr/cache": "^1 || ^2 || ^3"
-            },
-            "require-dev": {
-                "doctrine/cache": "^1.11 || ^2.0",
-                "doctrine/coding-standard": "^9 || ^10",
-                "phpstan/phpstan": "~1.4.10 || ^1.8.0",
-                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5",
-                "symfony/cache": "^4.4 || ^5.4 || ^6",
-                "vimeo/psalm": "^4.10"
-            },
-            "suggest": {
-                "php": "PHP 8.0 or higher comes with attributes, a native replacement for annotations"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Doctrine\\Common\\Annotations\\": "lib/Doctrine/Common/Annotations"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
-                },
-                {
-                    "name": "Roman Borschel",
-                    "email": "roman@code-factory.org"
-                },
-                {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
-                },
-                {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com"
-                },
-                {
-                    "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com"
-                }
-            ],
-            "description": "Docblock Annotations Parser",
-            "homepage": "https://www.doctrine-project.org/projects/annotations.html",
-            "keywords": [
-                "annotations",
-                "docblock",
-                "parser"
-            ],
-            "support": {
-                "issues": "https://github.com/doctrine/annotations/issues",
-                "source": "https://github.com/doctrine/annotations/tree/1.14.3"
-            },
-            "time": "2023-02-01T09:20:38+00:00"
-        },
-        {
             "name": "doctrine/cache",
             "version": "2.2.0",
             "source": {
@@ -664,30 +588,29 @@
         },
         {
             "name": "doctrine/event-manager",
-            "version": "1.2.0",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/event-manager.git",
-                "reference": "95aa4cb529f1e96576f3fda9f5705ada4056a520"
+                "reference": "750671534e0241a7c50ea5b43f67e23eb5c96f32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/event-manager/zipball/95aa4cb529f1e96576f3fda9f5705ada4056a520",
-                "reference": "95aa4cb529f1e96576f3fda9f5705ada4056a520",
+                "url": "https://api.github.com/repos/doctrine/event-manager/zipball/750671534e0241a7c50ea5b43f67e23eb5c96f32",
+                "reference": "750671534e0241a7c50ea5b43f67e23eb5c96f32",
                 "shasum": ""
             },
             "require": {
-                "doctrine/deprecations": "^0.5.3 || ^1",
-                "php": "^7.1 || ^8.0"
+                "php": "^8.1"
             },
             "conflict": {
                 "doctrine/common": "<2.9"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^9 || ^10",
-                "phpstan/phpstan": "~1.4.10 || ^1.8.8",
-                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5",
-                "vimeo/psalm": "^4.24"
+                "doctrine/coding-standard": "^10",
+                "phpstan/phpstan": "^1.8.8",
+                "phpunit/phpunit": "^9.5",
+                "vimeo/psalm": "^4.28"
             },
             "type": "library",
             "autoload": {
@@ -736,7 +659,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/event-manager/issues",
-                "source": "https://github.com/doctrine/event-manager/tree/1.2.0"
+                "source": "https://github.com/doctrine/event-manager/tree/2.0.0"
             },
             "funding": [
                 {
@@ -752,7 +675,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-10-12T20:51:15+00:00"
+            "time": "2022-10-12T20:59:15+00:00"
         },
         {
             "name": "doctrine/inflector",
@@ -1190,10 +1113,6 @@
                     "type": "github"
                 }
             ],
-<<<<<<< HEAD
-            "abandoned": true,
-=======
->>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
             "time": "2022-02-23T14:25:13+00:00"
         },
         {
@@ -2106,16 +2025,8 @@
         },
         {
             "name": "league/commonmark",
-<<<<<<< HEAD
-            "version": "2.3.9",
-=======
-<<<<<<<< HEAD:vendor/composer/installed.json
             "version": "2.3.9",
             "version_normalized": "2.3.9.0",
-========
-            "version": "2.3.8",
->>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281:composer.lock
->>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
@@ -2217,11 +2128,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< HEAD
-            "time": "2023-02-15T14:07:24+00:00"
-=======
             "time": "2022-12-10T16:02:17+00:00"
->>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
         },
         {
             "name": "league/config",
@@ -2511,16 +2418,8 @@
         },
         {
             "name": "league/oauth2-server",
-<<<<<<< HEAD
-            "version": "8.4.0",
-=======
-<<<<<<<< HEAD:vendor/composer/installed.json
             "version": "8.4.0",
             "version_normalized": "8.4.0.0",
-========
-            "version": "8.3.6",
->>>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281:composer.lock
->>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/oauth2-server.git",
@@ -2604,11 +2503,7 @@
                     "type": "github"
                 }
             ],
-<<<<<<< HEAD
-            "time": "2023-02-15T16:08:35+00:00"
-=======
             "time": "2022-11-14T19:42:00+00:00"
->>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
         },
         {
             "name": "league/uri",
@@ -3688,8 +3583,6 @@
             "time": "2022-12-17T18:26:50+00:00"
         },
         {
-<<<<<<< HEAD
-=======
             "name": "psr/cache",
             "version": "3.0.0",
             "source": {
@@ -3739,7 +3632,6 @@
             "time": "2021-02-03T23:26:27+00:00"
         },
         {
->>>>>>> 7cb60c1880157646dd3964621b7f49fc86328281
             "name": "psr/clock",
             "version": "1.0.0",
             "source": {
@@ -7799,16 +7691,16 @@
         },
         {
             "name": "laravel/sail",
-            "version": "v1.20.1",
+            "version": "v1.20.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/sail.git",
-                "reference": "4b85dbfa3dceeaf7227e3029707562fd60297e86"
+                "reference": "5ae072b182b1efbec927409e8a3ce3b1078cc42c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/sail/zipball/4b85dbfa3dceeaf7227e3029707562fd60297e86",
-                "reference": "4b85dbfa3dceeaf7227e3029707562fd60297e86",
+                "url": "https://api.github.com/repos/laravel/sail/zipball/5ae072b182b1efbec927409e8a3ce3b1078cc42c",
+                "reference": "5ae072b182b1efbec927409e8a3ce3b1078cc42c",
                 "shasum": ""
             },
             "require": {
@@ -7856,7 +7748,7 @@
                 "issues": "https://github.com/laravel/sail/issues",
                 "source": "https://github.com/laravel/sail"
             },
-            "time": "2023-02-08T02:08:37+00:00"
+            "time": "2023-02-08T20:22:21+00:00"
         },
         {
             "name": "mockery/mockery",
