@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ResultController;
 use App\Http\Controllers\Web\DepositController;
 /* Admin controllers. */
 use App\Http\Controllers\Admin\AuthController;
@@ -32,7 +33,9 @@ Route::group(['prefix' => 'users', 'middleware' => 'CORS'], function ($router) {
     Route::get('/view-profile', [UserController::class, 'viewProfile'])->name('profile.user');
     Route::get('/logout', [UserController::class, 'logout'])->name('logout.user');
 });
-
+Route::group(['prefix' => 'result', 'middleware' => 'CORS'], function ($router){
+    Route::post('/get_result_ft', [ResultController::class, 'getResultFt'])->name('result.getResultFt');
+});
 /* Admin routes. */
 Route::group(['prefix'=>'admin', 'middleware'=>'CORS'], function ($router) {
     /* Authentication */
