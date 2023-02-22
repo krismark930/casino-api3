@@ -17,7 +17,7 @@ class DepositController extends Controller {
     /* Get bank info. */
     public function getBank(Request $request) {
         $user = Bank::all();
-        return response()->json(['success'=>true, 'backList' => $user, 'user' => $request->user()]);
+        return response()->json(['success'=>true, 'bankList' => $user]);
     }
     public function addMoney(Request $request) {
         error_log($request->money);
