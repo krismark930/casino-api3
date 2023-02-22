@@ -10,9 +10,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Config;
 use App\Models\SysConfig;
 
-class SystemParametersController extends Controller {
+class SystemParametersController extends Controller
+{
     /* Set pc, mobile urls */
-    public function set_urls(Request $request) {
+    public function set_urls(Request $request)
+    {
         $pcUrl = $request->input('pcurl');
         $mobileUrl = $request->input('wapurl');
 
@@ -30,12 +32,14 @@ class SystemParametersController extends Controller {
     }
 
     /* Get pc, mobile urls */
-    public function get_urls(Request $request) {
+    public function get_urls(Request $request)
+    {
         $config = Config::selectRaw('*')->first();
         return $this->respondData(['pcurl' => $config['PCURL'], 'wapurl' => $config['WAPURL']]);
     }
     /* Set Reg_Status, AG_Repair, OG_Repair, BBIN_Repair, MG_Repair, PT_Repair, KY_Repair */
-    public function set_turnservices(Request $request) {
+    public function set_turnservices(Request $request)
+    {
         $isReg = $request->input('isReg');
         $AG_Repair = $request->input('AG_Repair');
         $OG_Repair = $request->input('OG_Repair');
@@ -57,16 +61,54 @@ class SystemParametersController extends Controller {
         if ($validator->fails())
             return response()->json(['success' => false, 'message' => $validator->messages()->toArray()]);
 
-        DB::table('sys_config')->where('id', 1)->update(['isReg' => $isReg, 'AG_Repair' => $AG_Repair,
-        'OG_Repair' => $OG_Repair,'BBIN_Repair' => $BBIN_Repair,'MG_Repair' => $MG_Repair,'PT_Repair' => $PT_Repair,'KY_Repair' => $KY_Repair]);
+        DB::table('sys_config')->where('id', 1)->update([
+            'isReg' => $isReg,
+            'AG_Repair' => $AG_Repair,
+            'OG_Repair' => $OG_Repair,
+            'BBIN_Repair' => $BBIN_Repair,
+            'MG_Repair' => $MG_Repair,
+            'PT_Repair' => $PT_Repair,
+            'KY_Repair' => $KY_Repair
+        ]);
 
         return $this->respondData([]);
     }
     //get turn on/off services
-    public function get_turnservices(Request $request) {
+    public function get_turnservices(Request $request)
+    {
         $sys_config = SysConfig::selectRaw('*')->first();
-        return $this->respondData(['isReg' => $sys_config['isReg'], 'AG_Repair' => $sys_config['AG_Repair'],
-        'OG_Repair' => $sys_config['OG_Repair'], 'BBIN_Repair' => $sys_config['BBIN_Repair'], 'MG_Repair' => $sys_config['MG_Repair'],
-        'PT_Repair' => $sys_config['PT_Repair'] , 'KY_Repair' => $sys_config['KY_Repair']]);
+        return $this->respondData([
+            'isReg' => $sys_config['isReg'],
+            'AG_Repair' => $sys_config['AG_Repair'],
+            'OG_Repair' => $sys_config['OG_Repair'],
+            'BBIN_Repair' => $sys_config['BBIN_Repair'],
+            'MG_Repair' => $sys_config['MG_Repair'],
+            'PT_Repair' => $sys_config['PT_Repair'],
+            'KY_Repair' => $sys_config['KY_Repair']
+        ]);
+    }
+
+    /* Set HomeNotification GongGao */
+    public function set_homenotifications(Request $request)
+    {
+        $GongGao = $request->input('GongGao');
+
+        $validator = Validator::make($request->all(), [
+            'GongGao' => 'required',
+        ]);
+
+        if ($validator->fails())
+            return response()->json(['success' => false, 'message' => $validator->messages()->toArray()]);
+
+            DB::table('web_system_data')->where('id', 1)->update(['GongGao' => $GongGao]);
+
+        return $this->respondData([]);
+    }
+    //get HomeNotification GongGao
+    public function get_homenotifications(Request $request)
+    {
+        $web_system_data = DB::table('web_system_data')->orderBy('id', 'desc')->first();
+        $web_system_data_arr = (array) $web_system_data;
+        return $this->respondData(['GongGao' => $web_system_data_arr['GongGao']]);
     }
 }
