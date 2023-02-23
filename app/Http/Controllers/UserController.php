@@ -59,8 +59,8 @@ class UserController extends Controller {
 
         if($user) {
             if(!auth()->guard('api')->attempt($credentials)) {
-                $responseMessage = "Invalid username or password";
-
+                $responseMessage = "Invalid username or password2";
+                print_r($credentials);
                 return response()->json([
                     "success" => false,
                     "message" => $responseMessage,
