@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Web\DepositController;
+use App\Http\Controllers\Web\TransferController;
 /* Admin controllers. */
 use App\Http\Controllers\Admin\AuthController;
 
@@ -44,4 +45,9 @@ Route::group(['prefix' => 'deposit', 'middleware' => 'CORS'], function ($router)
     Route::get('/getBank', [DepositController::class, 'getBank'])->name('web.deposit.getBank');
     Route::post('/addMoney', [DepositController::class, 'addMoney'])->name('web.deposit.addMoney');
 });
+Route::group(['prefix' => 'transfer', 'middleware' => 'CORS'], function ($router) {
+    Route::get('/getSysConfig', [TransferController::class, 'getSysConfig'])->name('web.transfer.getSysConfig');
+    Route::post('/transferMoney', [TransferController::class, 'transferMoney'])->name('web.transfer.transferMoney');
+});
+
 
