@@ -4,7 +4,7 @@ namespace App\Models\Web;
 
 use Illuminate\Database\Eloquent\Model;
 
-class BBINLogs extends Model {
+class AGLogs extends Model {
 
     protected $fillable = [
         'Username',
@@ -15,6 +15,6 @@ class BBINLogs extends Model {
         'Result',
         'Checked'];
 
-    protected $table = 'bbin_logs';
+    protected $table = 'ag_logs';
 
 }
