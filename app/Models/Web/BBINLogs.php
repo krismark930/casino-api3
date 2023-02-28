@@ -16,5 +16,5 @@ class BBINLogs extends Model {
         'Checked'];
 
     protected $table = 'bbin_logs';
-
+    public $timestamps = false;
 }

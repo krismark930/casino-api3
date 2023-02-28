@@ -16,5 +16,5 @@ class MGLogs extends Model {
         'Checked'];
 
     protected $table = 'mg_logs';
-
+    public $timestamps = false;
 }
