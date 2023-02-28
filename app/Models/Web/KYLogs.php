@@ -4,7 +4,7 @@ namespace App\Models\Web;
 
 use Illuminate\Database\Eloquent\Model;
 
-class OGLogs extends Model {
+class KYLogs extends Model {
 
     protected $fillable = [
         'Username',
@@ -14,6 +14,7 @@ class OGLogs extends Model {
         'DateTime',
         'Result',
         'Checked'];
-    protected $table = 'og_logs';
+
+    protected $table = 'ky_logs';
     public $timestamps = false;
 }

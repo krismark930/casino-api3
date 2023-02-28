@@ -16,5 +16,5 @@ class PTLogs extends Model {
         'Checked'];
 
     protected $table = 'pt_logs';
-
+    public $timestamps = false;
 }

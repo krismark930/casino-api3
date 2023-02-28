@@ -16,5 +16,5 @@ class AGLogs extends Model {
         'Checked'];
 
     protected $table = 'ag_logs';
-
+    public $timestamps = false;
 }
