@@ -252,7 +252,7 @@ class TransferController extends Controller {
                 if ($deposit){
                     //return response()->json(['success'=>$assets, 'user'=>$balance]);
                 }else{
-                    return response()->json(['success'=>$assets, 'message'=>"操作失败!!!"]);
+                    return response()->json(['success'=>false, 'message'=>"操作失败!!!"]);
                 }
 
                 $assets=Utils::GetField($username,'Money');
@@ -280,13 +280,13 @@ class TransferController extends Controller {
                     if ($result){
                         //$ouid=$result->id;
                     }else{
-                        return response()->json(['success'=>$assets, 'message'=>'mon_log_insert error']);
+                        return response()->json(['success'=>false, 'message'=>'mon_log_insert error']);
                     }
                 }
             }
-            return response()->json(['success'=>$assets, 'message'=>'转账成功!']);
+            return response()->json(['success'=>true, 'message'=>'转账成功!']);
         }else{
-            return response()->json(['success'=>$assets, 'message'=>'网络异常，请稍后再试!']);
+            return response()->json(['success'=>false, 'message'=>'网络异常，请稍后再试!']);
         }
     }
     // AG handle
@@ -504,7 +504,7 @@ class TransferController extends Controller {
                 if ($deposit){
                     //return response()->json(['success'=>$assets, 'user'=>$balance]);
                 }else{
-                    return response()->json(['success'=>$assets, 'message'=>"操作失败!!!"]);
+                    return response()->json(['success'=>false, 'message'=>"操作失败!!!"]);
                 }
 
                 $assets=Utils::GetField($username,'Money');
@@ -532,13 +532,13 @@ class TransferController extends Controller {
                     if ($result){
                         //$ouid=$result->id;
                     }else{
-                        return response()->json(['success'=>$assets, 'message'=>'mon_log_insert error']);
+                        return response()->json(['success'=>false, 'message'=>'mon_log_insert error']);
                     }
                 }
             }
-            return response()->json(['success'=>$assets, 'message'=>'转账成功!']);
+            return response()->json(['success'=>true, 'message'=>'转账成功!']);
         }else{
-            return response()->json(['success'=>$assets, 'message'=>'网络异常，请稍后再试!']);
+            return response()->json(['success'=>false, 'message'=>'网络异常，请稍后再试!']);
         }
     }
     // OG handle
@@ -1005,7 +1005,7 @@ class TransferController extends Controller {
                 if ($deposit){
                     //return response()->json(['success'=>$assets, 'user'=>$balance]);
                 }else{
-                    return response()->json(['success'=>$assets, 'message'=>"操作失败!!!"]);
+                    return response()->json(['success'=>false, 'message'=>"操作失败!!!"]);
                 }
 
                 $assets=Utils::GetField($username,'Money');
@@ -1033,13 +1033,13 @@ class TransferController extends Controller {
                     if ($result){
                         //$ouid=$result->id;
                     }else{
-                        return response()->json(['success'=>$assets, 'message'=>'mon_log_insert error']);
+                        return response()->json(['success'=>false, 'message'=>'mon_log_insert error']);
                     }
                 }
             }
-            return response()->json(['success'=>$assets, 'message'=>'转账成功!']);
+            return response()->json(['success'=>true, 'message'=>'转账成功!']);
         }else{
-            return response()->json(['success'=>$assets, 'message'=>'网络异常，请稍后再试!']);
+            return response()->json(['success'=>false, 'message'=>'网络异常，请稍后再试!']);
         }
     }
     // PT handle
@@ -1257,7 +1257,7 @@ class TransferController extends Controller {
                 if ($deposit){
                     //return response()->json(['success'=>$assets, 'user'=>$balance]);
                 }else{
-                    return response()->json(['success'=>$assets, 'message'=>"操作失败!!!"]);
+                    return response()->json(['success'=>false, 'message'=>"操作失败!!!"]);
                 }
 
                 $assets=Utils::GetField($username,'Money');
@@ -1284,13 +1284,13 @@ class TransferController extends Controller {
                     if ($result){
                         //$ouid=$result->id;
                     }else{
-                        return response()->json(['success'=>$assets, 'message'=>'mon_log_insert error']);
+                        return response()->json(['success'=>false, 'message'=>'mon_log_insert error']);
                     }
                 }
             }
-            return response()->json(['success'=>$assets, 'message'=>'转账成功!']);
+            return response()->json(['success'=>true, 'message'=>'转账成功!']);
         }else{
-            return response()->json(['success'=>$assets, 'message'=>'网络异常，请稍后再试!']);
+            return response()->json(['success'=>false, 'message'=>'网络异常，请稍后再试!']);
         }
     }
     // KY handle
@@ -1490,7 +1490,7 @@ class TransferController extends Controller {
                 if ($deposit){
                     //return response()->json(['success'=>$assets, 'user'=>$balance]);
                 }else{
-                    return response()->json(['success'=>$assets, 'message'=>"操作失败!!!"]);
+                    return response()->json(['success'=>false, 'message'=>"操作失败!!!"]);
                 }
 
                 $assets=Utils::GetField($username,'Money');
@@ -1517,13 +1517,13 @@ class TransferController extends Controller {
                     if ($result){
                         //$ouid=$result->id;
                     }else{
-                        return response()->json(['success'=>$assets, 'message'=>'mon_log_insert error']);
+                        return response()->json(['success'=>false, 'message'=>'mon_log_insert error']);
                     }
                 }
             }
-            return response()->json(['success'=>$assets, 'message'=>'转账成功!']);
+            return response()->json(['success'=>true, 'message'=>'转账成功!']);
         }else{
-            return response()->json(['success'=>$assets, 'message'=>'网络异常，请稍后再试!']);
+            return response()->json(['success'=>false, 'message'=>'网络异常，请稍后再试!']);
         }
     }
     /* Get bank info. */
