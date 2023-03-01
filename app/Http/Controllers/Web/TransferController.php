@@ -107,7 +107,7 @@ class TransferController extends Controller {
                 return response()->json(['success'=>false, 'message'=> '转账金额不能大于会员余额!']);
             }else{  //转入前扣款
                 $assets= $user['Money'];//GetField($username,'Money');
-                $user_id=$user['ID'];//GetField($username,'ID');
+                $user_id=$user['id'];//GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
                 $result = DB::update("update web_member_data set Money=Money-$money where Username='$username'");
 
@@ -207,7 +207,7 @@ class TransferController extends Controller {
 
         //更新状态
         //$tr_sql="update  `BBIN_logs` set Billno='$billno',Result='$result',Checked='$result' where id='$ouid2'";
-        // $user_id=Utils::GetField($username,'ID');
+        // $user_id=Utils::GetField($username,'id');
         // return response()->json(['success'=>$user_id, 'test'=> $username]);
 
         BBINLogs::where('id', $ouid2)->update(['Billno' => $billno,
@@ -258,7 +258,7 @@ class TransferController extends Controller {
                 }
 
                 $assets=Utils::GetField($username,'Money');
-                $user_id=Utils::GetField($username,'ID');
+                $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
                 $mysql="update web_member_data set Money=Money+$money where Username='$username'";
                 $q1 = User::where('Username', $username)->update(['Money' => $assets+$money]);
@@ -365,7 +365,7 @@ class TransferController extends Controller {
                 return response()->json(['success'=>false, 'message'=> '转账金额不能大于会员余额!']);
             }else{  //转入前扣款
                 $assets= Utils::GetField($username,'Money');
-                $user_id=Utils::GetField($username,'ID');
+                $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
                 $result = DB::update("update web_member_data set Money=Money-$money where Username='$username'");
 
@@ -510,7 +510,7 @@ class TransferController extends Controller {
                 }
 
                 $assets=Utils::GetField($username,'Money');
-                $user_id=Utils::GetField($username,'ID');
+                $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
                 $mysql="update web_member_data set Money=Money+$money where Username='$username'";
                 $q1 = User::where('Username', $username)->update(['Money' => $assets+$money]);
@@ -612,7 +612,7 @@ class TransferController extends Controller {
                 return response()->json(['success'=>false, 'message'=> '转账金额不能大于会员余额!']);
             }else{  //转入前扣款
                 $assets= Utils::GetField($username,'Money');
-                $user_id=Utils::GetField($username,'ID');
+                $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
                 $result = DB::update("update web_member_data set Money=Money-$money where Username='$username'");
 
@@ -759,7 +759,7 @@ class TransferController extends Controller {
                 }
 
                 $assets=Utils::GetField($username,'Money');
-                $user_id=Utils::GetField($username,'ID');
+                $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
                 $q1 = User::where('Username', $username)->update(['Money' => $assets+$money]);
                 if($q1){
@@ -865,7 +865,7 @@ class TransferController extends Controller {
                 return response()->json(['success'=>false, 'message'=> '转账金额不能大于会员余额!']);
             }else{  //转入前扣款
                 $assets= Utils::GetField($username,'Money');
-                $user_id=Utils::GetField($username,'ID');
+                $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
                 $result = DB::update("update web_member_data set Money=Money-$money where Username='$username'");
 
@@ -1011,7 +1011,7 @@ class TransferController extends Controller {
                 }
 
                 $assets=Utils::GetField($username,'Money');
-                $user_id=Utils::GetField($username,'ID');
+                $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
                 $mysql="update web_member_data set Money=Money+$money where Username='$username'";
                 $q1 = User::where('Username', $username)->update(['Money' => $assets+$money]);
@@ -1117,7 +1117,7 @@ class TransferController extends Controller {
                 return response()->json(['success'=>false, 'message'=> '转账金额不能大于会员余额!']);
             }else{  //转入前扣款
                 $assets= Utils::GetField($username,'Money');
-                $user_id=Utils::GetField($username,'ID');
+                $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
                 $result = DB::update("update web_member_data set Money=Money-$money where Username='$username'");
 
@@ -1263,7 +1263,7 @@ class TransferController extends Controller {
                 }
 
                 $assets=Utils::GetField($username,'Money');
-                $user_id=Utils::GetField($username,'ID');
+                $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
                 $q1 = User::where('Username', $username)->update(['Money' => $assets+$money]);
                 if($q1){
@@ -1351,7 +1351,7 @@ class TransferController extends Controller {
                 return response()->json(['success'=>false, 'message'=> '转账金额不能大于会员余额!']);
             }else{  //转入前扣款
                 $assets= Utils::GetField($username,'Money');
-                $user_id=Utils::GetField($username,'ID');
+                $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
                 $result = DB::update("update web_member_data set Money=Money-$money where Username='$username'");
 
@@ -1496,7 +1496,7 @@ class TransferController extends Controller {
                 }
 
                 $assets=Utils::GetField($username,'Money');
-                $user_id=Utils::GetField($username,'ID');
+                $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
                 $q1 = User::where('Username', $username)->update(['Money' => $assets+$money]);
                 if($q1){
@@ -1535,7 +1535,7 @@ class TransferController extends Controller {
     }
     /* Transfer function. */
     public function transferMoney(Request $request) {
-        $user = User::where('ID',$request->userId)->first();
+        $user = User::where('id',$request->userId)->first();
         $sysConfig = SysConfig::all()->first();
         // if($cou==0){   oid='$uid'
         //     echo "<script>alert('登录超时!');window.open('/','_top');</script>";
