@@ -25,8 +25,8 @@ class Utils {
 		}while($flag==0);
 	}
 
-    static function GetField($user,$Field){
-        $user = User::where('UserName',$user)->first();
+    static function GetField($username,$Field){
+        $user = User::where('UserName',$username)->first();
 		if(!$user){
 			return "";
 		}
