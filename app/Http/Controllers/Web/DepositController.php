@@ -8,7 +8,7 @@ use Auth;
 use Validator;
 use App\Models\Web\Sys800;
 use App\Models\Web\SysConfig;
-
+use App\Models\User;
 class DepositController extends Controller {
 
     public function __construct(){
@@ -21,6 +21,7 @@ class DepositController extends Controller {
     }
     /* Deposit function. */
     public function addMoney(Request $request) {
+        $user = User::where('ID',$request->userId)->first();
         $Order_Code='CK'.date("YmdHis",time()+12*3600).mt_rand(1000,9999);
         $validator = Validator::make($request->all(),[
             'isCrypto' => 'required',
@@ -47,17 +48,17 @@ class DepositController extends Controller {
             "AddDate" => $date,
             "Type" => $type,
             "Type2" => "1",
-            "UserName" => "test",//$user->UserName,
-            "Agents" => "test",//$user->Agents,
-            "World" => "test",//$user->World,
-            "Corprator" => "test",//$user->Corprator,
-            "Super" => "test",//$user->Super,
-            "Admin" => "test",//$user->Admin,
+            "UserName" => $user->UserName,
+            "Agents" => $user->Agents,
+            $user->World&&"World" => $user->World,
+            $user->Corprator&&"Corprator" => $user->Corprator,
+            $user->Super&&"Super" => $user->Super,
+            $user->Admin&&"Admin" => $user->Admin,
             "CurType" => 'RMB',
-            "Name" => $request->isCrypto ? "test" : $request->name,//$user->Alias,
-            "Bank" => "test",//$user->bankName,
-            "Bank_Address" => $request->bankAddress,
-            "Bank_Account" => $request->bankNo,
+            "Name" => $request->isCrypto ? $user->Alias : $request->name,//$user->Alias,
+            $user->bankName&&"Bank" => $user->bankName,
+            $user->bankAddress&&"Bank_Address" => $request->bankAddress,
+            $user->bankNo&&"Bank_Account" => $request->bankNo,
             "Order_Code" => $Order_Code,
         ];
         $deposit = new Sys800;
