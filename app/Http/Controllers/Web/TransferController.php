@@ -207,8 +207,8 @@ class TransferController extends Controller {
 
         //更新状态
         //$tr_sql="update  `BBIN_logs` set Billno='$billno',Result='$result',Checked='$result' where id='$ouid2'";
-        $user_id=Utils::GetField($username,'ID');
-        return response()->json(['success'=>$user_id, 'test'=> $username]);
+        // $user_id=Utils::GetField($username,'ID');
+        // return response()->json(['success'=>$user_id, 'test'=> $username]);
 
         BBINLogs::where('id', $ouid2)->update(['Billno' => $billno,
         'Result' => $result, 'Checked' => $result,]);
