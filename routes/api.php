@@ -7,6 +7,7 @@ use App\Http\Controllers\SportController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\Web\DepositController;
 use App\Http\Controllers\Web\TransferController;
+use App\Http\Controllers\Web\WithdrawController;
 /* Admin controllers. */
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\SystemSetting\SystemParametersController;
@@ -78,5 +79,7 @@ Route::group(['prefix' => 'transfer', 'middleware' => 'CORS'], function ($router
     Route::get('/getSysConfig', [TransferController::class, 'getSysConfig'])->name('web.transfer.getSysConfig');
     Route::post('/transferMoney', [TransferController::class, 'transferMoney'])->name('web.transfer.transferMoney');
 });
-
+Route::group(['prefix' => 'withdraw', 'middleware' => 'CORS'], function ($router) {
+    Route::post('/quick-withdraw', [WithdrawController::class, 'quickWithdraw'])->name('web.withdraw.quickWithdraw');
+});
 

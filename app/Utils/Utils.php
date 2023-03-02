@@ -93,4 +93,24 @@ class Utils {
 		}
 		return false;
 	}
+    static function SafeString($inString){
+		$inString=str_replace('"','',$inString);
+		$inString=str_replace("'","",$inString);
+		$inString=str_replace('<','',$inString);
+		$inString=str_replace('>','',$inString);
+		$inString=str_replace('=','',$inString);
+		//$inString=str_replace(' ','',$inString);
+		if(strlen($inString)>50) return '';
+		if(strpos(strtolower($inString),'script')) return '';
+		if(strpos(strtolower($inString),'frame')) return '';
+		if(strpos(strtolower($inString),'update')) return '';
+		if(strpos(strtolower($inString),'%20')) return '';
+		if(strpos(strtolower($inString),'*')) return '';
+		if(strpos(strtolower($inString),"'")) return '';
+		if(strpos(strtolower($inString),"select")) return '';
+		if(strpos(strtolower($inString),"convert")) return '';
+		if(strpos(strtolower($inString),"concat")) return '';
+		if(strpos(strtolower($inString),"0x")) return '';
+		return $inString;
+	}
 }
