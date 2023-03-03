@@ -624,7 +624,7 @@ class SportController extends Controller
               $w_m_place=$w_mb_team.'&nbsp;/&nbsp;'.$w_tg_team;
               $w_m_place_tw=$w_mb_team_tw.'&nbsp;/&nbsp;'.$w_tg_team_tw;
               $w_m_place_en=$w_mb_team_en.'&nbsp;/&nbsp;'.$w_tg_team_en;
-              $s_m_place=$sport[0]["MB_Team"].'&nbsp;/&nbsp;'.$sport[0][$tg_team];
+              $s_m_place=$sport[0]["MB_Team"].'&nbsp;/&nbsp;'.$sport[0]["TG_Team"];
               $w_m_rate=$sport[0]["MBTG"];
               break;
           case "FNH":
@@ -645,28 +645,28 @@ class SportController extends Controller
               $w_m_place='和局&nbsp;/&nbsp;'.$w_tg_team;
               $w_m_place_tw='和局&nbsp;/&nbsp;'.$w_tg_team_tw;
               $w_m_place_en='Flat&nbsp;/&nbsp;'.$w_tg_team_en;
-              $s_m_place=$Draw.'&nbsp;/&nbsp;'.$sport[0][$tg_team];	
+              $s_m_place=$Draw.'&nbsp;/&nbsp;'.$sport[0]["TG_Team"];	
               $w_m_rate=$sport[0]["FTTG"];
               break;
           case "FCH":
               $w_m_place=$w_tg_team.'&nbsp;/&nbsp;'.$w_mb_team;
               $w_m_place_tw=$w_tg_team_tw.'&nbsp;/&nbsp;'.$w_mb_team_tw;
               $w_m_place_en=$w_tg_team_en.'&nbsp;/&nbsp;'.$w_mb_team_en;
-              $s_m_place=$sport[0][$tg_team].'&nbsp;/&nbsp;'.$sport[0]["MB_Team"];
+              $s_m_place=$sport[0]["TG_Team"].'&nbsp;/&nbsp;'.$sport[0]["MB_Team"];
               $w_m_rate=$sport[0]["TGMB"];
               break;
           case "FCN":
               $w_m_place=$w_tg_team.'&nbsp;/&nbsp;和局';
               $w_m_place_tw=$w_tg_team_tw.'&nbsp;/&nbsp;和局';
               $w_m_place_en=$w_tg_team_en.'&nbsp;/&nbsp;Flat';
-              $s_m_place=$sport[0][$tg_team].'&nbsp;/&nbsp;'.$Draw;
+              $s_m_place=$sport[0]["TG_Team"].'&nbsp;/&nbsp;'.$Draw;
               $w_m_rate=$sport[0]["TGFT"];
               break;
           case "FCC":
               $w_m_place=$w_tg_team.'&nbsp;/&nbsp;'.$w_tg_team;
               $w_m_place_tw=$w_tg_team_tw.'&nbsp;/&nbsp;'.$w_tg_team_tw;
               $w_m_place_en=$w_tg_team_en.'&nbsp;/&nbsp;'.$w_tg_team_en;
-              $s_m_place=$sport[0][$tg_team].'&nbsp;/&nbsp;'.$sport[0][$tg_team];
+              $s_m_place=$sport[0]["TG_Team"].'&nbsp;/&nbsp;'.$sport[0]["TG_Team"];
               $w_m_rate=$sport[0]["TGTG"];
               break;
           }
@@ -697,7 +697,7 @@ class SportController extends Controller
               $w_m_place=$w_tg_team;
               $w_m_place_tw=$w_tg_team_tw;
               $w_m_place_en=$w_tg_team_en;
-              $s_m_place=$sport[0][$tg_team];
+              $s_m_place=$sport[0]["TG_Team"];
               $w_m_rate=Utils::num_rate($open,$sport[0]["TG_Win_Rate_H"]);
               $mtype='VMC';
               break;
@@ -737,7 +737,7 @@ class SportController extends Controller
               $w_m_place=$w_tg_team;
               $w_m_place_tw=$w_tg_team_tw;
               $w_m_place_en=$w_tg_team_en;
-              $s_m_place=$sport[0][$tg_team];
+              $s_m_place=$sport[0]["TG_Team"];
               $w_m_rate=Utils::change_rate($open,$rate[1]);
               $turn_url="/app/member/FT_order/FT_order_hr.php?gid=".$gid."&uid=".$id."&type=".$type."&gnum=".$gnum."&strong=".$strong."&odd_f_type=".$odd_f_type;
               $mtype='VRC';
