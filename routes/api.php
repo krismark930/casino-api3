@@ -8,6 +8,7 @@ use App\Http\Controllers\ResultController;
 use App\Http\Controllers\Web\DepositController;
 use App\Http\Controllers\Web\TransferController;
 use App\Http\Controllers\Web\WithdrawController;
+use App\Http\Controllers\Web\AccountController;
 /* Admin controllers. */
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\SystemSetting\SystemParametersController;
@@ -81,5 +82,9 @@ Route::group(['prefix' => 'transfer', 'middleware' => 'CORS'], function ($router
 });
 Route::group(['prefix' => 'withdraw', 'middleware' => 'CORS'], function ($router) {
     Route::post('/quick-withdraw', [WithdrawController::class, 'quickWithdraw'])->name('web.withdraw.quickWithdraw');
+});
+Route::group(['prefix' => 'account', 'middleware' => 'CORS'], function ($router) {
+    Route::get('/get-bank-list', [AccountController::class, 'getUserBankAccounts'])->name('web.account.getUserBankAccounts');
+    Route::post('/add-crypto-account', [AccountController::class, 'addBankAccount'])->name('web.account.addBankAccount');
 });
 

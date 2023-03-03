@@ -1107,7 +1107,7 @@ class TransferController extends Controller {
                 }else{
                     die('.');
                 };// or die($msql);
-                echo("<script>alert('恭喜您，真人账号激活成功！');</script>");
+                //echo("<script>alert('恭喜您，真人账号激活成功！');</script>");
             }else{
                 return response()->json(['success'=>false, 'message'=> '网络异常，请与在线客服联系！']);
             }
