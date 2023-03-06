@@ -81,10 +81,12 @@ Route::group(['prefix' => 'transfer', 'middleware' => 'CORS'], function ($router
     Route::post('/transferMoney', [TransferController::class, 'transferMoney'])->name('web.transfer.transferMoney');
 });
 Route::group(['prefix' => 'withdraw', 'middleware' => 'CORS'], function ($router) {
+    Route::get('/get-transaction-history', [WithdrawController::class, 'getTransactionHistory'])->name('web.withdraw.getTransactionHistory');
     Route::post('/quick-withdraw', [WithdrawController::class, 'quickWithdraw'])->name('web.withdraw.quickWithdraw');
 });
 Route::group(['prefix' => 'account', 'middleware' => 'CORS'], function ($router) {
     Route::get('/get-bank-list', [AccountController::class, 'getUserBankAccounts'])->name('web.account.getUserBankAccounts');
     Route::post('/add-crypto-account', [AccountController::class, 'addBankAccount'])->name('web.account.addBankAccount');
+    Route::post('/edit-crypto-account', [AccountController::class, 'editBankAccount'])->name('web.account.editBankAccount');
 });
 
