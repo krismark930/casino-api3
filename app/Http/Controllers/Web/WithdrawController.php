@@ -22,7 +22,7 @@ class WithdrawController extends Controller {
         $bank = Bank::all();
         return response()->json(['success'=>true, 'bankList' => $bank]);
     }
-    /* Deposit function. */
+    /* withdraw function. */
     public function quickWithdraw(Request $request) {
         $money=intval($request["money"]);
         $adddate=date("Y-m-d");
@@ -39,9 +39,9 @@ class WithdrawController extends Controller {
         $admin=$user['Admin'];
         $phone=$user['Phone'];
         $alias=$user['Alias'];
+
         $bank_account=Utils::SafeString($request["Bank_Account"]);
 	    $bank_Address=Utils::SafeString($request["Bank_Address"]);
-
         if($bank_account=="" or $bank_Address==""){
             return response()->json(['success'=>false, 'message' => "非法参数!"]);
         }
@@ -71,19 +71,19 @@ class WithdrawController extends Controller {
                 "Type" => 'T',
                 "UserName" => $username,
                 "Agents" => $agents,
-                $world&&"World" => $world,
-                $corprator&&"Corprator" => $corprator,
-                $super&&"Super" => $super,
-                $admin&&"Admin" => $admin,
+                "World" => $world?$world:'',
+                "Corprator" => $corprator?$corprator:'',
+                "Super" => $super?$super:'',
+                "Admin" => $admin?$admin:'',
                 "CurType" => $curtype,
                 "Date" => $date,
                 "Name" => $alias,
                 "User" => $username,
                 "Phone" => $phone,
                 "Contact" => $user['Address'],
-                $bank&&"Bank" => $bank,
-                $bank_Address&&"Bank_Address" => $bank_Address,
-                $bank_account&&"Bank_Account" => $bank_account,
+                "Bank" => $bank?$bank:'',
+                "Bank_Address" => $bank_Address?$bank_Address:'',
+                "Bank_Account" => $bank_account,
                 "Order_Code" => $Order_Code,
             ];
             $deposit = new Sys800;
@@ -122,11 +122,21 @@ class WithdrawController extends Controller {
                 $res=Sys800::where('id',$ouid)->delete();
                 return response()->json(['success'=>false, 'message'=> '提款不成功,请联系在线客服!']);
             }
-        return response()->json(['success'=>true, 'message' => "提款成功!!!"]);
+            return response()->json(['success'=>true, 'message' => "提款成功!!!"]);
             //MoneyToSsc($username);
         // }else{
         //     echo "<Script language=javascript>alert('提款失败!原因:提款密码不正确.');location.href='record.php?uid=$uid&langx=$langx&username=$username';</script>";
         // }
         //}
+    }
+
+    /* Get transaction history. */
+    public function getTransactionHistory(Request $request) {
+        if($request->type == "transfer"){
+            $withdrawHistory = Sys800::where('UserName', $request->username)->where('Type2', $request->type2)->orderBy('id', 'desc')->get();
+            return response()->json(['success'=>true, 'historyList' => $withdrawHistory]);
+        }
+        $withdrawHistory = Sys800::where('UserName', $request->username)->where('Type', $request->type)->where('Type2', $request->type2)->orderBy('id', 'desc')->get();
+        return response()->json(['success'=>true, 'historyList' => $withdrawHistory]);
     }
 }
