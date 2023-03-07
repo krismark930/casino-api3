@@ -88,7 +88,10 @@ Route::group(['prefix' => 'withdraw', 'middleware' => 'CORS'], function ($router
 });
 Route::group(['prefix' => 'account', 'middleware' => 'CORS'], function ($router) {
     Route::get('/get-bank-list', [AccountController::class, 'getUserBankAccounts'])->name('web.account.getUserBankAccounts');
-    Route::post('/add-crypto-account', [AccountController::class, 'addBankAccount'])->name('web.account.addBankAccount');
-    Route::post('/edit-crypto-account', [AccountController::class, 'editBankAccount'])->name('web.account.editBankAccount');
+    Route::get('/get-crypto-list', [AccountController::class, 'getUserCryptoAccounts'])->name('web.account.getUserCryptoAccounts');
+    Route::post('/add-bank-account', [AccountController::class, 'addBankAccount'])->name('web.account.addBankAccount');
+    Route::post('/add-crypto-account', [AccountController::class, 'addCryptoAccount'])->name('web.account.addCryptoAccount');
+    Route::post('/edit-bank-account', [AccountController::class, 'editBankAccount'])->name('web.account.editBankAccount');
+    Route::post('/edit-crypto-account', [AccountController::class, 'editCryptoAccount'])->name('web.account.editCryptoAccount');
 });
 
