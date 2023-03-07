@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Sport;
 use App\Models\User;
+use App\Models\Web\Report;
 use App\Models\Config;
 use App\Utils\Utils;
 use DB;
@@ -206,14 +207,12 @@ class SportController extends Controller
             ], 500);
         }
         $Order_Other_Score = '其它比分';
-        //var_dump("aaaaa");
         $id = $request->post('id');
         $gold = $request->post('gold');
         $gid = $request->post('gid');
         $line = $request->post('line_type');
         $type=$request->post('type');
         $active= $request->post('active');	//not used but final sql
-        //$odd_f_type=$request->post('odd_f_type');
         $member = User::selectRaw('*')->whereRaw("id='".$id."' and Status=0")->get()[0];
         $sport = Sport::selectRaw('*')->whereRaw("`M_Start`>now() and `MID`='".$gid."' and Cancel!=1 and Open=1 and MB_Team!='' and MB_Team_tw!='' and MB_Team_en!=''")->get();
         
@@ -271,29 +270,28 @@ class SportController extends Controller
         
         if(strpos($w_tg_team,'角球') or strpos($w_mb_team,'角球') or strpos($w_tg_team,'点球') or strpos($w_mb_team,'点球')){  //屏蔽角球、点球投注
             if(in_array($memname,$badname_jq)){
-                // Todo: 
-                // echo attention("$Order_This_match_is_closed_Please_try_again","",$langx);
-                // exit;
+                return response()->json([
+                    'success' => false,
+                    'message' => "赛程已关闭,无法进行交易!!"
+                ], 404);
             }
         }
        
         $s_mb_team=Utils::filiter_team($sport[0]['MB_Team']);
 	    $s_tg_team=Utils::filiter_team($sport[0]['TG_team']);
         if ($gold<=0){
-            //Todo:
-            // echo attention("非法参数！",$id,$langx);
-            // exit();
+            return response()->json([
+                'success' => false,
+                'message' => "非法参数！"
+            ], 404);
         }
        
         if($gold<$XianEr){
-            // echo attention("最低投注額是RMB ".$XianEr,$id,$langx);
-            // exit();
+            return response()->json([
+                'success' => false,
+                'message' => "最低投注額是RMB"
+            ], 404);
         }
-        //Todo: the case of betting money exceeds the max
-        // if($gold>$mem_xe['BET_SO']){
-        //     echo attention("超过单注总额！",$id,$langx);
-        //     exit();
-        // }
         
         
         //下注时间
@@ -308,9 +306,10 @@ class SportController extends Controller
         $datetime=time();
         
         if ($m_start-$datetime<120){
-            // Todo: match finished
-            // echo attention("$Order_This_match_is_closed_Please_try_again",$id,$langx);
-            // exit();
+            return response()->json([
+                'success' => false,
+                'message' => "赛程已关闭,无法进行交易!!"
+            ], 404);
         }
         
         $s_sleague=$sport[0]["M_League"];
@@ -333,7 +332,6 @@ class SportController extends Controller
                 $w_m_rate=Utils::num_rate($open,$sport[0]["MB_Win_Rate"]);
                 $mtype='MH';
                 break;
-                return "aaaassssaaaaa";
             case "C":
                 $w_m_place=$w_tg_team;
                 $w_m_place_tw=$w_tg_team_tw;
@@ -497,7 +495,6 @@ class SportController extends Controller
             }
             $ptype='OU';		
         break;    
-        //Todo, other cases
         case 4:
             $bet_type='波胆';
           $bet_type_tw="波膽";
@@ -919,9 +916,10 @@ class SportController extends Controller
         // $lines_en=$lines_en."<FONT color=#cc0000>".$w_m_place_en."</FONT>&nbsp;".$bottom1_en."@&nbsp;<FONT color=#cc0000><b>".$w_m_rate."</b></FONT>";	
     
         if($w_m_rate=='' or $gwin<=0 or $gwin==''){
-            //todo:
-            // echo attention("$Order_This_match_is_closed_Please_try_again","",$langx);
-            // exit;
+            return response()->json([
+                'success' => false,
+                'message' => "赛程已关闭,无法进行交易!!"
+            ], 404);
         }
        
         $ip_addr = Utils::get_ip();
@@ -1003,5 +1001,20 @@ class SportController extends Controller
             "success" => true,
             "data" => $rMoney
         ], 200);
+    }
+    public function get_betting_records(Request $request)
+    {
+
+        $m_name = $request->post('m_name');
+
+                    $count = Report::selectRaw('*')->whereRaw("M_Name='$m_name'")->count();
+                    //$items = Report::selectRaw('*')->whereRaw("M_Name='$m_name'")->get();
+                    $items = Report::with('sport')->whereRaw("M_Name='$m_name'")->get();
+                return response()->json([
+            "success" => true,
+            "data" => $items,
+            "count" => $count
+        ], 200);     
+
     }
 }
