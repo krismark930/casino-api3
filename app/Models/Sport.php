@@ -14,5 +14,4 @@ class Sport extends Model
 
     protected $primaryKey = 'MID';
 
-
 }

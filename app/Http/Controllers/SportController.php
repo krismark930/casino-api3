@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Sport;
 use App\Models\User;
+use App\Models\Web\Report;
 use App\Models\Config;
 use App\Utils\Utils;
 use DB;
@@ -1000,5 +1001,20 @@ class SportController extends Controller
             "success" => true,
             "data" => $rMoney
         ], 200);
+    }
+    public function get_betting_records(Request $request)
+    {
+
+        $m_name = $request->post('m_name');
+
+                    $count = Report::selectRaw('*')->whereRaw("M_Name='$m_name'")->count();
+                    //$items = Report::selectRaw('*')->whereRaw("M_Name='$m_name'")->get();
+                    $items = Report::with('sport')->whereRaw("M_Name='$m_name'")->get();
+                return response()->json([
+            "success" => true,
+            "data" => $items,
+            "count" => $count
+        ], 200);     
+
     }
 }
