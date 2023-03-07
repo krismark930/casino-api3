@@ -22,6 +22,9 @@ class AlterPasswordLengthIncrease extends Migration
             $table->string('PassWord', 255)->change();
             $table->renameColumn('PassWord', 'password');
         });
+        Schema::table('web_member_data', function (Blueprint $table) {
+            $table->renameColumn('ID', 'id');
+        });
     }
 
     /**
