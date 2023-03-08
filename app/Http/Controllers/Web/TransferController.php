@@ -181,7 +181,7 @@ class TransferController extends Controller {
         }
 
         //转换前添加记录
-        //$tr_sql="insert into `BBIN_logs` set Username='$username',Type='$tp',Gold='$money',Billno='0',DateTime='".date("Y-m-d H:i:s",time())."',Result='0',Checked='0'";
+        //$tr_sql="insert into 'BBIN_logs' set Username='$username',Type='$tp',Gold='$money',Billno='0',DateTime='".date("Y-m-d H:i:s",time())."',Result='0',Checked='0'";
 
         $bbinLogData = [
             "Username" => $username,
@@ -206,7 +206,7 @@ class TransferController extends Controller {
         //if($results['info']=='0') $result=1;
 
         //更新状态
-        //$tr_sql="update  `BBIN_logs` set Billno='$billno',Result='$result',Checked='$result' where id='$ouid2'";
+        //$tr_sql="update  'BBIN_logs' set Billno='$billno',Result='$result',Checked='$result' where id='$ouid2'";
         // $user_id=Utils::GetField($username,'id');
         // return response()->json(['success'=>$user_id, 'test'=> $username]);
 
@@ -440,7 +440,7 @@ class TransferController extends Controller {
         }
 
         //转换前添加记录
-        //$tr_sql="insert into `BBIN_logs` set Username='$username',Type='$tp',Gold='$money',Billno='0',DateTime='".date("Y-m-d H:i:s",time())."',Result='0',Checked='0'";
+        //$tr_sql="insert into 'BBIN_logs' set Username='$username',Type='$tp',Gold='$money',Billno='0',DateTime='".date("Y-m-d H:i:s",time())."',Result='0',Checked='0'";
 
         $agLogData = [
             "Username" => $username,
@@ -464,7 +464,7 @@ class TransferController extends Controller {
         $result=1;
         //if($results['info']=='0') $result=1;
         //更新状态
-        //$tr_sql="update  `BBIN_logs` set Billno='$billno',Result='$result',Checked='$result' where id='$ouid2'";
+        //$tr_sql="update  'BBIN_logs' set Billno='$billno',Result='$result',Checked='$result' where id='$ouid2'";
 
         AGLogs::where('id', $ouid2)->update(['Billno' => $billno,
         'Result' => $result, 'Checked' => $result]);
@@ -687,7 +687,7 @@ class TransferController extends Controller {
         }
 
         //转换前添加记录
-        //$tr_sql="insert into `BBIN_logs` set Username='$username',Type='$tp',Gold='$money',Billno='0',DateTime='".date("Y-m-d H:i:s",time())."',Result='0',Checked='0'";
+        //$tr_sql="insert into 'BBIN_logs' set Username='$username',Type='$tp',Gold='$money',Billno='0',DateTime='".date("Y-m-d H:i:s",time())."',Result='0',Checked='0'";
 
         $agLogData = [
             "Username" => $username,
@@ -713,7 +713,7 @@ class TransferController extends Controller {
         //$result=intval($results['result']);
 
         //更新状态
-        //$tr_sql="update  `og_logs` set Billno='$billno',Result='$result',Checked='$result' where id='$ouid2'";
+        //$tr_sql="update  'og_logs' set Billno='$billno',Result='$result',Checked='$result' where id='$ouid2'";
 
         OGLogs::where('id', $ouid2)->update(['Billno' => $billno,
         'Result' => $result, 'Checked' => $result]);
@@ -940,7 +940,7 @@ class TransferController extends Controller {
         }
 
         //转换前添加记录
-        //$tr_sql="insert into `BBIN_logs` set Username='$username',Type='$tp',Gold='$money',Billno='0',DateTime='".date("Y-m-d H:i:s",time())."',Result='0',Checked='0'";
+        //$tr_sql="insert into 'BBIN_logs' set Username='$username',Type='$tp',Gold='$money',Billno='0',DateTime='".date("Y-m-d H:i:s",time())."',Result='0',Checked='0'";
 
         $mgLogData = [
             "Username" => $username,
@@ -965,7 +965,7 @@ class TransferController extends Controller {
         //if($results['info']=='0') $result=1;
 
         //更新状态
-        //$tr_sql="update  `BBIN_logs` set Billno='$billno',Result='$result',Checked='$result' where id='$ouid2'";
+        //$tr_sql="update  'BBIN_logs' set Billno='$billno',Result='$result',Checked='$result' where id='$ouid2'";
 
         MGLogs::where('id', $ouid2)->update(['Billno' => $billno,
         'Result' => $result, 'Checked' => $result]);
@@ -1192,7 +1192,7 @@ class TransferController extends Controller {
         }
 
         //转换前添加记录
-        //$tr_sql="insert into `BBIN_logs` set Username='$username',Type='$tp',Gold='$money',Billno='0',DateTime='".date("Y-m-d H:i:s",time())."',Result='0',Checked='0'";
+        //$tr_sql="insert into 'BBIN_logs' set Username='$username',Type='$tp',Gold='$money',Billno='0',DateTime='".date("Y-m-d H:i:s",time())."',Result='0',Checked='0'";
 
         $ptLogData = [
             "Username" => $username,
@@ -1217,7 +1217,7 @@ class TransferController extends Controller {
         // if($results['info']=='0') $result=1;
         $result=1;
         //更新状态
-        //$tr_sql="update  `BBIN_logs` set Billno='$billno',Result='$result',Checked='$result' where id='$ouid2'";
+        //$tr_sql="update  'BBIN_logs' set Billno='$billno',Result='$result',Checked='$result' where id='$ouid2'";
 
         MGLogs::where('id', $ouid2)->update(['Billno' => $billno,
         'Result' => $result, 'Checked' => $result]);
@@ -1426,7 +1426,7 @@ class TransferController extends Controller {
         }
 
         //转换前添加记录
-        //$tr_sql="insert into `BBIN_logs` set Username='$username',Type='$tp',Gold='$money',Billno='0',DateTime='".date("Y-m-d H:i:s",time())."',Result='0',Checked='0'";
+        //$tr_sql="insert into 'BBIN_logs' set Username='$username',Type='$tp',Gold='$money',Billno='0',DateTime='".date("Y-m-d H:i:s",time())."',Result='0',Checked='0'";
 
         $kyLogData = [
             "Username" => $username,
