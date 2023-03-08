@@ -151,4 +151,26 @@ class AccountController extends Controller {
             return response()->json(['success'=>false, 'message' => '操作失败!!!']);
         };
     }
+
+    /* Delete Bank Account function. */
+    public function deleteBankAccount(Request $request){
+        $response = UserBankAccount::where('id',$request->bank_id)->delete();
+        if($response){
+            $bankList = UserBankAccount::where('user_id', intval($request->user_id))->get();
+            return response()->json(['success'=>true,'message'=>'操作成功',  'bankList' => $bankList]);
+        }else{
+            return response()->json(['success'=>false, 'message'=>'操作失败!!!']);
+        }
+    }
+
+    /* Delete Crypto Account function. */
+    public function deleteCryptoAccount(Request $request){
+        $response = UserAccount::where('id',$request->crypto_id)->delete();
+        if($response){
+            $bankList = UserAccount::where('user_id', intval($request->user_id))->get();
+            return response()->json(['success'=>true,'message'=>'操作成功',  'cryptoList' => $bankList]);
+        }else{
+            return response()->json(['success'=>false, 'message'=>'操作失败!!!']);
+        }
+    }
 }

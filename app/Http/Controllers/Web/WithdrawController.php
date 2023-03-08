@@ -90,7 +90,7 @@ class WithdrawController extends Controller {
             $result = $deposit->create($data);
             if ($result){
             }else{
-                return response()->json(['success'=>false, 'message' => `操作失败!!!`]);
+                return response()->json(['success'=>false, 'message' => '操作失败!!!']);
             }
             $ouid = $result->id;
 

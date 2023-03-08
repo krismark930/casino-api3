@@ -93,5 +93,7 @@ Route::group(['prefix' => 'account', 'middleware' => 'CORS'], function ($router)
     Route::post('/add-crypto-account', [AccountController::class, 'addCryptoAccount'])->name('web.account.addCryptoAccount');
     Route::post('/edit-bank-account', [AccountController::class, 'editBankAccount'])->name('web.account.editBankAccount');
     Route::post('/edit-crypto-account', [AccountController::class, 'editCryptoAccount'])->name('web.account.editCryptoAccount');
+    Route::delete('/delete-bank-account', [AccountController::class, 'deleteBankAccount'])->name('web.account.deleteBankAccount');
+    Route::delete('/delete-crypto-account', [AccountController::class, 'deleteCryptoAccount'])->name('web.account.deleteCryptoAccount');
 });
 
