@@ -41,7 +41,8 @@ Route::group(['prefix' => 'users', 'middleware' => 'CORS'], function ($router) {
 Route::group(['prefix' => 'sport', 'middleware' => 'CORS'], function ($router){
     Route::resource('/get_data', SportController::class);
     Route::post('/get_item_date', [SportController::class, 'get_item_date']);
-    Route::post('/bet_ft', [SportController::class, 'betFt']);
+    Route::post('/bet_ft', [SportController::class, 'singleBetFt']);
+    Route::post('/multi_bet_ft', [SportController::class, 'multiBetFt']);
     Route::post('/get_betting_records', [SportController::class, 'get_betting_records'])->name('sport.get_betting_records');
 });
 
