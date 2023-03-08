@@ -175,7 +175,8 @@ class SportController extends Controller
         //
     }
 
-    public function betFt(Request $request) {
+    // betFt function
+    public function betFt($id,$gold,$gid,$line,$type,$active) {
         //todo: should come from index.php
         $FT_Order = ""; //temp variable
         $mb_ball = 0;
@@ -197,22 +198,7 @@ class SportController extends Controller
         $Order_1st_Half_Handicap_betting_order = '上半场让球交易单';
         $Order_1st_Half_Over_Under_betting_order = '上半场大小交易单';
         $Order_1st_Half_Correct_Score_betting_order = '上半波胆交易单';
-        $validator = Validator::make($request->all(),[
-            'gold' => 'required|Integer',
-        ]);
-        if($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $validator->messages()->toArray()
-            ], 500);
-        }
         $Order_Other_Score = '其它比分';
-        $id = $request->post('id');
-        $gold = $request->post('gold');
-        $gid = $request->post('gid');
-        $line = $request->post('line_type');
-        $type=$request->post('type');
-        $active= $request->post('active');	//not used but final sql
         $member = User::selectRaw('*')->whereRaw("id='".$id."' and Status=0")->get()[0];
         $sport = Sport::selectRaw('*')->whereRaw("`M_Start`>now() and `MID`='".$gid."' and Cancel!=1 and Open=1 and MB_Team!='' and MB_Team_tw!='' and MB_Team_en!=''")->get();
         
@@ -997,9 +983,51 @@ class SportController extends Controller
         fwrite($f,$t."\r\n".$sql."\r\n");
         fwrite($f,$pp."\r\n\r\n");
         fclose($f);
+        return $rMoney;
+    }
+    // Single Betting FT
+    public function singleBetFt(Request $request) {
+        $validator = Validator::make($request->all(),[
+            'gold' => 'required|Integer',
+        ]);
+        if($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->messages()->toArray()
+            ], 500);
+        }
+        $id = $request->post('id');
+        $gold = $request->post('gold');
+        $gid = $request->post('gid');
+        $line = $request->post('line_type');
+        $type=$request->post('type');
+        $active= $request->post('active');	//not used but final sql
+        $money = $this->betFt($id, $gold, $gid, $line, $type, $active);
         return response()->json([
             "success" => true,
-            "data" => $rMoney
+            "data" => $money
+        ], 200);
+    }
+
+    // Multi Betting FT
+    public function multiBetFt(Request $request) {
+        
+        $data = $request->post('data');
+        $count = $request->post('count');
+        for ($i = 0; $i < $count; $i++)
+        {
+            $item = (object)$data[$i];
+            $id = $item->id;
+            $gold = $item->gold;
+            $gid = $item->gid;
+            $line = $item->line_type;
+            $type = $item->type;
+            $active = $item->active;
+            $money = $this->betFt($id, $gold, $gid, $line, $type, $active);
+        }
+        return response()->json([
+            "success" => true,
+            "data" => $money
         ], 200);
     }
     public function get_betting_records(Request $request)
