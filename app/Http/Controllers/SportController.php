@@ -6,6 +6,7 @@ use App\Models\Sport;
 use App\Models\User;
 use App\Models\Web\Report;
 use App\Models\Config;
+use App\Models\WebReportTemp;
 use App\Utils\Utils;
 use DB;
 use Validator;
@@ -330,7 +331,7 @@ class SportController extends Controller
                 $w_m_place="和局";
                 $w_m_place_tw="和局";
                 $w_m_place_en="Flat";
-                $s_m_place=$Draw;
+                $s_m_place="和局";
                 $w_m_rate=Utils::num_rate($open,$sport[0]["M_Flat_Rate"]);
                 $mtype='MN';
                 break;
@@ -600,7 +601,7 @@ class SportController extends Controller
               $w_m_place=$w_mb_team.'&nbsp;/&nbsp;和局';
               $w_m_place_tw=$w_mb_team_tw.'&nbsp;/&nbsp;和局';
               $w_m_place_en=$w_mb_team_en.'&nbsp;/&nbsp;Flat';		
-              $s_m_place=$sport[0]["MB_Team"].'&nbsp;/&nbsp;'.$Draw;		
+              $s_m_place=$sport[0]["MB_Team"].'&nbsp;/&nbsp;'."和局";		
               $w_m_rate=$sport[0]["MBFT"];
               break;
           case "FHC":
@@ -614,21 +615,21 @@ class SportController extends Controller
               $w_m_place='和局&nbsp;/&nbsp;'.$w_mb_team;
               $w_m_place_tw='和局&nbsp;/&nbsp;'.$w_mb_team_tw;
               $w_m_place_en='Flat&nbsp;/&nbsp;'.$w_mb_team_en;
-              $s_m_place=$Draw.'&nbsp;/&nbsp;'.$sport[0]["MB_Team"];
+              $s_m_place="和局".'&nbsp;/&nbsp;'.$sport[0]["MB_Team"];
               $w_m_rate=$sport[0]["FTMB"];
               break;
           case "FNN":
               $w_m_place='和局&nbsp;/&nbsp;和局';
               $w_m_place_tw='和局&nbsp;/&nbsp;和局';
               $w_m_place_en='Flat&nbsp;/&nbsp;Flat';
-              $s_m_place=$Draw.'&nbsp;/&nbsp;'.$Draw;
+              $s_m_place="和局".'&nbsp;/&nbsp;'."和局";
               $w_m_rate=$sport[0]["FTFT"];
               break;
           case "FNC":
               $w_m_place='和局&nbsp;/&nbsp;'.$w_tg_team;
               $w_m_place_tw='和局&nbsp;/&nbsp;'.$w_tg_team_tw;
               $w_m_place_en='Flat&nbsp;/&nbsp;'.$w_tg_team_en;
-              $s_m_place=$Draw.'&nbsp;/&nbsp;'.$sport[0]["TG_Team"];	
+              $s_m_place="和局".'&nbsp;/&nbsp;'.$sport[0]["TG_Team"];	
               $w_m_rate=$sport[0]["FTTG"];
               break;
           case "FCH":
@@ -642,7 +643,7 @@ class SportController extends Controller
               $w_m_place=$w_tg_team.'&nbsp;/&nbsp;和局';
               $w_m_place_tw=$w_tg_team_tw.'&nbsp;/&nbsp;和局';
               $w_m_place_en=$w_tg_team_en.'&nbsp;/&nbsp;Flat';
-              $s_m_place=$sport[0]["TG_Team"].'&nbsp;/&nbsp;'.$Draw;
+              $s_m_place=$sport[0]["TG_Team"].'&nbsp;/&nbsp;'."和局";
               $w_m_rate=$sport[0]["TGFT"];
               break;
           case "FCC":
@@ -688,7 +689,7 @@ class SportController extends Controller
               $w_m_place="和局";
               $w_m_place_tw="和局";
               $w_m_place_en="Flat";
-              $s_m_place=$Draw;
+              $s_m_place="和局";
               $w_m_rate=Utils::num_rate($open,$sport[0]["M_Flat_Rate_H"]);
               $mtype='VMN';
               break;
@@ -1025,11 +1026,14 @@ class SportController extends Controller
             $active = $item->active;
             $money = $this->betFt($id, $gold, $gid, $line, $type, $active);
         }
+        $this->deleteTemps();
         return response()->json([
             "success" => true,
             "data" => $money
         ], 200);
     }
+
+    // GET Betting Records API
     public function get_betting_records(Request $request)
     {
 
@@ -1044,5 +1048,74 @@ class SportController extends Controller
             "count" => $count
         ], 200);     
 
+    }
+
+    // ADD Temp of BET
+    public function addTemp(Request $request)
+    {
+        $temp = new WebReportTemp;
+        $temp->type = $request->type;
+        $temp->title = $request->title;
+        $temp->league = $request->league;
+        $temp->m_team = $request->m_team;
+        $temp->t_team = $request->t_team;
+        $temp->select_team = $request->select_team;
+        $temp->text = $request->text;
+        $temp->rate = $request->rate;
+        $temp->gold = $request->gold;
+        $temp->m_win = $request->m_win;
+        $temp->uid = $request->uid;
+        $temp->gid = $request->gid;
+        $temp->line_type = $request->line_type;
+        $temp->g_type = $request->g_type;
+        $temp->active = $request->active;
+        $temp->save();
+        $responseMessage = "添加成功";
+        return response()->json([
+            'success' => true,
+            'message' => $responseMessage
+        ], 200);
+    }
+    
+    // DELETE Temps
+    public function deleteTemps()
+    {
+        WebReportTemp::query()->delete();
+        $responseMessage = "删除成功";
+        return response()->json([
+            'success' => true,
+            'message' => $responseMessage
+        ], 200);
+    }
+
+    // GET Temps
+    public function getTemps()
+    {
+        $temps = WebReportTemp::all();
+        return response()->json([
+            'success' => true,
+            'data' => $temps
+        ], 200);
+    }
+
+    // Edit Temp
+    public function editTemp(Request $request)
+    {
+        $gold = $request->gold;
+
+        $validator = Validator::make($request->all(), [
+            'gold' => 'required',
+        ]);
+
+        if ($validator->fails())
+            return response()->json([
+                'success' => false, 
+                'message' => $validator->messages()->toArray()]);
+        WebReportTemp::where('id', $request->id)->update(['gold' => $gold, 'm_win'=> $request->m_win]);
+        $responseMessage = "更新成功";
+        return response()->json([
+            'success' => true,
+            'message' => $responseMessage
+        ], 200);
     }
 }
