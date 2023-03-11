@@ -79,5 +79,13 @@ docker run --name laravel -p 8088:80  -e WEBROOT=/var/www/html/public -v /Users/
             NPMMIRROR: 'https://registry.npmmirror.com'
             
 composer update
- php artisan passport:keys
-php artisan migrate 
+php artisan passport:keys
+php artisan migrate
+
+1. Within your app/Http directory, create a helpers.php file and add your functions.
+2. Within composer.json, in the autoload block, add "files": ["app/Http/helpers.php"].
+3. Run composer dump-autoload.
+
+php artisan migrate --path=\\database\\migrations\\fileName.php
+
+php artisan migrate:rollback --path=/database/migrations/your-specific-migration.php
