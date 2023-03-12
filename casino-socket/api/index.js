@@ -8,3 +8,6 @@ exports.SAVE_FT_IN_PLAY = "/save-ft-inplay"
 exports.GET_FT_DATA = "/ft-data";
 exports.GET_IN_PLAY_DATA = "/ft-in-play-data";
 exports.SAVE_FT_HDP_OBT = "/ft-hdp-obt";
+exports.SAVE_FT_CORNER_OBT = "/ft-corner-obt";
+exports.SAVE_FT_CORRECT_SCORE = "/ft-correct-score";
+exports.GET_IN_PLAY_SCORE = "/ft-correct-score-inplay-data";

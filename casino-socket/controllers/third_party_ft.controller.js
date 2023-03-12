@@ -1,5 +1,13 @@
 const axios = require('axios');
-const { BACKEND_BASE_URL, GET_WEB_SYSTEM_DATA, MATCH_SPORTS, SAVE_FT_FU_R, MATCH_CROWN, SAVE_FT_IN_PLAY, SAVE_FT_HDP_OBT } = require('../api');
+const { BACKEND_BASE_URL } = require('../api');
+const { SAVE_FT_CORRECT_SCORE } = require('../api');
+const { GET_WEB_SYSTEM_DATA } = require('../api');
+const { MATCH_SPORTS } = require('../api');
+const { SAVE_FT_FU_R } = require('../api');
+const { MATCH_CROWN } = require('../api');
+const { SAVE_FT_IN_PLAY } = require('../api');
+const { SAVE_FT_HDP_OBT } = require('../api');
+const { SAVE_FT_CORNER_OBT } = require('../api');
 var FormData = require('form-data');
 var convert = require('xml-js');
 const { XMLParser, XMLBuilder, XMLValidator} = require("fast-xml-parser");
@@ -358,6 +366,44 @@ exports.getFT_FU_R_TODAY = async () => {
 	}
 }
 
+exports.getLeagueListALL_TODAY = async () => {
+	try {
+		let thirdPartyBaseUrl = "https://www.hga030.com";
+		let thirdPartyUrl = "";
+		let version = "-3ed5-newkeyboard-0303-95881ae5676be2";
+		let uID = "hojnotcm27417505l93240b0";
+		let response = await axios.get(`${BACKEND_BASE_URL}${GET_WEB_SYSTEM_DATA}`);
+		if (response.status == 200 && response.data.success) {
+			thirdPartyBaseUrl = response.data.data.datasite;
+			version = response.data.data.ver;
+			uID = response.data.data.Uid;
+
+			thirdPartyUrl = `${thirdPartyBaseUrl}/transform.php?ver=${version}`;
+
+			formData = new FormData();
+			formData.append("p", "get_league_list_All");
+			formData.append("uid", uID);
+			formData.append("ver", version);
+			formData.append("langx", "zh-cn");
+			formData.append("gtype", "FT");
+			formData.append("FS", "N");
+			formData.append("showtype", "ft");
+			formData.append("date", 0);
+			formData.append("ts", new Date().getTime());
+			formData.append("nocp", "N");
+
+			let response = await axios.post(thirdPartyUrl, formData);
+
+			if (response.status === 200) {
+				let result = parser.parse(response.data);
+				return result;
+			}
+		}
+	} catch(e) {
+		console.log(e)
+	}	
+}
+
 exports.getFT_FU_R_INPLAY = async () => {
 	try {
 		let thirdPartyBaseUrl = "https://www.hga030.com";
@@ -389,11 +435,11 @@ exports.getFT_FU_R_INPLAY = async () => {
 			response = await axios.post(thirdPartyUrl, formData);
 			if (response.status === 200) {
 				let result = parser.parse(response.data);
-				console.log("1111111111111111111111111111", result['serverresponse'])
+				// console.log("1111111111111111111111111111", result['serverresponse'])
 				let totalDataCount = result['serverresponse']['totalDataCount'];
 				if (totalDataCount > 1) {
 					await Promise.all(result['serverresponse']['ec'].map(async item => {
-						console.log("HDP_OU:======================", item['game']['OU_COUNT'])
+						// console.log("CORNER:======================", item['game'])
 						let m_date = moment().format('YYYY') + "-" + item['game']['DATETIME'].split(" ")[0];
 						let m_time = item['game']['DATETIME'].split(" ")[1];
 						let time = m_time.split(":")[0];
@@ -403,7 +449,7 @@ exports.getFT_FU_R_INPLAY = async () => {
 						if (lastChar == "p") {
 							time = Number(time) + 12;
 						}
-						console.log("22222222222222", item['game']['IOR_HREH'] ?? 0)
+						// console.log("22222222222222", item['game']['IOR_HREH'] ?? 0)
 						let m_start = m_date + " " + time + ":" + minute;
 						let data = {
 							Type: 'FT',
@@ -767,8 +813,211 @@ exports.getFT_HDP_OU_INPLAY = async (item) => {
 	}
 }
 
+exports.getFT_CORNER_INPLAY = async (item) => {
+	try {
+		let thirdPartyBaseUrl = "https://www.hga030.com";
+		let thirdPartyUrl = "";
+		let version = "-3ed5-newkeyboard-0303-95881ae5676be2";
+		let uID = "hojnotcm27417505l93240b0";
+		let response = await axios.get(`${BACKEND_BASE_URL}${GET_WEB_SYSTEM_DATA}`);
+		if (response.status == 200 && response.data.success) {
+			thirdPartyBaseUrl = response.data.data.datasite;
+			version = response.data.data.ver;
+			uID = response.data.data.Uid;
+
+			console.log("item============", item)
+
+			thirdPartyUrl = `${thirdPartyBaseUrl}/transform.php?ver=${version}`;
+
+			formData = new FormData();
+			formData.append("p", "get_game_OBT");
+			formData.append("uid", uID);
+			formData.append("ver", version);
+			formData.append("langx", "zh-cn");
+			formData.append("gtype", "ft");
+			formData.append("showtype", "live");
+			formData.append("isSpecial", "");
+			formData.append("isEarly", "N");
+			formData.append("model", "CN");
+			formData.append("isETWI", "N");
+			formData.append("ecid", item["ecid"]);
+			formData.append("ltype", 3);
+			formData.append("is_rb", "Y");
+			formData.append("ts", new Date().getTime());
+			formData.append("isClick", "Y");
+
+			let cnResponse = await axios.post(thirdPartyUrl, formData);
+
+			let data = {};
+
+			data["MID"] = item["id"];
+
+			if (cnResponse.status === 200) {
+				let result = parser.parse(cnResponse.data);
+				if (result["serverresponse"]["code"] !== "noData") {
+					console.log("getGameOBT_CN:===============", result["serverresponse"]["ec"]["game"]);
+					data["RATIO_ROUO_CN"] = result["serverresponse"]["ec"]["game"]["RATIO_ROUO"];
+					data["RATIO_ROUU_CN"] = result["serverresponse"]["ec"]["game"]["RATIO_ROUU"];
+					data["IOR_ROUH_CN"] = result["serverresponse"]["ec"]["game"]["IOR_ROUH"];
+					data["IOR_ROUC_CN"] = result["serverresponse"]["ec"]["game"]["IOR_ROUC"];
+					data["RATIO_HROUO_CN"] = result["serverresponse"]["ec"]["game"]["RATIO_HROUO"];
+					data["RATIO_HROUU_CN"] = result["serverresponse"]["ec"]["game"]["RATIO_HROUU"];
+					data["IOR_HROUH_CN"] = result["serverresponse"]["ec"]["game"]["IOR_HROUH"];
+					data["IOR_HROUC_CN"] = result["serverresponse"]["ec"]["game"]["IOR_HROUC"];
+					data["STR_ODD_CN"] = result["serverresponse"]["ec"]["game"]["STR_ODD"];
+					data["STR_EVEN_CN"] = result["serverresponse"]["ec"]["game"]["STR_EVEN"];
+					data["IOR_REOO_CN"] = result["serverresponse"]["ec"]["game"]["IOR_REOO"];
+					data["IOR_REOE_CN"] = result["serverresponse"]["ec"]["game"]["IOR_REOE"];
+					data["STR_HODD_CN"] = result["serverresponse"]["ec"]["game"]["STR_HODD"];
+					data["STR_HEVEN_CN"] = result["serverresponse"]["ec"]["game"]["STR_HEVEN"];
+					data["IOR_HREOO_CN"] = result["serverresponse"]["ec"]["game"]["IOR_HREOO"];
+					data["IOR_HREOE_CN"] = result["serverresponse"]["ec"]["game"]["IOR_HREOE"];
+					data["WTYPE_CN"] = result["serverresponse"]["ec"]["game"]["WTYPE_CN"];
+					data["IOR_RNCH_CN"] = result["serverresponse"]["ec"]["game"]["IOR_RNCH"];
+					data["IOR_RNCC_CN"] = result["serverresponse"]["ec"]["game"]["IOR_RNCC"];
+					try {									
+						response = await axios.post(`${BACKEND_BASE_URL}${MATCH_SPORTS}${SAVE_FT_CORNER_OBT}`, data);
+						console.log("FT_CORNER_OBT_RESPONSE:===============", response.data);
+					} catch(err) {
+						console.log("FT_CORNER_OBT_ERROR:===============", err);
+					}
+				}
+			}
+		}
+	} catch(e) {
+		console.log(e)
+		await sleep(2000);
+	}
+}
+
+exports.getFT_CORRECT_SCORE_INPLAY = async () => {
+	try {
+		let thirdPartyBaseUrl = "";
+		let thirdPartyUrl = "";
+		let version = "";
+		let uID = "";
+		let response = await axios.get(`${BACKEND_BASE_URL}${GET_WEB_SYSTEM_DATA}`);
+		if (response.status == 200 && response.data.success) {
+			thirdPartyBaseUrl = response.data.data.datasite;
+			version = response.data.data.ver;
+			uID = response.data.data.Uid;
+			thirdPartyUrl = `${thirdPartyBaseUrl}/transform.php?ver=${version}`;
+			let formData = new FormData();
+			formData.append("p", "get_game_list");
+			formData.append("uid", uID);
+			formData.append("ver", version);
+			formData.append("langx", "zh-cn");
+			formData.append("p3type", "");
+			formData.append("date", "");
+			formData.append("gtype", "ft");
+			formData.append("showtype", "live");
+			formData.append("rtype", "rpd");
+			formData.append("ltype", 3);
+			formData.append("sorttype", "L");
+			formData.append("specialClick", "");
+			formData.append("isFantasy", "N");
+			formData.append("ts", new Date().getTime());
+			response = await axios.post(thirdPartyUrl, formData);
+			if (response.status === 200) {
+				let result = parser.parse(response.data);
+				console.log("correctScore:====================", result);
+				let totalDataCount = result['serverresponse']['totalDataCount'];
+				if (totalDataCount > 1) {
+					result['serverresponse']['ec'].map(async item => {
+						let data = {
+							Type: "FT",
+							MB_Ball: item['game']['SCORE_H'],
+							TG_Ball: item['game']['SCORE_C'],
+							RETIME_SET: item['game']["RETIMESET"].split("^")[0] == "MTIME" ? item['game']["RETIMESET"].split("^")[1] : item['game']["RETIMESET"].split("^")[0] + " " + item['game']["RETIMESET"].split("^")[1],
+							MB1TG0: item['game']['IOR_RH1C0'],
+							MB2TG0: item['game']['IOR_RH2C0'],
+							MB2TG1: item['game']['IOR_RH2C1'],
+							MB3TG0: item['game']['IOR_RH3C0'],
+							MB3TG1: item['game']['IOR_RH3C1'],
+							MB3TG2: item['game']['IOR_RH3C2'],
+							MB4TG0: item['game']['IOR_RH4C0'],
+							MB4TG1: item['game']['IOR_RH4C1'],
+							MB4TG2: item['game']['IOR_RH4C2'],
+							MB4TG3: item['game']['IOR_RH4C3'],
+							MB0TG0: item['game']['IOR_RH0C0'],
+							MB1TG1: item['game']['IOR_RH1C1'],
+							MB2TG2: item['game']['IOR_RH2C2'],
+							MB3TG3: item['game']['IOR_RH3C3'],
+							MB4TG4: item['game']['IOR_RH4C4'],
+							MB0TG1: item['game']['IOR_RH0C1'],
+							MB0TG2: item['game']['IOR_RH0C2'],
+							MB1TG2: item['game']['IOR_RH1C2'],
+							MB0TG3: item['game']['IOR_RH0C3'],
+							MB1TG3: item['game']['IOR_RH1C3'],
+							MB2TG3: item['game']['IOR_RH2C3'],
+							MB0TG4: item['game']['IOR_RH0C4'],
+							MB1TG4: item['game']['IOR_RH1C4'],
+							MB2TG4: item['game']['IOR_RH2C4'],
+							MB3TG4: item['game']['IOR_RH3C4'],
+							UP5H: item['game']['IOR_ROVH'],
+							UP5: item['game']['IOR_ROVC'],
+							MID: item['game']['GID'],
+							PD_Show: 1,
+						};
+						try {
+							response = await axios.post(`${BACKEND_BASE_URL}${MATCH_SPORTS}${SAVE_FT_CORRECT_SCORE}`, data);
+							console.log("response==============================", response.data);
+						} catch(err) {
+							console.log("err===================", err);
+						}
+					})			
+				} else if(totalDataCount == 1) {
+					let item = result['serverresponse']['ec'];
+					let data = {
+						Type: "FT",
+						MB_Ball: item['game']['SCORE_H'],
+						TG_Ball: item['game']['SCORE_C'],
+						RETIME_SET: item['game']["RETIMESET"].split("^")[0] == "MTIME" ? item['game']["RETIMESET"].split("^")[1] : item['game']["RETIMESET"].split("^")[0] + " " + item['game']["RETIMESET"].split("^")[1],
+						MB1TG0: item['game']['IOR_RH1C0'],
+						MB2TG0: item['game']['IOR_RH2C0'],
+						MB2TG1: item['game']['IOR_RH2C1'],
+						MB3TG0: item['game']['IOR_RH3C0'],
+						MB3TG1: item['game']['IOR_RH3C1'],
+						MB3TG2: item['game']['IOR_RH3C2'],
+						MB4TG0: item['game']['IOR_RH4C0'],
+						MB4TG1: item['game']['IOR_RH4C1'],
+						MB4TG2: item['game']['IOR_RH4C2'],
+						MB4TG3: item['game']['IOR_RH4C3'],
+						MB0TG0: item['game']['IOR_RH0C0'],
+						MB1TG1: item['game']['IOR_RH1C1'],
+						MB2TG2: item['game']['IOR_RH2C2'],
+						MB3TG3: item['game']['IOR_RH3C3'],
+						MB4TG4: item['game']['IOR_RH4C4'],
+						MB0TG1: item['game']['IOR_RH0C1'],
+						MB0TG2: item['game']['IOR_RH0C2'],
+						MB1TG2: item['game']['IOR_RH1C2'],
+						MB0TG3: item['game']['IOR_RH0C3'],
+						MB1TG3: item['game']['IOR_RH1C3'],
+						MB2TG3: item['game']['IOR_RH2C3'],
+						MB0TG4: item['game']['IOR_RH0C4'],
+						MB1TG4: item['game']['IOR_RH1C4'],
+						MB2TG4: item['game']['IOR_RH2C4'],
+						MB3TG4: item['game']['IOR_RH3C4'],
+						UP5H: item['game']['IOR_ROVH'],
+						UP5: item['game']['IOR_ROVC'],
+						MID: item['game']['GID'],
+						PD_Show: 1,				
+					};
+					try {
+						response = await axios.post(`${BACKEND_BASE_URL}${MATCH_SPORTS}${SAVE_FT_CORRECT_SCORE}`, data);
+						console.log("response==============================", response.data);
+					} catch(err) {
+						console.log("err===================", err.response);
+					}
+				}
+			}
+		}
+	} catch(e) {
+		console.log(e)
+	}
+}
+
 function sleep (milliseconds) {
-	console.log("00000000000000000000");
   	return new Promise((resolve) => setTimeout(resolve, milliseconds))
 }
 
@@ -955,151 +1204,6 @@ exports.getFT_FU_R_EARLY = async () => {
 								ShowTypeRB: item['game']['STRONG'],
 								FLAG_CLASS: item['game']['FLAG_CLASS'],
 								MID: item['game']['GID'],								
-							};
-							try {
-								response = await axios.post(`${BACKEND_BASE_URL}${MATCH_SPORTS}${SAVE_FT_FU_R}`, data);
-								console.log("response==============================", response.data);
-							} catch(err) {
-								console.log("err===================", err.response);
-							}
-						}
-					}
-				})
-			}
-		}
-	} catch(e) {
-		console.log(e)
-	}
-}
-
-exports.getFT_PD = async () => {
-	try {
-		let thirdPartyBaseUrl = "";
-		let thirdPartyUrl = "";
-		let version = "";
-		let uID = "";
-		let response = await axios.get(`${BACKEND_BASE_URL}${GET_WEB_SYSTEM_DATA}`);
-		if (response.status == 200 && response.data.success) {
-			thirdPartyBaseUrl = response.data.data.datasite;
-			version = response.data.data.ver;
-			uID = response.data.data.Uid;
-			thirdPartyUrl = `${thirdPartyBaseUrl}/transform.php?ver=${version}`;
-			let formData = new FormData();
-			formData.append("p", "get_league_list_All");
-			formData.append("uid", uID);
-			formData.append("ver", version);
-			formData.append("langx", "zh-cn");
-			formData.append("gtype", "FT");
-			formData.append("FS", "N");
-			formData.append("showtype", "ft");
-			formData.append("date", 0);
-			formData.append("ts", new Date().getTime());
-			formData.append("nocp", "N");
-			response = await axios.post(thirdPartyUrl, formData);
-			if (response.status === 200) {
-				var lid = ""
-				let result = parser.parse(response.data);
-				console.log(result['serverresponse']['coupons']['coupon']);
-				if (result['serverresponse']['coupons']['coupon'].length > 0) {
-					result['serverresponse']['coupons']['coupon'].map(item => {
-						if (item['name'] === "今日赛事") lid = item['lid'];
-					})
-				} else {
-					if (result['serverresponse']['coupons']['coupon']['name'] === "今日赛事") lid = result['serverresponse']['coupons']['coupon']['item']['lid'];
-				}
-				let lid_array = lid.split(",");
-				lid_array.map(async lid => {
-					let formData = new FormData();
-					formData.append("p", "get_game_list");
-					formData.append("uid", uID);
-					formData.append("ver", version);
-					formData.append("langx", "zh-cn");
-					formData.append("p3type", "");
-					formData.append("date", 0);
-					formData.append("gtype", "ft");
-					formData.append("showtype", "today");
-					formData.append("rtype", "r");
-					formData.append("ltype", 3);
-					formData.append("lid", lid);
-					formData.append("action", "click_league");
-					formData.append("sorttype", "L");
-					formData.append("specialClick", "");
-					formData.append("isFantasy", "N");
-					formData.append("ts", new Date().getTime());
-					response = await axios.post(thirdPartyUrl, formData);
-					if (response.status === 200) {
-						let result = parser.parse(response.data);
-						let totalDataCount = result['serverresponse']['totalDataCount'];
-						if (totalDataCount > 1) {
-							result['serverresponse']['ec'].map(async item => {
-								let data = {
-									MB1TG0: item['game']['IOR_H1C0'],
-									MB2TG0: item['game']['IOR_H2C0'],
-									MB2TG1: item['game']['IOR_H2C1'],
-									MB3TG0: item['game']['IOR_H3C0'],
-									MB3TG1: item['game']['IOR_H3C1'],
-									MB3TG2: item['game']['IOR_H3C2'],
-									MB4TG0: item['game']['IOR_H4C0'],
-									MB4TG1: item['game']['IOR_H4C1'],
-									MB4TG2: item['game']['IOR_H4C2'],
-									MB4TG3: item['game']['IOR_H4C3'],
-									MB0TG0: item['game']['IOR_H0C0'],
-									MB1TG1: item['game']['IOR_H1C1'],
-									MB2TG2: item['game']['IOR_H2C2'],
-									MB3TG3: item['game']['IOR_H3C3'],
-									MB4TG4: item['game']['IOR_H4C4'],
-									MB0TG1: item['game']['IOR_H0C1'],
-									MB0TG2: item['game']['IOR_H0C2'],
-									MB1TG2: item['game']['IOR_H1C2'],
-									MB0TG3: item['game']['IOR_H0C3'],
-									MB1TG3: item['game']['IOR_H1C3'],
-									MB2TG3: item['game']['IOR_H2C3'],
-									MB0TG4: item['game']['IOR_H0C4'],
-									MB1TG4: item['game']['IOR_H1C4'],
-									MB2TG4: item['game']['IOR_H2C4'],
-									MB3TG4: item['game']['IOR_H3C4'],
-									UP5: item['game']['IOR_OVH'],
-									MID: item['game']['GID'],
-									PD_Show: 1,		
-								};
-								try {
-									response = await axios.post(`${BACKEND_BASE_URL}${MATCH_SPORTS}${SAVE_FT_FU_R}`, data);
-									console.log("response==============================", response.data);
-								} catch(err) {
-									console.log("err===================", err.response);
-								}
-							})			
-						} else if(totalDataCount == 1) {
-							let item = result['serverresponse']['ec'];
-							let data = {
-								MB1TG0: item['game']['IOR_H1C0'],
-								MB2TG0: item['game']['IOR_H2C0'],
-								MB2TG1: item['game']['IOR_H2C1'],
-								MB3TG0: item['game']['IOR_H3C0'],
-								MB3TG1: item['game']['IOR_H3C1'],
-								MB3TG2: item['game']['IOR_H3C2'],
-								MB4TG0: item['game']['IOR_H4C0'],
-								MB4TG1: item['game']['IOR_H4C1'],
-								MB4TG2: item['game']['IOR_H4C2'],
-								MB4TG3: item['game']['IOR_H4C3'],
-								MB0TG0: item['game']['IOR_H0C0'],
-								MB1TG1: item['game']['IOR_H1C1'],
-								MB2TG2: item['game']['IOR_H2C2'],
-								MB3TG3: item['game']['IOR_H3C3'],
-								MB4TG4: item['game']['IOR_H4C4'],
-								MB0TG1: item['game']['IOR_H0C1'],
-								MB0TG2: item['game']['IOR_H0C2'],
-								MB1TG2: item['game']['IOR_H1C2'],
-								MB0TG3: item['game']['IOR_H0C3'],
-								MB1TG3: item['game']['IOR_H1C3'],
-								MB2TG3: item['game']['IOR_H2C3'],
-								MB0TG4: item['game']['IOR_H0C4'],
-								MB1TG4: item['game']['IOR_H1C4'],
-								MB2TG4: item['game']['IOR_H2C4'],
-								MB3TG4: item['game']['IOR_H3C4'],
-								UP5: item['game']['IOR_OVH'],
-								MID: item['game']['GID'],	
-								PD_Show: 1,							
 							};
 							try {
 								response = await axios.post(`${BACKEND_BASE_URL}${MATCH_SPORTS}${SAVE_FT_FU_R}`, data);

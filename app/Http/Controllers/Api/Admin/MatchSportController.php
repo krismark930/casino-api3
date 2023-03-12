@@ -172,7 +172,7 @@ class MatchSportController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function saveFT_PD(Request $request) {
+    public function saveFT_CORRECT_SCORE(Request $request) {
 
         $response = [];
         $response['success'] = FALSE;
@@ -181,33 +181,38 @@ class MatchSportController extends Controller
         try {
             $request_data = $request->all();
             $new_data = [
+                "Type" => $request_data['Type'],
                 "MID" => $request_data['MID'],
-                "MB1TG0" => $request_data['MB1TG0'],
-                "MB2TG0" => $request_data['MB2TG0'],
-                "MB2TG1" => $request_data['MB2TG1'],
-                "MB3TG0" => $request_data['MB3TG0'],
-                "MB3TG1" => $request_data['MB3TG1'],
-                "MB3TG2" => $request_data['MB3TG2'],
-                "MB4TG0" => $request_data['MB4TG0'],
-                "MB4TG1" => $request_data['MB4TG1'],
-                "MB4TG2" => $request_data['MB4TG2'],
-                "MB4TG3" => $request_data['MB4TG3'],
-                "MB0TG0" => $request_data['MB0TG0'],
-                "MB1TG1" => $request_data['MB1TG1'],
-                "MB2TG2" => $request_data['MB2TG2'],
-                "MB3TG3" => $request_data['MB3TG3'],
-                "MB4TG4" => $request_data['MB4TG4'],
-                "MB0TG1" => $request_data['MB0TG1'],
-                "MB0TG2" => $request_data['MB0TG2'],
-                "MB1TG2" => $request_data['MB1TG2'],
-                "MB0TG3" => $request_data['MB0TG3'],
-                "MB1TG3" => $request_data['MB1TG3'],
-                "MB2TG3" => $request_data['MB2TG3'],
-                "MB0TG4" => $request_data['MB0TG4'],
-                "MB1TG4" => $request_data['MB1TG4'],
-                "MB2TG4" => $request_data['MB2TG4'],
-                "MB3TG4" => $request_data['MB3TG4'],
-                "UP5" => $request_data['UP5'],
+                "MB_Ball" => $request_data['MB_Ball'] ?? 0,
+                "TG_Ball" => $request_data['MB_Ball'] ?? 0,
+                "RETIME_SET" => $request_data['RETIME_SET'],
+                "MB1TG0" => $request_data['MB1TG0'] ?? 0,
+                "MB2TG0" => $request_data['MB2TG0'] ?? 0,
+                "MB2TG1" => $request_data['MB2TG1'] ?? 0,
+                "MB3TG0" => $request_data['MB3TG0'] ?? 0,
+                "MB3TG1" => $request_data['MB3TG1'] ?? 0,
+                "MB3TG2" => $request_data['MB3TG2'] ?? 0,
+                "MB4TG0" => $request_data['MB4TG0'] ?? 0,
+                "MB4TG1" => $request_data['MB4TG1'] ?? 0,
+                "MB4TG2" => $request_data['MB4TG2'] ?? 0,
+                "MB4TG3" => $request_data['MB4TG3'] ?? 0,
+                "MB0TG0" => $request_data['MB0TG0'] ?? 0,
+                "MB1TG1" => $request_data['MB1TG1'] ?? 0,
+                "MB2TG2" => $request_data['MB2TG2'] ?? 0,
+                "MB3TG3" => $request_data['MB3TG3'] ?? 0,
+                "MB4TG4" => $request_data['MB4TG4'] ?? 0,
+                "MB0TG1" => $request_data['MB0TG1'] ?? 0,
+                "MB0TG2" => $request_data['MB0TG2'] ?? 0,
+                "MB1TG2" => $request_data['MB1TG2'] ?? 0,
+                "MB0TG3" => $request_data['MB0TG3'] ?? 0,
+                "MB1TG3" => $request_data['MB1TG3'] ?? 0,
+                "MB2TG3" => $request_data['MB2TG3'] ?? 0,
+                "MB0TG4" => $request_data['MB0TG4'] ?? 0,
+                "MB1TG4" => $request_data['MB1TG4'] ?? 0,
+                "MB2TG4" => $request_data['MB2TG4'] ?? 0,
+                "MB3TG4" => $request_data['MB3TG4'] ?? 0,
+                "UP5" => $request_data['UP5'] ?? 0,
+                "UP5H" => $request_data['UP5H'] ?? 0,
                 "PD_Show" => 1,
             ];
             $sport = Sport::where("MID", $request_data['MID'])->first();
@@ -270,6 +275,34 @@ class MatchSportController extends Controller
                 "RATIO_ROUU_HDP_3" => $request_data['RATIO_ROUU_HDP_3'] ?? "",
                 "IOR_ROUH_HDP_3" => $request_data['IOR_ROUH_HDP_3'] ?? 0,
                 "IOR_ROUC_HDP_3" => $request_data['IOR_ROUC_HDP_3'] ?? 0,
+            ];
+            $sport = Sport::where("MID", $request_data['MID'])->first();
+            if (isset($sport)) {
+                Sport::where("MID", $request_data['MID'])->update($new_data);
+                $response['message'] = 'Match Sport OBT Data updated successfully!';
+                $response['success'] = TRUE;
+                $response['status'] = STATUS_OK;
+            }
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+
+    }
+
+    public function saveFT_CORNER_INPLAY (Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+            $request_data = $request->all();
+            $new_data = [
+                "MID" => $request_data['MID'],
                 "RATIO_ROUO_CN" => $request_data['RATIO_ROUO_CN'] ?? "",
                 "RATIO_ROUU_CN" => $request_data['RATIO_ROUU_CN'] ?? "",
                 "IOR_ROUH_CN" => $request_data['IOR_ROUH_CN'] ?? 0,
@@ -293,7 +326,7 @@ class MatchSportController extends Controller
             $sport = Sport::where("MID", $request_data['MID'])->first();
             if (isset($sport)) {
                 Sport::where("MID", $request_data['MID'])->update($new_data);
-                $response['message'] = 'Match Sport OBT Data updated successfully!';
+                $response['message'] = 'Match Sport CORNER Data updated successfully!';
                 $response['success'] = TRUE;
                 $response['status'] = STATUS_OK;
             }
@@ -314,7 +347,7 @@ class MatchSportController extends Controller
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
-            $newDate = date('Y-m-d H:i:s', strtotime(' -7 hours'));
+            $newDate = now()->subMinutes(4 * 60 + 90);
             $sports = Sport::where("Type", "FT")->where("M_Start", ">=", $newDate)->get();
             $response['data'] = $sports;
             $response['message'] = 'Match Sport Data fetched successfully!';
@@ -336,7 +369,30 @@ class MatchSportController extends Controller
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
-            $sports = Sport::where("Type", "FT")->where("M_Date", date("Y-m-d"))->where("isSub", 1)->where("RB_Show", 1)->get();
+            $newDate = now()->subMinutes(4 * 60 + 90);
+            $sports = Sport::where("Type", "FT")->where("M_Date", date("Y-m-d"))->where("isSub", 1)->where("RB_Show", 1)->where("M_Start", ">=", $newDate)->get();
+            $response['data'] = $sports;
+            $response['message'] = 'Match Sport Data fetched successfully!';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    }
+
+    public function getFTCorrectScoreInPlayData(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+            $newDate = now()->subMinutes(4 * 60 + 90);
+            $sports = Sport::where("Type", "FT")->where("M_Date", date("Y-m-d"))->where("PD_Show", 1)->where("M_Start", ">=", $newDate)->get();
             $response['data'] = $sports;
             $response['message'] = 'Match Sport Data fetched successfully!';
             $response['success'] = TRUE;

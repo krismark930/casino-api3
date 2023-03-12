@@ -105,6 +105,7 @@ class Sport extends Model
         "MB2TG4",
         "MB3TG4",
         "UP5",
+        "UP5H",
         "PD_Show",
         "FLAG_CLASS",
         "SCORE_H",
