@@ -11,6 +11,7 @@ use App\Utils\Utils;
 use DB;
 use Validator;
 include("include.php");
+
 class SportController extends Controller
 {
     /**
@@ -28,9 +29,52 @@ class SportController extends Controller
         if ($limit == '' || $limit == null) $limit = 10;
         return Sport::paginate($limit);
     }
+
     public function match_count()
     {
         return Sport::count();
+    }
+
+    public function getItem(Request $request)
+    {
+        $id = $request->post('id');
+        $data = Sport::select('MID', 'M_Date', 'M_Time', 'MB_Team', 'TG_Team', 'MB_Inball', 'TG_Inball', 'MB_Inball_HR', 'TG_Inball_HR', 'M_League')
+            ->where('MID', $id)->get();
+        return $data;
+    }
+
+    public function updateItem(Request $request)
+    {
+        $id = $request->id;
+        $data = $request->item;
+        $item = Sport::where('MID', $id)->get();
+        $m_date = date('Y-m-d');
+
+        $m_result1 = Sport::select('MID', 'MB_MID', 'TG_MID', 'MB_Team', 'TG_Team', 'MB_Inball', 'TG_Inball', 'MB_Inball_HR', 'TG_Inball_HR', 'M_Start')
+            ->where('Type', 'FT')
+            ->where('M_Date', $m_date)
+            ->where('MB_Inball', '')
+            ->where('Score', 0)
+            ->orderBy('M_Start', 'asc')
+            ->orderBy('MID', 'asc')
+            ->get();
+        return $m_result1;
+    }
+
+    public function getItems(Request $request)
+    {
+        $m_date = $request->m_date ?? date('Y-m-d');
+        $type = $request->type ?? 'FT';
+        $offset = $request->offset ?? 0;
+        $limit = $request->limit ?? 60;
+
+        $items = Sport::select('MID', 'M_Date', 'M_Time', 'MB_Team', 'TG_Team', 'MB_Inball', 'TG_Inball', 'MB_Inball_HR', 'TG_Inball_HR', 'Checked', 'M_League')
+            ->where('M_Date', $m_date)
+            ->where('Type', $type)
+            ->skip($offset)
+            ->take($limit)
+            ->get();
+        return $items;
     }
 
     public function get_item_date(Request $request)
@@ -207,17 +251,17 @@ class SportController extends Controller
         $badname_jq=explode(",",$config[0]['BadMember_JQ']);
        
         $gtype="R";
-        if($line=='1') $gtype='M';   //独赢
-        if($line=='2') $gtype='R';   //让球
-        if($line=='3') $gtype='OU';  //大小
-        if($line=='4') $gtype='PD';  //波胆
-        if($line=='5') $gtype='R';  //单双
-        if($line=='6') $gtype='T';  //总入球
-        if($line=='7') $gtype='F';   //半全场
-        if($line=='11') $gtype='M';  //半场独赢
-        if($line=='12') $gtype='R';  //半场让球
-        if($line=='13') $gtype='OU';  //半场大小
-        if($line=='14') $gtype='PD';  //半场波胆
+        if($line=='1') $gtype='M';   //独赢=win alone
+        if($line=='2') $gtype='R';   //让球=handicap
+        if($line=='3') $gtype='OU';  //大小=size
+        if($line=='4') $gtype='PD';  //波胆=cholesterol
+        if($line=='5') $gtype='R';  //单双=single and double
+        if($line=='6') $gtype='T';  //总入球=total goals
+        if($line=='7') $gtype='F';   //半全场=half time
+        if($line=='11') $gtype='M';  //半场独赢=win at half time
+        if($line=='12') $gtype='R';  //半场让球=half time handicap
+        if($line=='13') $gtype='OU';  //半场大小=half court size
+        if($line=='14') $gtype='PD';  //半场波胆=half time correct score
         
         $open = $member['OpenType'];
         $pay_type =$member['Pay_Type'];
@@ -1039,10 +1083,10 @@ class SportController extends Controller
 
         $m_name = $request->post('m_name');
 
-                    $count = Report::selectRaw('*')->whereRaw("M_Name='$m_name'")->count();
-                    //$items = Report::selectRaw('*')->whereRaw("M_Name='$m_name'")->get();
-                    $items = Report::with('sport')->whereRaw("M_Name='$m_name'")->get();
-                return response()->json([
+        $count = Report::selectRaw('*')->whereRaw("M_Name='$m_name'")->count();
+        //$items = Report::selectRaw('*')->whereRaw("M_Name='$m_name'")->get();
+        $items = Report::with('sport')->whereRaw("M_Name='$m_name'")->get();
+        return response()->json([
             "success" => true,
             "data" => $items,
             "count" => $count
