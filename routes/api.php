@@ -84,12 +84,17 @@ Route::group(['prefix' => 'third-party'], function ($router){
         Route::post('/save-ft-inplay', [MatchSportController::class, 'saveFT_FU_R_INPLAY']);
         // save match sport data by HDP in OBT
         Route::post('/ft-hdp-obt', [MatchSportController::class, 'saveFT_HDP_OBT']);
+        // save match sport data by CORNER in OBT
+        Route::post('/ft-corner-obt', [MatchSportController::class, 'saveFT_CORNER_INPLAY']);
         // save match sport data by showtype "today"
         Route::post('/save-ft-pd', [MatchSportController::class, 'saveFT_PD']);
+        // save match sport correct score data by showtype "live"
+        Route::post('/ft-correct-score', [MatchSportController::class, 'saveFT_CORRECT_SCORE']);
         // get ft data 
         Route::get('/ft-data', [MatchSportController::class, 'getFTData']);
         // get In play Data
-        Route::get('/ft-in-play-data', [MatchSportController::class, 'getFTInPlayData']);
+        Route::get('/ft-in-play-data', [MatchSportController::class, 'getFTInPlayData']);        
+        Route::get('/ft-correct-score-inplay-data', [MatchSportController::class, 'getFTCorrectScoreInPlayData']);
     });
 });
 
