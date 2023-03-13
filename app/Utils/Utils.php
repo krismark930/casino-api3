@@ -26,7 +26,7 @@ class Utils {
 		}while($flag==0);
 	}
 
-    static function GetField($username,$Field){
+    static function GetField($username, $Field){
         $user = User::where('UserName',$username)->first();
 		if(!$user){
 			return "";
@@ -130,7 +130,7 @@ class Utils {
 		$repteam=trim(str_replace("<font color=#990000> - [下半場]</font>","",$repteam));
 		$repteam=trim(str_replace("<font color=#990000> - [1st]</font>","",$repteam));
 		$repteam=trim(str_replace("<font color=#990000> - [2nd]</font>","",$repteam));
-		
+
 		$repteam=trim(str_replace("<font color=gray> - [上半]</font>","",$repteam));
 		$repteam=trim(str_replace("<font color=gray> - [下半]</font>","",$repteam));
 		$repteam=trim(str_replace("<font color=gray> - [第1节]</font>","",$repteam));
@@ -145,11 +145,11 @@ class Utils {
 		$repteam=trim(str_replace("<font color=gray> - [第4節]</font>","",$repteam));
 		$repteam=trim(str_replace("<font color=gray> - [1st Half]</font>","",$repteam));
 		$repteam=trim(str_replace("<font color=gray> - [2nd Half]</font>","",$repteam));
-		$repteam=trim(str_replace("<font color=gray> - [Q1]</font>","",$repteam));	
-		$repteam=trim(str_replace("<font color=gray> - [Q2]</font>","",$repteam));	
-		$repteam=trim(str_replace("<font color=gray> - [Q3]</font>","",$repteam));	
-		$repteam=trim(str_replace("<font color=gray> - [Q4]</font>","",$repteam));	
-	
+		$repteam=trim(str_replace("<font color=gray> - [Q1]</font>","",$repteam));
+		$repteam=trim(str_replace("<font color=gray> - [Q2]</font>","",$repteam));
+		$repteam=trim(str_replace("<font color=gray> - [Q3]</font>","",$repteam));
+		$repteam=trim(str_replace("<font color=gray> - [Q4]</font>","",$repteam));
+
 		$filiter_team=$repteam;
 		return $filiter_team;
 	}
@@ -248,7 +248,7 @@ class Utils {
 				break;
 			case 4:
 				$show_voucher='DT'.($id+$dtid);
-				break;	
+				break;
 			case 5:
 				$show_voucher='DT'.($id+$dtid);
 				break;
@@ -260,7 +260,7 @@ class Utils {
 				break;
 			case 8:
 				$show_voucher='PM'.($id+$pmid);
-				break;				
+				break;
 			case 9:
 				$show_voucher='OU'.($id+$ouid);
 				break;
@@ -387,7 +387,7 @@ class Utils {
 		$out_ior=Array();
 		$out_ior = Utils::get_HK_ior($H_ratio,$C_ratio);
 		$H_ratio=$out_ior[0];
-		$C_ratio=$out_ior[1];       
+		$C_ratio=$out_ior[1];
 		$out_ior[0]=$H_ratio+1000;
 		$out_ior[1]=$C_ratio+1000;
 		return $out_ior;
@@ -405,7 +405,7 @@ class Utils {
 			return $out_ior;
 		}
 		$line=2000 - ( $H_ratio + $C_ratio );
-		if ($H_ratio > $C_ratio){ 
+		if ($H_ratio > $C_ratio){
 			$lowRatio=$C_ratio;
 			$nowType = "C";
 		}else{
@@ -417,7 +417,7 @@ class Utils {
 			$nowRatio = ($lowRatio + $line) * (-1);
 		}else{
 			//對盤香港盤
-			$nowRatio=(2000 - $line) - $lowRatio;	
+			$nowRatio=(2000 - $line) - $lowRatio;
 		}
 		if ($nowRatio < 0){
 			$highRatio = (abs(1000 / $nowRatio) * 1000) ;
@@ -451,7 +451,7 @@ class Utils {
 			return $out_ior;
 		}
 		$line=2000 - ( $H_ratio + $C_ratio );
-		if ($H_ratio > $C_ratio){ 
+		if ($H_ratio > $C_ratio){
 			$lowRatio = $C_ratio;
 			$nowType = "C";
 		}else{
@@ -490,5 +490,5 @@ class Utils {
 		$out_ior[0]=$H_ratio*1000;
 		$out_ior[1]=$C_ratio*1000;
 		return $out_ior;
-	}	
+	}
 }
