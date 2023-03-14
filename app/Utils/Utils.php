@@ -6,6 +6,54 @@ use App\Models\Web\UpdateLog;
 use App\Models\User;
 use DB;
 class Utils {
+	
+    const Rep_HK = '香港盤';
+    const Rep_Malay = '馬來盤';
+    const Rep_Indo = '印尼盤';
+    const Rep_Euro = '歐洲盤';
+
+    const Mnu_Soccer = '足球';
+    const Mnu_Bask = '篮球';
+    const Mnu_Base = '棒球';
+    const Mnu_Tennis = '网球';
+    const Mnu_Voll = '排球';
+    const Mnu_Other = '其它';
+    const Mnu_BasketBall = '籃球';
+    const Mnu_Stock = '指数';
+    const Mnu_Outright = '冠军';
+    const Mnu_MarkSix = '六合彩';
+    const Mnu_EarlyMarket = '早餐';
+    const Mnu_Guan = 'Mnu_Guan';
+
+    //半全计算：
+    public static function odds_half($mb_in_score_v, $tg_in_score_v, $mb_in_score, $tg_in_score, $m_place)
+    {
+        if ($mb_in_score < 0 or $tg_in_score < 0) return 0;
+        $grade = 0;
+        if ($mb_in_score_v > $tg_in_score_v) {
+            $m_w1 = "H";
+        } elseif ($mb_in_score_v == $tg_in_score_v) {
+            $m_w1 = "N";
+        } else {
+            $m_w1 = "C";
+        }
+
+        if ($mb_in_score > $tg_in_score) {
+            $m_w2 = "H";
+        } elseif ($mb_in_score == $tg_in_score) {
+            $m_w2 = "N";
+        } else {
+            $m_w2 = "C";
+        }
+        $m_w = "F$m_w1$m_w2";
+        if ($m_place == $m_w) {
+            $grade = 1;
+        } else {
+            $grade = -1;
+        }
+        $odds_half = $grade;
+        return $odds_half;
+    }
     static function ProcessUpdate($username){
 		global $dbname;
 		do{

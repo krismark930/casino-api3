@@ -40,7 +40,9 @@ Route::group(['prefix' => 'users', 'middleware' => 'CORS'], function ($router) {
 /* Sports routes */
 Route::group(['prefix' => 'sport', 'middleware' => 'CORS'], function ($router){
     Route::resource('/get_data', SportController::class);
-    Route::put('/update_item', [SportController::class, 'updateItem']);
+    Route::post('/save_score', [SportController::class, 'sveScore']);
+    Route::post('/check_score', [SportController::class, 'checkScore']);
+    Route::post('/bet_slip', [SportController::class, 'showData']);
     Route::post('/get_item', [SportController::class, 'getItem']);
     Route::post('/get_items', [SportController::class, 'getItems']);
     Route::post('/get_item_date', [SportController::class, 'get_item_date']);

@@ -47,7 +47,7 @@ class SportController extends Controller
         return $data;
     }
 
-    public function updateItem(Request $request)
+    public function saveScore(Request $request)
     {
         $id = $request->id;
         $data = $request->item;
@@ -329,6 +329,566 @@ class SportController extends Controller
         }
     }
 
+    public function checkScore(Request $request)
+    {
+        $gid = $request['id'];
+        $new_item = $request['item'];
+        $type = $new_item['type'];
+        $item = Sport::where('MID', $gid)->first();
+        $mb_in_score = $new_item['MB_Inball'];
+        $tg_in_score = $new_item['TG_Inball'];
+        $mb_in_score_v = $new_item['MB_Inball_HR'];
+        $tg_in_score_v = $new_item['TG_Inball_HR'];
+        $data = array(); // return data
+        if ($type == 'FT') {
+            if(trim($mb_in_score)=="-"||trim($tg_in_score)=="-"||trim($mb_in_score)==""||trim($tg_in_score)==""||trim($mb_in_score)=="－"||trim($tg_in_score)=="－"){
+                Sport::where('MID', $gid)->update(['MB_Inball' => $mb_in_score, 'TG_Inball' => $tg_in_score]);
+            }
+            if($mb_in_score<0 or $tg_in_score<0 or $mb_in_score_v<0 or $tg_in_score_v<0){
+                Sport::where('MID', $gid)->update([
+                    'MB_Inball' => $mb_in_score,
+                    'TG_Inball' => $tg_in_score,
+                    'MB_Inball_HR' => $mb_in_score_v,
+                    'TG_Inball_HR' => $tg_in_score_v
+                ]);
+            }
+
+            Utils::ProcessUpdate($gid, 3);
+
+            $result = Sport::where('MID', $gid)->where('MB_Inball', '')->where('TG_Inball', '')->count();
+            if ($result == 0) {
+                return [
+                    'code' => 'settled',
+                    'message' => '本场赛事已经结算!'
+                ];
+            }
+
+            //需直接传递过来比分：上半和全场，可根据实际情况分别分批传递
+            $bc_arr=array('VRC','VRH','VMN','VMC','VMH','VOUH','VOUC','VRMH','VRMC','VRMN','VROUH','VROUC','VRRH','VRRC');
+            $Score_arr=array();
+            $Score_arr[1]='取消';
+            $Score_arr[2]='赛事腰斩';
+            $Score_arr[3]='赛事改期';
+            $Score_arr[4]='赛事延期';
+            $Score_arr[5]='赛事延赛';
+            $Score_arr[6]='赛事取消';
+            $Score_arr[7]='赛事无PK加时';
+            $Score_arr[8]='球员弃权';
+            $Score_arr[9]='队名错误';
+            $Score_arr[10]='主客场错误';
+            $Score_arr[11]='先发投手更换';
+            $Score_arr[12]='选手更换';
+            $Score_arr[13]='联赛名称错误';
+            $Score_arr[19]='提前开赛';
+
+            $result = Report::select('ID', 'MID', 'OrderID', 'Active', 'M_Name', 'LineType', 'OpenType', 'ShowType', 'Mtype', 'Gwin', 'VGOLD', 'TurnRate', 'BetType', 'M_Place', 'M_Rate', 'Middle', 'BetScore', 'A_Rate', 'B_Rate', 'C_Rate', 'D_Rate', 'A_Point', 'B_Point', 'C_Point', 'D_Point', 'Pay_Type', 'Checked')
+                ->whereRaw('FIND_IN_SET(?, MID) > 0', [$gid])
+                ->whereIn('Active', [1, 11])
+                ->where('LineType', '!=', 8)
+                ->where('Cancel', '!=', 1)
+                ->orderBy('LineType', 'asc')
+                ->get();
+            
+            foreach ($result as $row_index => $row) {
+                $mtype = $row['Mtype'];
+                $id = $row['ID'];
+                $user = $row['M_Name'];
+                switch ($row['LineType']) {
+                    case 1:
+                        $graded = PublicUtils::win_chk($mb_in_score, $tg_in_score, $row['Mtype']);
+                        break;
+                    case 2:
+                        $graded = PublicUtils::odds_letb($mb_in_score, $tg_in_score, $row['ShowType'], $row['M_Place'], $row['Mtype']);
+                        break;
+                    case 3:
+                        $graded = PublicUtils::odds_dime($mb_in_score, $tg_in_score, $row['M_Place'], $row['Mtype']);
+                        break;
+                    case 4:
+                        $graded = PublicUtils::odds_pd($mb_in_score, $tg_in_score, $row['Mtype']);
+                        break;
+                    case 5:
+                        $graded = PublicUtils::odds_eo($mb_in_score, $tg_in_score, $row['Mtype']);
+                        break;
+                    case 6:
+                        $graded = PublicUtils::odds_t($mb_in_score, $tg_in_score, $row['Mtype']);
+                        break;
+                    case 7:
+                        $graded = Utils::odds_half($mb_in_score_v, $tg_in_score_v, $mb_in_score, $tg_in_score, $row['Mtype']);
+                        break;
+                    case 9:
+                        $score = explode('<FONT color=red><b>', $row['Middle']);
+                        $msg = explode("</b></FONT><br>", $score[1]);
+                        $bcd = explode(":", $msg[0]);
+                        $m_in = $bcd[0];
+                        $t_in = $bcd[1];
+                        if ($row['ShowType'] == 'H') {
+                            $mbinscore1 = $mb_in_score - $m_in;
+                            $tginscore1 = $tg_in_score - $t_in;
+                        } else {
+                            $mbinscore1 = $mb_in_score - $t_in;
+                            $tginscore1 = $tg_in_score - $m_in;
+                        }
+                        $graded = PublicUtils::odds_letb_rb($mbinscore1, $tginscore1, $row['ShowType'], $row['M_Place'], $row['Mtype']);
+                        break;
+                    case 19:
+                        $score = explode('<FONT color=red><b>', $row['Middle']);
+                        $msg = explode("</b></FONT><br>", $score[1]);
+                        $bcd = explode(":", $msg[0]);
+                        $m_in = $bcd[0];
+                        $t_in = $bcd[1];
+                        if ($row['ShowType'] == 'H') {
+                            $mbinscore1 = $mb_in_score_v - $m_in;
+                            $tginscore1 = $tg_in_score_v - $t_in;
+                        } else {
+                            $mbinscore1 = $mb_in_score_v - $t_in;
+                            $tginscore1 = $tg_in_score_v - $m_in;
+                        }
+                        $graded = PublicUtils::odds_letb_vrb($mbinscore1, $tginscore1, $row['ShowType'], $row['M_Place'], $row['Mtype']);
+                        break;
+                    case 10:
+                        $graded = PublicUtils::odds_dime_rb($mb_in_score, $tg_in_score, $row['M_Place'], $row['Mtype']);
+                        break;
+                    case 50:
+                        $graded = PublicUtils::odds_dime_rb($mb_in_score, $tg_in_score, $row['M_Place'], $row['Mtype']);
+                        break;
+                    case 20:
+                        $graded = PublicUtils::odds_dime_vrb($mb_in_score_v, $tg_in_score_v, $row['M_Place'], $row['Mtype']);
+                        break;
+                    case 21:
+                        $graded = PublicUtils::win_chk_rb($mb_in_score, $tg_in_score, $row['Mtype']);
+                        break;
+                    case 31:
+                        $graded = PublicUtils::win_chk_vrb($mb_in_score_v, $tg_in_score_v, $row['Mtype']);
+                        break;
+                    case 11:
+                        $graded = PublicUtils::win_chk_v($mb_in_score_v, $tg_in_score_v, $row['Mtype']);
+                        break;
+                    case 12:
+                        $graded = PublicUtils::odds_letb_v($mb_in_score_v, $tg_in_score_v, $row['ShowType'], $row['M_Place'], $row['Mtype']);
+                        break;
+                    case 13:
+                        $graded = PublicUtils::odds_dime_v($mb_in_score_v, $tg_in_score_v, $row['M_Place'], $row['Mtype']);
+                        break;
+                    case 14:
+                        $graded = PublicUtils::odds_pd_v($mb_in_score_v, $tg_in_score_v, $row['Mtype']);
+                        break;
+                }
+                //echo $graded."-----------<br>";
+                $num = 0;
+                if (floatval($row['M_Rate']) < 0) {
+                    $num = str_replace("-", "", $row['M_Rate']);
+                } else if (floatval($row['M_Rate']) > 0) {
+                    $num = 1;
+                }
+                switch ($graded) {
+                    case 1:
+                        $g_res = $row['Gwin'];
+                        break;
+                    case 0.5:
+                        $g_res = $row['Gwin'] * 0.5;
+                        break;
+                    case -0.5:
+                        $g_res = -$row['BetScore'] * 0.5 * $num;
+                        break;
+                    case -1:
+                        $g_res = -$row['BetScore'] * $num;
+                        break;
+                    case 0:
+                        $g_res = 0;
+                        break;
+                }
+                /*$vgold=abs($graded)*$row['BetScore'];
+                $betscore=$row['BetScore'];
+                $turn=abs($graded)*$row['BetScore']*$row['TurnRate']/100;*/
+                $betscore = $row['BetScore'];  //投注金额
+                $vgold = $row['VGOLD']; //有效金额
+                if (empty($vgold) or $vgold <> 0) {
+                    $vgold = abs($graded) * $row['BetScore'];
+                } else {
+                    $vgold = 0;
+                }
+                $turn = abs($graded) * $vgold * intval($row['TurnRate']) / 100;  //返水
+
+                $d_point = intval($row['D_Point']) / 100;
+                $c_point = intval($row['C_Point']) / 100;
+                $b_point = intval($row['B_Point']) / 100;
+                $a_point = intval($row['A_Point']) / 100;
+
+                $members = $g_res + $turn; //和会员结帐的金额
+                $agents = $g_res * (1 - $d_point) + (1 - $d_point) * intval($row['D_Rate']) / 100 * intval($row['BetScore']) * abs($graded); //上缴总代理结帐的金额
+                $world = $g_res * (1 - $c_point - $d_point) + (1 - $c_point - $d_point) * intval($row['C_Rate']) / 100 * $row['BetScore'] * abs($graded); //上缴股东结帐
+                if (1 - $b_point - $c_point - $d_point != 0) {
+                    $corprator = $g_res * (1 - $b_point - $c_point - $d_point) + (1 - $b_point - $c_point - $d_point) * intval($row['B_Rate']) / 100 * $row['BetScore'] * abs($graded); //上缴公司结帐
+                } else {
+                    $corprator = $g_res * ($b_point + $a_point) + ($b_point + $a_point) * intval($row['B_Rate']) / 100 * $row['BetScore'] * abs($graded); //和公司结帐
+                }
+                $super = $g_res * $a_point + $a_point * intval($row['A_Rate']) / 100 * $row['BetScore'] * abs($graded); //和公司结帐
+                $agent = $g_res * 1 + 1 * intval($row['D_Rate']) / 100 * $row['BetScore'] * abs($graded); //公司退水帐目
+
+
+                $previousAmount = Utils::GetField($user, 'Money');
+                $user_id = Utils::GetField($user, 'id');
+                $datetime = date("Y-m-d H:i:s", time() + 12 * 3600);
+                $q1 = 0;
+                if (in_array($mtype, $bc_arr)) {
+                    $isQC = 0;
+                } else {
+                    $isQC = 1;
+                }  //是否全场赛事注单
+                if ($mb_in_score_v < 0 and $mb_in_score < 0) {
+                    $BiFen = "半场:" . $Score_arr[abs($mb_in_score_v)] . " 全场:" . $Score_arr[abs($mb_in_score)];
+                } elseif ($mb_in_score < 0) {
+                    $BiFen = "半场:$mb_in_score_v-$tg_in_score_v 全场:" . $Score_arr[abs($mb_in_score)];
+                } else {
+                    $BiFen = "半场:$mb_in_score_v-$tg_in_score_v 全场:$mb_in_score-$tg_in_score";
+                }
+                if (($mb_in_score < 0 and $isQC == 1) or $mb_in_score_v < 0) {  //取消注单  全场比分为“取消”只取消全场  半场比分取消：全部取消
+                    if ($row['Checked'] == 0) {
+                        if ($row['Pay_Type'] == 1) {
+                            $cash = $row['BetScore'];
+                            Utils::ProcessUpdate($user);  //防止并发
+                            $q1 = User::where('UserName', $user)->increment('Money', $cash)->get();
+                        }
+                    }
+
+                    if ($q1 == 1) {
+                        $currentAmount = Utils::GetField($user, 'Money');
+                        $Order_Code = $row['OrderID'];
+                        $new_log = new MoneyLog;
+                        $new_log->user_id = $user_id;
+                        $new_log->order_num = "$Order_Code";
+                        $new_log->about =  "loginname" . "系统取消赛事($BiFen)<br>MID:" . $row['MID'] . "<br>RID:" . $row['ID'];
+                        $new_log->update_time = $datetime;
+                        $new_log->type = $row['Middle'];
+                        $new_log->order_value = $cash;
+                        $new_log->assets = $previousAmount;
+                        $new_log->balance = $currentAmount;
+                        $new_log->save();
+
+                        $for_update = Report::where('ID', $id)->whereIn('active', [1, 11])->where('LineType', '!=', 8)
+                            ->update([
+                                'VGOLD' => 0,
+                                'M_Result' => 0,
+                                'D_Result' => 0,
+                                'C_Result' => 0,
+                                'B_Result' => 0,
+                                'A_Result' => 0,
+                                'T_Result' => 0,
+                                'Cancel' => 1,
+                                'Checked' => 1,
+                                'Confirmed' => $mb_in_score
+                            ]);
+                    }
+                } else {  //结算注单
+                    $cash = 0;
+                    if ($row['Checked'] == 0) {
+                        if ($row['Pay_Type'] == 1) {
+                            $cash = $row['BetScore'] + $members;
+                            Utils::ProcessUpdate($user);  //防止并发
+                            $q1 = User::where('UserName', $user)->increment('Money', $cash);
+                        }
+                    }
+                    if ($q1 == 1 or $cash == 0) {
+                        $currentAmount = Utils::GetField($user, 'Money');
+                        $Order_Code = $row['OrderID'];
+                        $new_log = new MoneyLog;
+                        $new_log->user_id = $user_id;
+                        $new_log->order_num = "$Order_Code";
+                        $new_log->update_time = $datetime;
+                        $new_log->type = $row['Middle'];
+                        $new_log->order_value = $cash;
+                        $new_log->assets = $previousAmount;
+                        $new_log->balance = $currentAmount;
+                        if ($cash < $row['BetScore']) {
+                            $new_log->about =  "系统取消赛事($BiFen)<br>输<br>MID:" . $row['MID'] . "<br>RID:" . $row['ID'];
+                        } else {
+                            $new_log->about =  "系统取消赛事($BiFen)<br>MID:" . $row['MID'] . "<br>RID:" . $row['ID'];
+                        }
+                        $new_log->save();
+
+                        $for_update = Report::where('ID', $id)
+                            ->update([
+                                'VGOLD' => $vgold,
+                                'M_Result' => $members,
+                                'D_Result' => $agents,
+                                'C_Result' => $world,
+                                'B_Result' => $corprator,
+                                'A_Result' => $super,
+                                'T_Result' => $agent,
+                                'Checked' => 1
+                            ]);
+                    }
+                }
+            }
+            Sport::where('Type', 'FT')->where('MID', $gid)->update(['Score' => 1]);
+
+            switch($row['OddsType']) {
+                case 'H':
+                    $Odds = '<BR><font color =green>'.Utils::Rep_HK.'</font>';
+                    break;
+                case 'M':
+                    $Odds='<BR><font color =green>'.Utils::Rep_Malay.'</font>';
+                    break;
+                case 'I':
+                    $Odds='<BR><font color =green>'.Utils::Rep_Indo.'</font>';
+                    break;
+                case 'E':
+                    $Odds='<BR><font color =green>'.Utils::Rep_Euro.'</font>';
+                    break;
+                case '':
+                    $Odds='';
+                    break;
+            }
+            
+            $time=$row['BetTime'];
+            $times=date("Y-m-d",$time).'<br>'.date("H:i:s",$time);
+
+            $temp = array(
+                'field_count' => $row_index,
+                'times' => $times,
+                'M_Name' => $row['M_Name'],
+                'OpenType' => $row['OpenType'],
+                'TurnRate' => $row['TurnRate'],
+                'Mnu_Soccer' => Utils::Mnu_Soccer,
+                'Odds' => $Odds,
+                'LineType' => $row['LineType'],
+                'BetType' => $row['BetType'],
+                'voucher' => Utils::show_voucher($row['LineType'], $row['ID']),
+                'Middle' => $row['Middle'],
+                'BetScore' => $row['BetScore'],
+                'd_point' => $d_point,
+                'c_point' => $c_point,
+                'b_point' => $b_point,
+                'a_point' => $a_point,
+                'turn' => $turn,
+                'g_res' => $g_res,
+                'actual_amount' => $members,
+                'agents' => $agents,
+                'world' => $world,
+                'corprator' => $corprator,
+                'pay_type' => $row['Pay_Type'],
+                'memname' => $row['M_Name'],
+                'BetScore' => $row['BetScore'],
+                'id' => $row['ID'],
+                'mb_inball' => $mb_in_score,
+                'tg_inball' => $tg_in_score,
+                'mb_inball_v' => $mb_in_score_v,
+                'tg_inball_v' => $tg_in_score_v,
+                'gtype' => $item['Type'],
+                'gid' => $gid,
+            );
+            array_push($data, $temp);
+        }
+        return json_encode($data);
+    }
+
+    public function showData(Request $request)
+    {
+        $uid = $request->uid;
+        // $langx = $request->langx;
+        $active = $request->active;
+        $id = $request->id;
+        $gid = $request->gid;
+        $gtype = $request->gtype;
+        $key = $request->key;
+        $confirmed = $request->confirmed;
+
+        switch ($gtype) {
+            case 'FT':
+                $table = [1, 11];
+                break;
+            case 'BK':
+                $table = [2, 22];
+                break;
+            case 'BS':
+                $table = [3, 33];
+                break;
+            case 'TN':
+                $table = [4, 44];
+                break;
+            case 'VB':
+                $table = [5, 55];
+                break;
+            case 'OP':
+                $table = [6, 66];
+                break;
+            case 'FU':
+                $table = [7, 77];
+                break;
+            case 'FS':
+                $table = [8];
+                break;
+        }
+
+        // 取消注单 - Cancel bet
+        if ($key=='cancel'){
+            $rresult = Report::select('M_Name', 'Pay_Type', 'BetScore', 'M_Result')->where('mid', $id)->where('Pay_Type', 1);
+            foreach ($rresult as $rrow_index => $rrow) {
+                $username=$rrow['M_Name'];
+                $betscore=$rrow['BetScore'];
+                $m_result=$rrow['M_Result'];
+                if ($rrow['Pay_Type']==1){//结算之后的现金返回
+                    if ($m_result==''){
+                        User::where('UserName', $username)->where('Pay_Type', 1)->increment('Money', $betscore) or die ("操作失败11!");
+                        PublicUtils::MoneyToSsc($username);
+                    }else{
+                        User::where('UserName', $username)->where('Pay_Type', 1)->decrement('Money', $m_result) or die ("操作失败11!");
+                        PublicUtils::MoneyToSsc($username);
+                    }
+                }
+            }
+            Report::where('ID', $id)->update([
+                'VGOLD' => 0,
+                'M_Result' => 0,
+                'D_Result' => 0,
+                'C_Result' => 0,
+                'B_Result' => 0,
+                'A_Result' => 0,
+                'T_Result' => 0,
+                'Cancel' => 1,
+                'Checked' => 1,
+                'Danger' => 0,
+                'Confirmed' => $confirmed
+            ]) or die ("操作失败!");
+            // echo "<script languag='JavaScript'>self.location='showdata.php?uid=$uid&id=$id&gid=$gid&gtype=$gtype&langx=$langx'</script>";
+        }
+
+        //恢复注单 - Resume bet
+        if ($key=='resume'){
+            $rresult = Report::select('M_Name', 'Pay_Type', 'BetScore', 'M_Result', 'Checked')->where('MID', $gid)->where('ID', $id)->where('Pay_Type', 1)->get();
+            foreach ($rresult as $rrow_index => $rrow) {
+                $username=$rrow['M_Name'];
+                $betscore=$rrow['BetScore'];
+                $m_result=$rrow['M_Result'];
+                if ($rrow['Pay_Type']==1){//结算之后的现金返回
+                    if ($rrow['Checked']==1){
+                        $cash=$betscore+$m_result;
+                        User::where('UserName', $username)->where('Pay_Type', 1)->decrement('Money', $cash) or die ("操作失败1!");
+                        PublicUtils::MoneyToSsc($username);
+                    }
+                }
+            }
+            Report::where('id', $id)->update([
+                'VGOLD' => '',
+                'M_Result' => '',
+                'D_Result' => '',
+                'C_Result' => '',
+                'B_Result' => '',
+                'A_Result' => '',
+                'T_Result' => '',
+                'Cancel' => 0,
+                'Checked' => 0,
+                'Danger' => 0,
+                'Confirmed' => 0
+            ]);
+            // echo "<script languag='JavaScript'>self.location='showdata.php?uid=$uid&id=$id&gid=$gid&gtype=$gtype&langx=$langx'</script>";
+        }
+        $result1 = Sport::where('Type', $gtype)->where('MID', $gid)->get();
+        $mrow = $result1[0];
+        $result = Report::select('ID', 'MID', 'Active', 'LineType', 'Mtype', 'Pay_Type', 'M_Date', 'BetTime', 'BetScore', 'CurType', 'Middle', 'BetType', 'M_Place', 'M_Rate', 'M_Name', 'Gwin', 'Glost', 'VGOLD', 'M_Result', 'A_Result', 'B_Result', 'C_Result', 'D_Result', 'T_Result', 'TurnRate', 'OpenType', 'OddsType', 'ShowType', 'Cancel', 'Confirmed', 'Danger')->whereRaw('FIND_IN_SET(' . $gid . ', MID) > 0');
+        if (count($table) > 0)
+            $result = $result->whereIn('Active', $table);
+        $result = $result->orderBy('bettime', 'asc')->orderBy('linetype', 'asc')->orderBy('mtype', 'asc');
+
+        $data = [];
+        foreach ($result as $key => $row) {
+            switch ($row['Active']) {
+				case 1:
+					$Title = Utils::Mnu_Soccer;
+					break;
+				case 11:
+					$Title = Utils::Mnu_Soccer;
+					break;
+				case 2:
+					$Title = Utils::Mnu_BasketBall;
+					break;
+				case 22:
+					$Title = Utils::Mnu_BasketBall;
+					break;
+				case 3:
+					$Title = Utils::Mnu_Base;
+					break;
+				case 33:
+					$Title = Utils::Mnu_Base;
+					break;
+				case 4:
+					$Title = Utils::Mnu_Tennis;
+					break;
+				case 44:
+					$Title = Utils::Mnu_Tennis;
+					break;
+				case 5:
+					$Title = Utils::Mnu_Voll;
+					break;
+				case 55:
+					$Title = Utils::Mnu_Voll;
+					break;
+				case 6:
+					$Title = Utils::Mnu_Other;
+					break;
+				case 66:
+					$Title = Utils::Mnu_Other;
+					break;
+				case 7:
+					$Title = Utils::Mnu_Stock;
+					break;
+				case 77:
+					$Title = Utils::Mnu_Stock;
+					break;
+				case 8:
+					$Title = Utils::Mnu_Guan;
+					break;
+			}
+			switch ($row['OddsType']) {
+				case 'H':
+					$Odds = '<BR><font color =green>' . Utils::Rep_HK . '</font>';
+					break;
+				case 'M':
+					$Odds = '<BR><font color =green>' . Utils::Rep_Malay . '</font>';
+					break;
+				case 'I':
+					$Odds = '<BR><font color =green>' . Utils::Rep_Indo . '</font>';
+					break;
+				case 'E':
+					$Odds = '<BR><font color =green>' . Utils::Rep_Euro . '</font>';
+					break;
+				case '':
+					$Odds = '';
+					break;
+			}
+			$time = strtotime($row['BetTime']);
+			$times = date("Y-m-d", $time) . '<br>' . date("H:i:s", $time);
+
+			if ($row['Danger'] == 1 or $row['Cancel'] == 1) {
+				$bettimes = '<font color="#FFFFFF"><span style="background-color: #FF0000">' . $times . '</span></font>';
+				$betscore = '<S><font color=#cc0000>' . number_format($row['BetScore']) . '</font></S>';
+			} else {
+				$bettimes = $times;
+				$betscore = number_format($row['BetScore']);
+			}
+
+            $temp = [
+                'bettimes' => $bettimes,
+                'M_Name' => $row['M_Name'],
+                'OpenType' => $row['OpenType'],
+                'TurnRate' => $row['TurnRate'],
+                'BetType' => $row['BetType'],
+                'LineType' => $row['LineType'],
+                'ID' => $row['ID'],
+                'voucher' => Utils::show_voucher($row['LineType'], $row['ID']),
+                'Middle' => $row['Middle'],
+                'betscore' => $betscore,
+                'Cancel' => $row['Cancel'],
+                'Confirmed' => $row['Confirmed'],
+                'Result' => number_format($row['Result']),
+            ];
+        }
+        return array(
+            'mrow' => $mrow,
+            'result' => $data
+        );
+    }
+
     public function getItems(Request $request)
     {
         $m_date = $request->m_date ?? date('Y-m-d');
@@ -336,9 +896,13 @@ class SportController extends Controller
         $offset = $request->offset ?? 0;
         $limit = $request->limit ?? 20;
 
-        $items = Sport::select('MID', 'M_Date', 'M_Time', 'MB_Team', 'TG_Team', 'MB_Inball', 'TG_Inball', 'MB_Inball_HR', 'TG_Inball_HR', 'Checked', 'M_League')
+        $mids = Report::select('MID')->where('M_Date', $m_date)->get();
+
+        $items = Sport::select('MID', 'M_Date', 'M_Time', 'MB_Team', 'TG_Team', 'MB_Inball', 'TG_Inball', 'MB_Inball_HR', 'TG_Inball_HR', 'Cancel', 'Checked', 'Open', 'M_League')
             ->where('M_Date', $m_date)
             ->where('Type', $type)
+            ->where('Score', 0)
+            ->whereIn('MID', $mids)
             ->skip($offset)
             ->take($limit)
             ->get();
