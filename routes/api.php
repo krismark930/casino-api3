@@ -13,6 +13,15 @@ use App\Http\Controllers\Web\AccountController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\SystemSetting\SystemParametersController;
 
+// API User Controllers
+use App\Http\Controllers\Api\User\BettingController;
+use App\Http\Controllers\Api\User\UserMatchSportController;
+
+// API Admin Controllers
+use App\Http\Controllers\Api\Admin\WebSystemDataController;
+use App\Http\Controllers\Api\Admin\MatchCrownController;
+use App\Http\Controllers\Api\Admin\MatchSportController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +33,70 @@ use App\Http\Controllers\Admin\SystemSetting\SystemParametersController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+// user routes
+Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
+    // betting routes
+    Route::group(['prefix' => 'betting'], function ($router) {
+        // ft betting order api
+        Route::post('/ft-order', [BettingController::class, 'saveFTBettingOrderData']);
+    });
+    // matched sports route
+    Route::group(['prefix' => 'match-sport'], function ($router) {
+        // today of ft data api
+        Route::post('/ft-data', [UserMatchSportController::class, 'getFTData']);
+        // get count by ft and bt in match-sport
+        Route::get('/get-count', [UserMatchSportController::class, 'getCountSport']);
+    });
+});
+
+// admin routes
+Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:api']], function ($router){
+    // web_system_data routes
+    Route::group(['prefix' => 'web-system-data'], function ($router) {
+        // get web_system_data api
+        Route::get('/all', [WebSystemDataController::class, 'getWebSystemData']);
+    });
+});
+
+// routes for third party
+Route::group(['prefix' => 'third-party'], function ($router){
+    // web_system_data routes
+    Route::group(['prefix' => 'web-system-data'], function ($router) {
+        // get web_system_data api
+        Route::get('/all', [WebSystemDataController::class, 'getWebSystemData']);
+        Route::put('/{id}', [WebSystemDataController::class, 'updateWebSystemData']);
+    });
+    // match_crown routes
+    Route::group(['prefix' => 'match-crown'], function ($router) {
+        // get match_crown data by MID and Gid
+        Route::get('/{MID}/{Gid}', [MatchCrownController::class, 'getMatchCrownDataByMID']);
+        // update match_crown data by MID and Gid
+        Route::put('/{MID}/{Gid}', [MatchCrownController::class, 'updateMatchCrownDataByMID']);
+        // add match_crown data
+        Route::post('/add', [MatchCrownController::class, 'addMatchCrownData']);
+    });
+    // match_sport routes
+    Route::group(['prefix' => 'match-sport'], function ($router) {
+        // save match sport data by showtype "early"
+        Route::post('/save-ft-fu-r', [MatchSportController::class, 'saveFT_FU_R']);
+        // save match sport data by showtype "live"
+        Route::post('/save-ft-inplay', [MatchSportController::class, 'saveFT_FU_R_INPLAY']);
+        // save match sport data by HDP in OBT
+        Route::post('/ft-hdp-obt', [MatchSportController::class, 'saveFT_HDP_OBT']);
+        // save match sport data by CORNER in OBT
+        Route::post('/ft-corner-obt', [MatchSportController::class, 'saveFT_CORNER_INPLAY']);
+        // save match sport data by showtype "today"
+        Route::post('/save-ft-pd', [MatchSportController::class, 'saveFT_PD']);
+        // save match sport correct score data by showtype "live"
+        Route::post('/ft-correct-score', [MatchSportController::class, 'saveFT_CORRECT_SCORE']);
+        // get ft data 
+        Route::get('/ft-data', [MatchSportController::class, 'getFTData']);
+        // get In play Data
+        Route::get('/ft-in-play-data', [MatchSportController::class, 'getFTInPlayData']);        
+        Route::get('/ft-correct-score-inplay-data', [MatchSportController::class, 'getFTCorrectScoreInPlayData']);
+    });
+});
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -54,8 +127,6 @@ Route::group(['prefix' => 'sport', 'middleware' => 'CORS'], function ($router){
     Route::post('/edit_temp', [SportController::class, 'editTemp'])->name('sport.edit_temp');
     Route::post('/get_betting_records', [SportController::class, 'get_betting_records'])->name('sport.get_betting_records');
 });
-
-Route::post('/get_item_date', [SportController::class, 'get_item_date']);// Test_API
 
 Route::group(['prefix' => 'result', 'middleware' => 'CORS'], function ($router){
     Route::post('/get_result_ft', [ResultController::class, 'getResultFt'])->name('result.getResultFt');

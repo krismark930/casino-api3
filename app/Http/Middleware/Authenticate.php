@@ -18,4 +18,15 @@ class Authenticate extends Middleware
             return route('login.user');
         }
     }
+
+    protected function unauthenticated($request, array $guards)
+    {
+        if ($request->is('api/*')) {
+            $response = [];
+            $response['success'] = FALSE;
+            $response['message'] = "Unauthenticate";
+            $response['status'] = STATUS_BAD_REQUEST;
+            abort(response()->json($response, $response['status']));
+        }
+    }    
 }

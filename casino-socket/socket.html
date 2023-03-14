@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Socket.IO chat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font: 13px Helvetica, Arial;
+        }
+
+        form {
+            background: #000;
+            padding: 3px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        form input {
+            border: 0;
+            padding: 10px;
+            width: 90%;
+            margin-right: 0.5%;
+        }
+
+        form button {
+            width: 9%;
+            background: rgb(130, 224, 255);
+            border: none;
+            padding: 10px;
+        }
+
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #messages li {
+            padding: 5px 10px;
+        }
+
+        #messages li:nth-child(odd) {
+            background: #eee;
+        }
+    </style>
+</head>
+
+<body>
+    <ul id="messages"></ul>
+    <form action="">
+        <input id="m" autocomplete="off" /><button>Send</button>
+        <input type="file" id="file" name="file">
+        <input type="hidden" id="room_id">
+    </form>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"
+    integrity="sha512-v8ng/uGxkge3d1IJuEo6dJP8JViyvms0cly9pnbfRxT6/31c3dRWxIiwGnMSWwZjHKOuY3EVmijs7k1jz/9bLA=="
+    crossorigin="anonymous"></script> -->
+    <script defer src="/socket.io/socket.io.js" ></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+        $(function () {
+            const socketUrl = "http://3.23.176.6:3000/";
+            var socket = io(socketUrl);
+            var sender_id = 17;
+            var receiver_id = 16;
+            var roomId = sender_id.toString() + receiver_id.toString();
+            socket.on('connect', () => {
+                console.log("socket connect = "+socket.connected); // true
+            });
+  
+            $('form').submit(function (e) {
+                e.preventDefault(); // prevents page reloading
+
+                $('#messages').append($('<li style="text-align: right;">').text($('#m').val()));
+
+                socket.emit('sendMessage', {
+                    type: 'text',
+                    message: $('#m').val(),
+                    sender_id: sender_id,
+                    receiver_id: receiver_id,
+                    chatId: '1716'
+                });
+                console.log("send message")
+                $('#m').val('');
+                return true;
+            });
+
+            socket.emit('join', "23");
+
+            socket.on('receivedMessage', function (msg) {
+                console.log("receivedMessage", msg)
+            });
+
+            socket.on('sendedMessageDetail', function (msg) {
+                console.log("sendedMessageDetail", msg)
+            });
+
+            socket.on('acknowledge', function (msg) {
+                console.log("acknowledge", msg)
+            });
+        });
+    </script>
+</body>
+
+</html>
