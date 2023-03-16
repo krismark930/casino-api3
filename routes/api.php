@@ -39,7 +39,9 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
     // betting routes
     Route::group(['prefix' => 'betting'], function ($router) {
         // ft betting order api
-        Route::post('/ft-order', [BettingController::class, 'saveFTBettingOrderData']);
+        Route::post('/single-ft', [BettingController::class, 'saveFTBettingOrderData']);
+        // ft betting inplay api
+        Route::post('/single-ft-re', [BettingController::class, 'saveFTBettingInPlay']);
     });
     // matched sports route
     Route::group(['prefix' => 'match-sport'], function ($router) {
@@ -95,6 +97,7 @@ Route::group(['prefix' => 'third-party'], function ($router){
         // get In play Data
         Route::get('/ft-in-play-data', [MatchSportController::class, 'getFTInPlayData']);        
         Route::get('/ft-correct-score-inplay-data', [MatchSportController::class, 'getFTCorrectScoreInPlayData']);
+        Route::post('/ft-corner-today', [MatchSportController::class, 'saveFT_CORNER_TODAY']);
     });
 });
 
@@ -110,9 +113,15 @@ Route::group(['prefix' => 'users', 'middleware' => 'CORS'], function ($router) {
     Route::get('/view-profile', [UserController::class, 'viewProfile'])->name('profile.user');
     Route::get('/logout', [UserController::class, 'logout'])->name('logout.user');
 });
+
 /* Sports routes */
 Route::group(['prefix' => 'sport', 'middleware' => 'CORS'], function ($router){
     Route::resource('/get_data', SportController::class);
+    Route::post('/save_score', [SportController::class, 'saveScore']);
+    Route::post('/check_score', [SportController::class, 'checkScore']);
+    Route::post('/bet_slip', [SportController::class, 'showData']);
+    Route::post('/get_item', [SportController::class, 'getItem']);
+    Route::post('/get_items', [SportController::class, 'getItems']);
     Route::post('/get_item_date', [SportController::class, 'get_item_date']);
     Route::post('/bet_ft', [SportController::class, 'singleBetFt'])->name('sport.bet_ft');
     Route::post('/multi_bet_ft', [SportController::class, 'multiBetFt'])->name('sport.multi_bet_ft');

@@ -11,3 +11,4 @@ exports.SAVE_FT_HDP_OBT = "/ft-hdp-obt";
 exports.SAVE_FT_CORNER_OBT = "/ft-corner-obt";
 exports.SAVE_FT_CORRECT_SCORE = "/ft-correct-score";
 exports.GET_IN_PLAY_SCORE = "/ft-correct-score-inplay-data";
+exports.SAVE_FT_CORNER_TODAY = "/ft-corner-today";

@@ -118,6 +118,7 @@ if (!function_exists('getXianEr')) {
 }
 
 function show_voucher($line, $id, $web_system_data){
+    $show_voucher = "";
     $ouid=$web_system_data['OUID'];
     $dtid=$web_system_data['DTID'];
     $pmid=$web_system_data['PMID'];

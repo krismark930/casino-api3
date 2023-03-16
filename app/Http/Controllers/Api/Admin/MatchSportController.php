@@ -144,8 +144,8 @@ class MatchSportController extends Controller
                 "RB_Show" => $request_data["RB_Show"],
                 "S_Show" => $request_data["S_Show"],
                 "isSub" => $request_data["isSub"],
-                "MB_Card" => $request_data["MB_Card"],
-                "TG_Card" => $request_data["TG_Card"],
+                "MB_Card" => $request_data["MB_Card"] ?? "",
+                "TG_Card" => $request_data["TG_Card"] ?? "",
                 "RETIME_SET" => $request_data["RETIME_SET"],
                 "HDP_OU" => $request_data['HDP_OU'],
                 "CORNER" => $request_data['CORNER'],
@@ -322,6 +322,44 @@ class MatchSportController extends Controller
                 "WTYPE_CN" => $request_data['WTYPE_CN'] ?? "",
                 "IOR_RNCH_CN" => $request_data['IOR_RNCH_CN'] ?? 0,
                 "IOR_RNCC_CN" => $request_data['IOR_RNCC_CN'] ?? 0,
+            ];
+            $sport = Sport::where("MID", $request_data['MID'])->first();
+            if (isset($sport)) {
+                Sport::where("MID", $request_data['MID'])->update($new_data);
+                $response['message'] = 'Match Sport CORNER Data updated successfully!';
+                $response['success'] = TRUE;
+                $response['status'] = STATUS_OK;
+            }
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+
+    }
+
+    public function saveFT_CORNER_TODAY (Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+            $request_data = $request->all();
+            $new_data = [
+                "MID" => $request_data['MID'],
+                "RATIO_R_CN" => $request_data['RATIO_R_CN'] ?? "",
+                "IOR_RH_CN" => $request_data['IOR_RH_CN'] ?? "",
+                "IOR_RC_CN" => $request_data['IOR_RC_CN'] ?? 0,
+                "RATIO_OUO_CN" => $request_data['RATIO_OUO_CN'] ?? "",
+                "RATIO_OUU_CN" => $request_data['RATIO_OUU_CN'] ?? "",
+                "IOR_HRH_CN" => $request_data['IOR_HRH_CN'] ?? 0,
+                "IOR_HRC_CN" => $request_data['IOR_HRC_CN'] ?? 0,
+                "IOR_MH_CN" => $request_data['IOR_MH_CN'] ?? "",
+                "IOR_MC_CN" => $request_data['IOR_MC_CN'] ?? "",
+                "IOR_MN_CN" => $request_data['IOR_MN_CN'] ?? 0,
             ];
             $sport = Sport::where("MID", $request_data['MID'])->first();
             if (isset($sport)) {
