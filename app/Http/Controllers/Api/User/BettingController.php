@@ -15,11 +15,12 @@ use App\Models\WebAgent;
 use App\Models\WebSystemData;
 use App\Utils\Utils;
 use App\Models\Web\MoneyLog;
+use App\Models\MatchCrown;
 use Auth;
 
 class BettingController extends Controller
 {
-    public function saveFTBettingOrderData(Request $request)
+    public function saveFTBettingToday(Request $request)
     {
 
         $response = [];
@@ -55,6 +56,8 @@ class BettingController extends Controller
             $gid = $request_data["m_id"];
             $type = $request_data["type"];
             $order_rate = $request_data["order_rate"];
+            $rtype = $request_data["r_type"] ?? "";
+            $langx = "zh-cn";
 
             $configs = Config::all();
 
@@ -65,9 +68,14 @@ class BettingController extends Controller
             $bad_name_jq = explode(",", $configs[0]['BadMember_JQ']);
 
             // $user_id = $request_data["id"];
-            $user_id = Auth::guard("api")->user();
+            $user_id = Auth::guard("api")->user()->id;
 
             $user = User::where('id', $user_id)->where('Status', 0)->first();
+
+            if (!isset($user)) {
+                $response['message'] = 'Please login again!';
+                return response()->json($response, $response['status']);                
+            }
 
             $open = $user['OpenType'];
             $pay_type = $user['Pay_Type'];
@@ -156,6 +164,12 @@ class BettingController extends Controller
             $m_start = strtotime($match_sports['M_Start']);
             // $date_time = time();
             $date_time = now()->subMinutes(5 * 60 + 90);
+
+            $inball = $match_sports['MB_Ball'] . ":" . $match_sports['TG_Ball'];
+
+            $mb_ball = $match_sports['MB_Ball'];
+
+            $tg_ball = $match_sports['TG_Ball'];
 
             // if ($m_start - $date_time < 120){
             //     $response['message'] = 'Schedule is closed!';
@@ -351,12 +365,15 @@ class BettingController extends Controller
                         $w_m_rate = $match_sports['UP5'];
                     }
                     if ($rtype == "OVH") {
-                        $s_m_place = Order_Other_Score;
+                        $s_m_place = "其它比分";
                         $w_m_place = '其它比分';
                         $w_m_place_tw = '其它比分';
                         $w_m_place_en = 'Other Score';
                         $Sign = "VS.";
                     } else {
+                        $w_m_place='';
+                        $w_m_place_tw='';
+                        $w_m_place_en='';
                         $M_Place = "";
                         $M_Sign = $rtype;
                         $M_Sign = str_replace("MB", "", $M_Sign);
@@ -724,16 +741,16 @@ class BettingController extends Controller
                 $bottom1_tw = "-&nbsp;<font color=#666666>[上半]</font>&nbsp;";
                 $bottom1_en = "-&nbsp;<font color=#666666>[1st Half]</font>&nbsp;";
             }
-            if ($line == 2 or $line == 3 or $line == 12 or $line == 13) {
-                if ($w_m_rate != $order_rate) {
-                    $response["message"] = "error";
-                    return response()->json($response, $response['status']);
-                }
+            if ($line == 2 || $line == 3 || $line == 12 || $line == 13) {
+                // if ($w_m_rate != $order_rate) {
+                //     $response["message"] = "w_m_rate and order_rate is not same";
+                //     return response()->json($response, $response['status']);
+                // }
                 $oddstype = $odd_f_type;
             } else {
                 $oddstype = '';
             }
-            $s_m_place = filiter_team(trim($s_m_place));
+            // $s_m_place = filiter_team(trim($s_m_place));
 
             $w_mid = "<br>[" . $match_sports['MB_MID'] . "]vs[" . $match_sports['TG_MID'] . "]<br>";
 
@@ -892,6 +909,7 @@ class BettingController extends Controller
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            // $response['message'] = "ok";
             Log::error($e->getTraceAsString());
             $response['status'] = STATUS_GENERAL_ERROR;
         }
@@ -929,9 +947,9 @@ class BettingController extends Controller
             $request_data = $request->all();
 
             $odd_f_type = $request_data["odd_f_type"];
-            $gold = $request_data["gold"];
+            $gold = (float)$request_data["gold"];
             $active = $request_data["active"];
-            $line_type = $request_data["line_type"];
+            $line = $request_data["line_type"];
             $gid = $request_data["m_id"];
             $type = $request_data["type"];
             $order_rate = $request_data["order_rate"];
@@ -951,6 +969,11 @@ class BettingController extends Controller
 
             $user = User::where('id', $user_id)->where('Status', 0)->first();
 
+            if (!isset($user)) {
+                $response['message'] = 'Please login again!';
+                return response()->json($response, $response['status']);                
+            }
+
             // return $user;
 
             $open = $user['OpenType'];
@@ -965,10 +988,6 @@ class BettingController extends Controller
             $w_ratio = $user['ratio'];
             $h_money = $user['Money'];
             $w_current = $user['CurType'];
-
-            $gold = (float)$request_data['gold'];
-            $gid = $request_data['m_id'];
-            $line = $request_data['line_type'];
 
             if ($h_money < $gold) {
                 $response['message'] = 'Your available balance is insufficient, please deposit first!';
@@ -1071,7 +1090,7 @@ class BettingController extends Controller
                         $w_m_place_tw='其它比分';
                         $w_m_place_en='Other Score';
                         $Sign="VS.";
-                    }else{                        
+                    }else{
                         $w_m_place='';
                         $w_m_place_tw='';
                         $w_m_place_en='';
@@ -2437,7 +2456,253 @@ class BettingController extends Controller
                 $money_log['order_num'] = $order_id;
                 $money_log['about'] = '投注足球<br>gid:' . $gid . '<br>RID:' . $ouid;
                 $money_log['update_time'] = $datetime;
-                // $money_log['type'] = $lines;
+                $money_log['type'] = $lines;
+                $money_log['order_value'] = '-' . $gold;
+                $money_log['assets'] = $assets;
+                $money_log['balance'] = $user["Money"];
+
+                $money_log->save();
+            } else {
+                WebReportData::where("id", $ouid)->delete();
+                $response['message'] = 'If the bet is unsuccessful, please contact the customer service!';
+                return response()->json($response, $response['status']);
+            }
+
+            $response['data'] = $new_web_report_data;
+            $response['message'] = 'Betting Order added successfully!';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    }
+
+    public function saveFTBettingChampion(Request $request)
+    {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+
+            $rules = [
+                'gold' => 'required|numeric|min:10|max:500000',
+                'active' => 'required',
+                'line_type' => 'required|numeric',
+                'm_id' => 'required|numeric',
+                'order_rate' => 'required',
+                'id' => 'required',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                $errorResponse = validation_error_response($validator->errors()->toArray());
+                return response()->json($errorResponse, $response['status']);
+            }
+
+            $request_data = $request->all();
+
+            $odd_f_type = $request_data["odd_f_type"];
+            $gold = $request_data["gold"];
+            $active = $request_data["active"];
+            $line = $request_data["line_type"];
+            $gid = $request_data["m_id"];
+            $order_rate = $request_data["order_rate"];
+            $rtype = $request_data["r_type"] ?? "";
+            $wtype = "FS";
+            $gametype = "FT";
+            $langx = "zh-cn";
+
+            $configs = Config::all();
+
+            $hg_confirm = $configs[0]['HG_Confirm'];
+            $bad_name = explode(",", $configs[0]['BadMember']);
+            $bad_name2 = explode(",", $configs[0]['BadMember2']);
+            $bad_name3 = explode(",", $configs[0]['BadMember3']);
+            $bad_name_jq = explode(",", $configs[0]['BadMember_JQ']);
+
+            $user_id = $request_data["id"];
+            // $user_id = Auth::guard("api")->user()->id;
+
+            $user = User::where('id', $user_id)->where('Status', 0)->first();
+
+            if (!isset($user)) {
+                $response['message'] = 'Please login again!';
+                return response()->json($response, $response['status']);                
+            }
+
+            // return $user;
+
+            $open = $user['OpenType'];
+            $pay_type = $user['Pay_Type'];
+            $user_name = $user['UserName'];
+            $agents = $user['Agents'];
+            $world = $user['World'];
+            $credit = $user['Money'];
+            $corprator = $user['Corprator'];
+            $super = $user['Super'];
+            $admin = $user['Admin'];
+            $w_ratio = $user['ratio'];
+            $h_money = $user['Money'];
+            $w_current = $user['CurType'];
+
+            if ($h_money < $gold) {
+                $response['message'] = 'Your available balance is insufficient, please deposit first!';
+                return response()->json($response, $response['status']);
+            }
+
+            $mem_xe = getXianEr('FT', 'FS', $user);
+
+            // if($gold > $mem_xe['BET_SO']){
+            //     $response['message'] = 'Exceeded the total amount of single bets!';
+            //     return response()->json($response, $response['status']);
+            // }
+
+            $bet_score = WebReportData::where('M_Name', $user_name)->where('Cancel', 0)->where('MID', $gid)->sum('BetScore');
+
+            // if ($bet_score + $gold > $mem_xe['BET_SC']) {
+            //     $response['message'] = 'The betting amount you entered is greater than the limit amount for a single game!';
+            //     return response()->json($response, $response['status']);
+            // }
+
+            $newDate = now()->subMinutes(6 * 60 + 90);
+
+            $match_crown = MatchCrown::where('MID', $gid)->where('Gid', $rtype)->first();
+
+            if (!isset($match_crown)) {
+                $response['message'] = 'Schedule is closed!';
+                return response()->json($response, $response['status']);
+            }
+
+            //下注时间Date('Y').'-'.   $match_crown["ShowType"]
+            $m_date = date("Y-m-d",strtotime($match_crown["M_Start"]));
+            $show_type = $rtype;
+            $bet_time = date('Y-m-d H:i:s');
+    
+            //联盟处理:生成写入数据库的联盟样式和显示的样式,二者有区别
+            $w_sleague = $match_crown['M_League'];
+            $w_sleague_tw = $match_crown['M_League_tw'];
+            $w_sleague_en = $match_crown['M_League_en'];
+            $s_sleague = $match_crown['M_League'];
+    
+            $w_sitem = $match_crown['M_Item'];
+            $w_sitem_tw = $match_crown['M_Item_tw'];
+            $w_sitem_en = $match_crown['M_Item_en'];
+            $s_sitem = $match_crown['M_Item'];
+    
+            //根据下注的类型进行处理：构建成新的数据格式,准备写入数据库
+
+            $bet_type = '冠军';
+            $bet_type_tw = "冠軍";
+            $bet_type_en = "Outright";
+            $turn_rate = "FS_Turn_FS";
+            $turn = "FS_Turn_FS";
+            
+            $num = $match_crown['Num'];
+            $ftype = $match_crown['mshow'];
+            $w_mb_team = $match_crown['MB_Team'];
+            $w_mb_team_tw = $match_crown['MB_Team_tw'];
+            $w_mb_team_en = $match_crown['MB_Team_en'];
+            $s_mb_team = "";
+            // $s_m_rate = num_rate($open, $match_crown['M_Rate']);
+            $s_m_rate =$match_crown['M_Rate'];
+            $s_m_rate = str_replace(",", "", $s_m_rate);
+            $gwin = ($s_m_rate - 1) * $gold;
+            $wtype = $gametype;
+            
+            $lines=$match_crown['M_League']."&nbsp;-&nbsp;".$match_crown['M_Item']."<br>".$w_mb_team."&nbsp;&nbsp;@&nbsp;<FONT color=#CC0000><b>".$s_m_rate."</b></FONT>";  
+            
+            $lines_tw=$match_crown['M_League_tw']."&nbsp;-&nbsp;".$match_crown['M_Item_tw']."<br>".$w_mb_team_tw."&nbsp;&nbsp;@&nbsp;<FONT color=#CC0000><b>".$s_m_rate."</b></FONT>";
+            
+            $lines_en=$match_crown['M_League_en']."&nbsp;-&nbsp;".$match_crown['M_Item_en']."<br>".$w_mb_team_en."&nbsp;&nbsp;@&nbsp;<FONT color=#CC0000><b>".$s_m_rate."</b></FONT>";
+
+            // $ip_addr = get_ip();
+            $ip_addr = "";
+
+            $m_turn = $user['M_turn'] + 0;
+
+            $a_point = "";
+
+            $b_point = "";
+
+            $c_point = "";
+
+            $d_point = "";
+
+            $max_id = WebReportData::where('BetTime', '<', $bet_time)->max('ID');
+            $num = rand(10, 50);
+            $id = $max_id + $num;
+
+            $web_system_data = WebSystemData::all();
+
+            $order_id = show_voucher($line, $id, $web_system_data[0]);  //定单号
+
+            $oddstype = $odd_f_type;
+
+            if ($oddstype == '') $oddstype = 'H';
+
+            $new_web_report_data = new WebReportData();
+
+            $new_web_report_data->ID = $id;
+            $new_web_report_data->OrderID = $order_id;
+            $new_web_report_data->danger = 0;
+            $new_web_report_data->MID = $gid;
+            $new_web_report_data->Active = $active;
+            $new_web_report_data->LineType = $line;
+            // $new_web_report_data->Mtype = $w_gtype;
+            $new_web_report_data->M_Date = $m_date;
+            $new_web_report_data->BetTime = $bet_time;
+            $new_web_report_data->BetScore = $gold;
+            $new_web_report_data->Middle = $lines;
+            $new_web_report_data->BetType = $bet_type;
+            // $new_web_report_data->M_Place = $grape;
+            $new_web_report_data->M_Rate = $s_m_rate;
+            $new_web_report_data->M_Name = $user_name;
+            $new_web_report_data->Gwin = $gwin;
+            $new_web_report_data->TurnRate = $m_turn;
+            $new_web_report_data->OpenType = $open;
+            $new_web_report_data->OddsType = $oddstype;
+            $new_web_report_data->ShowType = $show_type;
+            $new_web_report_data->Agents = $agents;
+            $new_web_report_data->World = $world;
+            $new_web_report_data->Corprator = $corprator;
+            $new_web_report_data->Super = $super;
+            $new_web_report_data->Admin = $admin;
+            $new_web_report_data->A_Point = $a_point;
+            $new_web_report_data->B_Point = $b_point;
+            $new_web_report_data->C_Point = $c_point;
+            $new_web_report_data->D_Point = $d_point;
+            $new_web_report_data->Ptype = $wtype;
+            $new_web_report_data->Gtype = 'FS';
+            $new_web_report_data->CurType = $w_current;
+            $new_web_report_data->Ratio = $w_ratio;
+            $new_web_report_data->Pay_Type = $pay_type;
+
+            $new_web_report_data->save();
+
+            $ouid = $new_web_report_data['ID'];
+
+            $assets = $user['Money'];
+            $user_id = $user['id'];
+
+            $datetime = date("Y-m-d H:i:s", time() + 12 * 3600);
+
+            $user["Money"] = $assets - $gold;
+
+            if ($user->save()) {
+                $money_log = new MoneyLog();
+
+                $money_log['user_id'] = $user_id;
+                $money_log['order_num'] = $order_id;
+                $money_log['about'] = '投注足球<br>gid:' . $gid . '<br>RID:' . $ouid;
+                $money_log['update_time'] = $datetime;
+                $money_log['type'] = $lines;
                 $money_log['order_value'] = '-' . $gold;
                 $money_log['assets'] = $assets;
                 $money_log['balance'] = $user["Money"];
