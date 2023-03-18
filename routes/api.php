@@ -96,7 +96,7 @@ Route::group(['prefix' => 'third-party'], function ($router){
         Route::post('/ft-corner-obt', [MatchSportController::class, 'saveFT_CORNER_INPLAY']);
         // save match sport correct score data by showtype "live"
         Route::post('/ft-correct-score', [MatchSportController::class, 'saveFT_CORRECT_SCORE']);
-        // get ft data 
+        // get ft data
         Route::get('/ft-data', [MatchSportController::class, 'getFTData']);
         // get In play Data
         Route::get('/ft-in-play-data', [MatchSportController::class, 'getFTInPlayData']);        
