@@ -12,6 +12,8 @@ use App\Http\Controllers\Web\AccountController;
 /* Admin controllers. */
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\SystemSetting\SystemParametersController;
+use App\Http\Controllers\Admin\AdminLiveBettingController;
+use App\Http\Controllers\Admin\AdminSearchBettingController;
 
 // API User Controllers
 use App\Http\Controllers\Api\User\BettingController;
@@ -92,10 +94,10 @@ Route::group(['prefix' => 'third-party'], function ($router){
         Route::post('/save-ft-pd', [MatchSportController::class, 'saveFT_PD']);
         // save match sport correct score data by showtype "live"
         Route::post('/ft-correct-score', [MatchSportController::class, 'saveFT_CORRECT_SCORE']);
-        // get ft data 
+        // get ft data
         Route::get('/ft-data', [MatchSportController::class, 'getFTData']);
         // get In play Data
-        Route::get('/ft-in-play-data', [MatchSportController::class, 'getFTInPlayData']);        
+        Route::get('/ft-in-play-data', [MatchSportController::class, 'getFTInPlayData']);
         Route::get('/ft-correct-score-inplay-data', [MatchSportController::class, 'getFTCorrectScoreInPlayData']);
         Route::post('/ft-corner-today', [MatchSportController::class, 'saveFT_CORNER_TODAY']);
     });
@@ -180,5 +182,17 @@ Route::group(['prefix' => 'account', 'middleware' => 'CORS'], function ($router)
     Route::post('/edit-crypto-account', [AccountController::class, 'editCryptoAccount'])->name('web.account.editCryptoAccount');
     Route::delete('/delete-bank-account', [AccountController::class, 'deleteBankAccount'])->name('web.account.deleteBankAccount');
     Route::delete('/delete-crypto-account', [AccountController::class, 'deleteCryptoAccount'])->name('web.account.deleteCryptoAccount');
+});
+
+
+Route::group(['prefix' => 'livebetting', 'middleware' => 'CORS'], function ($router){
+    Route::get('/get_items', [AdminLiveBettingController::class, 'getItems'])->name('admin.livebetting.getItems');
+    Route::get('/get_function_items', [AdminLiveBettingController::class, 'getFunctionItems'])->name('admin.livebetting.getFunctionItems');
+});
+
+
+Route::group(['prefix' => 'searchbetting', 'middleware' => 'CORS'], function ($router){
+    Route::get('/get_items', [AdminSearchBettingController::class, 'getItems'])->name('admin.searchbetting.getItems');
+    Route::get('/get_function_items', [AdminSearchBettingController::class, 'getFunctionItems'])->name('admin.searchbetting.getFunctionItems');
 });
 
