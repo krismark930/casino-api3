@@ -13,12 +13,12 @@ class AdminSearchBettingController extends Controller
     //
     public function getItems(Request $request)
     {
-        // $m_date = $request['m_date'] ?? date('Y-m-d');
+        $m_date = $request['m_date'] ?? date('Y-m-d');
         // $mids = Report::select('MID')->where('M_Date', $m_date)->get();
 
         $data = array();
 
-        $mids = Report::select()->where('M_Date', '2023-03-17')->get();
+        $mids = Report::select()->where('M_Date', $m_date)->orderBy('BetTime', "desc")->get();
         $items = Sport::select('MID')->get();
 
         foreach($mids as $row){

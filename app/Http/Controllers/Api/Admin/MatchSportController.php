@@ -8,7 +8,7 @@ use App\Models\Sport;
 
 class MatchSportController extends Controller
 {
-    public function saveFT_FU_R(Request $request) {
+    public function saveFTDefaultToday(Request $request) {
 
         $response = [];
         $response['success'] = FALSE;
@@ -43,7 +43,7 @@ class MatchSportController extends Controller
                 "M_Flat_Rate" => $request_data['M_Flat_Rate'],
                 "M_LetB" => $request_data['M_LetB'],
                 "MB_LetB_Rate" => $request_data['MB_LetB_Rate'],
-                "TG_LetB_Rate" => $request_data['Type'],
+                "TG_LetB_Rate" => $request_data['TG_LetB_Rate'],
                 "MB_Dime" => $request_data['MB_Dime'],
                 "TG_Dime" => $request_data['TG_Dime'],
                 "MB_Dime_Rate" => $request_data['MB_Dime_Rate'],
@@ -84,7 +84,7 @@ class MatchSportController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function saveFT_FU_R_INPLAY(Request $request) {
+    public function saveFTDefaultInplay(Request $request) {
 
         $response = [];
         $response['success'] = FALSE;
@@ -172,6 +172,80 @@ class MatchSportController extends Controller
         return response()->json($response, $response['status']);
     }
 
+    public function saveFTDefaultParlay(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+            $request_data = $request->all();
+            $new_data = [
+                "MID" => $request_data['MID'],
+                "Type" => $request_data['Type'],
+                "LID" => $request_data['LID'],
+                "MB_MID" => $request_data['MB_MID'],
+                "TG_MID" => $request_data['TG_MID'],
+                "Play" => $request_data['Play'] ?? 0,
+                "P3_Show" => $request_data['P3_Show'],
+                "MB_Team" => $request_data['MB_Team'],
+                "TG_Team" => $request_data['TG_Team'],
+                "MB_Team_tw" => $request_data['MB_Team_tw'],
+                "TG_Team_tw" => $request_data['TG_Team_tw'],
+                "MB_Team_en" => $request_data['MB_Team_en'],
+                "TG_Team_en" => $request_data['TG_Team_en'],
+                "M_Date" => $request_data['M_Date'],
+                "M_Time" => $request_data['M_Time'],
+                "M_Start" => $request_data['M_Start'],
+                "M_League" => $request_data['M_League'],
+                "M_League_tw" => $request_data['M_League_tw'],
+                "M_League_en" => $request_data['M_League_en'],
+                'ShowTypeP' => $request_data['ShowTypeP'],
+                'ShowTypeHP' => $request_data['ShowTypeHP'],
+                "MB_P_Win_Rate" => $request_data['MB_P_Win_Rate'],
+                "TG_P_Win_Rate" => $request_data['TG_P_Win_Rate'],
+                "M_P_Flat_Rate" => $request_data['M_P_Flat_Rate'],
+                "M_P_LetB" => $request_data['M_P_LetB'],
+                "MB_P_LetB_Rate" => $request_data['MB_P_LetB_Rate'],
+                "TG_P_LetB_Rate" => $request_data['TG_P_LetB_Rate'],
+                "MB_P_Dime" => $request_data['MB_P_Dime'],
+                "TG_P_Dime" => $request_data['TG_P_Dime'],
+                "MB_P_Dime_Rate" => $request_data['MB_P_Dime_Rate'],
+                "TG_P_Dime_Rate" => $request_data['TG_P_Dime_Rate'],
+                "MB_P_Win_Rate_H" => $request_data['MB_P_Win_Rate_H'],
+                "TG_P_Win_Rate_H" => $request_data['TG_P_Win_Rate_H'],
+                "M_P_Flat_Rate_H" => $request_data['M_P_Flat_Rate_H'],
+                "M_P_LetB_H" => $request_data['M_P_LetB_H'],
+                "MB_P_LetB_Rate_H" => $request_data['MB_P_LetB_Rate_H'],
+                "TG_P_LetB_Rate_H" => $request_data['TG_P_LetB_Rate_H'],
+                "MB_P_Dime_H" => $request_data['MB_P_Dime_H'],
+                "TG_P_Dime_H" => $request_data['TG_P_Dime_H'],
+                "MB_P_Dime_Rate_H" => $request_data['MB_P_Dime_Rate_H'],
+                "TG_P_Dime_Rate_H" => $request_data['TG_P_Dime_Rate_H'],      
+                "FLAG_CLASS" => $request_data['FLAG_CLASS'],
+            ];
+            $sport = Sport::where("MID", $request_data['MID'])->first();
+            if (isset($sport)) {
+                Sport::where("MID", $request_data['MID'])->update($new_data);
+                $response['message'] = 'Match Sport Data updated successfully!';
+                $response['success'] = TRUE;
+                $response['status'] = STATUS_OK;
+            } else {
+                $sport = new Sport;
+                $sport->create($new_data);
+                $response['message'] = 'Match Sport Data added successfully!';
+                $response['success'] = TRUE;
+                $response['status'] = STATUS_OK;
+            }
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    }
+
     public function saveFT_CORRECT_SCORE(Request $request) {
 
         $response = [];
@@ -185,7 +259,10 @@ class MatchSportController extends Controller
                 "MID" => $request_data['MID'],
                 "MB_Ball" => $request_data['MB_Ball'] ?? 0,
                 "TG_Ball" => $request_data['MB_Ball'] ?? 0,
-                "RETIME_SET" => $request_data['RETIME_SET'],
+                "RETIME_SET" => $request_data['RETIME_SET'] ?? "",
+                "M_Date" => $request_data['M_Date'] ?? "",
+                "M_Time" => $request_data['M_Time'] ?? "",
+                "M_Start" => $request_data['M_Start'] ?? "",
                 "MB1TG0" => $request_data['MB1TG0'] ?? 0,
                 "MB2TG0" => $request_data['MB2TG0'] ?? 0,
                 "MB2TG1" => $request_data['MB2TG1'] ?? 0,
@@ -212,7 +289,6 @@ class MatchSportController extends Controller
                 "MB2TG4" => $request_data['MB2TG4'] ?? 0,
                 "MB3TG4" => $request_data['MB3TG4'] ?? 0,
                 "UP5" => $request_data['UP5'] ?? 0,
-                "UP5H" => $request_data['UP5H'] ?? 0,
                 "PD_Show" => 1,
             ];
             $sport = Sport::where("MID", $request_data['MID'])->first();
@@ -235,7 +311,7 @@ class MatchSportController extends Controller
         }
 
         return response()->json($response, $response['status']);
-    }
+    }    
 
     public function saveFT_HDP_OBT(Request $request) {
 

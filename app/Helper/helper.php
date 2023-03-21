@@ -183,6 +183,15 @@ function show_voucher($line, $id, $web_system_data){
     case 31:
         $show_voucher='OU'.($id+$ouid);
         break;
+    case 50:
+        $show_voucher='OU'.($id+$ouid);
+        break;
+    case 51:
+        $show_voucher='OU'.($id+$ouid);
+        break;
+    case 52:
+        $show_voucher='OU'.($id+$ouid);
+        break;
     }
     return $show_voucher;
 }

@@ -48,7 +48,7 @@ class MatchCrownController extends Controller
         $match_crown->MB_Team_en = $request_data['MB_Team_en'];
         $match_crown->M_League_en = $request_data['M_League_en'];
         $match_crown->M_Item_en = $request_data['M_Item_en'];
-        $match_crown->M_Area = $request_data['M_Area'];
+        $match_crown->M_Area = $request_data['M_Area'] ?? "";
         $match_crown->M_Rate = $request_data['M_Rate'];
         $match_crown->Gid = $request_data['Gid'];
         $match_crown->mcount = $request_data['mcount'];

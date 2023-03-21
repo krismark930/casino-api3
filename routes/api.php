@@ -41,9 +41,17 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
     // betting routes
     Route::group(['prefix' => 'betting'], function ($router) {
         // ft betting order api
-        Route::post('/single-ft', [BettingController::class, 'saveFTBettingOrderData']);
+        Route::post('/single-ft-today', [BettingController::class, 'saveFTBettingToday']);
         // ft betting inplay api
-        Route::post('/single-ft-re', [BettingController::class, 'saveFTBettingInPlay']);
+        Route::post('/single-ft-play', [BettingController::class, 'saveFTBettingInPlay']);
+        // ft betting champion api
+        Route::post('/single-ft-champion', [BettingController::class, 'saveFTBettingChampion']);        
+        // ft betting parlay api
+        Route::post('/single-ft-parlay', [BettingController::class, 'saveFTBettingParlay']);
+        // ft betting parlay api ft-bet-history
+        Route::post('/multi-ft-parlay', [BettingController::class, 'saveFTMultiBettingParlay']);
+        // ft betting parlay api ft-bet-history
+        Route::post('/ft-bet-history', [BettingController::class, 'getFTBetHistory']);
     });
     // matched sports route
     Route::group(['prefix' => 'match-sport'], function ($router) {
@@ -82,23 +90,23 @@ Route::group(['prefix' => 'third-party'], function ($router){
     });
     // match_sport routes
     Route::group(['prefix' => 'match-sport'], function ($router) {
-        // save match sport data by showtype "early"
-        Route::post('/save-ft-fu-r', [MatchSportController::class, 'saveFT_FU_R']);
+        // save match sport data by showtype "today"
+        Route::post('/save-ft-today', [MatchSportController::class, 'saveFTDefaultToday']);
         // save match sport data by showtype "live"
-        Route::post('/save-ft-inplay', [MatchSportController::class, 'saveFT_FU_R_INPLAY']);
+        Route::post('/save-ft-inplay', [MatchSportController::class, 'saveFTDefaultInplay']);
+        // save match sport data by showtype "parlay"
+        Route::post('/save-ft-parlay', [MatchSportController::class, 'saveFTDefaultParlay']);
         // save match sport data by HDP in OBT
         Route::post('/ft-hdp-obt', [MatchSportController::class, 'saveFT_HDP_OBT']);
         // save match sport data by CORNER in OBT
         Route::post('/ft-corner-obt', [MatchSportController::class, 'saveFT_CORNER_INPLAY']);
-        // save match sport data by showtype "today"
-        Route::post('/save-ft-pd', [MatchSportController::class, 'saveFT_PD']);
         // save match sport correct score data by showtype "live"
         Route::post('/ft-correct-score', [MatchSportController::class, 'saveFT_CORRECT_SCORE']);
-        // get ft data
+        // get ft data 
         Route::get('/ft-data', [MatchSportController::class, 'getFTData']);
         // get In play Data
-        Route::get('/ft-in-play-data', [MatchSportController::class, 'getFTInPlayData']);
-        Route::get('/ft-correct-score-inplay-data', [MatchSportController::class, 'getFTCorrectScoreInPlayData']);
+        Route::get('/ft-in-play-data', [MatchSportController::class, 'getFTInPlayData']);        
+        Route::get('/ft-correct-score-inplay', [MatchSportController::class, 'getFTCorrectScoreInPlayData']);
         Route::post('/ft-corner-today', [MatchSportController::class, 'saveFT_CORNER_TODAY']);
     });
 });
@@ -195,4 +203,3 @@ Route::group(['prefix' => 'searchbetting', 'middleware' => 'CORS'], function ($r
     Route::get('/get_items', [AdminSearchBettingController::class, 'getItems'])->name('admin.searchbetting.getItems');
     Route::get('/get_function_items', [AdminSearchBettingController::class, 'getFunctionItems'])->name('admin.searchbetting.getFunctionItems');
 });
-
