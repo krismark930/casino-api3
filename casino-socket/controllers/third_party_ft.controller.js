@@ -18,6 +18,337 @@ const { XMLParser, XMLBuilder, XMLValidator} = require("fast-xml-parser");
 var moment = require('moment');
 const parser = new XMLParser();
 
+
+exports.getFT_MAIN_FAVORITE = async (thirdPartyAuthData, data) => {
+	try {
+		let ecidStr = "";
+		for (let i = 0; i < data.length; i++) {
+			if (i == data.length - 1) {
+				ecidStr += data[i]["ecid"]
+			} else {
+				ecidStr += data[i]["ecid"] + "|"
+			}
+		}
+		let itemList = [];
+		let thirdPartyBaseUrl = thirdPartyAuthData["thirdPartyBaseUrl"];
+		let thirdPartyUrl = "";
+		let version = thirdPartyAuthData["version"];
+		let uID = thirdPartyAuthData["uid"];
+		thirdPartyUrl = `${thirdPartyBaseUrl}/transform.php?ver=${version}`;
+		let formData = new FormData();
+		formData.append("p", "get_game_list");
+		formData.append("uid", uID);
+		formData.append("ver", version);
+		formData.append("langx", "zh-cn");
+		formData.append("p3type", "");
+		formData.append("date", "");
+		formData.append("gtype", "ft");
+		formData.append("showtype", "mygame");
+		formData.append("rtype", "r");
+		formData.append("ltype", 3);
+		formData.append("sorttype", "L");
+		formData.append("specialClick", "");
+		formData.append("isFantasy", "N");
+		formData.append("ts", new Date().getTime());
+		formData.append("ecid_str", ecidStr);
+		response = await axios.post(thirdPartyUrl, formData);
+		if (response.status === 200) {
+			// let result = parser.parse(response.data);
+			var result = JSON.parse(convert.xml2json(response.data, {compact: true, spaces: 4}));
+			console.log("FT_FAVORITE: ", result['serverresponse']['ec'])
+			if (result['serverresponse']['code'] === "error") return null;
+			let totalDataCount = result['serverresponse']['totalDataCount']['_text'];
+			if (totalDataCount > 1) {
+				await Promise.all(result['serverresponse']['ec'].map(async item => {
+					// console.log("CORNER:======================", item['game'])
+					let m_date = moment().format('YYYY') + "-" + item['game']['DATETIME']['_text'].split(" ")[0];
+					let m_time = item['game']['DATETIME']['_text'].split(" ")[1];
+					let time = m_time.split(":")[0];
+					let temp_minute = m_time.split(":")[1];
+					let minute = temp_minute.substring(0, temp_minute.length - 1);
+					var lastChar = temp_minute.substr(temp_minute.length - 1);
+					if (lastChar == "p") {
+						time = Number(time) + 12;
+					}
+					// console.log("22222222222222", item['game']['IOR_HREH'] ?? 0)
+					let m_start = m_date + " " + time + ":" + minute;
+					m_time = time + ":" + minute;
+					if (item['_attributes']['myGame'] === "rb") {
+						let data = {
+							showType: item['_attributes']['myGame'],
+							Type: 'FT',
+							Retime: item['game']['TIMER']['_text'],
+							ECID: item['game']['ECID']['_text'],
+							LID: item['game']['LID']['_text'],
+							M_Date: m_date,
+							M_Time: m_time,
+							M_Start: m_start,
+							MB_Team: item['game']['TEAM_H']['_text'],
+							TG_Team: item['game']['TEAM_C']['_text'],
+							MB_Team_tw: item['game']['TEAM_H']['_text'],
+							TG_Team_tw: item['game']['TEAM_C']['_text'],
+							MB_Team_en: item['game']['TEAM_H']['_text'],
+							TG_Team_en: item['game']['TEAM_C']['_text'],
+							M_League: item['game']['LEAGUE']['_text'],
+							M_League_tw: item['game']['LEAGUE']['_text'],
+							M_League_en: item['game']['LEAGUE']['_text'],
+							MB_MID: item['game']['GNUM_H']['_text'],
+							TG_MID: item['game']['GNUM_C']['_text'],
+							ShowTypeRB: item['game']['HSTRONG']['_text'] == "" ? "H" : item['game']['HSTRONG']['_text'],
+							M_LetB_RB: item['game']['RATIO_RE']['_text'] == "" ? 0 : item['game']['RATIO_RE']['_text'],
+							MB_LetB_Rate_RB: item['game']['IOR_REH']['_text'] == "" ? 0 : item['game']['IOR_REH']['_text'],
+							TG_LetB_Rate_RB: item['game']['IOR_REC']['_text'] == "" ? 0 : item['game']['IOR_REC']['_text'],
+							MB_Dime_RB: item['game']['RATIO_ROUO']['_text'] == "" ? 0 : item['game']['RATIO_ROUO']['_text'],
+							TG_Dime_RB: item['game']['RATIO_ROUU']['_text'] == "" ? 0 : item['game']['RATIO_ROUU']['_text'],
+							MB_Dime_Rate_RB: item['game']['IOR_ROUC']['_text'] == "" ? 0 : item['game']['IOR_ROUC']['_text'],
+							TG_Dime_Rate_RB: item['game']['IOR_ROUH']['_text'] == "" ? 0 : item['game']['IOR_ROUH']['_text'],
+							ShowTypeHRB: item['game']['HSTRONG']['_text'] == "" ? "H" : item['game']['HSTRONG']['_text'],
+							M_LetB_RB_H: item['game']['RATIO_HRE']['_text'] == "" ? 0 : item['game']['RATIO_HRE']['_text'],
+							MB_LetB_Rate_RB_H: item['game']['IOR_HREH']['_text'] == "" ? 0 : item['game']['IOR_HREH']['_text'],
+							TG_LetB_Rate_RB_H: item['game']['IOR_HREC']['_text'] == "" ? 0 : item['game']['IOR_HREC']['_text'],
+							MB_Dime_RB_H: item['game']['RATIO_HROUO']['_text'] == "" ? 0 : item['game']['RATIO_HROUO']['_text'],
+							TG_Dime_RB_H: item['game']['RATIO_HROUU']['_text'] == "" ? 0 : item['game']['RATIO_HROUU']['_text'],
+							MB_Dime_Rate_RB_H: item['game']['IOR_HROUC']['_text'] == "" ? 0 : item['game']['IOR_HROUC']['_text'],
+							TG_Dime_Rate_RB_H: item['game']['IOR_HROUH'] == "" ? 0 : item['game']['IOR_HROUH'],
+							MB_Ball: item['game']['SCORE_H']['_text'],
+							TG_Ball: item['game']['SCORE_C']['_text'],
+							MB_Win_Rate_RB: item['game']['IOR_RMH']['_text'] == "" ? 0 : item['game']['IOR_RMH']['_text'],
+							TG_Win_Rate_RB: item['game']['IOR_RMC']['_text'] == "" ? 0 : item['game']['IOR_RMC']['_text'],
+							M_Flat_Rate_RB: item['game']['IOR_RMN']['_text'] == "" ? 0 : item['game']['IOR_RMN']['_text'],
+							MB_Win_Rate_RB_H: item['game']['IOR_HRMH']['_text'] == "" ? 0 : item['game']['IOR_HRMH']['_text'],
+							TG_Win_Rate_RB_H: item['game']['IOR_HRMC']['_text'] == "" ? 0 : item['game']['IOR_HRMC']['_text'],
+							M_Flat_Rate_RB_H: item['game']['IOR_HRMN']['_text'] == "" ? 0 : item['game']['IOR_HRMN']['_text'],
+							MB_Card: item['game']['REDCARD_H']['_text'] == "" ? 0 : item['game']['REDCARD_H']['_text'],
+							TG_Card: item['game']['REDCARD_C']['_text'] == "" ? 0 : item['game']['REDCARD_C']['_text'],
+							FLAG_CLASS: item['game']['FLAG_CLASS']['_text'],
+							RETIME_SET: item['game']["RETIMESET"]['_text'].split("^")[0] == "MTIME" ? item['game']["RETIMESET"]['_text'].split("^")[1] : item['game']["RETIMESET"]['_text'].split("^")[0] + " " + item['game']["RETIMESET"]['_text'].split("^")[1],
+							// Eventid: item['game']['EVENTID'],
+							Hot: item['game']['HOT']['_text'] == 'Y'? 1 : 0,
+							Play: item['game']['PLAY']['_text'] == 'Y'? 1 : 0,
+							MID: item['game']['GID']['_text'],
+							HDP_OU: item['game']['OU_COUNT']['_text'] > 1 ? 1 : 0,
+							CORNER: item['game']['CN_COUNT']['_text'] > 0 ? 1 : 0,
+							RB_Show: 1,
+							S_Show: 0,
+							isSub: 1
+						};
+						itemList.push(data);						
+					} else {
+						let data = {
+							showType: item['_attributes']['myGame'],
+							Type: 'FT',
+							ECID: item['game']['ECID']['_text'],
+							LID: item['game']['LID']['_text'],
+							MB_MID: item['game']['GNUM_H']['_text'],
+							TG_MID: item['game']['GNUM_C']['_text'],
+							S_Single_Rate: item['game']['IOR_EOO']['_text'],
+							S_Double_Rate: item['game']['IOR_EOE']['_text'],
+							Eventid: item['game']['EVENTID']['_text'],
+							Hot: item['game']['HOT']['_text'],
+							Play: item['game']['PLAY']['_text'],
+							S_Show: 1,
+							MB_Team: item['game']['TEAM_H']['_text'],
+							TG_Team: item['game']['TEAM_C']['_text'],
+							MB_Team_tw: item['game']['TEAM_H']['_text'],
+							TG_Team_tw: item['game']['TEAM_C']['_text'],
+							MB_Team_en: item['game']['TEAM_H']['_text'],
+							TG_Team_en: item['game']['TEAM_C']['_text'],
+							M_Date: m_date,
+							M_Time: m_time,
+							M_Start: m_start,
+							M_League: item['game']['LEAGUE']['_text'],
+							M_League_tw: item['game']['LEAGUE']['_text'],
+							M_League_en: item['game']['LEAGUE']['_text'],
+							M_Type: item['game']['RUNNING']['_text'] == "Y" ? 1 : 0,
+							ShowTypeR: item['game']['STRONG']['_text'],
+							MB_Win_Rate: item['game']['IOR_MH']['_text'],
+							TG_Win_Rate: item['game']['IOR_MC']['_text'],
+							M_Flat_Rate: item['game']['IOR_MN']['_text'],
+							M_LetB: item['game']['RATIO_R']['_text'],
+							MB_LetB_Rate: item['game']['IOR_RH']['_text'],
+							TG_LetB_Rate: item['game']['IOR_RC']['_text'],
+							MB_Dime: item['game']['RATIO_OUO']['_text'],
+							TG_Dime: item['game']['RATIO_OUU']['_text'],
+							MB_Dime_Rate: item['game']['IOR_OUC']['_text'],
+							TG_Dime_Rate: item['game']['IOR_OUH']['_text'],
+							ShowTypeHR: item['game']['STRONG']['_text'],
+							MB_Win_Rate_H: item['game']['IOR_HMH']['_text'],
+							TG_Win_Rate_H: item['game']['IOR_HMC']['_text'],
+							M_Flat_Rate_H: item['game']['IOR_HMN']['_text'],
+							M_LetB_H: item['game']['RATIO_HR']['_text'],
+							MB_LetB_Rate_H: item['game']['IOR_HRH']['_text'],
+							TG_LetB_Rate_H: item['game']['IOR_HRC']['_text'],
+							MB_Dime_H: item['game']['RATIO_HOUO']['_text'],
+							TG_Dime_H: item['game']['RATIO_HOUU']['_text'],
+							MB_Dime_Rate_H: item['game']['IOR_HOUC']['_text'],
+							TG_Dime_Rate_H: item['game']['IOR_HOUH']['_text'],
+							ShowTypeRB: item['game']['STRONG']['_text'],
+							FLAG_CLASS: item['game']['FLAG_CLASS']['_text'],
+							MID: item['game']['GID']['_text'],
+							HDP_OU: item['game']['OU_COUNT']['_text'] > 1 ? 1 : 0,
+							CORNER: item['game']['CN_COUNT']['_text'] > 0 ? 1 : 0,
+						};
+						itemList.push(data);						
+					}
+				}));
+			} else if(totalDataCount == 1) {
+				let item = result['serverresponse']['ec'];
+				// console.log("CORNER:======================", item['game'])
+				let m_date = moment().format('YYYY') + "-" + item['game']['DATETIME']['_text'].split(" ")[0];
+				let m_time = item['game']['DATETIME']['_text'].split(" ")[1];
+				let time = m_time.split(":")[0];
+				let temp_minute = m_time.split(":")[1];
+				let minute = temp_minute.substring(0, temp_minute.length - 1);
+				var lastChar = temp_minute.substr(temp_minute.length - 1);
+				if (lastChar == "p") {
+					time = Number(time) + 12;
+				}
+				// console.log("22222222222222", item['game']['IOR_HREH'] ?? 0)
+				let m_start = m_date + " " + time + ":" + minute;
+				m_time = time + ":" + minute;
+				if (item['_attributes']['myGame'] === "rb") {
+					let data = {
+						sowType: "rb",
+						Type: 'FT',
+						Retime: item['game']['TIMER']['_text'],
+						ECID: item['game']['ECID']['_text'],
+						LID: item['game']['LID']['_text'],
+						M_Date: m_date,
+						M_Time: m_time,
+						M_Start: m_start,
+						MB_Team: item['game']['TEAM_H']['_text'],
+						TG_Team: item['game']['TEAM_C']['_text'],
+						MB_Team_tw: item['game']['TEAM_H']['_text'],
+						TG_Team_tw: item['game']['TEAM_C']['_text'],
+						MB_Team_en: item['game']['TEAM_H']['_text'],
+						TG_Team_en: item['game']['TEAM_C']['_text'],
+						M_League: item['game']['LEAGUE']['_text'],
+						M_League_tw: item['game']['LEAGUE']['_text'],
+						M_League_en: item['game']['LEAGUE']['_text'],
+						MB_MID: item['game']['GNUM_H']['_text'],
+						TG_MID: item['game']['GNUM_C']['_text'],
+						ShowTypeRB: item['game']['HSTRONG']['_text'] == "" ? "H" : item['game']['HSTRONG']['_text'],
+						M_LetB_RB: item['game']['RATIO_RE']['_text'] == "" ? 0 : item['game']['RATIO_RE']['_text'],
+						MB_LetB_Rate_RB: item['game']['IOR_REH']['_text'] == "" ? 0 : item['game']['IOR_REH']['_text'],
+						TG_LetB_Rate_RB: item['game']['IOR_REC']['_text'] == "" ? 0 : item['game']['IOR_REC']['_text'],
+						MB_Dime_RB: item['game']['RATIO_ROUO']['_text'] == "" ? 0 : item['game']['RATIO_ROUO']['_text'],
+						TG_Dime_RB: item['game']['RATIO_ROUU']['_text'] == "" ? 0 : item['game']['RATIO_ROUU']['_text'],
+						MB_Dime_Rate_RB: item['game']['IOR_ROUC']['_text'] == "" ? 0 : item['game']['IOR_ROUC']['_text'],
+						TG_Dime_Rate_RB: item['game']['IOR_ROUH']['_text'] == "" ? 0 : item['game']['IOR_ROUH']['_text'],
+						ShowTypeHRB: item['game']['HSTRONG']['_text'] == "" ? "H" : item['game']['HSTRONG']['_text'],
+						M_LetB_RB_H: item['game']['RATIO_HRE']['_text'] == "" ? 0 : item['game']['RATIO_HRE']['_text'],
+						MB_LetB_Rate_RB_H: item['game']['IOR_HREH']['_text'] == "" ? 0 : item['game']['IOR_HREH']['_text'],
+						TG_LetB_Rate_RB_H: item['game']['IOR_HREC']['_text'] == "" ? 0 : item['game']['IOR_HREC']['_text'],
+						MB_Dime_RB_H: item['game']['RATIO_HROUO']['_text'] == "" ? 0 : item['game']['RATIO_HROUO']['_text'],
+						TG_Dime_RB_H: item['game']['RATIO_HROUU']['_text'] == "" ? 0 : item['game']['RATIO_HROUU']['_text'],
+						MB_Dime_Rate_RB_H: item['game']['IOR_HROUC']['_text'] == "" ? 0 : item['game']['IOR_HROUC']['_text'],
+						TG_Dime_Rate_RB_H: item['game']['IOR_HROUH']['_text'] == "" ? 0 : item['game']['IOR_HROUH']['_text'],
+						MB_Ball: item['game']['SCORE_H']['_text'],
+						TG_Ball: item['game']['SCORE_C']['_text'],
+						MB_Win_Rate_RB: item['game']['IOR_RMH']['_text'] == "" ? 0 : item['game']['IOR_RMH']['_text'],
+						TG_Win_Rate_RB: item['game']['IOR_RMC']['_text'] == "" ? 0 : item['game']['IOR_RMC']['_text'],
+						M_Flat_Rate_RB: item['game']['IOR_RMN']['_text'] == "" ? 0 : item['game']['IOR_RMN']['_text'],
+						MB_Win_Rate_RB_H: item['game']['IOR_HRMH']['_text'] == "" ? 0 : item['game']['IOR_HRMH']['_text'],
+						TG_Win_Rate_RB_H: item['game']['IOR_HRMC']['_text'] == "" ? 0 : item['game']['IOR_HRMC']['_text'],
+						M_Flat_Rate_RB_H: item['game']['IOR_HRMN']['_text'] == "" ? 0 : item['game']['IOR_HRMN']['_text'],
+						MB_Card: item['game']['REDCARD_H']['_text'] == "" ? 0 : item['game']['REDCARD_H']['_text'],
+						TG_Card: item['game']['REDCARD_C']['_text'] == "" ? 0 : item['game']['REDCARD_C']['_text'],
+						FLAG_CLASS: item['game']['FLAG_CLASS']['_text'],
+						RETIME_SET: item['game']["RETIMESET"]['_text'].split("^")[0] == "MTIME" ? item['game']["RETIMESET"]['_text'].split("^")[1] : item['game']["RETIMESET"]['_text'].split("^")[0] + " " + item['game']["RETIMESET"]['_text'].split("^")[1],
+						// Eventid: item['game']['EVENTID'],
+						Hot: item['game']['HOT']['_text'] == 'Y'? 1 : 0,
+						Play: item['game']['PLAY']['_text'] == 'Y'? 1 : 0,
+						MID: item['game']['GID']['_text'],
+						HDP_OU: item['game']['OU_COUNT']['_text'] > 1 ? 1 : 0,
+						CORNER: item['game']['CN_COUNT']['_text'] > 0 ? 1 : 0,
+						RB_Show: 1,
+						S_Show: 0,
+						isSub: 1
+					};
+					itemList.push(data);						
+				} else {
+					let data = {
+						showType: "ft",
+						Type: 'FT',
+						ECID: item['game']['ECID']['_text'],
+						LID: item['game']['LID']['_text'],
+						MB_MID: item['game']['GNUM_H']['_text'],
+						TG_MID: item['game']['GNUM_C']['_text'],
+						S_Single_Rate: item['game']['IOR_EOO']['_text'],
+						S_Double_Rate: item['game']['IOR_EOE']['_text'],
+						Eventid: item['game']['EVENTID']['_text'],
+						Hot: item['game']['HOT']['_text'],
+						Play: item['game']['PLAY']['_text'],
+						S_Show: 1,
+						MB_Team: item['game']['TEAM_H']['_text'],
+						TG_Team: item['game']['TEAM_C']['_text'],
+						MB_Team_tw: item['game']['TEAM_H']['_text'],
+						TG_Team_tw: item['game']['TEAM_C']['_text'],
+						MB_Team_en: item['game']['TEAM_H']['_text'],
+						TG_Team_en: item['game']['TEAM_C']['_text'],
+						M_Date: m_date,
+						M_Time: m_time,
+						M_Start: m_start,
+						M_League: item['game']['LEAGUE']['_text'],
+						M_League_tw: item['game']['LEAGUE']['_text'],
+						M_League_en: item['game']['LEAGUE']['_text'],
+						M_Type: item['game']['RUNNING']['_text'] == "Y" ? 1 : 0,
+						ShowTypeR: item['game']['STRONG']['_text'],
+						MB_Win_Rate: item['game']['IOR_MH']['_text'],
+						TG_Win_Rate: item['game']['IOR_MC']['_text'],
+						M_Flat_Rate: item['game']['IOR_MN']['_text'],
+						M_LetB: item['game']['RATIO_R']['_text'],
+						MB_LetB_Rate: item['game']['IOR_RH']['_text'],
+						TG_LetB_Rate: item['game']['IOR_RC']['_text'],
+						MB_Dime: item['game']['RATIO_OUO']['_text'],
+						TG_Dime: item['game']['RATIO_OUU']['_text'],
+						MB_Dime_Rate: item['game']['IOR_OUC']['_text'],
+						TG_Dime_Rate: item['game']['IOR_OUH']['_text'],
+						ShowTypeHR: item['game']['STRONG']['_text'],
+						MB_Win_Rate_H: item['game']['IOR_HMH']['_text'],
+						TG_Win_Rate_H: item['game']['IOR_HMC']['_text'],
+						M_Flat_Rate_H: item['game']['IOR_HMN']['_text'],
+						M_LetB_H: item['game']['RATIO_HR']['_text'],
+						MB_LetB_Rate_H: item['game']['IOR_HRH']['_text'],
+						TG_LetB_Rate_H: item['game']['IOR_HRC']['_text'],
+						MB_Dime_H: item['game']['RATIO_HOUO']['_text'],
+						TG_Dime_H: item['game']['RATIO_HOUU']['_text'],
+						MB_Dime_Rate_H: item['game']['IOR_HOUC']['_text'],
+						TG_Dime_Rate_H: item['game']['IOR_HOUH']['_text'],
+						ShowTypeRB: item['game']['STRONG']['_text'],
+						FLAG_CLASS: item['game']['FLAG_CLASS']['_text'],
+						MID: item['game']['GID']['_text'],
+						HDP_OU: item['game']['OU_COUNT']['_text'] > 1 ? 1 : 0,
+						CORNER: item['game']['CN_COUNT']['_text'] > 0 ? 1 : 0,
+					};
+					itemList.push(data);						
+				}
+			}
+			return itemList;
+		}
+		return itemList;
+	} catch(e) {
+		console.log(e)
+		await sleep(2000);
+	}
+}
+
+exports.dispatchFT_MAIN_FAVORITE = (itemList) => {
+	itemList.map(async item => {
+		let response;
+		try {
+			if (item["showType"] === "rb") {
+				response = await axios.post(`${BACKEND_BASE_URL}${MATCH_SPORTS}${SAVE_FT_IN_PLAY}`, item);
+			} else {
+				response = await axios.post(`${BACKEND_BASE_URL}${MATCH_SPORTS}${SAVE_FT_DEFAULT_TODAY}`, item);			
+			}
+			console.log("response==============================", response.data);
+		} catch(err) {
+			console.log("err===================", err.response);
+		}
+	})
+}
+
 exports.getFT_LEAGUE_CHAMPION = async (thirdPartyAuthData) => {
 	try {
 		let thirdPartyBaseUrl = thirdPartyAuthData["thirdPartyBaseUrl"];
@@ -1148,7 +1479,7 @@ exports.getFT_DEFAULT_PARLAY = async (thirdPartyAuthData, data) => {
 		response = await axios.post(thirdPartyUrl, formData);
 		if (response.status === 200) {
 			let result = parser.parse(response.data);
-			console.log("getFT_DEFAULT_TODAY:=========", result['serverresponse'])
+			console.log("getFT_DEFAULT_TODAY:=========", result['serverresponse']['ec'][0]['game']['DATETIME'])
 			let totalDataCount = result['serverresponse']['totalDataCount'];
 			if (totalDataCount > 1) {
 				await Promise.all(result['serverresponse']['ec'].map(async item => {

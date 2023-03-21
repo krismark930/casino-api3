@@ -45,7 +45,13 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
         // ft betting inplay api
         Route::post('/single-ft-play', [BettingController::class, 'saveFTBettingInPlay']);
         // ft betting champion api
-        Route::post('/single-ft-champion', [BettingController::class, 'saveFTBettingChampion']);
+        Route::post('/single-ft-champion', [BettingController::class, 'saveFTBettingChampion']);        
+        // ft betting parlay api
+        Route::post('/single-ft-parlay', [BettingController::class, 'saveFTBettingParlay']);
+        // ft betting parlay api ft-bet-history
+        Route::post('/multi-ft-parlay', [BettingController::class, 'saveFTMultiBettingParlay']);
+        // ft betting parlay api ft-bet-history
+        Route::post('/ft-bet-history', [BettingController::class, 'getFTBetHistory']);
     });
     // matched sports route
     Route::group(['prefix' => 'match-sport'], function ($router) {

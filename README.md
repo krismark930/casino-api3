@@ -79,6 +79,7 @@ docker run --name laravel -p 8088:80  -e WEBROOT=/var/www/html/public -v /Users/
             NPMMIRROR: 'https://registry.npmmirror.com'
             
 composer update
+php artisan passport:install
 php artisan passport:keys
 php artisan migrate
 

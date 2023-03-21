@@ -38,6 +38,8 @@ var { getFT_DEFAULT_PARLAY } = require('./controllers/third_party_ft.controller'
 var { dispatchFT_DEFAULT_PARLAY } = require('./controllers/third_party_ft.controller');
 var { getFT_HDP_OU_PARLAY } = require('./controllers/third_party_ft.controller');
 var { getFT_CORRECT_SCORE_PARLAY } = require('./controllers/third_party_ft.controller');
+var { getFT_MAIN_FAVORITE } = require('./controllers/third_party_ft.controller');
+var { dispatchFT_MAIN_FAVORITE } = require('./controllers/third_party_ft.controller');
 
 var obtIterval = 0;
 var correctScoreInterval = 0;
@@ -50,12 +52,13 @@ var leagueChampionInterval = 0;
 var ftChampionInterval = 0;
 var leagueParlayInterval = 0;
 var ftParlayInterval = 0;
+var ftFavoriteInterval = 0;
 
-const userName = "4060hg";
+const userName = "4059hg";
 const passWord = "yy667788"
 const thirdPartyBaseUrl = "https://www.hga030.com"
 var thirdPartyAuthData = {
-    uid: "i1cynk8qm27417505l242221b0",
+    uid: "3fsqww9ugm27417505l280148b0",
     version: "-3ed5-bug4-0309-95881ae5676be2",
     thirdPartyBaseUrl: "https://www.hga030.com"
 }
@@ -68,7 +71,7 @@ setInterval(async () => {
     if (data != {}) {
         // await dispatchUID_VER(data);
     }
-}, 3600000);
+}, 600000);
 
 // setTimeout(async () => {
 //     let data = await getUID_VER(userName, passWord, thirdPartyBaseUrl);
@@ -335,6 +338,32 @@ io.on("connection", async function (socket) {
         clearInterval(obtIterval);
     })
 
+    //=============== FT Favorite Data ======================//
+
+    socket.on("sendFTFavoriteMessage", async (data) => {
+        console.log(data);
+        clearInterval(ftFavoriteInterval);
+        let itemList = await getFT_MAIN_FAVORITE(thirdPartyAuthData, data);
+        console.log(itemList)
+        io.emit("receivedFTFavoriteMessage", itemList);
+        if (itemList && itemList.length > 0) {
+            dispatchFT_MAIN_FAVORITE(itemList)            
+        }
+        ftFavoriteInterval = setInterval(async () => {
+            let itemList = await getFT_MAIN_FAVORITE(thirdPartyAuthData, data);
+            io.emit("receivedFTFavoriteMessage", itemList);
+            if (itemList && itemList.length > 0) {
+                dispatchFT_MAIN_FAVORITE(itemList)            
+            }
+        }, 300000);
+    })
+
+    socket.on("stopFTFavoriteMessage", () => {
+        clearInterval(leagueParlayInterval);
+        clearInterval(ftParlayInterval);
+        clearInterval(obtIterval);
+    })
+
     //=============== FT Today HDP_OU Data ======================//
 
     socket.on('sendHDP_OU_TODAY', async data => {
@@ -370,6 +399,36 @@ io.on("connection", async function (socket) {
             let item  = await getFT_HDP_OU_PARLAY(thirdPartyAuthData, data);
             if (item) {
                 io.emit("receivedFT_HDP_OU_PARLAY", item);
+                dispatchFT_HDP_OU_INPLAY(item)   
+            }
+        }, 10000);
+    });
+
+    //=============== FT Favorite HDP_OU Data ======================//
+
+    socket.on('sendHDP_OU_FAVORITE', async data => {
+        console.log(data);
+        clearInterval(obtIterval);
+        let item;
+        if (data["showtype"] === "rb") {
+            item  = await getFT_HDP_OU_INPLAY(thirdPartyAuthData, data);
+        }else {
+            item  = await getFT_HDP_OU_TODAY(thirdPartyAuthData, data);
+        }
+        console.log("item=======", item);
+        if (item) {
+            io.emit("receivedFT_HDP_OU_FAVORITE", item);
+            dispatchFT_HDP_OU_INPLAY(item)   
+        }
+        obtIterval = setInterval( async () => {
+            let item;
+            if (data["showtype"] === "rb") {
+                item  = await getFT_HDP_OU_INPLAY(thirdPartyAuthData, data);
+            }else {
+                item  = await getFT_HDP_OU_TODAY(thirdPartyAuthData, data);
+            }
+            if (item) {
+                io.emit("receivedFT_HDP_OU_FAVORITE", item);
                 dispatchFT_HDP_OU_INPLAY(item)   
             }
         }, 10000);
@@ -471,6 +530,10 @@ io.on("connection", async function (socket) {
         clearInterval(correctScoreInterval);
     })
 
+});
+
+app.get('/', (req, res) => {
+    res.send("socket server");
 });
 
 server.listen(3000, () => {
