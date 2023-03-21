@@ -50,24 +50,44 @@ class AuthController extends Controller {
 
     /* Login action. */
     public function login(Request $request) {
-        $username = $request->input('username');
-        $password = $request->input('password');
+        // $username = $request->input('username');
+        // $password = $request->input('password');
 
+        // $validator = Validator::make($request->all(), [
+        //     'username' => 'required|string|max:50',
+        //     'password' => 'required'
+        // ]);
+
+        // if ($validator->fails())
+        //     return response()->json(['success'=>false, 'message'=>$validator->messages()->toArray()]);
+
+        // if (!auth()->guard('admin')->attempt(compact('username', 'password'))) {
+        //     auth()->guard('admin')->logout();
+        //     return response()->json(['success'=>false, 'message'=>'Your credentials are incorrect.']);
+        // }
+
+        // $accessToken = auth()->guard('admin')->user()->createToken('adminToken')->accessToken;
+        // return $this->respondWithToken($accessToken, 'Login successfully.', auth()->guard('admin')->user());
+        
         $validator = Validator::make($request->all(), [
-            'username' => 'required|string|max:50',
-            'password' => 'required'
+            'username' => 'required|string|max:255',
+            'password' => 'required|string|min:6',
         ]);
-
         if ($validator->fails())
-            return response()->json(['success'=>false, 'message'=>$validator->messages()->toArray()]);
-
-        if (!auth()->guard('admin')->attempt(compact('username', 'password'))) {
-            auth()->guard('admin')->logout();
-            return response()->json(['success'=>false, 'message'=>'Your credentials are incorrect.']);
+        {
+            return response()->json(['success'=>false, 'message'=>$validator->errors()->all()]);
         }
-
-        $accessToken = auth()->guard('admin')->user()->createToken('adminToken')->accessToken;
-        return $this->respondWithToken($accessToken, 'Login successfully.', auth()->guard('admin')->user());
+        $user = User::where('username', $request->username)->first();
+        if ($user) {
+            if (Hash::check($request->password, $user->password)) {
+                $token = $user->createToken('adminToken')->accessToken;
+                return $this->respondWithToken($token, 'Login successfully.', auth()->guard('admin')->user());
+            } else {
+                return response()->json(['success'=>false, 'message'=>'Password mismatch']);
+            }
+        } else {
+            return response()->json(['success'=>false, 'message'=>'User does not exist']);
+        }
     }
 
     /**
