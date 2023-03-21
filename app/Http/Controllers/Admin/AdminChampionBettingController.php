@@ -14,32 +14,24 @@ use App\Models\Web\MoneyLog;
 use App\Models\Web\WebMemLogData;
 use Auth;
 
-class AdminSearchBettingController extends Controller
+class AdminChampionBettingController extends Controller
 {
     //
     public function getItems(Request $request)
     {
         // Web Report Data
         $user = Auth::guard("admin")->user();
-        $m_date = $request['m_date'] ?? date('Y-m-d');
-        $sort = $request['sort'] ?? 'BetTime';
-        $active = $request['ball'];
+        $active = $request['match'];
+        // $ptype = $request['wtype'];
         $m_name = $request['username'];
-        // $checkout = $request['checkout'];
+        $checkout = $request['checkout'];
         $type = $request['type'];
         $result_type = $request['result_type'];
         // $mids = Report::select('MID')->where('M_Date', $m_date)->get();
         
         $data = array();
         
-        $mids = Report::where('M_Date', $m_date);
-        
-        if($sort == 'Cancel') {
-            $mids = $mids->where('Cancel', 1);
-        }
-        if($sort == 'Danger') {
-            $mids = $mids->where('Danger', 1);
-        }
+        $mids = Report::where('LineType', 16);
         if($active) {
             $mids = $mids->where('Active', $active);
         }
@@ -97,13 +89,10 @@ class AdminSearchBettingController extends Controller
                     break;
             }
         }
-        if($type) {
-            $mids = $mids->where('Ptype', $type);
+        if($checkout == '0') {
+          $mids = $mids->where('M_Result', '');
         }
-        // if($checkout == '0') {
-        //   $mids = $mids->where('M_Result', '');
-        // }
-        $mids = $mids->orderBy($sort, "desc")->get();
+        $mids = $mids->orderBy('ID', "desc")->get();
 
         // Web Sport Data
         $items = Sport::select('MID')->get();
@@ -122,13 +111,15 @@ class AdminSearchBettingController extends Controller
                 $state = '结算';
             }else if($row['Active'] == 1){
                 $state = '<font color=red>未结算</font>';
+            }else{
+              $state = '结算';
             }
 
             $temp = array(
                 'id' => $row['ID'],
+                'gid' => $row['MID'],
                 'userName' => $row['M_Name'],
                 'minutes' => '',
-                'gid' => $row['MID'],
                 'bettingTime' => $row['BetTime'],
                 'startingTime' => $row['BetTime'],
                 'gameType' => $row['BetType'],
@@ -147,9 +138,9 @@ class AdminSearchBettingController extends Controller
 
     public function getFunctionItems() {
         $scors = Utils::Scores;
+        $arr = array('判为全赢', '判为全输', '判为和局');
         $scors = array_splice($scors, 20, 23);
-        $arr = array('判为全赢', '判为全输', '判为赢一半', '判为输一半', '判为和局');
-        $scors = array_merge($scors, $arr);
+        $scors = array_merge($arr, $scors);
         $data = array();
 
         foreach($scors as $row) {
@@ -202,19 +193,9 @@ class AdminSearchBettingController extends Controller
       $gid = $request['gid'];
       
       try {
-        Report::where('ID', $id)->where('MID', $gid)->update([
-            'Danger' => '0',
-            'Confirmed' => '0'
-        ]);
         $res = Report::where('Cancel', '1')->where('MID', $gid)->where('ID', $id)->get();
         if(count($res)) {
             $res = $res[0];
-            if(!in_array($loginname,$adminList)) {
-                $tt=(time()-strtotime($res['BetTime']))/3600;
-                if($tt > 24) {
-                    return response()->json('注单投注时间超过24小时，不能取消！', 403);
-                }
-            }
             $username=$res['M_Name'];
             $betscore=$res['BetScore'];
             $m_result=$res['M_Result'];
@@ -285,15 +266,6 @@ class AdminSearchBettingController extends Controller
         $res = Report::where('ID', $id)->where('MID', $gid)->get();
         if(count($res)) {
             $res = $res[0];
-            if(($res['Cancel'] == 1 || $res['Confirmed'] < 0) && ($res['Checked'] == 1 || $res['M_Result' == '0'])) {
-                return response()->json('对不起，此注单已经取消!', 400);
-            }
-            if(!in_array($loginname,$adminList)) {
-                $tt=(time()-strtotime($res['BetTime']))/3600;
-                if($tt > 24) {
-                    return response()->json('注单投注时间超过24小时，不能取消！', 403);
-                }
-            }
             $username=$res['M_Name'];
             $betscore=$res['BetScore'];
             $m_result=$res['M_Result'];
@@ -435,7 +407,11 @@ class AdminSearchBettingController extends Controller
         $selectedUser = User::where('UserName', $username)->get()[0];
         $assets = $selectedUser['Money'];
 
-        $affectRows = User::where('UserName', $username)->where('Pay_Type', 1)->limit(1)->increment('Money', $balance);
+        try {
+            $affectRows = User::where('UserName', $username)->where('Pay_Type', 1)->limit(1)->increment('Money', $balance);
+        } catch (Exception $e) {
+            return response()->json('操作失败11!', 400);
+        }
         if($affectRows == 1 || floatval($balance) == 0) {
             $balance2 = $selectedUser['Money'];
             $user_id = $selectedUser['id'];

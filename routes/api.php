@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\SystemSetting\SystemParametersController;
 use App\Http\Controllers\Admin\AdminLiveBettingController;
 use App\Http\Controllers\Admin\AdminSearchBettingController;
+use App\Http\Controllers\Admin\AdminChampionBettingController;
 
 // API User Controllers
 use App\Http\Controllers\Api\User\BettingController;
@@ -193,13 +194,26 @@ Route::group(['prefix' => 'account', 'middleware' => 'CORS'], function ($router)
 });
 
 
-Route::group(['prefix' => 'livebetting', 'middleware' => 'CORS'], function ($router){
+Route::group(['prefix' => 'livebetting', 'middleware' => ['CORS', 'auth:admin']], function ($router){
     Route::get('/get_items', [AdminLiveBettingController::class, 'getItems'])->name('admin.livebetting.getItems');
     Route::get('/get_function_items', [AdminLiveBettingController::class, 'getFunctionItems'])->name('admin.livebetting.getFunctionItems');
+    Route::get('/cancel_event', [AdminLiveBettingController::class, 'handleCancelEvent'])->name('admin.livebetting.handleCancelEvent');
+    Route::get('/resume_event', [AdminLiveBettingController::class, 'handleResumeEvent'])->name('admin.livebetting.handleResumeEvent');
 });
 
 
-Route::group(['prefix' => 'searchbetting', 'middleware' => 'CORS'], function ($router){
-    Route::get('/get_items', [AdminSearchBettingController::class, 'getItems'])->name('admin.searchbetting.getItems');
+Route::group(['prefix' => 'searchbetting', 'middleware' => ['CORS', 'auth:admin']], function ($router){
+    Route::get('/get_items', [AdminSearchBettingController::class, 'getItems'])->name('admin.searchbetting.getItems');//->middleware('auth:admin');
     Route::get('/get_function_items', [AdminSearchBettingController::class, 'getFunctionItems'])->name('admin.searchbetting.getFunctionItems');
+    Route::get('/cancel_event', [AdminSearchBettingController::class, 'handleCancelEvent'])->name('admin.searchbetting.handleCancelEvent');
+    Route::get('/resume_event', [AdminSearchBettingController::class, 'handleResumeEvent'])->name('admin.searchbetting.handleResumeEvent');
+    Route::get('/balance_event', [AdminSearchBettingController::class, 'handleBalanceEvent'])->name('admin.searchbetting.handleBalanceEvent');
+});
+
+Route::group(['prefix' => 'championbetting', 'middleware' => ['CORS', 'auth:admin']], function ($router){
+    Route::get('/get_items', [AdminChampionBettingController::class, 'getItems'])->name('admin.championbetting.getItems');//->middleware('auth:admin');
+    Route::get('/get_function_items', [AdminChampionBettingController::class, 'getFunctionItems'])->name('admin.championbetting.getFunctionItems');
+    Route::get('/cancel_event', [AdminChampionBettingController::class, 'handleCancelEvent'])->name('admin.championbetting.handleCancelEvent');
+    Route::get('/resume_event', [AdminChampionBettingController::class, 'handleResumeEvent'])->name('admin.championbetting.handleResumeEvent');
+    Route::get('/balance_event', [AdminChampionBettingController::class, 'handleBalanceEvent'])->name('admin.championbetting.handleBalanceEvent');
 });
