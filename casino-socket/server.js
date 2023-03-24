@@ -40,6 +40,23 @@ var { getFT_HDP_OU_PARLAY } = require('./controllers/third_party_ft.controller')
 var { getFT_CORRECT_SCORE_PARLAY } = require('./controllers/third_party_ft.controller');
 var { getFT_MAIN_FAVORITE } = require('./controllers/third_party_ft.controller');
 var { dispatchFT_MAIN_FAVORITE } = require('./controllers/third_party_ft.controller');
+var { getFT_CORRECT_SCORE_FAVORITE } = require('./controllers/third_party_ft.controller');
+var { getFTScore } = require('./controllers/third_party_score.controller');
+var { getBK_MAIN_INPLAY } = require('./controllers/third_party_bk.controller');
+var { dispatchBK_MAIN_INPLAY } = require('./controllers/third_party_bk.controller');
+var { getBK_LEAGUE_TODAY } = require('./controllers/third_party_bk.controller');
+var { getBK_MAIN_TODAY } = require('./controllers/third_party_bk.controller');
+var { dispatchBK_MAIN_TODAY } = require('./controllers/third_party_bk.controller');
+var { getBK_LEAGUE_EARLY } = require('./controllers/third_party_bk.controller');
+var { getBK_MAIN_EARLY } = require('./controllers/third_party_bk.controller');
+var { getBK_LEAGUE_CHAMPION } = require('./controllers/third_party_bk.controller');
+var { getBK_MAIN_CHAMPION } = require('./controllers/third_party_bk.controller');
+var { dispatchBK_MAIN_CHAMPION } = require('./controllers/third_party_bk.controller');
+var { getBK_LEAGUE_PARLAY } = require('./controllers/third_party_bk.controller');
+var { getBK_MAIN_PARLAY } = require('./controllers/third_party_bk.controller');
+var { dispatchBK_MAIN_PARLAY } = require('./controllers/third_party_bk.controller');
+var { getBK_MAIN_FAVORITE } = require('./controllers/third_party_bk.controller');
+var { dispatchBK_MAIN_FAVORITE} = require('./controllers/third_party_bk.controller');
 
 var obtIterval = 0;
 var correctScoreInterval = 0;
@@ -53,35 +70,81 @@ var ftChampionInterval = 0;
 var leagueParlayInterval = 0;
 var ftParlayInterval = 0;
 var ftFavoriteInterval = 0;
+var scoreResultInterval = 0;
+var uidInterval = 0;
+var bkInplayInterval = 0;
+var leagueBKTodayInterval = 0;
+var bkTodayInterval = 0;
+var bkEarlyInterval = 0;
+var leagueBKEarlyInterval = 0;
+var leagueBKChampionInterval = 0;
+var bkChampionInterval = 0;
+var leagueBKParlayInterval = 0;
+var bkParlayInterval = 0;
+var bkFavoriteInterval = 0;
 
-const userName = "4059hg";
-const passWord = "yy667788"
-const thirdPartyBaseUrl = "https://www.hga030.com"
+var ftInPlayList = null;
+var bkInPlayList = null;
+
+const userName = "4060hg";
+const passWord = "admin123"
+const thirdPartyBaseUrl = "https://www.hga030.com";
+
 var thirdPartyAuthData = {
-    uid: "3fsqww9ugm27417505l280148b0",
+    uid: "0rgd118rxcm27417505l297039b0",
     version: "-3ed5-bug4-0309-95881ae5676be2",
     thirdPartyBaseUrl: "https://www.hga030.com"
 }
 
-setInterval(async () => {
+const thirdPartyScoreBaseUrl = ['http://zq0666.com','http://www.zq0666.com'];
+const thirdPartyScoreUrl = thirdPartyScoreBaseUrl[0] + '/app/member/score.php?type=FT';
+
+uidInterval = setInterval(async () => {
     let data = await getUID_VER(userName, passWord, thirdPartyBaseUrl);
-    console.log(data);
-    thirdPartyAuthData["uid"] = data["uid"];
-    thirdPartyAuthData["version"] = data["version"];
+    console.log("getUID_VER: ", data);
+    if (data != undefined && data != null) {
+        thirdPartyAuthData["uid"] = data["uid"];        
+    }
+    ftInPlayList = await getFT_FU_R_INPLAY(thirdPartyAuthData);
+    bkInPlayList = await getBK_MAIN_INPLAY(thirdPartyAuthData);
     if (data != {}) {
         // await dispatchUID_VER(data);
     }
-}, 600000);
+}, 1800000);
 
-// setTimeout(async () => {
-//     let data = await getUID_VER(userName, passWord, thirdPartyBaseUrl);
-//     console.log(data);
-//     thirdPartyAuthData["uid"] = data["uid"];
-//     thirdPartyAuthData["version"] = data["version"];
-//     if (data != {}) {
-//         // await dispatchUID_VER(data);
-//     }
-// }, 2000);
+setTimeout(async () => {
+    let data = await getUID_VER(userName, passWord, thirdPartyBaseUrl);
+    console.log("getUID_VER: ", data);
+    if (data != undefined && data != null) {
+        thirdPartyAuthData["uid"] = data["uid"];        
+    }
+    ftInPlayList = await getFT_FU_R_INPLAY(thirdPartyAuthData);
+    bkInPlayList = await getBK_MAIN_INPLAY(thirdPartyAuthData);
+    if (data != {}) {
+        // await dispatchUID_VER(data);
+    }
+}, 1000);
+
+ftInPlayInterval = setInterval(async () => {
+    ftInPlayList = await getFT_FU_R_INPLAY(thirdPartyAuthData);
+    io.emit("receivedFTInPlayData", ftInPlayList);
+    if (ftInPlayList && ftInPlayList.length > 0) {
+        dispatchFT_FU_R_INPLAY(ftInPlayList)            
+    }
+}, 60000);
+
+bkInplayInterval = setInterval(async () => {
+    bkInPlayList = await getBK_MAIN_INPLAY(thirdPartyAuthData);
+    io.emit("receivedBKInPlayData", bkInPlayList);
+    if (bkInPlayList && bkInPlayList.length > 0) {
+        dispatchBK_MAIN_INPLAY(bkInPlayList)            
+    }
+}, 30000);
+
+scoreResultInterval = setInterval( async () => {
+    getFTScore(thirdPartyScoreUrl);
+}, 10000);
+
 
 io.on("connection", async function (socket) {
 
@@ -124,7 +187,6 @@ io.on("connection", async function (socket) {
 
     socket.on('sendCorrectScoreMessage', async () => {
         console.log("sendCorrectScoreMessage");
-        clearInterval(ftInPlayInterval);
         clearInterval(obtIterval);
         clearInterval(correctScoreInterval);
         let itemList = await getFT_CORRECT_SCORE_INPLAY(thirdPartyAuthData);
@@ -145,31 +207,34 @@ io.on("connection", async function (socket) {
         clearInterval(correctScoreInterval);
     })
 
+    // ========================= FT Inplay ========================= //
+
     socket.on('sendFTInPlayMessage', async () => {
-        console.log("sendFTInPlayMessage");
-        clearInterval(ftInPlayInterval);
-        let itemList = await getFT_FU_R_INPLAY(thirdPartyAuthData);
-        console.log(itemList)
-        io.emit("receivedFTInPlayData", itemList);
-        if (itemList && itemList.length > 0) {
-            dispatchFT_FU_R_INPLAY(itemList)            
-        }
-        ftInPlayInterval = setInterval(async () => {
-            let itemList = await getFT_FU_R_INPLAY(thirdPartyAuthData);
-            io.emit("receivedFTInPlayData", itemList);
-            if (itemList && itemList.length > 0) {
-                dispatchFT_FU_R_INPLAY(itemList)            
-            }
-        }, 60000);
+        // console.log("sendFTInPlayMessage");
+        // clearInterval(ftInPlayInterval);
+        // let itemList = await getFT_FU_R_INPLAY(thirdPartyAuthData);
+        // console.log(itemList)
+        // io.emit("receivedFTInPlayData", itemList);
+        // if (itemList && itemList.length > 0) {
+        //     dispatchFT_FU_R_INPLAY(itemList)            
+        // }
+        // ftInPlayInterval = setInterval(async () => {
+        //     let itemList = await getFT_FU_R_INPLAY(thirdPartyAuthData);
+        //     io.emit("receivedFTInPlayData", itemList);
+        //     if (itemList && itemList.length > 0) {
+        //         dispatchFT_FU_R_INPLAY(itemList)            
+        //     }
+        // }, 60000);
+        io.emit("receivedFTInPlayData", ftInPlayList);
     });
 
     socket.on("stopFT_INPLAY", () => {
-        clearInterval(ftInPlayInterval);
+        // clearInterval(ftInPlayInterval);
         clearInterval(correctScoreInterval);        
         clearInterval(obtIterval);
     })
 
-    //=============== Tdoay League Data ======================//
+    //=============== Today League Data ======================//
 
     socket.on("sendLeagueTodayMessage", async () => {
         console.log("sendLeagueTodayMessage");
@@ -451,7 +516,7 @@ io.on("connection", async function (socket) {
                 // dispatchFT_CORNER_TODAY(item);
             }
         }, 8000)
-    }); 
+    });
 
     //=============== FT Today Correct Score Data ======================//
 
@@ -528,6 +593,218 @@ io.on("connection", async function (socket) {
 
     socket.on("stopCorrectScoreParlay", () => {
         clearInterval(correctScoreInterval);
+    })
+
+    //=============== FT Favorite Correct Score Data ======================//
+
+    socket.on('sendCorrectScoreFavorite', async (data) => {
+        clearInterval(obtIterval);
+        clearInterval(correctScoreInterval);
+        let itemList = await getFT_CORRECT_SCORE_FAVORITE(thirdPartyAuthData, data);
+        io.emit("receivedFTFavoriteScoreData", itemList);
+        if (itemList && itemList.length > 0) {
+            dispatchFT_CORRECT_SCORE_INPLAY(itemList);
+        }
+        correctScoreInterval = setInterval( async () => {
+            let itemList = await getFT_CORRECT_SCORE_FAVORITE(thirdPartyAuthData, data);
+            io.emit("receivedFTFavoriteScoreData", itemList);
+            if (itemList && itemList.length > 0) {
+                dispatchFT_CORRECT_SCORE_INPLAY(itemList);
+            }
+        }, 30000)
+    });
+
+    socket.on("stopCorrectScoreFavorite", () => {
+        clearInterval(correctScoreInterval);
+    })
+
+    // ========================= BK Inplay ========================= //
+
+    socket.on('sendBKInPlayMessage', () => {
+        console.log(bkInPlayList);
+        io.emit("receivedBKInPlayData", bkInPlayList);
+    });
+
+    //=============== BK Today League Data ======================//
+
+    socket.on("sendBKLeagueTodayMessage", async () => {
+        console.log("sendBKLeagueTodayMessage");
+        let result = await getBK_LEAGUE_TODAY(thirdPartyAuthData);
+        io.emit("receivedBKLeagueTodayMessage", result)
+        leagueBKTodayInterval = setInterval( async () => {
+            let result = await getBK_LEAGUE_TODAY(thirdPartyAuthData);
+            io.emit("receivedBKLeagueTodayMessage", result)
+        }, 300000)
+    })
+
+    socket.on("stopBKLeagueTodayMessage", () => {
+        clearInterval(leagueBKTodayInterval);
+    })
+
+    //=============== BK Today Data ======================//
+
+    socket.on("sendBKTodayMessage", async (data) => {
+        let itemList = await getBK_MAIN_TODAY(thirdPartyAuthData, data);
+        io.emit("receivedBKTodayMessage", itemList);
+        if (itemList && itemList.length > 0) {
+            dispatchBK_MAIN_TODAY(itemList)            
+        }
+        bkTodayInterval = setInterval(async () => {
+            let itemList = await getBK_MAIN_TODAY(thirdPartyAuthData, data);
+            io.emit("receivedBKTodayMessage", itemList);
+            if (itemList && itemList.length > 0) {
+                dispatchBK_MAIN_TODAY(itemList)            
+            }
+        }, 300000);
+    })
+
+    socket.on("stopBKTodayMessage", () => {
+        clearInterval(bkTodayInterval);
+    })
+
+    //=============== BK Early League Data ======================//
+
+    socket.on("sendBKLeagueEarlyMessage", async () => {
+        console.log("sendBKLeagueEarlyMessage");
+        let result = await getBK_LEAGUE_EARLY(thirdPartyAuthData);
+        io.emit("receivedBKLeagueEarlyMessage", result)
+        leagueBKEarlyInterval = setInterval( async () => {
+            let result = await getBK_LEAGUE_EARLY(thirdPartyAuthData);
+            io.emit("receivedBKLeagueEarlyMessage", result)
+        }, 300000)
+    })
+
+    socket.on("stopBKLeagueEarlyMessage", () => {
+        clearInterval(leagueBKEarlyInterval);
+    })
+
+
+
+    //=============== BK Early Data ======================//
+
+    socket.on("sendBKEarlyMessage", async (data) => {
+        let itemList = await getBK_MAIN_EARLY(thirdPartyAuthData, data);
+        io.emit("receivedBKEarlyMessage", itemList);
+        if (itemList && itemList.length > 0) {
+            dispatchBK_MAIN_TODAY(itemList)            
+        }
+        bkEarlyInterval = setInterval(async () => {
+            let itemList = await getBK_MAIN_EARLY(thirdPartyAuthData, data);
+            io.emit("receivedBKEarlyMessage", itemList);
+            if (itemList && itemList.length > 0) {
+                dispatchBK_MAIN_TODAY(itemList)            
+            }
+        }, 300000);
+    })
+
+    socket.on("stopBKEarlyMessage", () => {
+        clearInterval(bkEarlyInterval);
+    })
+
+    //=============== BK Champion League Data ======================//
+
+    socket.on("sendBKLeagueChampionMessage", async () => {
+        console.log("sendBKLeagueChampionMessage");
+        let result = await getBK_LEAGUE_CHAMPION(thirdPartyAuthData);
+        io.emit("receivedBKLeagueChampionMessage", result)
+        leagueBKChampionInterval = setInterval( async () => {
+            let result = await getBK_LEAGUE_CHAMPION(thirdPartyAuthData);
+            io.emit("receivedBKLeagueChampionMessage", result)
+        }, 300000)
+    })
+
+    socket.on("stopBKLeagueChampionMessage", () => {
+        clearInterval(leagueBKChampionInterval);
+    })
+
+    //=============== BK Champion Data ======================//
+
+    socket.on("sendBKChampionMainMessage", async (data) => {
+        let itemList = await getBK_MAIN_CHAMPION(thirdPartyAuthData, data);
+        console.log(itemList)
+        io.emit("receivedBKChampionMainMessage", itemList);
+        if (Array.isArray(itemList) && itemList.length > 0) {
+            dispatchBK_MAIN_CHAMPION(itemList) 
+        } else if (itemList) {
+            let tempItemList = [];
+            tempItemList.push(itemList);
+            dispatchBK_MAIN_CHAMPION(tempItemList)    
+        }
+        bkChampionInterval = setInterval(async () => {
+            let itemList = await getBK_MAIN_CHAMPION(thirdPartyAuthData, data);
+            io.emit("receivedFTChampionMessage", itemList);
+            if (Array.isArray(itemList) && itemList.length > 0) {
+                dispatchBK_MAIN_CHAMPION(itemList) 
+            } else if (itemList) {
+                let tempItemList = [];
+                tempItemList.push(itemList);
+                dispatchBK_MAIN_CHAMPION(tempItemList)    
+            }
+        }, 300000);
+    })
+
+    socket.on("stopBKChampionMessage", () => {
+        clearInterval(bkChampionInterval);
+    })
+
+    //=============== BK Parlay League Data ======================//
+
+    socket.on("sendBKLeagueParlayMessage", async () => {
+        console.log("sendBKLeagueParlayMessage");
+        let result = await getBK_LEAGUE_PARLAY(thirdPartyAuthData);
+        io.emit("receivedBKLeagueParlayMessage", result)
+        leagueBKParlayInterval = setInterval( async () => {
+            let result = await getBK_LEAGUE_PARLAY(thirdPartyAuthData);
+            io.emit("receivedBKLeagueParlayMessage", result)
+        }, 300000)
+    })
+
+    socket.on("stopBKLeagueParlayMessage", () => {
+        clearInterval(leagueBKParlayInterval);
+    })
+
+    //=============== BK Parlay Data ======================//
+
+    socket.on("sendBKParlayMessage", async (data) => {
+        let itemList = await getBK_MAIN_PARLAY(thirdPartyAuthData, data);
+        console.log(itemList)
+        io.emit("receivedBKParlayMessage", itemList);
+        if (itemList && itemList.length > 0) {
+            dispatchBK_MAIN_PARLAY(itemList)            
+        }
+        bkParlayInterval = setInterval(async () => {
+            let itemList = await getBK_MAIN_PARLAY(thirdPartyAuthData, data);
+            io.emit("receivedBKParlayMessage", itemList);
+            if (itemList && itemList.length > 0) {
+                dispatchBK_MAIN_PARLAY(itemList)            
+            }
+        }, 300000);
+    })
+
+    socket.on("stopBKParlayMessage", () => {
+        clearInterval(bkParlayInterval);
+    })
+
+    //=============== BK Favorite Data ======================//
+
+    socket.on("sendBKFavoriteMessage", async (data) => {
+        clearInterval(bkFavoriteInterval);
+        let itemList = await getBK_MAIN_FAVORITE(thirdPartyAuthData, data);
+        io.emit("receivedBKFavoriteMessage", itemList);
+        if (itemList && itemList.length > 0) {
+            dispatchBK_MAIN_FAVORITE(itemList)            
+        }
+        bkFavoriteInterval = setInterval(async () => {
+            let itemList = await getBK_MAIN_FAVORITE(thirdPartyAuthData, data);
+            io.emit("receivedFTFavoriteMessage", itemList);
+            if (itemList && itemList.length > 0) {
+                dispatchBK_MAIN_FAVORITE(itemList)            
+            }
+        }, 300000);
+    })
+
+    socket.on("stopBKFavoriteMessage", () => {
+        clearInterval(bkFavoriteInterval);
     })
 
 });

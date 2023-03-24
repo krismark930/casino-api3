@@ -4,7 +4,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SportController;
-use App\Http\Controllers\ResultController;
 use App\Http\Controllers\Web\DepositController;
 use App\Http\Controllers\Web\TransferController;
 use App\Http\Controllers\Web\WithdrawController;
@@ -15,16 +14,22 @@ use App\Http\Controllers\Admin\SystemSetting\SystemParametersController;
 use App\Http\Controllers\Admin\AdminLiveBettingController;
 use App\Http\Controllers\Admin\AdminSearchBettingController;
 use App\Http\Controllers\Admin\AdminChampionBettingController;
+use App\Http\Controllers\Admin\AdminAllianceRestrictionController;
+use App\Http\Controllers\Admin\DataManipulation\AdminDataManipulationController;
+use App\Http\Controllers\Admin\DataManipulation\AdminBetCheckController;
 
 // API User Controllers
 use App\Http\Controllers\Api\User\BettingController;
+use App\Http\Controllers\Api\User\BKBettingController;
 use App\Http\Controllers\Api\User\UserMatchSportController;
+use App\Http\Controllers\Api\User\ResultController;
 
 // API Admin Controllers
 use App\Http\Controllers\Api\Admin\WebSystemDataController;
 use App\Http\Controllers\Api\Admin\MatchCrownController;
 use App\Http\Controllers\Api\Admin\MatchSportController;
-
+use App\Http\Controllers\Api\Admin\MatchSportBKController;
+use App\Http\Controllers\Api\Admin\FTScoreController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +46,7 @@ use App\Http\Controllers\Api\Admin\MatchSportController;
 Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
     // betting routes
     Route::group(['prefix' => 'betting'], function ($router) {
-        // ft betting order api
+        // ft betting order today api
         Route::post('/single-ft-today', [BettingController::class, 'saveFTBettingToday']);
         // ft betting inplay api
         Route::post('/single-ft-play', [BettingController::class, 'saveFTBettingInPlay']);
@@ -49,10 +54,22 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
         Route::post('/single-ft-champion', [BettingController::class, 'saveFTBettingChampion']);        
         // ft betting parlay api
         Route::post('/single-ft-parlay', [BettingController::class, 'saveFTBettingParlay']);
-        // ft betting parlay api ft-bet-history
-        Route::post('/multi-ft-parlay', [BettingController::class, 'saveFTMultiBettingParlay']);
-        // ft betting parlay api ft-bet-history
+        // ft betting parlay api
+        Route::post('/multi-parlay', [BettingController::class, 'saveMultiBettingParlay']);
+        // ft betting history api
         Route::post('/ft-bet-history', [BettingController::class, 'getFTBetHistory']);
+        // ft betting slip api
+        Route::post('/ft-bet-slip', [BettingController::class, 'getFTBetSlip']);
+
+
+        // bk betting order today api
+        Route::post('/single-bk-today', [BKBettingController::class, 'saveBKBettingToday']);
+        // bk betting inplay api
+        Route::post('/single-bk-play', [BKBettingController::class, 'saveBKBettingInPlay']);
+        // bk betting champion api
+        Route::post('/single-bk-champion', [BKBettingController::class, 'saveBKBettingChampion']);        
+        // bk betting parlay api
+        Route::post('/single-bk-parlay', [BKBettingController::class, 'saveBKBettingParlay']);
     });
     // matched sports route
     Route::group(['prefix' => 'match-sport'], function ($router) {
@@ -61,10 +78,14 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
         // get count by ft and bt in match-sport
         Route::get('/get-count', [UserMatchSportController::class, 'getCountSport']);
     });
+
+    Route::group(['prefix' => 'result', 'middleware' => 'CORS'], function ($router){
+        Route::post('/get_result_ft', [ResultController::class, 'getResultFT']);
+    });
 });
 
 // admin routes
-Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:api']], function ($router){
+Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], function ($router){
     // web_system_data routes
     Route::group(['prefix' => 'web-system-data'], function ($router) {
         // get web_system_data api
@@ -109,6 +130,19 @@ Route::group(['prefix' => 'third-party'], function ($router){
         Route::get('/ft-in-play-data', [MatchSportController::class, 'getFTInPlayData']);        
         Route::get('/ft-correct-score-inplay', [MatchSportController::class, 'getFTCorrectScoreInPlayData']);
         Route::post('/ft-corner-today', [MatchSportController::class, 'saveFT_CORNER_TODAY']);
+
+
+        // save bk data by showtype "live"
+        Route::post('/save-bk-inplay', [MatchSportBKController::class, 'saveBKDefaultInplay']);
+        // save bk data by showtype "today"
+        Route::post('/save-bk-today', [MatchSportBKController::class, 'saveBKDefaultToday']);
+        // save bk data by showtype "parlay"
+        Route::post('/save-bk-parlay', [MatchSportBKController::class, 'saveBKDefaultParlay']);
+    });
+    // score routes
+    Route::group(['prefix' => 'score'], function ($router) {
+        // get web_system_data api
+        Route::post('/ft-result', [FTScoreController::class, 'saveFTScore']);
     });
 });
 
@@ -143,9 +177,6 @@ Route::group(['prefix' => 'sport', 'middleware' => 'CORS'], function ($router){
     Route::post('/get_betting_records', [SportController::class, 'get_betting_records'])->name('sport.get_betting_records');
 });
 
-Route::group(['prefix' => 'result', 'middleware' => 'CORS'], function ($router){
-    Route::post('/get_result_ft', [ResultController::class, 'getResultFt'])->name('result.getResultFt');
-});
 /* Admin routes. */
 Route::group(['prefix'=>'admin', 'middleware'=>'CORS'], function ($router) {
     /* Authentication */
@@ -216,4 +247,28 @@ Route::group(['prefix' => 'championbetting', 'middleware' => ['CORS', 'auth:admi
     Route::get('/cancel_event', [AdminChampionBettingController::class, 'handleCancelEvent'])->name('admin.championbetting.handleCancelEvent');
     Route::get('/resume_event', [AdminChampionBettingController::class, 'handleResumeEvent'])->name('admin.championbetting.handleResumeEvent');
     Route::get('/balance_event', [AdminChampionBettingController::class, 'handleBalanceEvent'])->name('admin.championbetting.handleBalanceEvent');
+});
+
+Route::group(['prefix' => 'alliancerestriction', 'middleware' => ['CORS', 'auth:admin']], function ($router){
+    Route::get('/get_items', [AdminAllianceRestrictionController::class, 'getItems'])->name('admin.alliance_restriction.getItems');
+    Route::get('/get_item', [AdminAllianceRestrictionController::class, 'getItem'])->name('admin.alliance_restriction.getItem');
+    Route::post('/set_item', [AdminAllianceRestrictionController::class, 'setItem'])->name('admin.alliance_restriction.setItem');
+    Route::get('/delete_event', [AdminAllianceRestrictionController::class, 'handleDeleteEvent'])->name('admin.alliance_restriction.handleDeleteEvent');
+});
+
+Route::group(['prefix' => 'datamanipulation', 'middleware' => ['CORS', 'auth:admin']], function ($router){
+    Route::get('/scheduledata/get_alliance_items', [AdminDataManipulationController::class, 'scheduledata_getAllianceTypes'])->name('admin.datamanipulation.scheduledata.getAllianceTypes');
+    Route::get('/scheduledata/get_items', [AdminDataManipulationController::class, 'scheduledata_getItems'])->name('admin.datamanipulation.scheduledata.getItems');
+    Route::get('/scheduledata/get_item', [AdminDataManipulationController::class, 'scheduledata_getItem'])->name('admin.datamanipulation.scheduledata.getItem');
+    Route::post('/scheduledata/set_item', [AdminDataManipulationController::class, 'scheduledata_setItem'])->name('admin.datamanipulation.scheduledata.setItem');
+    Route::post('/scheduledata/close_bet', [AdminDataManipulationController::class, 'scheduledata_closeBet'])->name('admin.datamanipulation.scheduledata.closeBet');
+    Route::post('/scheduledata/delete_event', [AdminDataManipulationController::class, 'scheduledata_deleteEvent'])->name('admin.datamanipulation.scheduledata.deleteEvent');
+});
+
+Route::group(['prefix' => 'betcheck', 'middleware' => ['CORS', 'auth:admin']], function ($router){
+    Route::get('/get_items', [AdminBetCheckController::class, 'getItems'])->name('admin.betcheck.getItems');
+    Route::get('/get_functions', [AdminBetCheckController::class, 'getFunctions'])->name('admin.betcheck.getFunctions');
+    Route::get('/get_functions', [AdminBetCheckController::class, 'getFunctions'])->name('admin.betcheck.getFunctions');
+    Route::get('/cancel_event', [AdminBetCheckController::class, 'cancelEvent'])->name('admin.betcheck.cancelEvent');
+    Route::get('/resume_event', [AdminBetCheckController::class, 'resumeEvent'])->name('admin.betcheck.resumeEvent');
 });

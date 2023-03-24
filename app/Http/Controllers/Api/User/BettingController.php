@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\WebReportData;
 use App\Models\Sport;
 use App\Models\WebAgent;
+use App\Models\Web\Report;
 use App\Models\WebSystemData;
 use App\Utils\Utils;
 use App\Models\Web\MoneyLog;
@@ -851,7 +852,7 @@ class BettingController extends Controller
             $new_web_report_data->TurnRate = $m_turn;
             $new_web_report_data->OpenType = $open;
             $new_web_report_data->OddsType = $oddstype;
-            $new_web_report_data->ShowType = $show_type;
+            $new_web_report_data->ShowType = $type;
             $new_web_report_data->Agents = $agents;
             $new_web_report_data->World = $world;
             $new_web_report_data->Corprator = $corprator;
@@ -2416,7 +2417,7 @@ class BettingController extends Controller
             $new_web_report_data->TurnRate = $m_turn;
             $new_web_report_data->OpenType = $open;
             $new_web_report_data->OddsType = $oddstype;
-            $new_web_report_data->ShowType = $show_type;
+            $new_web_report_data->ShowType = $type;
             $new_web_report_data->Agents = $agents;
             $new_web_report_data->World = $world;
             $new_web_report_data->Corprator = $corprator;
@@ -2669,7 +2670,7 @@ class BettingController extends Controller
             $new_web_report_data->TurnRate = $m_turn;
             $new_web_report_data->OpenType = $open;
             $new_web_report_data->OddsType = $oddstype;
-            $new_web_report_data->ShowType = $show_type;
+            $new_web_report_data->ShowType = $type;
             $new_web_report_data->Agents = $agents;
             $new_web_report_data->World = $world;
             $new_web_report_data->Corprator = $corprator;
@@ -2921,11 +2922,11 @@ class BettingController extends Controller
 
                 case 50:
 
-                    $bet_type = '滚球独赢';
+                    $bet_type = '独赢';
 
-                    $bet_type_tw = '滾球獨贏';
+                    $bet_type_tw = '獨贏';
 
-                    $bet_type_en = "Running 1x2";
+                    $bet_type_en = "1x2";
 
                     $caption = "足球";
 
@@ -3002,11 +3003,11 @@ class BettingController extends Controller
 
                 case 51:
 
-                    $bet_type = '滚球让球';
+                    $bet_type = '让球';
 
-                    $bet_type_tw = "滾球讓球";
+                    $bet_type_tw = "讓球";
 
-                    $bet_type_en = "Running Ball";
+                    $bet_type_en = "Handicap";
 
                     $caption = "足球";
 
@@ -3124,16 +3125,14 @@ class BettingController extends Controller
                     $ptype = 'RE';
 
                     break;
-                                             
-
 
                 case 52:
 
-                    $bet_type = '滚球大小';
+                    $bet_type = '大小';
 
-                    $bet_type_tw = "滾球大小";
+                    $bet_type_tw = "大小";
 
-                    $bet_type_en = "Running Over/Under";
+                    $bet_type_en = "Over/Under";
 
                     $caption = "足球";
 
@@ -3290,7 +3289,7 @@ class BettingController extends Controller
             $new_web_report_data->TurnRate = $m_turn;
             $new_web_report_data->OpenType = $open;
             $new_web_report_data->OddsType = $oddstype;
-            $new_web_report_data->ShowType = $show_type;
+            $new_web_report_data->ShowType = $type;
             $new_web_report_data->Agents = $agents;
             $new_web_report_data->World = $world;
             $new_web_report_data->Corprator = $corprator;
@@ -3356,7 +3355,7 @@ class BettingController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function saveFTMultiBettingParlay(Request $request) {
+    public function saveMultiBettingParlay(Request $request) {
 
         $response = [];
         $response['success'] = FALSE;
@@ -3389,7 +3388,7 @@ class BettingController extends Controller
             $active = $request_data["active"];
             $line = $request_data["line_type"];
             $gid = $request_data["m_id"];
-            $show_type = $request_data["type"];
+            $type = $request_data["type"];
             $order_rate = $request_data["order_rate"];
             $rtype = $request_data["r_type"] ?? "";
             $bet_type = $request_data["title"] ?? "";
@@ -3404,6 +3403,7 @@ class BettingController extends Controller
             $t_ball = $request_data["t_ball"] ?? "";
             $bet_count= $request_data["bettingCount"] ?? 0;
             $gwin = $request_data["g_win"];
+            $g_type = $request_data["g_type"];
             $langx = "zh-cn";
 
             $configs = Config::all();
@@ -3553,7 +3553,7 @@ class BettingController extends Controller
             $new_web_report_data->TurnRate = $m_turn;
             $new_web_report_data->OpenType = $open;
             $new_web_report_data->OddsType = $oddstype;
-            $new_web_report_data->ShowType = $show_type;
+            $new_web_report_data->ShowType = $type;
             $new_web_report_data->Agents = $agents;
             $new_web_report_data->World = $world;
             $new_web_report_data->Corprator = $corprator;
@@ -3569,7 +3569,7 @@ class BettingController extends Controller
             $new_web_report_data->D_Point = $d_point;
             // $new_web_report_data->BetIP = $ip_addr;
             $new_web_report_data->Ptype = $ptype;
-            $new_web_report_data->Gtype = 'FT';
+            $new_web_report_data->Gtype = $g_type;
             $new_web_report_data->CurType = $w_current;
             $new_web_report_data->Ratio = $w_ratio;
             $new_web_report_data->MB_MID = $w_mb_mid;
@@ -3676,5 +3676,50 @@ class BettingController extends Controller
         }
 
         return response()->json($response, $response['status']);        
+    }
+
+    public function getFTBetSlip(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+
+            $rules = [
+                'm_name' => 'required',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                $errorResponse = validation_error_response($validator->errors()->toArray());
+                return response()->json($errorResponse, $response['status']);
+            }
+
+            $request_data = $request->all();
+
+            $m_name = $request_data["m_name"];
+
+            // $date = date("Y-m-d");
+
+            $date = "2023-03-18";
+
+            $items = Report::where("M_Name", $m_name)
+                    ->where('M_Date', $date)
+                    ->with('sport')
+                    ->get();
+
+            $response['data'] = $items;
+            $response['message'] = 'Bet Slip Data fetched successfully!';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
     }
 }

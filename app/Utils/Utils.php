@@ -3790,4 +3790,59 @@ class Utils {
         $odd_pr = $winrate;
         return $odd_pr;
     }
+
+    static function encrypt($input) {
+        $size = mcrypt_get_block_size('des', 'ecb');
+        $input = $this->pkcs5_pad($input, $size);
+        $key = "Facai168Facai168";
+        $td = mcrypt_module_open('des', '', 'ecb', '');
+        $iv = @mcrypt_create_iv (mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
+         @mcrypt_generic_init($td, $key, $iv);
+        $data = mcrypt_generic($td, $input);
+         mcrypt_generic_deinit($td);
+         mcrypt_module_close($td);
+        $data = base64_encode($data);
+        return preg_replace("/\s*/", '',$data);
+    }
+
+    static function decrypt($encrypted) {
+        $key = 'Facai168Facai168'; // Replace with your own key
+        $iv = ""; // Set the IV to all zeroes for ECB mode
+
+        $encrypted = base64_decode($encrypted);
+        if (!$encrypted) {
+            error_log("Invalid base64 string: $encrypted");
+            return false;
+        }
+
+        $decrypted = openssl_decrypt($encrypted, 'des-ecb', $key, OPENSSL_RAW_DATA, $iv);
+        if ($decrypted === false) {
+            $error = openssl_error_string();
+            error_log("Decryption error: $error");
+            return false;
+        }
+
+        // $decrypted = static::pkcs5_unpad($decrypted);
+        // if ($decrypted === false) {
+        //     error_log("Padding error");
+        //     return false;
+        // }
+
+        return $decrypted;
+    }
+
+    static function pkcs5_pad ($text, $blocksize) {
+        $pad = $blocksize - (strlen($text) % $blocksize);
+        return $text . str_repeat(chr($pad), $pad);
+    }
+
+    static function pkcs5_unpad($text) {
+
+        $pad_length = ord($text[strlen($text) - 1]);
+        if ($pad_length > strlen($text)) {
+            return false;
+        }
+
+        return substr($text, 0, -1 * $pad_length);
+    }    
 }

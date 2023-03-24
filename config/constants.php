@@ -7,7 +7,7 @@ defined('ORDER_Other') or define("ORDER_Other", '网球');
 defined('ORDER_TN') or define("ORDER_TN", '排球');
 defined('ORDER_VB') or define("ORDER_VB", '棒球');
 defined('ORDER_BS') or define("ORDER_BS", '棒球');
-defined('ORDER_Basketball') or define("ORDER_Basketball", '篮球');
+defined('Order_Basketball') or define("Order_Basketball", '篮球');
 defined('ORDER_EARLY_MARKET') or define("ORDER_EARLY_MARKET", '早餐');
 defined('Order_1_x_2_betting_order') or define("Order_1_x_2_betting_order", '单式独赢交易单');
 defined('Order_Handicap_betting_order') or define("Order_Handicap_betting_order", '单式让球交易单');
@@ -64,6 +64,50 @@ defined('Order_This_match_is_turned_to_Running_Ball_Please_wager_in_Running_Ball
 defined('Order_The_game_is_covered_same_teams_Please_reset_again') or define("Order_The_game_is_covered_same_teams_Please_reset_again", '赛事重覆，请重新选择!!');
 defined('Order_Odd_changed_please_bet_again') or define("Order_Odd_changed_please_bet_again", '赔率已变动,请重新下注!!');
 defined('Order_Running_Ball_is_temporary_not_accepted_wagering') or define("Order_Running_Ball_is_temporary_not_accepted_wagering", '暂时停止交易(走地)');
+
+// ================================= Score Constant =================================== //
+
+defined('Score1') or define("Score1", '取消');
+defined('Score2') or define("Score2", '赛事腰斩');
+defined('Score3') or define("Score3", '赛事改期');
+defined('Score4') or define("Score4", '赛事延期');
+defined('Score5') or define("Score5", '赛事延赛');
+defined('Score6') or define("Score6", '赛事取消');
+defined('Score7') or define("Score7", '赛事无PK加时');
+defined('Score8') or define("Score8", '球员弃权');
+defined('Score9') or define("Score9", '队名错误');
+defined('Score10') or define("Score10", '主客场错误');
+defined('Score11') or define("Score11", '先发投手更换');
+defined('Score12') or define("Score12", '选手更换');
+defined('Score13') or define("Score13", '联赛名称错误');
+defined('Score14') or define("Score14", '');
+defined('Score15') or define("Score15", '');
+defined('Score16') or define("Score16", '');
+defined('Score17') or define("Score17", '');
+defined('Score18') or define("Score18", '');
+defined('Score19') or define("Score19", '提前开赛');
+defined('Score20') or define("Score20", '[注单确认]');
+defined('Score21') or define("Score21", '[取消]');
+defined('Score22') or define("Score22", '[赛事腰斩]');
+defined('Score23') or define("Scor23", '[赛事改期]');
+defined('Score24') or define("Score24", '[赛事延期]');
+defined('Score25') or define("Score25", '[赛事延赛]');
+defined('Score26') or define("Score26", '[赛事取消]');
+defined('Score27') or define("Score27", '[赛事无PK加时]');
+defined('Score28') or define("Score28", '[球员弃权]');
+defined('Score29') or define("Score29", '[队名错误]');
+defined('Score30') or define("Score30", '[主客场错误]');
+defined('Score31') or define("Score31", '[先发投手更换]');
+defined('Score32') or define("Score32", '[选手更换]');
+defined('Score33') or define("Score33", '[联赛名称错误]');
+defined('Score34') or define("Score34", '[盘口错误]');
+defined('Score35') or define("Score35", '[提前开赛]');
+defined('Score36') or define("Score36", '[比分错误]');
+defined('Score37') or define("Score37", '[未接受注单]');
+defined('Score38') or define("Score38", '[进球取消]');
+defined('Score39') or define("Score39", '[红卡取消]');
+defined('Score40') or define("Score40", '[非正常投注]');
+defined('Score41') or define("Score41", '[赔率错误]');
 
 // ======================================== Super Admin Account ================================================
 defined('SUPER_ADMIN_EMAIL') or define("SUPER_ADMIN_EMAIL", 'cepochmobiledevelopers2@gmail.com');
