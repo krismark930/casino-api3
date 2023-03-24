@@ -396,8 +396,8 @@ exports.getFT_MAIN_CHAMPION = async (thirdPartyAuthData, data) => {
 		formData.append("search", "all");
 		formData.append("rtype", "fs");
 		formData.append("league_id", data.lid);
-		formData.append("date", version);
-		formData.append("special", version);
+		formData.append("date", "");
+		formData.append("special", "");
 		response = await axios.post(thirdPartyUrl, formData);
 		if (response.status === 200) {
 			let result = parser.parse(response.data);
@@ -495,7 +495,7 @@ exports.getFT_FU_R_INPLAY = async (thirdPartyAuthData) => {
 		response = await axios.post(thirdPartyUrl, formData);
 		if (response.status === 200) {
 			let result = parser.parse(response.data);
-			// console.log("1111111111111111111111111111", result['serverresponse'])
+			console.log("1111111111111111111111111111", result['serverresponse'])
 			let totalDataCount = result['serverresponse']['totalDataCount'];
 			if (totalDataCount > 1) {
 				await Promise.all(result['serverresponse']['ec'].map(async item => {
@@ -1448,10 +1448,7 @@ exports.getFT_DEFAULT_PARLAY = async (thirdPartyAuthData, data) => {
 		if (data.field === "cp1") {
 			formData.append("p3type", "RP3");
 			formData.append("date", "all");
-		} else if (data.field === "cp2") {
-			formData.append("p3type", "P3");
-			formData.append("date", 0);
-		} else if (data.field === "cp2") {
+		}else if (data.field === "cp2") {
 			formData.append("p3type", "P3");
 			formData.append("date", 0);
 		} else if (data.field === "HotGame_FT_lid_1" || data.field === "HotGame_FT_lid_2") {
@@ -1479,7 +1476,8 @@ exports.getFT_DEFAULT_PARLAY = async (thirdPartyAuthData, data) => {
 		response = await axios.post(thirdPartyUrl, formData);
 		if (response.status === 200) {
 			let result = parser.parse(response.data);
-			console.log("getFT_DEFAULT_TODAY:=========", result['serverresponse']['ec'][0]['game']['DATETIME'])
+			console.log(result);
+			console.log("getFT_DEFAULT_PARLAY:=========", result['serverresponse']['ec'][0]['game']['DATETIME'])
 			let totalDataCount = result['serverresponse']['totalDataCount'];
 			if (totalDataCount > 1) {
 				await Promise.all(result['serverresponse']['ec'].map(async item => {
@@ -2363,6 +2361,113 @@ exports.getFT_CORRECT_SCORE_PARLAY = async (thirdPartyAuthData, data) => {
 				};
 				itemList.push(data);
 			}
+			return itemList;
+		}
+		return itemList;
+	} catch(e) {
+		console.log(e)
+	}
+}
+
+exports.getFT_CORRECT_SCORE_FAVORITE = async (thirdPartyAuthData, data) => {
+	try {
+		let tempList = [];
+		let ecidStr = "";
+		for (let i = 0; i < data.length; i++) {
+			if (i == data.length - 1) {
+				ecidStr += data[i]["ecid"]
+			} else {
+				ecidStr += data[i]["ecid"] + "|"
+			}
+		}
+		let itemList = [];
+		let thirdPartyBaseUrl = thirdPartyAuthData["thirdPartyBaseUrl"];
+		let thirdPartyUrl = "";
+		let version = thirdPartyAuthData["version"];
+		let uID = thirdPartyAuthData["uid"];
+		thirdPartyUrl = `${thirdPartyBaseUrl}/transform.php?ver=${version}`;
+		let formData = new FormData();
+		formData.append("p", "get_game_list");
+		formData.append("uid", uID);
+		formData.append("ver", version);
+		formData.append("langx", "zh-cn");
+		formData.append("p3type", "");
+		formData.append("date", "");
+		formData.append("gtype", "ft");
+		formData.append("showtype", "mygame");
+		formData.append("rtype", "pd");
+		formData.append("ltype", 3);
+		formData.append("sorttype", "L");
+		formData.append("specialClick", "");
+		formData.append("isFantasy", "N");
+		formData.append("ts", new Date().getTime());
+		formData.append("ecid_str", ecidStr);
+		response = await axios.post(thirdPartyUrl, formData);
+		if (response.status === 200) {
+			let result = parser.parse(response.data);
+			console.log("correctScore:====================", result);
+			let totalDataCount = result['serverresponse']['totalDataCount'];
+			if (totalDataCount > 1) {
+				tempList = [...result['serverresponse']['ec']];
+			} else {
+				tempList.push(result['serverresponse']['ec']);
+			}
+			tempList.map(async item => {
+				let m_date = moment().format('YYYY') + "-" + item['game']['DATETIME'].split(" ")[0];
+				let m_time = item['game']['DATETIME'].split(" ")[1];
+				let time = m_time.split(":")[0];
+				let temp_minute = m_time.split(":")[1];
+				let minute = temp_minute.substring(0, temp_minute.length - 1);
+				var lastChar = temp_minute.substr(temp_minute.length - 1);
+				if (lastChar == "p") {
+					time = Number(time) + 12;
+				}
+				let m_start = m_date + " " + time + ":" + minute;
+				m_time = time + ":" + minute;
+				let data = {
+					Type: "FT",
+					ECID: item['game']['ECID'],
+					LID: item['game']['LID'],			
+					MB_Ball: item['game']['SCORE_H'],
+					TG_Ball: item['game']['SCORE_C'],
+					MB_Team: item['game']['TEAM_H'],
+					TG_Team: item['game']['TEAM_C'],
+					M_League: item['game']['LEAGUE'],
+					FLAG_CLASS: item['game']['FLAG_CLASS'],
+					M_Date: m_date,
+					M_Time: m_time,
+					M_Start: m_start,
+					MB1TG0: item['game']['IOR_H1C0'],
+					MB2TG0: item['game']['IOR_H2C0'],
+					MB2TG1: item['game']['IOR_H2C1'],
+					MB3TG0: item['game']['IOR_H3C0'],
+					MB3TG1: item['game']['IOR_H3C1'],
+					MB3TG2: item['game']['IOR_H3C2'],
+					MB4TG0: item['game']['IOR_H4C0'],
+					MB4TG1: item['game']['IOR_H4C1'],
+					MB4TG2: item['game']['IOR_H4C2'],
+					MB4TG3: item['game']['IOR_H4C3'],
+					MB0TG0: item['game']['IOR_H0C0'],
+					MB1TG1: item['game']['IOR_H1C1'],
+					MB2TG2: item['game']['IOR_H2C2'],
+					MB3TG3: item['game']['IOR_H3C3'],
+					MB4TG4: item['game']['IOR_H4C4'],
+					MB0TG1: item['game']['IOR_H0C1'],
+					MB0TG2: item['game']['IOR_H0C2'],
+					MB1TG2: item['game']['IOR_H1C2'],
+					MB0TG3: item['game']['IOR_H0C3'],
+					MB1TG3: item['game']['IOR_H1C3'],
+					MB2TG3: item['game']['IOR_H2C3'],
+					MB0TG4: item['game']['IOR_H0C4'],
+					MB1TG4: item['game']['IOR_H1C4'],
+					MB2TG4: item['game']['IOR_H2C4'],
+					MB3TG4: item['game']['IOR_H3C4'],
+					UP5: item['game']['IOR_OVH'],
+					MID: item['game']['GID'],
+					PD_Show: 1,
+				};
+				itemList.push(data);
+			})
 			return itemList;
 		}
 		return itemList;

@@ -2007,8 +2007,7 @@ class SportController extends Controller
 
         $m_name = $request->post('m_name');
 
-        $count = Report::selectRaw('*')->whereRaw("M_Name='$m_name'")->count();
-        //$items = Report::selectRaw('*')->whereRaw("M_Name='$m_name'")->get();
+        $report_count = Report::where("M_Name", $m_name)->count();
         $items = Report::with('sport')->whereRaw("M_Name='$m_name'")->get();
         return response()->json([
             "success" => true,

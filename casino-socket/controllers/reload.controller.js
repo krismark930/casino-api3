@@ -7,7 +7,7 @@ var moment = require('moment');
 exports.getUID_VER = async (userName, passWord, thirdPartyBaseUrl) => {
 	try {
 		let thirdPartyUrl = "";
-		let version = "";
+		let version = "-3ed5-bug4-0309-95881ae5676be2";
 		let uID = "";
 		let id = 0;
 		let data = {};
