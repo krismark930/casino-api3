@@ -69,7 +69,7 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 docker run --name laravel -p 8088:80 -v /Users/villian/app/php/fujia/casino-api3:/var/www/html/app laraedit/laraedit
 docker rm -rf laravel
-docker run --name laravel -p 8088:80  -e WEBROOT=/var/www/html/public -v /Users/villian/app/php/fujia/casino-api3:/var/www/html tangramor/nginx-php8-fpm:php8.2.2_node19.6.0
+docker run --name laravel -p 8088:80 --network coinuse  -e WEBROOT=/var/www/html/public -v /Users/villian/app/php/fujia/casino-api3:/var/www/html tangramor/nginx-php8-fpm:php8.2.2_node19.6.0
 
            TZ: 'Asia/Shanghai'
             WEBROOT: '/var/www/html/public'
@@ -81,3 +81,11 @@ docker run --name laravel -p 8088:80  -e WEBROOT=/var/www/html/public -v /Users/
 composer update
  php artisan passport:keys
 php artisan migrate 
+
+
+composer update
+composer install
+php artisan key:generate
+php artisan migrate
+php artisan passport:install
+php artisan serv
