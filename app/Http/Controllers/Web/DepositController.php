@@ -90,13 +90,13 @@ class DepositController extends Controller {
                 if ($deposit->create($data)){
                     return response()->json(['success'=>true, 'order_code'=> $Order_Code, 'message'=>'deposit successfully.'], 200);
                 }else {
-                    return response()->json(['success'=>false, 'message'=>'rebate deposit operation failure.']);
+                    return response()->json(['success'=>false, 'message'=>'rebate 提款成功!!!']);
                 }
             }else{
                 return response()->json(['success'=>true, 'order_code'=> $Order_Code, 'message'=>'deposit successfully.'], 200);
             }
         }
         else
-            return response()->json(['success'=>false, 'message'=>'deposit operation failure.']);
+            return response()->json(['success'=>false, 'message'=>'提款成功!!!']);
     }
 }

@@ -1,0 +1,260 @@
+2023-03-03 09:56:48
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782389','DT47578170','4884987','1','14','r','2023-08-13','2023-03-03 09:56:47','50','英格兰超级联赛<br>[60002]vs[60001]<br>布伦特福德&nbsp;&nbsp;<FONT COLOR=#0000BB><b>r</b></FONT>&nbsp;&nbsp;阿森纳<br>',   '半场波胆','','0','zzzxxx689','-50','0','C','H','C', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VPD','FT','RMB','1','60002', '60001','1','0','0')
+{
+    "gold": 50,
+    "id": 565,
+    "gid": 4884987,
+    "line_type": 14,
+    "type": "H",
+    "active": 1
+}
+
+
+2023-03-03 09:57:47
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782401','DT47578182','4884987','1','14','r','2023-08-13','2023-03-03 09:57:47','50','英格兰超级联赛<br>[60002]vs[60001]<br>布伦特福德&nbsp;&nbsp;<FONT COLOR=#0000BB><b>r</b></FONT>&nbsp;&nbsp;阿森纳<br>',   '半场波胆','','0','zzzxxx689','-50','0','C','H','C', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VPD','FT','RMB','1','60002', '60001','1','0','0')
+{
+    "gold": 50,
+    "id": 565,
+    "gid": 4884987,
+    "line_type": 14,
+    "type": "H",
+    "active": 1
+}
+
+
+2023-03-03 09:58:10
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782438','DT47578219','4884987','1','14','r','2023-08-13','2023-03-03 09:58:10','50','英格兰超级联赛<br>[60002]vs[60001]<br>布伦特福德&nbsp;&nbsp;<FONT COLOR=#0000BB><b>r</b></FONT>&nbsp;&nbsp;阿森纳<br>',   '半场波胆','','0','zzzxxx689','-50','0','C','H','C', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VPD','FT','RMB','1','60002', '60001','1','0','0')
+{
+    "gold": 50,
+    "id": 565,
+    "gid": 4884987,
+    "line_type": 14,
+    "type": "H",
+    "active": 1
+}
+
+
+2023-03-03 10:23:29
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782471','DT47578252','4884987','1','14','r','2023-08-13','2023-03-03 10:23:26','50','英格兰超级联赛<br>[60002]vs[60001]<br>布伦特福德&nbsp;&nbsp;<FONT COLOR=#0000BB><b>r</b></FONT>&nbsp;&nbsp;阿森纳<br>',   '半场波胆','','0','zzzxxx689','-50','0','C','H','C', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VPD','FT','RMB','1','60002', '60001','1','0','0')
+{
+    "gold": 50,
+    "id": 565,
+    "gid": 4884987,
+    "line_type": 14,
+    "type": "H",
+    "active": 1
+}
+
+
+2023-03-03 10:23:33
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782486','DT47578267','4884987','1','14','r','2023-08-13','2023-03-03 10:23:32','50','英格兰超级联赛<br>[60002]vs[60001]<br>布伦特福德&nbsp;&nbsp;<FONT COLOR=#0000BB><b>r</b></FONT>&nbsp;&nbsp;阿森纳<br>',   '半场波胆','','0','zzzxxx689','-50','0','C','H','C', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VPD','FT','RMB','1','60002', '60001','1','0','0')
+{
+    "gold": 50,
+    "id": 565,
+    "gid": 4884987,
+    "line_type": 14,
+    "type": "H",
+    "active": 1
+}
+
+
+2023-03-03 10:53:22
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782499','OU2225458330','4903017','1','12','VRH','2023-07-11','2023-03-03 10:53:21','50','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','zzzxxx689','42.5','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','RMB','1','70402', '70401','1','0','0')
+{
+    "gold": 50,
+    "id": 565,
+    "gid": 4903017,
+    "line_type": 12,
+    "type": "H",
+    "active": 1
+}
+
+
+2023-03-03 10:53:27
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782547','OU2225458378','4903017','1','12','VRH','2023-07-11','2023-03-03 10:53:26','50','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','zzzxxx689','42.5','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','RMB','1','70402', '70401','1','0','0')
+{
+    "gold": 50,
+    "id": 565,
+    "gid": 4903017,
+    "line_type": 12,
+    "type": "H",
+    "active": 1
+}
+
+
+2023-03-03 12:45:57
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782576','OU2225458407','4903017','1','12','VRH','2023-07-11','2023-03-03 12:45:53','50','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','zzzxxx689','42.5','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','RMB','1','70402', '70401','1','0','0')
+{
+    "gold": 50,
+    "id": 565,
+    "gid": 4903017,
+    "line_type": 12,
+    "type": "H",
+    "active": 1
+}
+
+
+2023-03-03 12:46:27
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782600','OU2225458431','4903017','1','12','VRH','2023-07-11','2023-03-03 12:46:26','50','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','zzzxxx689','42.5','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','RMB','1','70402', '70401','1','0','0')
+{
+    "gold": 50,
+    "id": 565,
+    "gid": 4903017,
+    "line_type": 12,
+    "type": "H",
+    "active": 1
+}
+
+
+2023-03-03 12:51:55
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782610','OU2225458441','4903017','1','12','VRH','2023-07-11','2023-03-03 12:51:54','50','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','zzzxxx689','42.5','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','RMB','1','70402', '70401','1','0','0')
+{
+    "gold": 50,
+    "id": 565,
+    "gid": 4903017,
+    "line_type": 12,
+    "type": "H",
+    "active": 1
+}
+
+
+2023-03-03 13:27:42
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782636','OU2225458467','4903017','1','12','VRH','2023-07-11','2023-03-03 13:27:38','50','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','antonio1006','42.5','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','','1','70402', '70401','0','0','0')
+{
+    "gold": 50,
+    "id": 2266,
+    "gid": 4903017,
+    "line_type": 12,
+    "type": "H",
+    "active": 1
+}
+
+
+2023-03-03 13:27:48
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782667','OU2225458498','4903017','1','12','VRH','2023-07-11','2023-03-03 13:27:47','50','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','antonio1006','42.5','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','','1','70402', '70401','0','0','0')
+{
+    "gold": 50,
+    "id": 2266,
+    "gid": 4903017,
+    "line_type": 12,
+    "type": "H",
+    "active": 1
+}
+
+
+2023-03-03 13:27:50
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782684','OU2225458515','4903017','1','12','VRH','2023-07-11','2023-03-03 13:27:49','50','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','antonio1006','42.5','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','','1','70402', '70401','0','0','0')
+{
+    "gold": 50,
+    "id": 2266,
+    "gid": 4903017,
+    "line_type": 12,
+    "type": "H",
+    "active": 1
+}
+
+
+2023-03-03 13:27:53
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782698','OU2225458529','4903017','1','12','VRH','2023-07-11','2023-03-03 13:27:52','50','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','antonio1006','42.5','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','','1','70402', '70401','0','0','0')
+{
+    "gold": 50,
+    "id": 2266,
+    "gid": 4903017,
+    "line_type": 12,
+    "type": "H",
+    "active": 1
+}
+
+
+2023-03-03 13:28:54
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782728','OU2225458559','4903017','1','12','VRH','2023-07-11','2023-03-03 13:28:53','20','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','antonio1006','17','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','','1','70402', '70401','0','0','0')
+{"id":2266,"gold":20,"gid":4903017,"type":"H","line_type":12,"active":1}
+
+2023-03-03 13:28:57
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782773','OU2225458604','4903017','1','12','VRH','2023-07-11','2023-03-03 13:28:56','20','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','antonio1006','17','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','','1','70402', '70401','0','0','0')
+{"id":2266,"gold":20,"gid":4903017,"type":"H","line_type":12,"active":1}
+
+2023-03-03 13:30:21
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782791','OU2225458622','4903017','1','12','VRC','2023-07-11','2023-03-03 13:30:21','20','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','2.030','antonio1006','20.6','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','','1','70402', '70401','0','0','0')
+{"id":2266,"gold":20,"gid":4903017,"type":"C","line_type":12,"active":1}
+
+2023-03-03 13:30:32
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782820','OU2225458651','4903017','1','12','VRH','2023-07-11','2023-03-03 13:30:31','20','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','antonio1006','17','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','','1','70402', '70401','0','0','0')
+{"id":2266,"gold":20,"gid":4903017,"type":"H","line_type":12,"active":1}
+
+2023-03-03 13:30:37
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782832','OU2225458663','4903017','1','12','VRC','2023-07-11','2023-03-03 13:30:36','20','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','2.030','antonio1006','20.6','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','','1','70402', '70401','0','0','0')
+{"id":2266,"gold":20,"gid":4903017,"type":"C","line_type":12,"active":1}
+
+2023-03-03 13:30:45
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782850','OU2225458681','4903017','1','13','VOUC','2023-07-11','2023-03-03 13:30:44','20','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场大小','U1','2.000','antonio1006','20','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VOU','FT','','1','70402', '70401','0','0','0')
+{"id":2266,"gold":20,"gid":4903017,"type":"H","line_type":13,"active":1}
+
+2023-03-03 13:36:18
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782873','OU2225458704','4903017','1','11','VMC','2023-07-11','2023-03-03 13:36:17','20','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场独赢','','5.10','antonio1006','82','0','C','H','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VM','FT','','1','70402', '70401','0','0','0')
+{"id":2266,"gold":20,"gid":4903017,"type":"C","line_type":11,"active":1}
+
+2023-03-03 13:36:21
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782900','OU2225458731','4903017','1','11','VMC','2023-07-11','2023-03-03 13:36:21','20','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场独赢','','5.10','antonio1006','82','0','C','H','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VM','FT','','1','70402', '70401','0','0','0')
+{"id":2266,"gold":20,"gid":4903017,"type":"C","line_type":11,"active":1}
+
+2023-03-03 13:39:11
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782948','OU2225458779','4903017','1','12','VRH','2023-07-11','2023-03-03 13:39:10','20','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','antonio1006','17','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','','1','70402', '70401','0','0','0')
+{"id":2266,"gold":20,"gid":4903017,"type":"H","line_type":12,"active":1}
+
+2023-03-03 13:46:01
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5782975','OU2225458806','4903017','1','12','VRH','2023-07-11','2023-03-03 13:46:00','10','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','antonio1006','8.5','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','','1','70402', '70401','0','0','0')
+{"id":2266,"gold":10,"gid":4903017,"type":"H","line_type":12,"active":1}
+
+2023-03-03 13:46:05
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5783012','OU2225458843','4903017','1','12','VRH','2023-07-11','2023-03-03 13:46:05','10','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','antonio1006','8.5','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','','1','70402', '70401','0','0','0')
+{"id":2266,"gold":10,"gid":4903017,"type":"H","line_type":12,"active":1}
+
+2023-03-03 13:46:11
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5783038','OU2225458869','4903017','1','11','VMC','2023-07-11','2023-03-03 13:46:11','10','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场独赢','','5.10','antonio1006','41','0','C','H','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VM','FT','','1','70402', '70401','0','0','0')
+{"id":2266,"gold":10,"gid":4903017,"type":"C","line_type":11,"active":1}
+
+2023-03-03 13:46:27
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5783073','OU2225458904','4903017','1','2','RH','2023-07-11','2023-03-03 13:46:27','10','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0.5 / 1</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '让球','0.5 / 1','1.820','antonio1006','8.2','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','R','FT','','1','70402', '70401','0','0','0')
+{"id":2266,"gold":10,"gid":4903017,"type":"H","line_type":2,"active":1}
+
+2023-03-03 13:46:33
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5783092','OU2225458923','4903017','1','2','RH','2023-07-11','2023-03-03 13:46:32','10','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0.5 / 1</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '让球','0.5 / 1','1.820','antonio1006','8.2','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','R','FT','','1','70402', '70401','0','0','0')
+{"id":2266,"gold":10,"gid":4903017,"type":"H","line_type":2,"active":1}
+
+2023-03-03 13:46:49
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5783116','OU2225458947','4903017','1','3','OUC','2023-07-11','2023-03-03 13:46:48','10','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '大小','U2.5','1.880','antonio1006','8.8','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','OU','FT','','1','70402', '70401','0','0','0')
+{"id":2266,"gold":10,"gid":4903017,"type":"H","line_type":3,"active":1}
+
+2023-03-03 13:46:54
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5783146','OU2225458977','4903017','1','3','OUH','2023-07-11','2023-03-03 13:46:53','10','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '大小','O2.5','1.980','antonio1006','9.8','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','OU','FT','','1','70402', '70401','0','0','0')
+{"id":2266,"gold":10,"gid":4903017,"type":"C","line_type":3,"active":1}
+
+2023-03-03 13:54:36
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5783180','DT47578961','4903017','1','14','r','2023-07-11','2023-03-03 13:54:35','10','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>r</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场波胆','','76','antonio1006','750','0','C','H','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VPD','FT','','1','70402', '70401','0','0','0')
+{"id":2266,"gold":10,"gid":4903017,"type":"N","line_type":14,"active":1}
+
+2023-03-03 13:54:41
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5783208','DT47578989','4903017','1','14','r','2023-07-11','2023-03-03 13:54:40','10','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>r</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场波胆','','76','antonio1006','750','0','C','H','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VPD','FT','','1','70402', '70401','0','0','0')
+{"id":2266,"gold":10,"gid":4903017,"type":"N","line_type":14,"active":1}
+
+2023-03-03 13:55:58
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5783251','DT47579032','4903017','1','14','r','2023-07-11','2023-03-03 13:55:57','10','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>r</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场波胆','','76','antonio1006','750','0','C','H','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VPD','FT','','1','70402', '70401','0','0','0')
+{"id":2266,"gold":10,"gid":4903017,"type":"N","line_type":14,"active":1}
+
+2023-03-03 13:57:46
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5783282','OU2225459113','4903017','1','2','RC','2023-07-11','2023-03-03 13:57:45','10','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0.5 / 1</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '让球','0.5 / 1','2.080','antonio1006','10.8','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','R','FT','','1','70402', '70401','0','0','0')
+{"id":2266,"gold":10,"gid":4903017,"type":"C","line_type":2,"active":1}
+
+2023-03-03 14:09:29
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5783329','OU2225459160','4903017','1','12','VRH','2023-07-11','2023-03-03 14:09:28','50','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','antonio1006','42.5','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','','1','70402', '70401','0','0','0')
+{
+    "gold": 50,
+    "id": 2266,
+    "gid": 4903017,
+    "line_type": 12,
+    "type": "H",
+    "active": 1
+}
+
+

@@ -1,0 +1,60 @@
+2023-03-05 09:24:42
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5783341','OU2225459172','4903017','1','12','VRH','2023-07-11','2023-03-05 09:24:38','50','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','antonio1006','42.5','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','','1','70402', '70401','0','0','0')
+{
+    "gold": 50,
+    "id": 2266,
+    "gid": 4903017,
+    "line_type": 12,
+    "type": "H",
+    "active": 1
+}
+
+
+2023-03-05 09:24:48
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5783386','OU2225459217','4903017','1','12','VRH','2023-07-11','2023-03-05 09:24:47','50','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','antonio1006','42.5','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','','1','70402', '70401','0','0','0')
+{
+    "gold": 50,
+    "id": 2266,
+    "gid": 4903017,
+    "line_type": 12,
+    "type": "H",
+    "active": 1
+}
+
+
+2023-03-05 09:24:55
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5783413','OU2225459244','4903017','1','12','VRH','2023-07-11','2023-03-05 09:24:54','10','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','antonio1006','8.5','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','','1','70402', '70401','0','0','0')
+{
+    "gold": 10,
+    "id": 2266,
+    "gid": 4903017,
+    "line_type": 12,
+    "type": "H",
+    "active": 1
+}
+
+
+2023-03-05 15:08:00
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5783458','OU2225459289','4903017','1','12','VRH','2023-07-11','2023-03-05 15:07:59','10','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','antonio1006','8.5','5','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','','1','70402', '70401','0','0','0')
+{
+    "gold": 10,
+    "id": 2266,
+    "gid": 4903017,
+    "line_type": 12,
+    "type": "H",
+    "active": 1
+}
+
+
+2023-03-05 15:44:59
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('5783470','OU2225459301','4903017','1','12','VRH','2023-07-11','2023-03-05 15:44:57','10','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0 / 0.5</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场让球','0 / 0.5','1.850','antonio1006','8.5','5','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','','1','70402', '70401','0','0','0')
+{
+    "gold": 10,
+    "id": 2266,
+    "gid": 4903017,
+    "line_type": 12,
+    "type": "H",
+    "active": 1
+}
+
+

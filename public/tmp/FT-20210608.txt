@@ -1,0 +1,116 @@
+2021-06-08 13:51:28
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2486944','OU2222162775','4915533','1','13','VOUC','2021-07-11','2021-06-08 13:51:13','10','美洲金杯2021(在美国)<br>[71710]vs[71709]<br>加拿大&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;马提尼克<br>',   '半场大小','U1 / 1.5','1.950','antonio1006','9.5','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VOU','FT','','1','71710', '71709','0','0','0')
+{"id":2266,"gold":10,"gid":4915533,"type":"H","line_type":13,"active":1}
+
+2021-06-08 13:51:49
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2486961','OU2222162792','4915533','1','13','VOUC','2021-07-11','2021-06-08 13:51:48','10','美洲金杯2021(在美国)<br>[71710]vs[71709]<br>加拿大&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;马提尼克<br>',   '半场大小','U1 / 1.5','1.950','antonio1006','9.5','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VOU','FT','','1','71710', '71709','0','0','0')
+{"id":2266,"gold":10,"gid":4915533,"type":"H","line_type":13,"active":1}
+
+2021-06-08 13:52:30
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2486998','OU2222162829','4915533','1','13','VOUH','2021-07-11','2021-06-08 13:52:29','10','美洲金杯2021(在美国)<br>[71710]vs[71709]<br>加拿大&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;马提尼克<br>',   '半场大小','O1 / 1.5','1.850','antonio1006','8.5','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VOU','FT','','1','71710', '71709','0','0','0')
+{"id":2266,"gold":10,"gid":4915533,"type":"C","line_type":13,"active":1}
+
+2021-06-08 13:53:42
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2487011','OU2222162842','4915533','1','11','VMH','2021-07-11','2021-06-08 13:53:41','10','美洲金杯2021(在美国)<br>[71710]vs[71709]<br>加拿大&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;马提尼克<br>',   '半场独赢','','1.43','antonio1006','4.3','0','C','H','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VM','FT','','1','71710', '71709','0','0','0')
+{"id":2266,"gold":10,"gid":4915533,"type":"H","line_type":11,"active":1}
+
+2021-06-08 13:54:06
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2487057','OU2222162888','4915533','1','11','VMC','2021-07-11','2021-06-08 13:54:06','10','美洲金杯2021(在美国)<br>[71710]vs[71709]<br>加拿大&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;马提尼克<br>',   '半场独赢','','11.50','antonio1006','105','0','C','H','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VM','FT','','1','71710', '71709','0','0','0')
+{"id":2266,"gold":10,"gid":4915533,"type":"C","line_type":11,"active":1}
+
+2021-06-08 14:15:20
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2489111','OU2222164942','4901871','1','13','VOUH','2021-07-11','2021-06-08 14:15:19','10','日本J2联赛<br>[70018]vs[70017]<br>长崎成功丸&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;大宫松鼠<br>',   '半场大小','O0.5 / 1','1.790','antonio1006','7.9','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VOU','FT','','1','70018', '70017','0','0','0')
+{"id":2266,"gold":10,"gid":4901871,"type":"C","line_type":13,"active":1}
+
+2021-06-08 14:15:51
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2489145','OU2222164976','4901871','1','13','VOUH','2021-07-11','2021-06-08 14:15:49','10','日本J2联赛<br>[70018]vs[70017]<br>长崎成功丸&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;大宫松鼠<br>',   '半场大小','O0.5 / 1','1.790','antonio1006','7.9','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VOU','FT','','1','70018', '70017','0','0','0')
+{"id":2266,"gold":10,"gid":4901871,"type":"C","line_type":13,"active":1}
+
+2021-06-08 14:16:14
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2489170','OU2222165001','4901927','1','13','VOUH','2021-07-11','2021-06-08 14:16:13','10','日本J2联赛<br>[70178]vs[70177]<br>町田泽维亚&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;水户蜀葵<br>',   '半场大小','O0.5 / 1','1.750','antonio1006','7.5','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VOU','FT','','1','70178', '70177','0','0','0')
+{"id":2266,"gold":10,"gid":4901927,"type":"C","line_type":13,"active":1}
+
+2021-06-08 14:24:32
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2489478','OU2222165309','4915539','1','11','VMC','2021-07-11','2021-06-08 14:24:31','10','美洲金杯2021(在美国)<br>[71752]vs[71751]<br>美国&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;海地<br>',   '半场独赢','','9.40','antonio1006','84','0','C','H','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VM','FT','','1','71752', '71751','0','0','0')
+{"id":2266,"gold":10,"gid":4915539,"type":"C","line_type":11,"active":1}
+
+2021-06-08 14:30:14
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2489706','OU2222165537','4901863','1','2','RH','2021-07-11','2021-06-08 14:30:13','10','日本J2联赛<br>[70002]vs[70001]<br>新泻天鹅&nbsp;&nbsp;<FONT COLOR=#0000BB><b>0.5</b></FONT>&nbsp;&nbsp;栃木SC<br>',   '让球','0.5','1.980','antonio1006','9.8','5','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','R','FT','','1','70002', '70001','0','0','0')
+{"id":2266,"gold":10,"gid":4901863,"type":"H","line_type":2,"active":1}
+
+2021-06-08 14:35:09
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2490274','OU2222166105','4901911','1','13','VOUH','2021-07-11','2021-06-08 14:35:08','10','日本J2联赛<br>[70130]vs[70129]<br>金泽萨维根&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;冈山绿雉<br>',   '半场大小','O0.5 / 1','1.850','antonio1006','8.5','0','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VOU','FT','','1','70130', '70129','0','0','0')
+{"id":2266,"gold":10,"gid":4901911,"type":"C","line_type":13,"active":1}
+
+2021-06-08 14:36:43
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2490312','DT44286093','4901911','1','14','r','2021-07-11','2021-06-08 14:36:42','10','日本J2联赛<br>[70130]vs[70129]<br>金泽萨维根&nbsp;&nbsp;<FONT COLOR=#0000BB><b>r</b></FONT>&nbsp;&nbsp;冈山绿雉<br>',   '半场波胆','','151','antonio1006','1500','0','C','H','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VPD','FT','','1','70130', '70129','0','0','0')
+{"id":2266,"gold":10,"gid":4901911,"type":"N","line_type":14,"active":1}
+
+2021-06-08 14:37:28
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2490398','DT44286179','4901911','1','14','r','2021-07-11','2021-06-08 14:37:26','10','日本J2联赛<br>[70130]vs[70129]<br>金泽萨维根&nbsp;&nbsp;<FONT COLOR=#0000BB><b>r</b></FONT>&nbsp;&nbsp;冈山绿雉<br>',   '半场波胆','','151','antonio1006','1500','0','C','H','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VPD','FT','','1','70130', '70129','0','0','0')
+{"id":2266,"gold":10,"gid":4901911,"type":"N","line_type":14,"active":1}
+
+2021-06-08 14:37:41
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2490446','DT44286227','4901919','1','14','r','2021-07-11','2021-06-08 14:37:40','10','日本J2联赛<br>[70162]vs[70161]<br>山口雷法&nbsp;&nbsp;<FONT COLOR=#0000BB><b>r</b></FONT>&nbsp;&nbsp;磐田山叶<br>',   '半场波胆','','71','antonio1006','700','0','C','H','C', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VPD','FT','','1','70162', '70161','0','0','0')
+{"id":2266,"gold":10,"gid":4901919,"type":"N","line_type":14,"active":1}
+
+2021-06-08 14:40:20
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2490486','OU2222166317','4903017','1','11','VMH','2023-07-11','2021-06-08 14:40:19','10','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场独赢','','2.29','antonio1006','12.9','0','C','H','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VM','FT','','1','70402', '70401','0','0','0')
+{
+    "gold": 10,
+    "id": 2266,
+    "gid": 4903017,
+    "line_type": 11,
+    "type": "H",
+    "active": 1
+}
+
+
+2021-06-08 14:40:29
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2490533','OU2222166364','4903017','1','11','VMH','2023-07-11','2021-06-08 14:40:28','10','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场独赢','','2.29','antonio1006','12.9','0','C','H','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VM','FT','','1','70402', '70401','0','0','0')
+{
+    "gold": 10,
+    "id": 2266,
+    "gid": 4903017,
+    "line_type": 11,
+    "type": "H",
+    "active": 1
+}
+
+
+2021-06-08 14:40:47
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2490582','OU2222166413','4903017','1','11','VMH','2023-07-11','2021-06-08 14:40:46','10','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场独赢','','2.29','antonio1006','12.9','0','C','H','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VM','FT','','1','70402', '70401','0','0','0')
+{
+    "gold": 10,
+    "id": 2266,
+    "gid": 4903017,
+    "line_type": 11,
+    "type": "H",
+    "active": 1
+}
+
+
+2021-06-08 14:42:32
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2490603','OU2222166434','4903017','1','11','VMN','2023-07-11','2021-06-08 14:42:31','10','瑞典超级甲组联赛<br>[70402]vs[70401]<br>赫尔辛堡&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;艾克罗保利斯<br>',   '半场独赢','','2.13','antonio1006','11.3','0','C','H','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VM','FT','','1','70402', '70401','0','0','0')
+{
+    "gold": 10,
+    "id": 2266,
+    "gid": 4903017,
+    "line_type": 11,
+    "type": "N",
+    "active": 1
+}
+
+
+2021-06-08 14:43:34
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2490650','OU2222166481','4901911','1','11','VMN','2021-07-11','2021-06-08 14:43:33','10','日本J2联赛<br>[70130]vs[70129]<br>金泽萨维根&nbsp;&nbsp;<FONT COLOR=#0000BB><b>VS.</b></FONT>&nbsp;&nbsp;冈山绿雉<br>',   '半场独赢','','1.90','antonio1006','9','0','C','H','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VM','FT','','1','70130', '70129','0','0','0')
+{"id":2266,"gold":10,"gid":4901911,"type":"N","line_type":11,"active":1}
+
+2021-06-08 14:44:45
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2490679','OU2222166510','4915539','1','12','VRH','2021-07-11','2021-06-08 14:44:44','10','美洲金杯2021(在美国)<br>[71752]vs[71751]<br>美国&nbsp;&nbsp;<FONT COLOR=#0000BB><b>1</b></FONT>&nbsp;&nbsp;海地<br>',   '半场让球','1','1.880','antonio1006','8.8','5','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','','1','71752', '71751','0','0','0')
+{"id":2266,"gold":10,"gid":4915539,"type":"H","line_type":12,"active":1}
+
+2021-06-08 15:01:40
+INSERT INTO web_report_data	(ID,OrderID,MID,Active,LineType,Mtype,M_Date,BetTime,BetScore,Middle,BetType,M_Place,M_Rate,M_Name,Gwin,TurnRate,OpenType,OddsType,ShowType,Agents,World,Corprator,Super,Admin,A_Rate,B_Rate,C_Rate,D_Rate,A_Point,B_Point,C_Point,D_Point,BetIP,Ptype,Gtype,CurType,Ratio,MB_MID,TG_MID,Pay_Type,MB_Ball,TG_Ball)                values ('2491212','OU2222167043','4915541','1','12','VRC','2021-07-11','2021-06-08 15:01:39','10','美洲金杯2021(在美国)<br>[71754]vs[71753]<br>美国&nbsp;&nbsp;<FONT COLOR=#0000BB><b>1 / 1.5</b></FONT>&nbsp;&nbsp;海地<br>',   '半场让球','1 / 1.5','1.620','antonio1006','6.2','5','C','E','H', 'ddm999','cdm888','bdm888','adm888','admin','0','0','0','0','0', '40', '50','30','127.0.0.1','VR','FT','','1','71754', '71753','0','0','0')
+{"id":2266,"gold":10,"gid":4915541,"type":"C","line_type":12,"active":1}
+

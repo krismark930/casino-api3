@@ -5,6 +5,7 @@ use App\Models\User;
 use Auth;
 use Validator;
 use Illuminate\Support\Facades\Hash;
+use App\Utils\Utils;
 class UserController extends Controller {
     protected $user;
     public function __construct(){
@@ -22,9 +23,17 @@ class UserController extends Controller {
                 'message' => $validator->messages()->toArray()
             ], 500);
         }
+        $inviter = $request->inviter_id;
+        $inviter_id = 0;
+        if($inviter <> ''){
+            $inviter_id = User::where('invite_url','/login'.'/'.$inviter)->first()->id;
+        }
+        $InviteUrl = 'IU'.date("YmdHis",time()+12*3600).mt_rand(100, 999);
         $data = [
             "UserName" => $request->UserName,
-            "password" => Hash::make($request->password)
+            "password" => Hash::make($request->password),
+            "invite_url" => '/login'.'/'.$InviteUrl,
+            "inviter_id" => $inviter_id
         ];
         $this->user->create($data);
         $responseMessage = "Registration Successful";
