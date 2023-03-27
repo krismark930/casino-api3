@@ -8,9 +8,9 @@ class WebMemLogData extends Model {
 
     protected $fillable = [
         'UserName',
-        'Logintime',
+        'LoginTime',
         'ConText',
-        'Loginip',
+        'LoginIP',
         'Url',
     ];
     protected $table = 'web_mem_log_data';

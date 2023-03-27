@@ -279,8 +279,6 @@ class Utils {
     }
 
     static function singleset($ptype){
-        //require ("config.inc.php");
-
         $sql="select $ptype as P3,R,MAX from web_system_data where ID=1";
         $row = DB::select($sql)[0];
         $p=$row->P3;
@@ -288,8 +286,8 @@ class Utils {
         return array($p,$pmax);
     }
 
-    static function show_voucher($line,$id){
-        //require ("config.inc.php");
+    static function show_voucher($line,$id) {
+        $show_voucher = "";
         $sql="select OUID,DTID,PMID from web_system_data";
         $row = DB::select($sql)['0'];
         $ouid=$row->OUID;
@@ -623,6 +621,7 @@ class Utils {
     //大小球计算：
     static function odds_dime($mbin1, $tgin1, $dime, $mtype)
     {
+        $grade = 0;
         if ($mbin1 < 0 or $tgin1 < 0) return 0;
         $dime = str_replace('大', '', $dime);
         $dime = str_replace('小', '', $dime);
@@ -708,6 +707,7 @@ class Utils {
     //让球计算:
     static function odds_letb($mbin, $tgin, $showtype, $dime, $mtype)
     {
+        $grade = 0;
         if ($mbin < 0 or $tgin < 0) return 0;
         if (mb_eregi("[+]", $dime)) {
             $letb_odds = explode("+", $dime);
@@ -1329,6 +1329,7 @@ class Utils {
     //上半大小球计算：
     static function odds_dime_v($mbin1, $tgin1, $dime, $mtype)
     {
+        $grade = 0;
         if ($mbin1 < 0 or $tgin1 < 0) return 0;
         $dime = str_replace('大', '', $dime);
         $dime = str_replace('小', '', $dime);
@@ -1414,6 +1415,7 @@ class Utils {
     //上半让球计算:
     static function odds_letb_v($mbin, $tgin, $showtype, $dime, $mtype)
     {
+        $grade = 0;
         if ($mbin < 0 or $tgin < 0) return 0;
         if (mb_eregi("[+]", $dime)) {
             $letb_odds = explode("+", $dime);
@@ -2035,6 +2037,7 @@ class Utils {
     //滚球大小球计算：
     static function odds_dime_rb($mbin1, $tgin1, $dime, $mtype)
     {
+        $grade = 0;
         if ($mbin1 < 0 or $tgin1 < 0) return 0;
         $dime = str_replace('大', '', $dime);
         $dime = str_replace('小', '', $dime);
@@ -2120,6 +2123,7 @@ class Utils {
     //滚球让球计算:
     static function odds_letb_rb($mbin, $tgin, $showtype, $dime, $mtype)
     {
+        $grade = 0;
         if ($mbin < 0 or $tgin < 0) return 0;
         if (mb_eregi("[+]", $dime)) {
             $letb_odds = explode("+", $dime);
@@ -2741,6 +2745,7 @@ class Utils {
     //滚球上半大小球计算：
     static function odds_dime_vrb($mbin1, $tgin1, $dime, $mtype)
     {
+        $grade = 0;
         if ($mbin1 < 0 or $tgin1 < 0) return 0;
         $dime = str_replace('大', '', $dime);
         $dime = str_replace('小', '', $dime);
@@ -2826,6 +2831,7 @@ class Utils {
     //滚球上半让球计算:
     static function odds_letb_vrb($mbin, $tgin, $showtype, $dime, $mtype)
     {
+        $grade = 0;
         if ($mbin < 0 or $tgin < 0) return 0;
         if (mb_eregi("[+]", $dime)) {
             $letb_odds = explode("+", $dime);
@@ -3447,6 +3453,7 @@ class Utils {
     //波胆计算：
     static function odds_pd($mb_in_score, $tg_in_score, $m_place)
     {
+        $grade = 0;
         if ($mb_in_score < 0 or $tg_in_score < 0) return 0;
         $betplace = 'MB' . $mb_in_score . 'TG' . $tg_in_score;
         if (($m_place == 'OVMB' or $m_place == 'OVH') and $mb_in_score > 4) {
@@ -3465,6 +3472,7 @@ class Utils {
     //上半波胆计算：
     static function odds_pd_v($mb_in_score_v, $tg_in_score_v, $m_place)
     {
+        $grade = 0;
         if ($mb_in_score_v < 0 or $tg_in_score_v < 0) return 0;
         $betplace = 'MB' . $mb_in_score_v . 'TG' . $tg_in_score_v;
         if (($m_place == 'OVMB' or $m_place == 'OVH') and $mb_in_score_v > 4) {
@@ -3483,6 +3491,7 @@ class Utils {
     //单双计算:
     static function odds_eo($mb_in_score, $tg_in_score, $m_place)
     {
+        $grade = 0;
         if ($mb_in_score < 0 or $tg_in_score < 0) return 0;
         $inball = ($mb_in_score + $tg_in_score);
         switch ($inball % 2) {
@@ -3507,6 +3516,7 @@ class Utils {
     //入球数计算:
     static function odds_t($mb_in_score, $tg_in_score, $m_place)
     {
+        $grade = 0;
         if ($mb_in_score < 0 or $tg_in_score < 0) return 0;
         $inball = $mb_in_score + $tg_in_score;
         if ($inball >= 0 and $inball <= 1) {
@@ -3529,6 +3539,7 @@ class Utils {
     //入球数计算:
     static function odds_bst($mb_in_score, $tg_in_score, $m_place)
     {
+        $grade = 0;
         if ($mb_in_score < 0 or $tg_in_score < 0) return 0;
         $inball = $mb_in_score + $tg_in_score;
         if ($inball >= 1 and $inball <= 2) {
@@ -3565,6 +3576,7 @@ class Utils {
     //半全计算：
     static function odds_half($mb_in_score_v, $tg_in_score_v, $mb_in_score, $tg_in_score, $m_place)
     {
+        $grade = 0;
         if ($mb_in_score < 0 or $tg_in_score < 0) return 0;
         $grade = 0;
         if ($mb_in_score_v > $tg_in_score_v) {

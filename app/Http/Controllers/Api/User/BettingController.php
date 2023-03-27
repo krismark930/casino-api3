@@ -2950,7 +2950,7 @@ class BettingController extends Controller
 
                             $turn_url = "";
 
-                            $w_gtype = 'RMH';
+                            $w_gtype = 'MH';
 
                             break;
 
@@ -2968,7 +2968,7 @@ class BettingController extends Controller
 
                             $turn_url = "";
 
-                            $w_gtype = 'RMC';
+                            $w_gtype = 'MC';
 
                             break;
 
@@ -2986,7 +2986,7 @@ class BettingController extends Controller
 
                             $turn_url = "";
 
-                            $w_gtype = 'RMN';
+                            $w_gtype = 'MN';
 
                             break;
                     }
@@ -2997,7 +2997,7 @@ class BettingController extends Controller
 
                     $gwin = ($w_m_rate - 1) * $gold;
 
-                    $ptype = 'RM';
+                    $ptype = 'M';
 
                     break;
 
@@ -3035,7 +3035,7 @@ class BettingController extends Controller
 
                             $turn_url = "";
 
-                            $w_gtype = 'RRH';
+                            $w_gtype = 'RH';
 
                             break;
 
@@ -3053,7 +3053,7 @@ class BettingController extends Controller
 
                             $turn_url = "";
 
-                            $w_gtype = 'RRC';
+                            $w_gtype = 'RC';
 
                             break;
                     }
@@ -3122,7 +3122,7 @@ class BettingController extends Controller
 
                     $gwin = ($w_m_rate) * $gold;
 
-                    $ptype = 'RE';
+                    $ptype = 'E';
 
                     break;
 
@@ -3179,7 +3179,7 @@ class BettingController extends Controller
 
                             $turn_url = "";
 
-                            $w_gtype = 'ROUH';
+                            $w_gtype = 'OUH';
 
                             break;
 
@@ -3216,7 +3216,7 @@ class BettingController extends Controller
 
                             $turn_url = "";
 
-                            $w_gtype = 'ROUC';
+                            $w_gtype = 'OUC';
 
                             break;
                     }
@@ -3229,7 +3229,7 @@ class BettingController extends Controller
 
                     $gwin = ($w_m_rate) * $gold;
 
-                    $ptype = 'ROU';
+                    $ptype = 'OU';
 
                     break;
             }
@@ -3404,6 +3404,7 @@ class BettingController extends Controller
             $bet_count= $request_data["bettingCount"] ?? 0;
             $gwin = $request_data["g_win"];
             $g_type = $request_data["g_type"];
+            $w_gtype = $request_data["m_type"];
             $langx = "zh-cn";
 
             $configs = Config::all();
@@ -3529,7 +3530,6 @@ class BettingController extends Controller
 
             if ($oddstype == '') $oddstype = 'H';
 
-            $w_gtype = "";
             $grape = "";
             $ptype= "";
 
@@ -3630,6 +3630,7 @@ class BettingController extends Controller
             $rules = [
                 'fromDate' => 'required',
                 'endDate' => 'required',
+                'gameType' => 'required'
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -3643,6 +3644,7 @@ class BettingController extends Controller
 
             $from_date = $request_data["fromDate"];
             $end_date = $request_data["endDate"];
+            $g_type = $request_data["gameType"];
 
             $user_id = Auth::guard("api")->user()->id;
 
@@ -3655,7 +3657,7 @@ class BettingController extends Controller
 
             $user_name = $user['UserName'];
 
-            $web_report_data = WebReportData::select(DB::raw('SUM(BetScore) AS betscore'), DB::raw('SUM(M_Result) AS m_result'), DB::raw('M_Date AS m_date'))->where('M_Name', $user_name)->whereBetween('M_Date',array($from_date, $end_date))->where("Gtype", "FT")->where("M_Result", "!=", "")->groupBy(DB::raw('DATE(M_Date)'))->get();
+            $web_report_data = WebReportData::select(DB::raw('SUM(BetScore) AS betscore'), DB::raw('SUM(M_Result) AS m_result'), DB::raw('M_Date AS m_date'))->where('M_Name', $user_name)->whereBetween('M_Date',array($from_date, $end_date))->where("Gtype", $g_type)->where("M_Result", "!=", "")->groupBy(DB::raw('DATE(M_Date)'))->get();
 
             foreach($web_report_data as $item) {
                 if ((float)$item['m_result'] > 0) {
@@ -3688,6 +3690,7 @@ class BettingController extends Controller
 
             $rules = [
                 'm_name' => 'required',
+                'gameType' => 'required'
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -3701,13 +3704,19 @@ class BettingController extends Controller
 
             $m_name = $request_data["m_name"];
 
-            // $date = date("Y-m-d");
+            $g_type = $request_data["gameType"];
 
-            $date = "2023-03-18";
+            $date = date("Y-m-d");
+
+            // $date = "2023-03-18";
 
             $items = Report::where("M_Name", $m_name)
                     ->where('M_Date', $date)
+                    ->where('Gtype', $g_type)
                     ->with('sport')
+                    // ->with(['sport' => function ($query) use ($g_type) {
+                    //     $query->where('Type', $g_type);
+                    // }])
                     ->get();
 
             $response['data'] = $items;

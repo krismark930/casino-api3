@@ -37,6 +37,7 @@ php artisan migrate:rollback --path=/database/migrations/fileName.php
 3. casino-api3
 
     - composer install
+    - composer dump-autoload
     - php artisan passport:install
     - php artisan config:clear
     - php artisan serve
