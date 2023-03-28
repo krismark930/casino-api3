@@ -72,9 +72,9 @@ class AdminBetCheckController extends Controller
         $rows = $rows->where('Active', $typeIndex)
           ->orWhere('Active', $typeIndex.$typeIndex);
       }
-      $rows = $rows->orderBy('bettime')
-      ->orderBy('linetype')
-      ->orderBy('mtype')->limit(20)->get();
+      $rows = $rows->orderBy('BetTime')
+      ->orderBy('LineType')
+      ->orderBy('Mtype')->limit(20)->get();
 
       $data = array();
       foreach($rows as $row) {

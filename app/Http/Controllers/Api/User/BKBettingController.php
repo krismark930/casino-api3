@@ -2189,6 +2189,22 @@ class BKBettingController extends Controller
 
                     $ptype = 'R';
 
+                    if ($odd_f_type == 'H') {
+
+                        $gwin = ($w_m_rate) * $gold;
+
+                    } else if ($odd_f_type == 'M' || $odd_f_type == 'I') {
+
+                        if ($w_m_rate < 0) {
+                            $gwin = $gold;
+                        } else {
+                            $gwin = ($w_m_rate) * $gold;
+                        }
+                    } else if ($odd_f_type == 'E') {
+                        
+                        $gwin = ($w_m_rate-1) * $gold;
+                    }
+
                     break;
 
                 case 52:
@@ -2295,6 +2311,22 @@ class BKBettingController extends Controller
                     $gwin = ($w_m_rate) * $gold;
 
                     $ptype = 'OU';
+
+                    if ($odd_f_type == 'H') {
+
+                        $gwin = ($w_m_rate) * $gold;
+
+                    } else if ($odd_f_type == 'M' || $odd_f_type == 'I') {
+
+                        if ($w_m_rate < 0) {
+                            $gwin = $gold;
+                        } else {
+                            $gwin = ($w_m_rate) * $gold;
+                        }
+                    } else if ($odd_f_type == 'E') {
+                        
+                        $gwin = ($w_m_rate-1) * $gold;
+                    }
 
                     break;
 
@@ -2553,6 +2585,24 @@ class BKBettingController extends Controller
                     }
 
                     break;
+            }
+
+            if ($odd_f_type == 'H') {
+
+                $gwin = ($w_m_rate) * $gold;
+
+            } else if ($odd_f_type == 'M' || $odd_f_type == 'I') {
+
+                if ($w_m_rate < 0) {
+
+                    $gwin = $gold;
+
+                } else {
+                    $gwin = ($w_m_rate) * $gold;
+                }
+            } else if ($odd_f_type == 'E') {
+                
+                $gwin = ($w_m_rate-1) * $gold;
             }
 
 
