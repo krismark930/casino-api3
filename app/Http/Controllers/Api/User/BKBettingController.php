@@ -113,12 +113,12 @@ class BKBettingController extends Controller
                 return response()->json($response, $response['status']);
             }
 
-            $newDate = now()->subMinutes(6 * 60 + 90);
+            // $newDate = now()->subMinutes(6 * 60 + 90);
 
             $match_sports = Sport::where('MID', $gid)->whereRaw("Open = 1 and MB_Team != ''")->first();
 
             if (!isset($match_sports)) {
-                $response['message'] = 'Schedule is closed!';
+                $response['message'] = 'Sport Not Found!';
                 return response()->json($response, $response['status']);
             }
 
@@ -160,8 +160,9 @@ class BKBettingController extends Controller
 
             $m_date = $match_sports["M_Date"];
             $show_type = $match_sports["ShowTypeRB"];
+            $show_type = "H";
 
-            $bet_time = date('Y-m-d H:i:s');
+            $bet_time = date('Y-m-d H:i:s', strtotime(' + 1 hours'));
 
             $m_start = strtotime($match_sports['M_Start']);
 
@@ -220,7 +221,7 @@ class BKBettingController extends Controller
 
                             $turn_url = "";
 
-                            $w_gtype = 'RRH';
+                            $mtype = 'RRH';
 
                             break;
 
@@ -238,7 +239,7 @@ class BKBettingController extends Controller
 
                             $turn_url = "";
 
-                            $w_gtype = 'RRC';
+                            $mtype = 'RRC';
 
                             break;
                     }
@@ -381,7 +382,7 @@ class BKBettingController extends Controller
 
                             $turn_url = "";
 
-                            $w_gtype = 'ROUH';
+                            $mtype = 'ROUH';
 
                             break;
 
@@ -418,7 +419,7 @@ class BKBettingController extends Controller
 
                             $turn_url = "";
 
-                            $w_gtype = 'ROUC';
+                            $mtype = 'ROUC';
 
                             break;
                     }
@@ -450,262 +451,291 @@ class BKBettingController extends Controller
                     }
 
                     break;
+                case 5:
+                    $bet_type = '单双';
+                    $bet_type_tw = "單雙";
+                    $bet_type_en = "Odd/Even";
+                    $caption = "足球";
+                    $turn_rate = "FT_Turn_EO_";
+                    switch ($rtype) {
+                        case "ODD":
+                            $w_m_place = '单';
+                            $w_m_place_tw = '單';
+                            $w_m_place_en = 'odd';
+                            $s_m_place = '(' . Order_Odd . ')';
+                            $w_m_rate = $match_sports["S_Single_Rate"];
+                            break;
+                        case "EVEN":
+                            $w_m_place = '双';
+                            $w_m_place_tw = '雙';
+                            $w_m_place_en = 'even';
+                            $s_m_place = '(' . Order_Even . ')';
+                            $w_m_rate = $match_sports["S_Double_Rate"];
+                            break;
+                    }
+                    $Sign = "VS.";
+                    $turn = "FT_Turn_EO";
+                    $gwin = ($w_m_rate - 1) * $gold;
+                    $ptype = 'EO';
+                    $mtype = $rtype;                    
+                    $grape="";
+                    break;
                 
-                case 11:
+                // case 11:
 
-                    $bet_type = '滚球第1队得分';
+                //     $bet_type = '滚球第1队得分';
 
-                    $bet_type_tw = "滚球第1队得分";
+                //     $bet_type_tw = "滚球第1队得分";
 
-                    $bet_type_en = "Running Team 1 Points";
+                //     $bet_type_en = "Running Team 1 Points";
 
-                    $caption = Order_Basketball;
+                //     $caption = Order_Basketball;
 
-                    $turn_rate = "BK_Turn_OU_A";
+                //     $turn_rate = "BK_Turn_OU_A";
 
-                    $MB_Points_Rate_RB_1 = $match_sports["MB_Points_Rate_RB_1"];
+                //     $MB_Points_Rate_RB_1 = $match_sports["MB_Points_Rate_RB_1"];
 
-                    $TG_Points_Rate_RB_1 = $match_sports["TG_Points_Rate_RB_1"];
+                //     $TG_Points_Rate_RB_1 = $match_sports["TG_Points_Rate_RB_1"];
 
-                    $rate = get_other_ioratio($odd_f_type, $MB_Points_Rate_RB_1, $TG_Points_Rate_RB_1, 100);
+                //     $rate = get_other_ioratio($odd_f_type, $MB_Points_Rate_RB_1, $TG_Points_Rate_RB_1, 100);
 
-                    switch ($type) {
+                //     switch ($type) {
 
-                        case "C":
+                //         case "C":
 
-                            $w_m_place = $match_sports["MB_Points_RB_1"];
+                //             $w_m_place = $match_sports["MB_Points_RB_1"];
 
-                            $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
+                //             $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
 
-                            $w_m_place_tw = $match_sports["MB_Points_RB_1"];
+                //             $w_m_place_tw = $match_sports["MB_Points_RB_1"];
 
-                            $w_m_place_tw = str_replace('O', '大&nbsp;', $w_m_place_tw);
+                //             $w_m_place_tw = str_replace('O', '大&nbsp;', $w_m_place_tw);
 
-                            $w_m_place_en = $match_sports["MB_Points_RB_1"];
+                //             $w_m_place_en = $match_sports["MB_Points_RB_1"];
 
-                            $w_m_place_en = str_replace('O', 'over&nbsp;', $w_m_place_en);
+                //             $w_m_place_en = str_replace('O', 'over&nbsp;', $w_m_place_en);
 
-                            $m_place = $match_sports["MB_Points_RB_1"];
+                //             $m_place = $match_sports["MB_Points_RB_1"];
 
-                            $s_m_place = $match_sports["MB_Points_RB_1"];
+                //             $s_m_place = $match_sports["MB_Points_RB_1"];
 
-                            if ($langx == "zh-cn") {
+                //             if ($langx == "zh-cn") {
 
-                                $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
+                //                 $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
 
-                            } else if ($langx == "zh-cn") {
+                //             } else if ($langx == "zh-cn") {
 
-                                $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
+                //                 $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
 
-                            } else if ($langx == "en-us" or $langx == 'th-tis') {
+                //             } else if ($langx == "en-us" or $langx == 'th-tis') {
 
-                                $s_m_place = str_replace('O', 'over&nbsp;', $s_m_place);
-                            }
+                //                 $s_m_place = str_replace('O', 'over&nbsp;', $s_m_place);
+                //             }
 
-                            $w_m_rate = number_format($rate[0], 3);
+                //             $w_m_rate = number_format($rate[0], 3);
 
-                            $turn_url = "";
+                //             $turn_url = "";
 
-                            $w_gtype = 'ROUHU';
+                //             $mtype = 'ROUHU';
 
-                            break;
+                //             break;
 
-                        case "H":
+                //         case "H":
 
-                            $w_m_place = $match_sports["TG_Points_RB_1"];
+                //             $w_m_place = $match_sports["TG_Points_RB_1"];
 
-                            $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
+                //             $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
 
-                            $w_m_place_tw = $match_sports["TG_Points_RB_1"];
+                //             $w_m_place_tw = $match_sports["TG_Points_RB_1"];
 
-                            $w_m_place_tw = str_replace('U', '小&nbsp;', $w_m_place_tw);
+                //             $w_m_place_tw = str_replace('U', '小&nbsp;', $w_m_place_tw);
 
-                            $w_m_place_en = $match_sports["TG_Points_RB_1"];
+                //             $w_m_place_en = $match_sports["TG_Points_RB_1"];
 
-                            $w_m_place_en = str_replace('U', 'under&nbsp;', $w_m_place_en);
+                //             $w_m_place_en = str_replace('U', 'under&nbsp;', $w_m_place_en);
 
-                            $m_place = $match_sports["TG_Points_RB_1"];
+                //             $m_place = $match_sports["TG_Points_RB_1"];
 
-                            $s_m_place = $match_sports["TG_Points_RB_1"];
+                //             $s_m_place = $match_sports["TG_Points_RB_1"];
 
-                            if ($langx == "zh-cn") {
+                //             if ($langx == "zh-cn") {
 
-                                $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
+                //                 $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
 
-                            } else if ($langx == "zh-cn") {
+                //             } else if ($langx == "zh-cn") {
 
-                                $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
+                //                 $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
 
-                            } else if ($langx == "en-us" or $langx == 'th-tis') {
+                //             } else if ($langx == "en-us" or $langx == 'th-tis') {
 
-                                $s_m_place = str_replace('U', 'under&nbsp;', $s_m_place);
+                //                 $s_m_place = str_replace('U', 'under&nbsp;', $s_m_place);
 
-                            }
+                //             }
 
-                            $w_m_rate = number_format($rate[1], 3);
+                //             $w_m_rate = number_format($rate[1], 3);
 
-                            $turn_url = "";
+                //             $turn_url = "";
 
-                            $w_gtype = 'ROUHO';
+                //             $mtype = 'ROUHO';
 
-                            break;
-                    }
+                //             break;
+                //     }
 
-                    $Sign = "VS.";
+                //     $Sign = "VS.";
 
-                    $grape = $m_place;
+                //     $grape = $m_place;
 
-                    $turn = "BK_Turn_P1";
+                //     $turn = "BK_Turn_P1";
 
-                    $ptype = 'ROUH';
+                //     $ptype = 'ROUH';
 
-                    $w_wtype='R';
+                //     $w_wtype='R';
 
-                    if ($odd_f_type == 'H') {
+                //     if ($odd_f_type == 'H') {
 
-                        $gwin = ($w_m_rate) * $gold;
+                //         $gwin = ($w_m_rate) * $gold;
 
-                    } else if ($odd_f_type == 'M' || $odd_f_type == 'I') {
+                //     } else if ($odd_f_type == 'M' || $odd_f_type == 'I') {
 
-                        if ($w_m_rate < 0) {
-                            $gwin = $gold;
-                        } else {
-                            $gwin = ($w_m_rate) * $gold;
-                        }
-                    } else if ($odd_f_type == 'E') {
+                //         if ($w_m_rate < 0) {
+                //             $gwin = $gold;
+                //         } else {
+                //             $gwin = ($w_m_rate) * $gold;
+                //         }
+                //     } else if ($odd_f_type == 'E') {
                         
-                        $gwin = ($w_m_rate-1) * $gold;
-                    }
+                //         $gwin = ($w_m_rate-1) * $gold;
+                //     }
 
-                    break;
+                //     break;
 
-                case 12:
+                // case 12:
 
-                    $bet_type = '滚球第2队得分';
+                //     $bet_type = '滚球第2队得分';
 
-                    $bet_type_tw = "滚球第2队得分";
+                //     $bet_type_tw = "滚球第2队得分";
 
-                    $bet_type_en = "Running Team 2 Points";
+                //     $bet_type_en = "Running Team 2 Points";
 
-                    $caption = Order_Basketball;
+                //     $caption = Order_Basketball;
 
-                    $turn_rate = "BK_Turn_OU_A";
+                //     $turn_rate = "BK_Turn_OU_A";
 
-                    $MB_Points_Rate_RB_2 = $match_sports["MB_Points_Rate_RB_2"];
+                //     $MB_Points_Rate_RB_2 = $match_sports["MB_Points_Rate_RB_2"];
 
-                    $TG_Points_Rate_RB_2 = $match_sports["TG_Points_Rate_RB_2"];
+                //     $TG_Points_Rate_RB_2 = $match_sports["TG_Points_Rate_RB_2"];
 
-                    $rate = get_other_ioratio($odd_f_type, $MB_Points_Rate_RB_2, $TG_Points_Rate_RB_2, 100);
+                //     $rate = get_other_ioratio($odd_f_type, $MB_Points_Rate_RB_2, $TG_Points_Rate_RB_2, 100);
 
-                    switch ($type) {
+                //     switch ($type) {
 
-                        case "C":
+                //         case "C":
 
-                            $w_m_place = $match_sports["MB_Points_RB_2"];
+                //             $w_m_place = $match_sports["MB_Points_RB_2"];
 
-                            $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
+                //             $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
 
-                            $w_m_place_tw = $match_sports["MB_Points_RB_2"];
+                //             $w_m_place_tw = $match_sports["MB_Points_RB_2"];
 
-                            $w_m_place_tw = str_replace('O', '大&nbsp;', $w_m_place_tw);
+                //             $w_m_place_tw = str_replace('O', '大&nbsp;', $w_m_place_tw);
 
-                            $w_m_place_en = $match_sports["MB_Points_RB_2"];
+                //             $w_m_place_en = $match_sports["MB_Points_RB_2"];
 
-                            $w_m_place_en = str_replace('O', 'over&nbsp;', $w_m_place_en);
+                //             $w_m_place_en = str_replace('O', 'over&nbsp;', $w_m_place_en);
 
-                            $m_place = $match_sports["MB_Points_RB_2"];
+                //             $m_place = $match_sports["MB_Points_RB_2"];
 
-                            $s_m_place = $match_sports["MB_Points_RB_2"];
+                //             $s_m_place = $match_sports["MB_Points_RB_2"];
 
-                            if ($langx == "zh-cn") {
+                //             if ($langx == "zh-cn") {
 
-                                $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
+                //                 $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
 
-                            } else if ($langx == "zh-cn") {
+                //             } else if ($langx == "zh-cn") {
 
-                                $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
+                //                 $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
 
-                            } else if ($langx == "en-us" or $langx == 'th-tis') {
+                //             } else if ($langx == "en-us" or $langx == 'th-tis') {
 
-                                $s_m_place = str_replace('O', 'over&nbsp;', $s_m_place);
-                            }
+                //                 $s_m_place = str_replace('O', 'over&nbsp;', $s_m_place);
+                //             }
 
-                            $w_m_rate = number_format($rate[0], 3);
+                //             $w_m_rate = number_format($rate[0], 3);
 
-                            $turn_url = "";
+                //             $turn_url = "";
 
-                            $w_gtype = 'ROUCO';
+                //             $mtype = 'ROUCO';
 
-                            break;
+                //             break;
 
-                        case "H":
+                //         case "H":
 
-                            $w_m_place = $match_sports["TG_Points_RB_2"];
+                //             $w_m_place = $match_sports["TG_Points_RB_2"];
 
-                            $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
+                //             $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
 
-                            $w_m_place_tw = $match_sports["TG_Points_RB_2"];
+                //             $w_m_place_tw = $match_sports["TG_Points_RB_2"];
 
-                            $w_m_place_tw = str_replace('U', '小&nbsp;', $w_m_place_tw);
+                //             $w_m_place_tw = str_replace('U', '小&nbsp;', $w_m_place_tw);
 
-                            $w_m_place_en = $match_sports["TG_Points_RB_2"];
+                //             $w_m_place_en = $match_sports["TG_Points_RB_2"];
 
-                            $w_m_place_en = str_replace('U', 'under&nbsp;', $w_m_place_en);
+                //             $w_m_place_en = str_replace('U', 'under&nbsp;', $w_m_place_en);
 
-                            $m_place = $match_sports["TG_Points_RB_2"];
+                //             $m_place = $match_sports["TG_Points_RB_2"];
 
-                            $s_m_place = $match_sports["TG_Points_RB_2"];
+                //             $s_m_place = $match_sports["TG_Points_RB_2"];
 
-                            if ($langx == "zh-cn") {
+                //             if ($langx == "zh-cn") {
 
-                                $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
+                //                 $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
 
-                            } else if ($langx == "zh-cn") {
+                //             } else if ($langx == "zh-cn") {
 
-                                $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
+                //                 $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
 
-                            } else if ($langx == "en-us" or $langx == 'th-tis') {
+                //             } else if ($langx == "en-us" or $langx == 'th-tis') {
 
-                                $s_m_place = str_replace('U', 'under&nbsp;', $s_m_place);
+                //                 $s_m_place = str_replace('U', 'under&nbsp;', $s_m_place);
 
-                            }
+                //             }
 
-                            $w_m_rate = number_format($rate[1], 3);
+                //             $w_m_rate = number_format($rate[1], 3);
 
-                            $turn_url = "";
+                //             $turn_url = "";
 
-                            $w_gtype = 'ROUCU';
+                //             $mtype = 'ROUCU';
 
-                            break;
-                    }
+                //             break;
+                //     }
 
-                    $Sign = "VS.";
+                //     $Sign = "VS.";
 
-                    $grape = $m_place;
+                //     $grape = $m_place;
 
-                    $turn = "BK_Turn_P1";
+                //     $turn = "BK_Turn_P1";
 
-                    $ptype = 'ROUH';
+                //     $ptype = 'ROUH';
 
-                    $w_wtype='R';
+                //     $w_wtype='R';
 
-                    if ($odd_f_type == 'H') {
+                //     if ($odd_f_type == 'H') {
 
-                        $gwin = ($w_m_rate) * $gold;
+                //         $gwin = ($w_m_rate) * $gold;
 
-                    } else if ($odd_f_type == 'M' || $odd_f_type == 'I') {
+                //     } else if ($odd_f_type == 'M' || $odd_f_type == 'I') {
 
-                        if ($w_m_rate < 0) {
-                            $gwin = $gold;
-                        } else {
-                            $gwin = ($w_m_rate) * $gold;
-                        }
-                    } else if ($odd_f_type == 'E') {
+                //         if ($w_m_rate < 0) {
+                //             $gwin = $gold;
+                //         } else {
+                //             $gwin = ($w_m_rate) * $gold;
+                //         }
+                //     } else if ($odd_f_type == 'E') {
                         
-                        $gwin = ($w_m_rate-1) * $gold;
-                    }
+                //         $gwin = ($w_m_rate-1) * $gold;
+                //     }
 
-                    break;
+                //     break;
             }
 
 
@@ -748,6 +778,13 @@ class BKBettingController extends Controller
 
             $d_point = "";
 
+            if ($w_m_rate == '' or $gwin <= 0 or $gwin == '') {
+                $response['message'] = 'The schedule has been closed!';
+                return response()->json($response, $response['status']);
+            }
+
+            $ip_addr = Utils::get_ip();
+
             $max_id = WebReportData::where('BetTime', '<', $bet_time)->max('ID');
             $num = rand(10, 50);
             $id = $max_id + $num;
@@ -765,7 +802,7 @@ class BKBettingController extends Controller
             $new_web_report_data->MID = $gid;
             $new_web_report_data->Active = $active;
             $new_web_report_data->LineType = $line;
-            $new_web_report_data->Mtype = $w_gtype;
+            $new_web_report_data->Mtype = $mtype;
             $new_web_report_data->M_Date = $m_date;
             $new_web_report_data->BetTime = $bet_time;
             $new_web_report_data->BetScore = $gold;
@@ -792,7 +829,7 @@ class BKBettingController extends Controller
             $new_web_report_data->B_Point = $b_point;
             $new_web_report_data->C_Point = $c_point;
             $new_web_report_data->D_Point = $d_point;
-            // $new_web_report_data->BetIP = $ip_addr;
+            $new_web_report_data->BetIP = $ip_addr;
             $new_web_report_data->Ptype = $ptype;
             $new_web_report_data->Gtype = 'BK';
             $new_web_report_data->CurType = $w_current;
@@ -808,7 +845,7 @@ class BKBettingController extends Controller
             $assets = $user['Money'];
             $user_id = $user['id'];
 
-            $datetime = date("Y-m-d H:i:s", time() + 12 * 3600);
+            $datetime = date("Y-m-d H:i:s");
 
             $user["Money"] = $assets - $gold;
 
@@ -934,12 +971,12 @@ class BKBettingController extends Controller
                 return response()->json($response, $response['status']);
             }
 
-            $newDate = now()->subMinutes(6 * 60 + 90);
+            // $newDate = now()->subMinutes(6 * 60 + 90);
 
             $match_sports = Sport::where('MID', $gid)->whereRaw("Open = 1 and MB_Team != ''")->first();
 
             if (!isset($match_sports)) {
-                $response['message'] = 'Schedule is closed!';
+                $response['message'] = 'Sport Not Found!';
                 return response()->json($response, $response['status']);
             }
 
@@ -980,14 +1017,16 @@ class BKBettingController extends Controller
             // betting time
 
             $m_date = $match_sports["M_Date"];
-            $show_type = $match_sports["ShowTypeRB"];
 
-            $bet_time = date('Y-m-d H:i:s');
+            $show_type = $match_sports["ShowTypeRB"];
+            $show_type = "H";
+
+            $bet_time = date('Y-m-d H:i:s', strtotime(' + 1 hours'));
 
             $m_start = strtotime($match_sports['M_Start']);
 
             // $date_time = time();
-            $date_time = now()->subMinutes(5 * 60 + 90);
+            $date_time = now()->subMinutes(90);
 
             // if ($datetime - $m_start < 120) {
             //     $response['message'] = 'This Match is closed!';
@@ -1002,7 +1041,7 @@ class BKBettingController extends Controller
 
             switch ($line) {
 
-                case 1:
+                case 2:
 
                     $bet_type = '让球';
 
@@ -1041,7 +1080,7 @@ class BKBettingController extends Controller
 
                             $turn_url = "";
 
-                            $w_gtype = 'RH';
+                            $mtype = 'RH';
 
                             break;
 
@@ -1059,7 +1098,7 @@ class BKBettingController extends Controller
 
                             $turn_url = "";
 
-                            $w_gtype = 'RC';
+                            $mtype = 'RC';
 
                             break;
                     }
@@ -1149,7 +1188,7 @@ class BKBettingController extends Controller
                     break;                                        
 
 
-                case 2:
+                case 3:
 
                     $bet_type = '大小';
 
@@ -1202,7 +1241,7 @@ class BKBettingController extends Controller
 
                             $turn_url = "";
 
-                            $w_gtype = 'OUH';
+                            $mtype = 'OUH';
 
                             break;
 
@@ -1239,7 +1278,7 @@ class BKBettingController extends Controller
 
                             $turn_url = "";
 
-                            $w_gtype = 'OUC';
+                            $mtype = 'OUC';
 
                             break;
                     }
@@ -1271,261 +1310,34 @@ class BKBettingController extends Controller
                     }
 
                     break;
-                
-                case 3:
-
-                    $bet_type = '第1队得分';
-
-                    $bet_type_tw = "第1队得分";
-
-                    $bet_type_en = "Team 1 Points";
-
-                    $caption = Order_Basketball;
-
-                    $turn_rate = "BK_Turn_OU_A";
-
-                    $MB_Points_Rate_1 = $match_sports["MB_Points_Rate_1"];
-
-                    $TG_Points_Rate_1 = $match_sports["TG_Points_Rate_1"];
-
-                    $rate = get_other_ioratio($odd_f_type, $MB_Points_Rate_1, $TG_Points_Rate_1, 100);
-
-                    switch ($type) {
-
-                        case "C":
-
-                            $w_m_place = $match_sports["MB_Points_1"];
-
-                            $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
-
-                            $w_m_place_tw = $match_sports["MB_Points_1"];
-
-                            $w_m_place_tw = str_replace('O', '大&nbsp;', $w_m_place_tw);
-
-                            $w_m_place_en = $match_sports["MB_Points_1"];
-
-                            $w_m_place_en = str_replace('O', 'over&nbsp;', $w_m_place_en);
-
-                            $m_place = $match_sports["MB_Points_1"];
-
-                            $s_m_place = $match_sports["MB_Points_1"];
-
-                            if ($langx == "zh-cn") {
-
-                                $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
-
-                            } else if ($langx == "zh-cn") {
-
-                                $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
-
-                            } else if ($langx == "en-us" or $langx == 'th-tis') {
-
-                                $s_m_place = str_replace('O', 'over&nbsp;', $s_m_place);
-                            }
-
-                            $w_m_rate = number_format($rate[0], 3);
-
-                            $turn_url = "";
-
-                            $w_gtype = 'OUHU';
-
+                case 105:
+                    $bet_type = '单双';
+                    $bet_type_tw = "單雙";
+                    $bet_type_en = "Odd/Even";
+                    $caption = "足球";
+                    $turn_rate = "FT_Turn_EO_";
+                    switch ($rtype) {
+                        case "ODD":
+                            $w_m_place = '单';
+                            $w_m_place_tw = '單';
+                            $w_m_place_en = 'odd';
+                            $s_m_place = '(' . Order_Odd . ')';
+                            $w_m_rate = $match_sports["S_Single_Rate"];
                             break;
-
-                        case "H":
-
-                            $w_m_place = $match_sports["TG_Points_1"];
-
-                            $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
-
-                            $w_m_place_tw = $match_sports["TG_Points_1"];
-
-                            $w_m_place_tw = str_replace('U', '小&nbsp;', $w_m_place_tw);
-
-                            $w_m_place_en = $match_sports["TG_Points_1"];
-
-                            $w_m_place_en = str_replace('U', 'under&nbsp;', $w_m_place_en);
-
-                            $m_place = $match_sports["TG_Points_1"];
-
-                            $s_m_place = $match_sports["TG_Points_1"];
-
-                            if ($langx == "zh-cn") {
-
-                                $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
-
-                            } else if ($langx == "zh-cn") {
-
-                                $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
-
-                            } else if ($langx == "en-us" or $langx == 'th-tis') {
-
-                                $s_m_place = str_replace('U', 'under&nbsp;', $s_m_place);
-
-                            }
-
-                            $w_m_rate = number_format($rate[1], 3);
-
-                            $turn_url = "";
-
-                            $w_gtype = 'OUHO';
-
+                        case "EVEN":
+                            $w_m_place = '双';
+                            $w_m_place_tw = '雙';
+                            $w_m_place_en = 'even';
+                            $s_m_place = '(' . Order_Even . ')';
+                            $w_m_rate = $match_sports["S_Double_Rate"];
                             break;
                     }
-
                     $Sign = "VS.";
-
-                    $grape = $m_place;
-
-                    $turn = "BK_Turn_P1";
-
-                    $ptype = 'OUH';
-
-                    $w_wtype='R';
-
-                    if ($odd_f_type == 'H') {
-
-                        $gwin = ($w_m_rate) * $gold;
-
-                    } else if ($odd_f_type == 'M' || $odd_f_type == 'I') {
-
-                        if ($w_m_rate < 0) {
-                            $gwin = $gold;
-                        } else {
-                            $gwin = ($w_m_rate) * $gold;
-                        }
-                    } else if ($odd_f_type == 'E') {
-                        
-                        $gwin = ($w_m_rate-1) * $gold;
-                    }
-
-                    break;
-
-                case 4:
-
-                    $bet_type = '第2队得分';
-
-                    $bet_type_tw = "第2队得分";
-
-                    $bet_type_en = "Team 2 Points";
-
-                    $caption = Order_Basketball;
-
-                    $turn_rate = "BK_Turn_OU_A";
-
-                    $MB_Points_Rate_2 = $match_sports["MB_Points_Rate_2"];
-
-                    $TG_Points_Rate_2 = $match_sports["TG_Points_Rate_2"];
-
-                    $rate = get_other_ioratio($odd_f_type, $MB_Points_Rate_2, $TG_Points_Rate_2, 100);
-
-                    switch ($type) {
-
-                        case "C":
-
-                            $w_m_place = $match_sports["MB_Points_2"];
-
-                            $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
-
-                            $w_m_place_tw = $match_sports["MB_Points_2"];
-
-                            $w_m_place_tw = str_replace('O', '大&nbsp;', $w_m_place_tw);
-
-                            $w_m_place_en = $match_sports["MB_Points_2"];
-
-                            $w_m_place_en = str_replace('O', 'over&nbsp;', $w_m_place_en);
-
-                            $m_place = $match_sports["MB_Points_2"];
-
-                            $s_m_place = $match_sports["MB_Points_2"];
-
-                            if ($langx == "zh-cn") {
-
-                                $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
-
-                            } else if ($langx == "zh-cn") {
-
-                                $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
-
-                            } else if ($langx == "en-us" or $langx == 'th-tis') {
-
-                                $s_m_place = str_replace('O', 'over&nbsp;', $s_m_place);
-                            }
-
-                            $w_m_rate = number_format($rate[0], 3);
-
-                            $turn_url = "";
-
-                            $w_gtype = 'OUCO';
-
-                            break;
-
-                        case "H":
-
-                            $w_m_place = $match_sports["TG_Points_2"];
-
-                            $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
-
-                            $w_m_place_tw = $match_sports["TG_Points_2"];
-
-                            $w_m_place_tw = str_replace('U', '小&nbsp;', $w_m_place_tw);
-
-                            $w_m_place_en = $match_sports["TG_Points_2"];
-
-                            $w_m_place_en = str_replace('U', 'under&nbsp;', $w_m_place_en);
-
-                            $m_place = $match_sports["TG_Points_2"];
-
-                            $s_m_place = $match_sports["TG_Points_2"];
-
-                            if ($langx == "zh-cn") {
-
-                                $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
-
-                            } else if ($langx == "zh-cn") {
-
-                                $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
-
-                            } else if ($langx == "en-us" or $langx == 'th-tis') {
-
-                                $s_m_place = str_replace('U', 'under&nbsp;', $s_m_place);
-
-                            }
-
-                            $w_m_rate = number_format($rate[1], 3);
-
-                            $turn_url = "";
-
-                            $w_gtype = 'OUCU';
-
-                            break;
-                    }
-
-                    $Sign = "VS.";
-
-                    $grape = $m_place;
-
-                    $turn = "BK_Turn_P1";
-
-                    $ptype = 'OUH';
-
-                    $w_wtype='R';
-
-                    if ($odd_f_type == 'H') {
-
-                        $gwin = ($w_m_rate) * $gold;
-
-                    } else if ($odd_f_type == 'M' || $odd_f_type == 'I') {
-
-                        if ($w_m_rate < 0) {
-                            $gwin = $gold;
-                        } else {
-                            $gwin = ($w_m_rate) * $gold;
-                        }
-                    } else if ($odd_f_type == 'E') {
-                        
-                        $gwin = ($w_m_rate-1) * $gold;
-                    }
-
+                    $turn = "FT_Turn_EO";
+                    $gwin = ($w_m_rate - 1) * $gold;
+                    $ptype = 'EO';
+                    $mtype = $rtype;                    
+                    $grape="";
                     break;
             }
 
@@ -1561,6 +1373,13 @@ class BKBettingController extends Controller
 
             $m_turn = $user['M_turn'] + 0;
 
+            if ($w_m_rate == '' or $gwin <= 0 or $gwin == '') {
+                $response['message'] = 'The schedule has been closed!';
+                return response()->json($response, $response['status']);
+            }
+
+            $ip_addr = Utils::get_ip();
+
             $a_point = "";
 
             $b_point = "";
@@ -1586,7 +1405,7 @@ class BKBettingController extends Controller
             $new_web_report_data->MID = $gid;
             $new_web_report_data->Active = $active;
             $new_web_report_data->LineType = $line;
-            $new_web_report_data->Mtype = $w_gtype;
+            $new_web_report_data->Mtype = $mtype;
             $new_web_report_data->M_Date = $m_date;
             $new_web_report_data->BetTime = $bet_time;
             $new_web_report_data->BetScore = $gold;
@@ -1613,7 +1432,7 @@ class BKBettingController extends Controller
             $new_web_report_data->B_Point = $b_point;
             $new_web_report_data->C_Point = $c_point;
             $new_web_report_data->D_Point = $d_point;
-            // $new_web_report_data->BetIP = $ip_addr;
+            $new_web_report_data->BetIP = $ip_addr;
             $new_web_report_data->Ptype = $ptype;
             $new_web_report_data->Gtype = 'BK';
             $new_web_report_data->CurType = $w_current;
@@ -1629,7 +1448,7 @@ class BKBettingController extends Controller
             $assets = $user['Money'];
             $user_id = $user['id'];
 
-            $datetime = date("Y-m-d H:i:s", time() + 12 * 3600);
+            $datetime = date("Y-m-d H:i:s");
 
             $user["Money"] = $assets - $gold;
 
@@ -1755,7 +1574,7 @@ class BKBettingController extends Controller
             //     return response()->json($response, $response['status']);
             // }
 
-            $newDate = now()->subMinutes(6 * 60 + 90);
+            // $newDate = now()->subMinutes(6 * 60 + 90);
 
             $match_crown = MatchCrown::where('MID', $gid)->where('Gid', $rtype)->first();
 
@@ -1767,7 +1586,7 @@ class BKBettingController extends Controller
             //下注时间Date('Y').'-'.   $match_crown["ShowType"]
             $m_date = date("Y-m-d",strtotime($match_crown["M_Start"]));
             $show_type = $rtype;
-            $bet_time = date('Y-m-d H:i:s');
+            $bet_time = date('Y-m-d H:i:s', strtotime(' + 1 hours'));
     
             //联盟处理:生成写入数据库的联盟样式和显示的样式,二者有区别
             $w_sleague = $match_crown['M_League'];
@@ -1806,8 +1625,12 @@ class BKBettingController extends Controller
             
             $lines_en=$match_crown['M_League_en']."&nbsp;-&nbsp;".$match_crown['M_Item_en']."<br>".$w_mb_team_en."&nbsp;&nbsp;@&nbsp;<FONT color=#CC0000><b>".$s_m_rate."</b></FONT>";
 
-            // $ip_addr = get_ip();
-            $ip_addr = "";
+            if ($s_m_rate == '' or $gwin <= 0 or $gwin == '') {
+                $response['message'] = 'The schedule has been closed!';
+                return response()->json($response, $response['status']);
+            }
+
+            $ip_addr = Utils::get_ip();
 
             $m_turn = $user['M_turn'] + 0;
 
@@ -1839,7 +1662,7 @@ class BKBettingController extends Controller
             $new_web_report_data->MID = $gid;
             $new_web_report_data->Active = $active;
             $new_web_report_data->LineType = $line;
-            // $new_web_report_data->Mtype = $w_gtype;
+            // $new_web_report_data->Mtype = $mtype;
             $new_web_report_data->M_Date = $m_date;
             $new_web_report_data->BetTime = $bet_time;
             $new_web_report_data->BetScore = $gold;
@@ -1862,6 +1685,7 @@ class BKBettingController extends Controller
             $new_web_report_data->B_Point = $b_point;
             $new_web_report_data->C_Point = $c_point;
             $new_web_report_data->D_Point = $d_point;
+            $new_web_report_data->BetIP = $ip_addr;
             $new_web_report_data->Ptype = $wtype;
             $new_web_report_data->Gtype = 'FS';
             $new_web_report_data->CurType = $w_current;
@@ -1875,7 +1699,7 @@ class BKBettingController extends Controller
             $assets = $user['Money'];
             $user_id = $user['id'];
 
-            $datetime = date("Y-m-d H:i:s", time() + 12 * 3600);
+            $datetime = date("Y-m-d H:i:s");
 
             $user["Money"] = $assets - $gold;
 
@@ -2001,14 +1825,14 @@ class BKBettingController extends Controller
                 return response()->json($response, $response['status']);
             }
 
-            $newDate = now()->subMinutes(6 * 60 + 90);
+            // $newDate = now()->subMinutes(6 * 60 + 90);
 
             $match_sports = Sport::where('MID', $gid)->whereRaw("Open = 1 and MB_Team != ''")->first();
 
 
 
             if (!isset($match_sports)) {
-                $response['message'] = 'Schedule is closed!';
+                $response['message'] = 'Sport Not Found!';
                 return response()->json($response, $response['status']);
             }
 
@@ -2050,9 +1874,9 @@ class BKBettingController extends Controller
 
             $m_date = $match_sports["M_Date"];
             $show_type = $match_sports["ShowTypeRB"];
-            // return $show_type;
+            $show_type = "H";
 
-            $bet_time = date('Y-m-d H:i:s');
+            $bet_time = date('Y-m-d H:i:s', strtotime(' + 1 hours'));
 
             $m_start = strtotime($match_sports['M_Start']);
 
@@ -2066,524 +1890,249 @@ class BKBettingController extends Controller
             $tg_ball = $match_sports['TG_Ball'];
 
             switch ($line) {
-                case 51:
-
+                case 102:
+                case 109:
                     $bet_type = '让球';
-
                     $bet_type_tw = "讓球";
-
                     $bet_type_en = "Handicap";
-
-                    $caption = Order_Basketball;
-
-                    $turn_rate = "BK_Turn_RE_A";
-
-                    $MB_LetB_Rate_RB = $match_sports["MB_P_LetB_Rate"];
-
-                    $TG_LetB_Rate_RB = $match_sports["TG_P_LetB_Rate"];
-
-                    $rate = get_other_ioratio($odd_f_type, $MB_LetB_Rate_RB, $TG_LetB_Rate_RB, 100);
+                    $caption = "足球";
+                    $turn_rate = "FT_Turn_R_";
+                    $rate = get_other_ioratio($odd_f_type, $match_sports["MB_P_LetB_Rate"], $match_sports["TG_P_LetB_Rate"], 100);
 
                     switch ($type) {
 
                         case "H":
-
                             $w_m_place = $w_mb_team;
-
                             $w_m_place_tw = $w_mb_team_tw;
-
                             $w_m_place_en = $w_mb_team_en;
-
                             $s_m_place = $s_mb_team;
-
-                            $w_m_rate = number_format($rate[0], 3);
-
+                            $w_m_rate = $rate[0] - 1;
                             $turn_url = "";
-
-                            $w_gtype = 'RH';
-
+                            $mtype = 'RH';
                             break;
-
                         case "C":
-
                             $w_m_place = $w_tg_team;
-
                             $w_m_place_tw = $w_tg_team_tw;
-
                             $w_m_place_en = $w_tg_team_en;
-
                             $s_m_place = $s_tg_team;
-
-                            $w_m_rate = number_format($rate[1], 3);
-
+                            $w_m_rate = $rate[1] - 1;
                             $turn_url = "";
-
-                            $w_gtype = 'RC';
-
+                            $mtype = 'RC';
                             break;
                     }
 
                     $Sign = $match_sports['M_P_LetB'];
-
                     $grape = $Sign;
 
-                    if (strtoupper($show_type) == "H") {
-
+                    if ($show_type == "H") {
                         $l_team = $s_mb_team;
-
                         $r_team = $s_tg_team;
-
                         $w_l_team = $w_mb_team;
-
                         $w_l_team_tw = $w_mb_team_tw;
-
                         $w_l_team_en = $w_mb_team_en;
-
                         $w_r_team = $w_tg_team;
-
                         $w_r_team_tw = $w_tg_team_tw;
-
                         $w_r_team_en = $w_tg_team_en;
-
-                        $inball = $match_sports['MB_Ball'] . ":" . $match_sports['TG_Ball'];
                     } else {
-
                         $r_team = $s_mb_team;
-
                         $l_team = $s_tg_team;
-
                         $w_r_team = $w_mb_team;
-
                         $w_r_team_tw = $w_mb_team_tw;
-
                         $w_r_team_en = $w_mb_team_en;
-
                         $w_l_team = $w_tg_team;
-
                         $w_l_team_tw = $w_tg_team_tw;
-
                         $w_l_team_en = $w_tg_team_en;
-
-                        $inball = $match_sports['TG_Ball'] . ":" . $match_sports['MB_Ball'];
                     }
 
                     $s_mb_team = $l_team;
-
                     $s_tg_team = $r_team;
-
                     $w_mb_team = $w_l_team;
-
                     $w_mb_team_tw = $w_l_team_tw;
-
                     $w_mb_team_en = $w_l_team_en;
-
                     $w_tg_team = $w_r_team;
-
                     $w_tg_team_tw = $w_r_team_tw;
-
                     $w_tg_team_en = $w_r_team_en;
 
-                    $turn = "BK_Turn_R";
+                    $turn = "FT_Turn_R";
 
-                    $gwin = ($w_m_rate) * $gold;
-
-                    $ptype = 'R';
-
-                    if ($odd_f_type == 'H') {
-
+                    if ($odd_f_type === 'H') {
                         $gwin = ($w_m_rate) * $gold;
-
-                    } else if ($odd_f_type == 'M' || $odd_f_type == 'I') {
-
+                    } else if ($odd_f_type === 'M' or $odd_f_type === 'I') {
                         if ($w_m_rate < 0) {
                             $gwin = $gold;
                         } else {
                             $gwin = ($w_m_rate) * $gold;
                         }
-                    } else if ($odd_f_type == 'E') {
-                        
-                        $gwin = ($w_m_rate-1) * $gold;
+                    } else if ($odd_f_type === 'E') {
+                        $gwin = ($w_m_rate - 1) * $gold;
                     }
-
+                    $ptype = 'R';
                     break;
-
-                case 52:
-
-                    $bet_type = '大小';
-
-                    $bet_type_tw = "大小";
-
-                    $bet_type_en = "Over/Under";
-
-                    $caption = Order_Basketball;
-
-                    $turn_rate = "BK_Turn_OU_A";
-
-                    $MB_Dime_Rate_RB = $match_sports["MB_P_Dime_Rate"];
-
-                    $TG_Dime_Rate_RB = $match_sports["TG_P_Dime_Rate"];
-
-                    $rate = get_other_ioratio($odd_f_type, $MB_Dime_Rate_RB, $TG_Dime_Rate_RB, 100);
+                    $bet_type = '让球';
+                    $bet_type_tw = "讓球";
+                    $bet_type_en = "Handicap";
+                    $caption = "足球";
+                    $turn_rate = "FT_Turn_R_";
+                    $rate = get_other_ioratio($odd_f_type, $match_sports["MB_P_LetB_Rate"], $match_sports["TG_P_LetB_Rate"], 100);
 
                     switch ($type) {
 
+                        case "H":
+                            $w_m_place = $w_mb_team;
+                            $w_m_place_tw = $w_mb_team_tw;
+                            $w_m_place_en = $w_mb_team_en;
+                            $s_m_place = $s_mb_team;
+                            $w_m_rate = $rate[0] - 1;
+                            $turn_url = "";
+                            $mtype = 'RH';
+                            break;
                         case "C":
+                            $w_m_place = $w_tg_team;
+                            $w_m_place_tw = $w_tg_team_tw;
+                            $w_m_place_en = $w_tg_team_en;
+                            $s_m_place = $s_tg_team;
+                            $w_m_rate = $rate[1] - 1;
+                            $turn_url = "";
+                            $mtype = 'RC';
+                            break;
+                    }
 
+                    $Sign = $match_sports['M_P_LetB'];
+                    $grape = $Sign;
+
+                    if ($show_type == "H") {
+                        $l_team = $s_mb_team;
+                        $r_team = $s_tg_team;
+                        $w_l_team = $w_mb_team;
+                        $w_l_team_tw = $w_mb_team_tw;
+                        $w_l_team_en = $w_mb_team_en;
+                        $w_r_team = $w_tg_team;
+                        $w_r_team_tw = $w_tg_team_tw;
+                        $w_r_team_en = $w_tg_team_en;
+                    } else {
+                        $r_team = $s_mb_team;
+                        $l_team = $s_tg_team;
+                        $w_r_team = $w_mb_team;
+                        $w_r_team_tw = $w_mb_team_tw;
+                        $w_r_team_en = $w_mb_team_en;
+                        $w_l_team = $w_tg_team;
+                        $w_l_team_tw = $w_tg_team_tw;
+                        $w_l_team_en = $w_tg_team_en;
+                    }
+
+                    $s_mb_team = $l_team;
+                    $s_tg_team = $r_team;
+                    $w_mb_team = $w_l_team;
+                    $w_mb_team_tw = $w_l_team_tw;
+                    $w_mb_team_en = $w_l_team_en;
+                    $w_tg_team = $w_r_team;
+                    $w_tg_team_tw = $w_r_team_tw;
+                    $w_tg_team_en = $w_r_team_en;
+
+                    $turn = "FT_Turn_R";
+
+                    if ($odd_f_type === 'H') {
+                        $gwin = ($w_m_rate) * $gold;
+                    } else if ($odd_f_type === 'M' or $odd_f_type === 'I') {
+                        if ($w_m_rate < 0) {
+                            $gwin = $gold;
+                        } else {
+                            $gwin = ($w_m_rate) * $gold;
+                        }
+                    } else if ($odd_f_type === 'E') {
+                        $gwin = ($w_m_rate - 1) * $gold;
+                    }
+                    $ptype = 'R';
+                    break;
+                case 103:
+                case 110:
+                    $bet_type = '大小';
+                    $bet_type_tw = "大小";
+                    $bet_type_en = "Over/Under";
+                    $caption = "足球";
+                    $turn_rate = "FT_Turn_OU_";
+                    $rate = get_other_ioratio($odd_f_type, $match_sports["MB_P_Dime_Rate"], $match_sports["TG_P_Dime_Rate"], 100);
+                    switch ($type) {
+                        case "C":
                             $w_m_place = $match_sports["MB_P_Dime"];
-
                             $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
-
                             $w_m_place_tw = $match_sports["MB_P_Dime"];
-
                             $w_m_place_tw = str_replace('O', '大&nbsp;', $w_m_place_tw);
-
                             $w_m_place_en = $match_sports["MB_P_Dime"];
-
                             $w_m_place_en = str_replace('O', 'over&nbsp;', $w_m_place_en);
 
                             $m_place = $match_sports["MB_P_Dime"];
 
                             $s_m_place = $match_sports["MB_P_Dime"];
-
-                            if ($langx == "zh-cn") {
-
-                                $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
-                            } else if ($langx == "zh-cn") {
-
-                                $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
-                            } else if ($langx == "en-us" or $langx == 'th-tis') {
-
-                                $s_m_place = str_replace('O', 'over&nbsp;', $s_m_place);
-                            }
-
-                            $w_m_rate = number_format($rate[1], 3);
-
+                            $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
+                            $w_m_rate = $rate[0] - 1;
                             $turn_url = "";
-
-                            $w_gtype = 'OUH';
-
+                            $mtype = 'OUH';
                             break;
-
                         case "H":
-
                             $w_m_place = $match_sports["TG_P_Dime"];
-
                             $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
-
                             $w_m_place_tw = $match_sports["TG_P_Dime"];
-
                             $w_m_place_tw = str_replace('U', '小&nbsp;', $w_m_place_tw);
-
                             $w_m_place_en = $match_sports["TG_P_Dime"];
-
                             $w_m_place_en = str_replace('U', 'under&nbsp;', $w_m_place_en);
 
                             $m_place = $match_sports["TG_P_Dime"];
 
                             $s_m_place = $match_sports["TG_P_Dime"];
+                            $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
 
-                            if ($langx == "zh-cn") {
-
-                                $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
-                            } else if ($langx == "zh-cn") {
-
-                                $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
-                            } else if ($langx == "en-us" or $langx == 'th-tis') {
-
-                                $s_m_place = str_replace('U', 'under&nbsp;', $s_m_place);
-                            }
-
-                            $w_m_rate = number_format($rate[0], 3);
-
+                            $w_m_rate = $rate[1] - 1;
                             $turn_url = "";
-
-                            $w_gtype = 'OUC';
-
+                            $mtype = 'OUC';
                             break;
                     }
-
                     $Sign = "VS.";
-
                     $grape = $m_place;
-
-                    $turn = "BK_Turn_OU";
-
-                    $gwin = ($w_m_rate) * $gold;
-
+                    $turn = "FT_Turn_OU";
+                    if ($odd_f_type == 'H') {
+                        $gwin = ($w_m_rate) * $gold;
+                    } else if ($odd_f_type == 'M' or $odd_f_type == 'I') {
+                        if ($w_m_rate < 0) {
+                            $gwin = $gold;
+                        } else {
+                            $gwin = ($w_m_rate) * $gold;
+                        }
+                    } else if ($odd_f_type == 'E') {
+                        $gwin = ($w_m_rate - 1) * $gold;
+                    }
                     $ptype = 'OU';
-
-                    if ($odd_f_type == 'H') {
-
-                        $gwin = ($w_m_rate) * $gold;
-
-                    } else if ($odd_f_type == 'M' || $odd_f_type == 'I') {
-
-                        if ($w_m_rate < 0) {
-                            $gwin = $gold;
-                        } else {
-                            $gwin = ($w_m_rate) * $gold;
-                        }
-                    } else if ($odd_f_type == 'E') {
-                        
-                        $gwin = ($w_m_rate-1) * $gold;
-                    }
-
                     break;
-
-                case 53:
-
-                    $bet_type = '第1队得分';
-
-                    $bet_type_tw = "第1队得分";
-
-                    $bet_type_en = "Team 1 Points";
-
-                    $caption = Order_Basketball;
-
-                    $turn_rate = "BK_Turn_OU_A";
-
-                    $MB_P_Points_Rate_1 = $match_sports["MB_P_Points_Rate_1"];
-
-                    $TG_P_Points_Rate_1 = $match_sports["TG_P_Points_Rate_1"];
-
-                    $rate = get_other_ioratio($odd_f_type, $MB_P_Points_Rate_1, $TG_P_Points_Rate_1, 100);
-
-                    switch ($type) {
-
-                        case "C":
-
-                            $w_m_place = $match_sports["MB_P_Points_1"];
-
-                            $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
-
-                            $w_m_place_tw = $match_sports["MB_P_Points_1"];
-
-                            $w_m_place_tw = str_replace('O', '大&nbsp;', $w_m_place_tw);
-
-                            $w_m_place_en = $match_sports["MB_P_Points_1"];
-
-                            $w_m_place_en = str_replace('O', 'over&nbsp;', $w_m_place_en);
-
-                            $m_place = $match_sports["MB_P_Points_1"];
-
-                            $s_m_place = $match_sports["MB_P_Points_1"];
-
-                            if ($langx == "zh-cn") {
-
-                                $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
-
-                            } else if ($langx == "zh-cn") {
-
-                                $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
-
-                            } else if ($langx == "en-us" or $langx == 'th-tis') {
-
-                                $s_m_place = str_replace('O', 'over&nbsp;', $s_m_place);
-                            }
-
-                            $w_m_rate = number_format($rate[0], 3);
-
-                            $turn_url = "";
-
-                            $w_gtype = 'OUHU';
-
+                case 5:
+                case 105:
+                    $bet_type = '单双';
+                    $bet_type_tw = "單雙";
+                    $bet_type_en = "Odd/Even";
+                    $caption = "足球";
+                    $turn_rate = "FT_Turn_EO_";
+                    switch ($rtype) {
+                        case "ODD":
+                            $w_m_place = '单';
+                            $w_m_place_tw = '單';
+                            $w_m_place_en = 'odd';
+                            $s_m_place = '(' . Order_Odd . ')';
+                            $w_m_rate = $match_sports["S_P_Single_Rate"];
                             break;
-
-                        case "H":
-
-                            $w_m_place = $match_sports["TG_P_Points_1"];
-
-                            $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
-
-                            $w_m_place_tw = $match_sports["TG_P_Points_1"];
-
-                            $w_m_place_tw = str_replace('U', '小&nbsp;', $w_m_place_tw);
-
-                            $w_m_place_en = $match_sports["TG_P_Points_1"];
-
-                            $w_m_place_en = str_replace('U', 'under&nbsp;', $w_m_place_en);
-
-                            $m_place = $match_sports["TG_P_Points_1"];
-
-                            $s_m_place = $match_sports["TG_P_Points_1"];
-
-                            if ($langx == "zh-cn") {
-
-                                $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
-
-                            } else if ($langx == "zh-cn") {
-
-                                $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
-
-                            } else if ($langx == "en-us" or $langx == 'th-tis') {
-
-                                $s_m_place = str_replace('U', 'under&nbsp;', $s_m_place);
-
-                            }
-
-                            $w_m_rate = number_format($rate[1], 3);
-
-                            $turn_url = "";
-
-                            $w_gtype = 'OUHO';
-
+                        case "EVEN":
+                            $w_m_place = '双';
+                            $w_m_place_tw = '雙';
+                            $w_m_place_en = 'even';
+                            $s_m_place = '(' . Order_Even . ')';
+                            $w_m_rate = $match_sports["S_P_Double_Rate"];
                             break;
                     }
-
                     $Sign = "VS.";
-
-                    $grape = $m_place;
-
-                    $turn = "BK_Turn_P1";
-
-                    $ptype = 'OUH';
-
-                    $w_wtype='R';
-
-                    if ($odd_f_type == 'H') {
-
-                        $gwin = ($w_m_rate) * $gold;
-
-                    } else if ($odd_f_type == 'M' || $odd_f_type == 'I') {
-
-                        if ($w_m_rate < 0) {
-                            $gwin = $gold;
-                        } else {
-                            $gwin = ($w_m_rate) * $gold;
-                        }
-                    } else if ($odd_f_type == 'E') {
-                        
-                        $gwin = ($w_m_rate-1) * $gold;
-                    }
-
-                    break;
-
-                case 54:
-
-                    $bet_type = '第2队得分';
-
-                    $bet_type_tw = "第2队得分";
-
-                    $bet_type_en = "Team 2 Points";
-
-                    $caption = Order_Basketball;
-
-                    $turn_rate = "BK_Turn_OU_A";
-
-                    $MB_P_Points_Rate_2 = $match_sports["MB_P_Points_Rate_2"];
-
-                    $TG_P_Points_Rate_2 = $match_sports["TG_P_Points_Rate_2"];
-
-                    $rate = get_other_ioratio($odd_f_type, $MB_P_Points_Rate_2, $TG_P_Points_Rate_2, 100);
-
-                    switch ($type) {
-
-                        case "C":
-
-                            $w_m_place = $match_sports["MB_P_Points_2"];
-
-                            $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
-
-                            $w_m_place_tw = $match_sports["MB_P_Points_2"];
-
-                            $w_m_place_tw = str_replace('O', '大&nbsp;', $w_m_place_tw);
-
-                            $w_m_place_en = $match_sports["MB_P_Points_2"];
-
-                            $w_m_place_en = str_replace('O', 'over&nbsp;', $w_m_place_en);
-
-                            $m_place = $match_sports["MB_P_Points_2"];
-
-                            $s_m_place = $match_sports["MB_P_Points_2"];
-
-                            if ($langx == "zh-cn") {
-
-                                $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
-
-                            } else if ($langx == "zh-cn") {
-
-                                $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
-
-                            } else if ($langx == "en-us" or $langx == 'th-tis') {
-
-                                $s_m_place = str_replace('O', 'over&nbsp;', $s_m_place);
-                            }
-
-                            $w_m_rate = number_format($rate[0], 3);
-
-                            $turn_url = "";
-
-                            $w_gtype = 'OUCO';
-
-                            break;
-
-                        case "H":
-
-                            $w_m_place = $match_sports["TG_P_Points_2"];
-
-                            $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
-
-                            $w_m_place_tw = $match_sports["TG_P_Points_2"];
-
-                            $w_m_place_tw = str_replace('U', '小&nbsp;', $w_m_place_tw);
-
-                            $w_m_place_en = $match_sports["TG_P_Points_2"];
-
-                            $w_m_place_en = str_replace('U', 'under&nbsp;', $w_m_place_en);
-
-                            $m_place = $match_sports["TG_P_Points_2"];
-
-                            $s_m_place = $match_sports["TG_P_Points_2"];
-
-                            if ($langx == "zh-cn") {
-
-                                $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
-
-                            } else if ($langx == "zh-cn") {
-
-                                $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
-
-                            } else if ($langx == "en-us" or $langx == 'th-tis') {
-
-                                $s_m_place = str_replace('U', 'under&nbsp;', $s_m_place);
-
-                            }
-
-                            $w_m_rate = number_format($rate[1], 3);
-
-                            $turn_url = "";
-
-                            $w_gtype = 'OUCU';
-
-                            break;
-                    }
-
-                    $Sign = "VS.";
-
-                    $grape = $m_place;
-
-                    $turn = "BK_Turn_P1";
-
-                    $ptype = 'OUH';
-
-                    $w_wtype='R';
-
-                    if ($odd_f_type == 'H') {
-
-                        $gwin = ($w_m_rate) * $gold;
-
-                    } else if ($odd_f_type == 'M' || $odd_f_type == 'I') {
-
-                        if ($w_m_rate < 0) {
-                            $gwin = $gold;
-                        } else {
-                            $gwin = ($w_m_rate) * $gold;
-                        }
-                    } else if ($odd_f_type == 'E') {
-                        
-                        $gwin = ($w_m_rate-1) * $gold;
-                    }
-
+                    $turn = "FT_Turn_EO";
+                    $gwin = ($w_m_rate - 1) * $gold;
+                    $ptype = 'EO';
+                    $mtype = $rtype;
+                    
+                    $grape="";
                     break;
             }
 
@@ -2622,6 +2171,13 @@ class BKBettingController extends Controller
 
             $m_turn = $user['M_turn'] + 0;
 
+            if ($w_m_rate == '' or $gwin <= 0 or $gwin == '') {
+                $response['message'] = 'The schedule has been closed!';
+                return response()->json($response, $response['status']);
+            }
+
+            $ip_addr = Utils::get_ip();
+
             $a_point = "";
 
             $b_point = "";
@@ -2647,7 +2203,7 @@ class BKBettingController extends Controller
             $new_web_report_data->MID = $gid;
             $new_web_report_data->Active = $active;
             $new_web_report_data->LineType = $line;
-            $new_web_report_data->Mtype = $w_gtype;
+            $new_web_report_data->Mtype = $mtype;
             $new_web_report_data->M_Date = $m_date;
             $new_web_report_data->BetTime = $bet_time;
             $new_web_report_data->BetScore = $gold;
@@ -2674,7 +2230,7 @@ class BKBettingController extends Controller
             $new_web_report_data->B_Point = $b_point;
             $new_web_report_data->C_Point = $c_point;
             $new_web_report_data->D_Point = $d_point;
-            // $new_web_report_data->BetIP = $ip_addr;
+            $new_web_report_data->BetIP = $ip_addr;
             $new_web_report_data->Ptype = $ptype;
             $new_web_report_data->Gtype = 'BK';
             $new_web_report_data->CurType = $w_current;
@@ -2690,7 +2246,7 @@ class BKBettingController extends Controller
             $assets = $user['Money'];
             $user_id = $user['id'];
 
-            $datetime = date("Y-m-d H:i:s", time() + 12 * 3600);
+            $datetime = date("Y-m-d H:i:s");
 
             $user["Money"] = $assets - $gold;
 
@@ -2715,110 +2271,6 @@ class BKBettingController extends Controller
 
             $response['data'] = $new_web_report_data;
             $response['message'] = 'Betting Order added successfully!';
-            $response['success'] = TRUE;
-            $response['status'] = STATUS_OK;
-        } catch (Exception $e) {
-            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
-            Log::error($e->getTraceAsString());
-            $response['status'] = STATUS_GENERAL_ERROR;
-        }
-
-        return response()->json($response, $response['status']);
-    }
-
-    public function getBKBetHistory(Request $request) {
-
-        $response = [];
-        $response['success'] = FALSE;
-        $response['status'] = STATUS_BAD_REQUEST;
-
-        try {
-
-            $rules = [
-                'fromDate' => 'required',
-                'endDate' => 'required',
-            ];
-
-            $validator = Validator::make($request->all(), $rules);
-
-            if ($validator->fails()) {
-                $errorResponse = validation_error_response($validator->errors()->toArray());
-                return response()->json($errorResponse, $response['status']);
-            }
-
-            $request_data = $request->all();
-
-            $from_date = $request_data["fromDate"];
-            $end_date = $request_data["endDate"];
-
-            $user_id = Auth::guard("api")->user()->id;
-
-            $user = User::where('id', $user_id)->where('Status', 0)->first();
-
-            if (!isset($user)) {
-                $response['message'] = 'Please login again!';
-                return response()->json($response, $response['status']);                
-            }
-
-            $user_name = $user['UserName'];
-
-            $web_report_data = WebReportData::select(DB::raw('SUM(BetScore) AS betscore'), DB::raw('SUM(M_Result) AS m_result'), DB::raw('M_Date AS m_date'))->where('M_Name', $user_name)->whereBetween('M_Date',array($from_date, $end_date))->where("Gtype", "BK")->where("M_Result", "!=", "")->groupBy(DB::raw('DATE(M_Date)'))->get();
-
-            foreach($web_report_data as $item) {
-                if ((float)$item['m_result'] > 0) {
-                    $item["bet_result"] = "赢";
-                } else {
-                    $item["bet_result"] = "输";
-                }
-            }
-
-            $response['data'] = $web_report_data;
-            $response['message'] = 'History Data fetched successfully!';
-            $response['success'] = TRUE;
-            $response['status'] = STATUS_OK;
-        } catch (Exception $e) {
-            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
-            Log::error($e->getTraceAsString());
-            $response['status'] = STATUS_GENERAL_ERROR;
-        }
-
-        return response()->json($response, $response['status']);        
-    }
-
-    public function getBKBetSlip(Request $request) {
-
-        $response = [];
-        $response['success'] = FALSE;
-        $response['status'] = STATUS_BAD_REQUEST;
-
-        try {
-
-            $rules = [
-                'm_name' => 'required',
-            ];
-
-            $validator = Validator::make($request->all(), $rules);
-
-            if ($validator->fails()) {
-                $errorResponse = validation_error_response($validator->errors()->toArray());
-                return response()->json($errorResponse, $response['status']);
-            }
-
-            $request_data = $request->all();
-
-            $m_name = $request_data["m_name"];
-
-            // $date = date("Y-m-d");
-
-            $date = "2023-03-18";
-
-            $items = Report::where("M_Name", $m_name)
-                    ->where('M_Date', $date)
-                    ->with('sport')
-                    ->get();
-
-            $response['data'] = $items;
-            $response['message'] = 'Bet Slip Data fetched successfully!';
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {

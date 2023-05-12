@@ -44,7 +44,6 @@ class User extends Authenticatable
     //     'email_verified_at' => 'datetime',
     // ];
     protected $table = 'web_member_data';
-    //protected $table = 'userstable';
 
     public $timestamps = false;
 }

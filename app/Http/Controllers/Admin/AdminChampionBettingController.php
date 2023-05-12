@@ -8,11 +8,15 @@ use App\Models\Web\Report;
 use App\Models\Web\System;
 use App\Utils\Utils;
 use App\Models\Sport;
+use App\Models\MatchCrown;
 use App\Models\Config;
 use App\Models\User;
 use App\Models\Web\MoneyLog;
 use App\Models\Web\WebMemLogData;
 use Auth;
+use Exception;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class AdminChampionBettingController extends Controller
 {
@@ -21,6 +25,7 @@ class AdminChampionBettingController extends Controller
     {
         // Web Report Data
         $user = Auth::guard("admin")->user();
+        $page = $request['page'];
         $active = $request['match'];
         // $ptype = $request['wtype'];
         $m_name = $request['username'];
@@ -29,111 +34,231 @@ class AdminChampionBettingController extends Controller
         $result_type = $request['result_type'];
         // $mids = Report::select('MID')->where('M_Date', $m_date)->get();
         
-        $data = array();
-        
-        $mids = Report::where('LineType', 16);
-        if($active) {
-            $mids = $mids->where('Active', $active);
-        }
-        if($m_name) {
-          $mids = $mids->where('M_Name', 'like', '%'.trim($m_name).'%');
-        }
-        if($user['Level']) {
-            switch($user['Level']) {
-                case 'A':
-                    $mids = $mids->where('Super', $user['UserName']);
-                    break;
-                case 'B':
-                    $mids = $mids->where('Corprator', $user['UserName']);
-                    break;
-                case 'C':
-                    $mids = $mids->where('World', $user['UserName']);
-                    break;
-                case 'D':
-                    $mids = $mids->where('Agents', $user['UserName']);
-                    break;
-                default:
-                    break;
+        try {
+            $mids = Report::where('LineType', 16);
+            if($active) {
+                $mids = $mids->where('Active', $active);
             }
-        }
-        if($result_type != "all") {
-            switch($result_type) {
-                // case "all":
-                //     break;
-                case "Y":
-                    $mids = $mids->where('M_Result', '!=', '');
-                    break;
-                case "N":
-                    $mids = $mids->where('M_Result', '');
-                    break;
-                case "W":
-                    $mids = $mids->where('M_Result', '>', '0');
-                    break;
-                case "W>=500":
-                    $mids = $mids->where('M_Result', '>', '0')->where('BetScore', '>=', '500');
-                    break;
-                case ">=100":
-                    $mids = $mids->where('BetScore', '>=', '100');
-                    break;
-                case ">=500":
-                    $mids = $mids->where('BetScore', '>=', '500');
-                    break;
-                case ">=1000":
-                    $mids = $mids->where('BetScore', '>=', '1000');
-                    break;
-                case ">=5000":
-                    $mids = $mids->where('BetScore', '>=', '5000');
-                    break;
-                case ">=10000":
-                    $mids = $mids->where('BetScore', '>=', '10000');
-                    break;
+            if($m_name) {
+            $mids = $mids->where('M_Name', 'like', '%'.trim($m_name).'%');
             }
-        }
-        if($checkout == '0') {
-          $mids = $mids->where('M_Result', '');
-        }
-        $mids = $mids->orderBy('ID', "desc")->get();
-
-        // Web Sport Data
-        $items = Sport::select('MID')->get();
-
-        foreach($mids as $row){
-
-            if($row['Cancel'] == 1){
-                $operate = '<font color=red><b>恢复</b></font></a>';
-            }else {
-                $operate = '<font color=blue><b>正常</b></font>';
+            if($user['Level']) {
+                switch($user['Level']) {
+                    case 'A':
+                        $mids = $mids->where('Super', $user['UserName']);
+                        break;
+                    case 'B':
+                        $mids = $mids->where('Corprator', $user['UserName']);
+                        break;
+                    case 'C':
+                        $mids = $mids->where('World', $user['UserName']);
+                        break;
+                    case 'D':
+                        $mids = $mids->where('Agents', $user['UserName']);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if($result_type != "all") {
+                switch($result_type) {
+                    // case "all":
+                    //     break;
+                    case "Y":
+                        $mids = $mids->where('M_Result', '!=', '');
+                        break;
+                    case "N":
+                        $mids = $mids->where('M_Result', '');
+                        break;
+                    case "W":
+                        $mids = $mids->where('M_Result', '>', '0');
+                        break;
+                    case "W>=500":
+                        $mids = $mids->where('M_Result', '>', '0')->where('BetScore', '>=', '500');
+                        break;
+                    case ">=100":
+                        $mids = $mids->where('BetScore', '>=', '100');
+                        break;
+                    case ">=500":
+                        $mids = $mids->where('BetScore', '>=', '500');
+                        break;
+                    case ">=1000":
+                        $mids = $mids->where('BetScore', '>=', '1000');
+                        break;
+                    case ">=5000":
+                        $mids = $mids->where('BetScore', '>=', '5000');
+                        break;
+                    case ">=10000":
+                        $mids = $mids->where('BetScore', '>=', '10000');
+                        break;
+                }
             }
 
-
-            //  state
-            if($row['Active'] == 0){
-                $state = '结算';
-            }else if($row['Active'] == 1){
-                $state = '<font color=red>未结算</font>';
-            }else{
-              $state = '结算';
+            if($checkout == '0') {
+                $mids = $mids->where('M_Result', '');
             }
 
-            $temp = array(
-                'id' => $row['ID'],
-                'gid' => $row['MID'],
-                'userName' => $row['M_Name'],
-                'minutes' => '',
-                'bettingTime' => $row['BetTime'],
-                'startingTime' => $row['BetTime'],
-                'gameType' => $row['BetType'],
-                'content' => $row['Middle'],
-                'state' => $state,
-                'betAmount' => $row['BetScore'],
-                'winableAmount' => $row['Gwin'],
-                'memberResult' => '0',
-                'betSlip' => $operate,
-                'function' => 'function',
+            // $totalCount = $mids->count();
+            // $mids = $mids->offset($page * 20 - 20)->limit(20)->orderBy('ID', "desc")->get();
+
+            $mids = $mids->orderBy('ID', "desc")->get();
+            
+            $data = array();
+            
+            foreach($mids as $row){
+                
+                // Web Match Crown Data
+                $item = MatchCrown::where('MID', $row['MID'])->first();
+                // $retime = $item['Retime'];
+                // if($retime == 0)    $retime = "";
+                // if($retime == -1)   $retime = "中场";
+                $retime = '';
+                if($item) {
+                    $time = $row['BetTime'];
+                    $m_start = $item['M_Start'];
+                    if($m_start != "") {
+                        $aa = floor((strtotime($time) - strtotime($m_start)) / 60);
+                        if($aa > 240 || $aa < 0)    $aa = "";
+                    }
+                } else {
+                    continue;
+                }
+
+                $time = strtotime($row['BetTime']);
+                $times = date("Y-m-d", $time).'<br>'.date("H:i:s", $time);
+
+                if($row['Danger']==1 or $row['Cancel']==1) {
+                    $bettimes='<font color="#FFFFFF"><span style="background-color: #FF0000">'.$times.'</span></font>';
+                }else{
+                    $bettimes=$times;
+                }
+                if($row['Cancel']==1){
+                    $betscore='<S><font color=#cc0000>'.number_format($row['BetScore']).'</font></S>';
+                }else{
+                    $betscore=number_format($row['BetScore']);
+                }
+
+                if($row['Cancel'] == 1) {
+                    $operate = '<font color=red><b>已注销</b></font></a>';
+                } else {
+                    $operate = '<font color=blue><b>正常</b></font>';
+                }
+
+                if ($row["Checked"] == 0) {
+
+                    $state="<font color=red>未结算</font>";
+
+                } else {
+
+                    $state = '<font>已结算</font>';
+                }
+
+                if ($row["Cancel"] == 1) {
+
+                    switch($row['Confirmed']) {
+                        case 0:
+                            $M_Result = Score20;
+                            break;
+                        case -1:
+                            $M_Result= Score21;
+                            break;
+                        case -2:
+                            $M_Result= Score22;
+                            break;
+                        case -3:
+                            $M_Result= Score23;
+                            break;
+                        case -4:
+                            $M_Result= Score24;
+                            break;
+                        case -5:
+                            $M_Result= Score25;
+                            break;
+                        case -6:
+                            $M_Result= Score26;
+                            break;
+                        case -7:
+                            $M_Result= Score27;
+                            break;
+                        case -8:
+                            $M_Result= Score28;
+                            break;
+                        case -9:
+                            $M_Result= Score29;
+                            break;
+                        case -10:
+                            $M_Result= Score30;
+                            break;
+                        case -11:
+                            $M_Result= Score31;
+                            break;
+                        case -12:
+                            $M_Result= Score32;
+                            break;
+                        case -13:
+                            $M_Result= Score33;
+                            break;
+                        case -14:
+                            $M_Result= Score34;
+                            break;
+                        case -15:
+                            $M_Result= Score35;
+                            break;
+                        case -16:
+                            $M_Result= Score36;
+                            break;
+                        case -17:
+                            $M_Result= Score37;
+                            break;
+                        case -18:
+                            $M_Result= Score38;
+                            break;
+                        case -19:
+                            $M_Result= Score39;
+                            break;
+                        case -20:
+                            $M_Result= Score40;
+                            break;
+                        case -21:
+                            $M_Result= Score41;
+                            break;
+                    }
+
+                    $M_Result = "<font color=red>".$M_Result."</font>";
+
+                } else {
+
+                    $M_Result = "<font>".$row["M_Result"]."</font>";
+                }
+
+                $temp = array(
+                    'id' => $row['ID'],
+                    'gid' => $row['MID'],
+                    'OpenType' => $row['OpenType'],                    
+                    'OrderID' => $row['OrderID'],
+                    'TurnRate' => $row['TurnRate'],
+                    'userName' => $row['M_Name'],
+                    'minutes' => '<div><font color="red"><b>'.$retime.'<br/><font color="blue">'.$aa.'</font></b></font>'.'</div>',
+                    'bettingTime' => $bettimes,
+                    'startingTime' => $m_start,
+                    'gameType' => $row['BetType'],
+                    'content' => $row['Middle'],
+                    'state' => $state,
+                    'betAmount' => $betscore,
+                    'winableAmount' => $row['Gwin'],
+                    'memberResult' => $M_Result,
+                    'betSlip' => $operate,
+                    'function' => 'function',
+                );
+                array_push($data, $temp);
+            }
+            return array(
+                'data' => $data,
+                // 'totalCount' => $totalCount,
             );
-            array_push($data, $temp);
+        } catch(Exception $e) {
+            return response()->json($e, 500);
         }
-        return $data;
     }
 
     public function getFunctionItems() {
@@ -189,8 +314,8 @@ class AdminChampionBettingController extends Controller
         $adminList = explode(',', $config['MemberModList']);
         $user = Auth::guard("admin")->user();
         $loginname = $user['LoginName'];
-      $id = $request['id'];
-      $gid = $request['gid'];
+        $id = $request['id'];
+        $gid = $request['gid'];
       
       try {
         $res = Report::where('Cancel', '1')->where('MID', $gid)->where('ID', $id)->get();
@@ -205,6 +330,7 @@ class AdminChampionBettingController extends Controller
             $assets = $selectedUser['Money'];
 
             $affectRows = User::where('UserName', $username)->where('Pay_Type', 1)->decrement('Money', $betscore);
+
             if($affectRows == 1) {
                 $balance = $selectedUser['Money'];
                 $user_id = $selectedUser['id'];
@@ -219,9 +345,10 @@ class AdminChampionBettingController extends Controller
                     'assets' => $assets,
                     'balance' => $balance,
                 ]);
+
                 $affectRows = Report::where('id', $id)->update([
                     'VGOLD' => '',
-                    'M_Result' => '',
+                    'M_Result' => '0',
                     'A_Result' => '',
                     'B_Result' => '',
                     'C_Result' => '',
@@ -232,6 +359,7 @@ class AdminChampionBettingController extends Controller
                     'Danger' => '0',
                     'Checked' => '0',
                 ]);
+
                 if($affectRows != 1) {
                     MoneyLog::where('id', $insertedMoney['id'])->where('user_id', $user_id)->delete();
                     User::where('UserName', $username)->where('Pay_Type', 1)->increment('Money', $betscore);
@@ -251,6 +379,44 @@ class AdminChampionBettingController extends Controller
       } catch(Exception $e) {
         return '操作失败!';
       }
+    }
+
+    public function handleDeleteEvent(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+
+            $rules = [
+                'id' => 'required|numeric'
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                $errorResponse = validation_error_response($validator->errors()->toArray());
+                return response()->json($errorResponse, $response['status']);
+            }
+
+            $request_data = $request->all();
+
+            $id = $request_data["id"];
+
+            Report::where("ID", $id)->delete();
+
+            $response['message'] = 'Selected Report deleted successfully';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
     }
 
     public function handleCancelEvent(Request $request) {
@@ -281,7 +447,7 @@ class AdminChampionBettingController extends Controller
                 'C_Result' => '0',
                 'D_Result' => '0',
                 'T_Result' => '0',
-                'Cancel' => '1',
+                'Cancel' => 1,
                 'Confirmed' => $confirmed,
                 'Danger' => '0',
                 'Checked' => '1',
@@ -290,7 +456,8 @@ class AdminChampionBettingController extends Controller
             $selectedUser = User::where('UserName', $username)->get()[0];
             $assets = $selectedUser['Money'];
 
-            $affectRows = User::where('UserName', $username)->where('Pay_Type', 1)->limit(1)->increment('Money', $balance);
+            $affectRows = User::where('UserName', $username)->where('Pay_Type', 1)->limit(1)->increment('Money', (int)$balance);
+
             if($affectRows == 1) {
                 $balance2 = $selectedUser['Money'];
                 $user_id = $selectedUser['id'];
@@ -305,21 +472,22 @@ class AdminChampionBettingController extends Controller
                     'assets' => $assets,
                     'balance' => $balance2,
                 ]);
-            } else {
-                Report::where('id', $id)->update([
-                    'VGOLD' => '',
-                    'M_Result' => '',
-                    'A_Result' => '',
-                    'B_Result' => '',
-                    'C_Result' => '',
-                    'D_Result' => '',
-                    'T_Result' => '',
-                    'Cancel' => '0',
-                    'Confirmed' => '0',
-                    'Danger' => '0',
-                    'Checked' => '0',
-                ]);
             }
+            //  else {
+            //     Report::where('id', $id)->update([
+            //         'VGOLD' => '',
+            //         'M_Result' => '',
+            //         'A_Result' => '',
+            //         'B_Result' => '',
+            //         'C_Result' => '',
+            //         'D_Result' => '',
+            //         'T_Result' => '',
+            //         'Cancel' => '0',
+            //         'Confirmed' => '0',
+            //         'Danger' => '0',
+            //         'Checked' => '0',
+            //     ]);
+            // }
             $ip_addr = request()->ip();
             $loginfo = '取消注单';
             WebMemLogData::create([
@@ -341,22 +509,22 @@ class AdminChampionBettingController extends Controller
         $adminList = explode(',', $config['MemberModList']);
         $user = Auth::guard("admin")->user();
         $loginname = $user['LoginName'];
-      $id = $request['id'];
-      $gid = $request['gid'];
-      $confirmed = $request['confirmed'];
+        $id = $request['id'];
+        $gid = $request['gid'];
+        $confirmed = $request['confirmed'];
       
       try {
         $res = Report::where('ID', $id)->where('MID', $gid)->where('Pay_Type', 1)->get();
         if(count($res) <= 0) {
-            return response()->json('操作失败，未找到注单!', 400);
+            return response()->json('Report not found!', 400);
         }
         $res = $res[0];
         if($res['LineType'] == 8) {
-            return response()->json('暂时不支持串关结算!', 400);
+            return response()->json('Temporarily does not support cross-border settlement!', 400);
         }
-        if($res['M_Result'] != '' || $res['Checked'] == 1 || $res['Cancel'] == 1) {
-            return response()->json('注单状态不正确!', 400);
-        }
+        // if($res['M_Result'] != '' || $res['Checked'] == 1 || $res['Cancel'] == 1) {
+        //     return response()->json('The bet status is incorrect!', 400);
+        // }
         $arr_m=array('MH','MC','MN','VMH','VMC','VMN','RMH','RMC','RMN','VRMH','VRMC','VRMN');
         $arr_line=array(1,11,21,31,16,4,5,6,7);
         $OrderID=$res['OrderID'];
@@ -385,11 +553,11 @@ class AdminChampionBettingController extends Controller
             $VGold=$BetScore/2;
             $memo=$loginname.'判为输一半';
         }else if($confirmed==15){  //和局
-            $balance=$BetScore;
+            $balance=$BetScore * 2;
             $VGold=0;
             $memo=$loginname.'判为和局';
         }else{
-            return response()->json('无效参数!', 400);
+            return response()->json('invalid parameter!', 400);
         }
         $M_Result=$balance-$BetScore;
         Report::where('id', $id)->update([
@@ -400,7 +568,7 @@ class AdminChampionBettingController extends Controller
             'C_Result' => '0',
             'D_Result' => '0',
             'T_Result' => '0',
-            'Cancel' => '1',
+            'Cancel' => '0',
             'Danger' => '0',
             'Checked' => '1',
         ]);
@@ -410,7 +578,7 @@ class AdminChampionBettingController extends Controller
         try {
             $affectRows = User::where('UserName', $username)->where('Pay_Type', 1)->limit(1)->increment('Money', $balance);
         } catch (Exception $e) {
-            return response()->json('操作失败11!', 400);
+            return response()->json('User Money Setting failed!', 400);
         }
         if($affectRows == 1 || floatval($balance) == 0) {
             $balance2 = $selectedUser['Money'];
@@ -428,7 +596,7 @@ class AdminChampionBettingController extends Controller
                     'balance' => $balance2,
                 ]);
             } catch(Exception $e) {
-                return response()->json('添加账务记录失败(结算注单)！<br>RID:'.$id, 400);
+                return response()->json('Failed to add accounting records (settlement betting slip)！<br>RID:'.$id, 400);
             }
         } else {
             Report::where('id', $id)->update([
@@ -445,18 +613,23 @@ class AdminChampionBettingController extends Controller
                 'Checked' => '0',
             ]);
         }
-            $ip_addr = request()->ip();
-            $loginfo = '通过查询注单结算注单';
-            WebMemLogData::create([
-                'UserName' => $loginname,
-                'Logintime' => now(),
-                'ConText' => $loginfo,
-                'Loginip' => $ip_addr,
-                'Url' => $this->getUrl(),
-            ]);
+
+        $ip_addr = request()->ip();
+
+        $loginfo = '通过查询注单结算注单';
+
+        WebMemLogData::create([
+            'UserName' => $loginname,
+            'Logintime' => now(),
+            'ConText' => $loginfo,
+            'Loginip' => $ip_addr,
+            'Url' => $this->getUrl(),
+        ]);
+
         return response()->json('恭喜您,注单已经结算!', 200);
+
       } catch (Exception $e) {
-        return '操作失败!';
+        return 'operation failed!';
       }
     }
 }

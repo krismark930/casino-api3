@@ -3,10 +3,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Auth;
-use Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Utils\Utils;
 use App\Models\WebAgent;
+use App\Models\WebMemberLogs;
+use Exception;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller {
 
@@ -842,6 +845,29 @@ class UserController extends Controller {
             }
 
             if(!auth()->attempt($credentials)) {
+                if (intval($user['ErrorTimes']) >= 8) {
+                    $response['message'] = 'Due to too many wrong passwords, your account has been locked!';
+                    return response()->json($response, $response['status']);
+                }
+
+                $datetime = date("Y-m-d H:i:s");
+
+                $new_data = [
+                    "UserName" => $credentials['UserName'],
+                    "Status" => 0,
+                    "LoginIP" => Utils::get_ip(),
+                    "DateTime" => $datetime,
+                    "Contect" => '登录失败(pass:'.$credentials['password'].')',
+                    "Url" => Utils::get_browser_ip()
+                ];
+
+                $web_member_logs = new WebMemberLogs;
+
+                $web_member_logs->create($new_data);
+
+                User::where('UserName',$credentials['UserName'])
+                    ->update(["ErrorTimes" => (int)$user["ErrorTimes"] + 1]);
+
                 $response['message'] = 'Incorrect name or password';
                 return response()->json($response, $response['status']);
             }
@@ -849,6 +875,42 @@ class UserController extends Controller {
             $accessToken = auth()->user()->createToken('authToken')->accessToken;
 
             $user->access_token = $accessToken;
+
+            $str = time();
+
+            $uid=strtolower(substr(md5($str),0,10).substr(md5($credentials['UserName']),0,10).'ra'.rand(0,9));
+            $ip_addr=Utils::get_ip();
+            $browser_ip = Utils::get_browser_ip();
+            $date=date("Y-m-d");
+            $datetime=date("Y-m-d H:i:s");
+            $MachineCode=substr(strtoupper(md5('newhg'.$str.mt_rand(1,9999))),8,20);
+
+            User::where('UserName',$credentials['UserName'])
+                ->where("Status", "<=", 1)
+                ->update([
+                    "Oid" => $uid,
+                    "MachineCode" => $MachineCode,
+                    "ErrorTimes" => 0,
+                    "LoginDate" => $date,
+                    "LoginTime" => now(),
+                    "OnlineTime" => now(),
+                    "Online" => 1,
+                    "LoginIP" => $ip_addr,                    
+                    "Url" => $browser_ip,
+                ]);
+
+            $new_data = [
+                "UserName" => $credentials['UserName'],
+                "Status" => 1,
+                "LoginIP" => Utils::get_ip(),
+                "DateTime" => $datetime,
+                "Contect" => '登录成功',
+                "Url" => Utils::get_browser_ip()
+            ];
+
+            $web_member_logs = new WebMemberLogs;
+                          
+            $web_member_logs->create($new_data);
 
             $response['message'] = "Login successfully";
             $response['data'] = $user;
@@ -872,7 +934,8 @@ class UserController extends Controller {
 
         try {
             $user = Auth::guard("api")->user();
-            $response['data'] = $user;
+            $user = User::where("UserName", $user["UserName"])->first(['Money']);
+            $response['data'] = $user['Money'];
             $response['message'] = 'Profile detail fetched successfully';
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;

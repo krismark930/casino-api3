@@ -59,15 +59,17 @@ class AdminParlayController extends Controller
   }
 
   public function getItems(Request $request) {
+    $page = $request['page'];
     // $id = $request['id'];
     // $type = $request['type'];
     $date = date('Y-m-d');
 
     try {
       $rows = Report::where('M_Date', $date)
-        ->where('LineType', '8')
-        ->orderBy('BetTime')
-        ->limit(20)->get();
+        ->where('LineType', '8');
+      $totalCount = $rows->count();
+      $rows = $rows->orderBy('BetTime')
+        ->offset($page * 20 - 20)->limit(20)->get();
 
       $data = array();
       foreach($rows as $row) {
@@ -136,7 +138,10 @@ class AdminParlayController extends Controller
           'cancel' => $row['Cancel'],
         ));
       }
-      return $data;
+      return array(
+        'data' => $data,
+        'totalCount' => $totalCount,
+      );
     } catch (Exception $e) {
       return response()->json($e, 500);
     }

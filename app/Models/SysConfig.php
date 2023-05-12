@@ -9,4 +9,5 @@ class SysConfig extends Model
 {
     protected $table = 'sys_config';
     protected $primaryKey = 'id';
+    public $timestamps = false;
 }

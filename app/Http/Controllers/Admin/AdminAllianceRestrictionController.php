@@ -10,6 +10,7 @@ use App\Models\Web\MatchLeague;
 class AdminAllianceRestrictionController extends Controller
 {
   public function getItems(Request $request) {
+    $page = $request['page'];
     $type = $request['type'] ?? 'FT';
     $league = $request['league'];
     try {
@@ -17,7 +18,9 @@ class AdminAllianceRestrictionController extends Controller
       if($league) {
         $rows = $rows->where('M_League', 'like', '%'.$league.'%');
       }
-      $rows = $rows->orderBy('M_League', 'desc')->limit(20)->get();
+      $totalCount = $rows->count();
+      $rows = $rows->orderBy('M_League', 'desc')
+        ->offset($page * 20 - 20)->limit(20)->get();
 
       $data = array();
       foreach($rows as $row) {
@@ -35,7 +38,10 @@ class AdminAllianceRestrictionController extends Controller
           'CS' => $row['CS'],
         ));
       }
-      return $data;
+      return array(
+        'data' => $data,
+        'totalCount' => $totalCount,
+      );
     } catch(Exception $e) {
       return $e;
     }
