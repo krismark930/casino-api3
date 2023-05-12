@@ -17,7 +17,7 @@ class AddHdpCornerBookingInMatchSportsTable extends Migration
             $table->boolean("HDP_OU")->default(false)->nullable();
             $table->boolean("CORNER")->default(false)->nullable();
             $table->boolean("BOOKING")->default(false)->nullable();
-            $table->double("RATIO_RE_HDP_0")->default(0)->nullable();
+            $table->string("RATIO_RE_HDP_0")->default("")->nullable();
             $table->double("IOR_REH_HDP_0")->default(0)->nullable();
             $table->double("IOR_REC_HDP_0")->default(0)->nullable();
             $table->string("RATIO_ROUO_HDP_0")->default("")->nullable();

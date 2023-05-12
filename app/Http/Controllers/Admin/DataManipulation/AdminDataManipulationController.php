@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\Web\MatchSports;
+use App\Utils\Utils;
 use App\Models\Web\Report;
 
 class AdminDataManipulationController extends Controller
@@ -14,6 +15,7 @@ class AdminDataManipulationController extends Controller
     $gtype = $request['gtype'] ?? 'FT';
     $date_start = $request['date_start'] ?? date('Y-m-d');
     $league = $request['league'];
+    $page = $request['page'] ?? 1;
 
     $rows = MatchSports::where('Type', $gtype)
       ->where('M_Date', $date_start)
@@ -22,7 +24,8 @@ class AdminDataManipulationController extends Controller
       $rows = $rows->where('M_League', $league);
     }
 
-    $rows = $rows->limit(20)
+    $totalCount = $rows->count();
+    $rows = $rows->offset(($page - 1) * 20)->limit(20)
       ->orderBy('M_Start')
       ->orderBy('M_League')
       ->orderBy('MB_Team')
@@ -34,17 +37,20 @@ class AdminDataManipulationController extends Controller
         'datetime' => $row['M_Date'],
         'sessions' => $row['MID'],
         'team' => $row['MB_Team'].'<br/>'.$row['TG_Team'],
-        'winner' => '<font color="red" align="right">'.$row['MB_Win_Rate'].'<br/>'.$row['M_Flat_Rate'].'<br/>'.$row['TG_Win_Rate'].'</font>',
-        'handicap' => '<font color="red">'.$row['MB_LetB'].'&nbsp;&nbsp;'.$row['MB_LebB_Rate'].'</font>'.'<br/><font color="red">'.$row['TG_LetB'].'&nbsp;&nbsp;'.$row['TG_LetB_Rate'],
-        'fullFieldGoal' => $row['MB_Dime'].'&nbsp;&nbsp;<font color="red">'.$row['MB_Dime_Rate'].'</font><br/>'.$row['TG_Dime'].'&nbsp;&nbsp;<font color="red">'.$row['TG_Dime_Rate'].'</font>',
-        'odd' => ($row['S_Single_Rate'] ? '单' : '').'&nbsp;&nbsp;<font color="red">'.$row['S_Single_Rate'].'</font><br/>'.($row['S_Double_Rate'] ? '双' : '').'&nbsp;&nbsp;<font color="red">'.$row['S_Double_Rate'].'</font>',
-        'winAtHalfTime' => '<font color="red">'.$row['MB_Win_Rate_H'].'<br/>'.$row['TG_Win_Rate_H'].'<br/>'.$row['M_Flat_Rate_H'].'</font>',
-        'halfTimeHandicap' => $row['MB_LetB_H'].'&nbsp;&nbsp;<font color="red">'.$row['MB_LetB_Rate_H'].'</font><br/>'.$row['TG_LetB_H'].'&nbsp;&nbsp;<font color="red">'.$row['TG_LetB_Rate_H'].'</font>',
-        'halfCourtSize' => $row['MB_Dime_H'].'&nbsp;&nbsp;<font color="red">'.$row['MB_Dime_Rate_H'].'<br/>'.$row['TG_Dime_H'].'&nbsp;&nbsp;<font color="red">'.$row['TG_Dime_Rate_H'].'</font>',
+        'winner' => '<font color="red" align="right">'.Utils::num_rate('', $row['MB_Win_Rate']).'<br/>'.Utils::num_rate('', $row['M_Flat_Rate']).'<br/>'.Utils::num_rate('', $row['TG_Win_Rate']).'</font>',
+        'handicap' => '<font color="red">'.$row['MB_LetB'].'&nbsp;&nbsp;'.Utils::num_rate('', $row['MB_LebB_Rate']).'</font>'.'<br/><font color="red">'.$row['TG_LetB'].'&nbsp;&nbsp;'.Utils::num_rate('', $row['TG_LetB_Rate']),
+        'fullFieldGoal' => $row['MB_Dime'].'&nbsp;&nbsp;<font color="red">'.Utils::num_rate('', $row['MB_Dime_Rate']).'</font><br/>'.$row['TG_Dime'].'&nbsp;&nbsp;<font color="red">'.Utils::num_rate('', $row['TG_Dime_Rate']).'</font>',
+        'odd' => (Utils::num_rate('', $row['S_Single_Rate']) ? '单' : '').'&nbsp;&nbsp;<font color="red">'.Utils::num_rate('', $row['S_Single_Rate']).'</font><br/>'.(Utils::num_rate('', $row['S_Double_Rate']) ? '双' : '').'&nbsp;&nbsp;<font color="red">'.Utils::num_rate('', $row['S_Double_Rate']).'</font>',
+        'winAtHalfTime' => '<font color="red">'.Utils::num_rate('', $row['MB_Win_Rate_H']).'<br/>'.Utils::num_rate('', $row['TG_Win_Rate_H']).'<br/>'.Utils::num_rate('', $row['M_Flat_Rate_H']).'</font>',
+        'halfTimeHandicap' => $row['MB_LetB_H'].'&nbsp;&nbsp;<font color="red">'.Utils::num_rate('', $row['MB_LetB_Rate_H']).'</font><br/>'.$row['TG_LetB_H'].'&nbsp;&nbsp;<font color="red">'.Utils::num_rate('', $row['TG_LetB_Rate_H']).'</font>',
+        'halfCourtSize' => $row['MB_Dime_H'].'&nbsp;&nbsp;<font color="red">'.Utils::num_rate('', $row['MB_Dime_Rate_H']).'<br/>'.$row['TG_Dime_H'].'&nbsp;&nbsp;<font color="red">'.Utils::num_rate('', $row['TG_Dime_Rate_H']).'</font>',
       ));
     }
 
-    return $data;
+    return array(
+      'data' => $data,
+      'totalCount' => $totalCount
+    );
   }
 
   public function scheduledata_getItem(Request $request) {

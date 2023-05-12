@@ -10,4 +10,5 @@ class MatchCrown extends Model
     use HasFactory;
 
     protected $table = 'match_crown';
+    public $timestamps = false;
 }

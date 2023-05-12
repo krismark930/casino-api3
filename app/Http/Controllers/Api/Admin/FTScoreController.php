@@ -27,11 +27,13 @@ class FTScoreController extends Controller
         $settime = $web_system_data['udp_ft_score'];
         $settime = 60;
         $time = $web_system_data['udp_ft_results'];
-        $list_date = date('Y-m-d',time()-$time*60*60);
+        $list_date = date('Y-m-d');
 
         $htmlcode = Utils::decrypt($request_data["cryptedData"]);
 
         $jsondata = json_decode($htmlcode, true);
+
+        // return $jsondata;
 
         $Score_arr=array();
 
@@ -75,17 +77,7 @@ class FTScoreController extends Controller
                 }
                 $timestamp = $date." ".$hh.":".$mm.":00";  
 
-                // if($mb_inball == '' or $tg_inball == '' or $mb_inball_hr == '' or $tg_inball_hr == '') continue;  //比分不全
-
-                if ($mb_inball == '赛事无PK/ 加时' or $tg_inball == '赛事无PK/ 加时'){
-                    $mb_inball = '-7';
-                    $tg_inball = '-7';
-                }
-
-                if ($mb_inball_hr == '赛事无PK/ 加时' or $tg_inball_hr == '赛事无PK/ 加时'){
-                    $mb_inball_hr = '-7';
-                    $tg_inball_hr = '-7';
-                }
+                if($mb_inball == '' or $tg_inball == '' or $mb_inball == '-' or $tg_inball == '-') continue;  //比分不全
 
                 if ($mb_inball == Score1 or $tg_inball == Score1){
                     $mb_inball='-1';
@@ -97,12 +89,12 @@ class FTScoreController extends Controller
                     $tg_inball_hr='-1';
                 }
 
-                if(strpos('aaa'.$mb_inball,Score2) or strpos('aaa'.$tg_inball,Score2)){
+                if($mb_inball == Score2 or $tg_inball == Score2){
                     $mb_inball='-2';
                     $tg_inball='-2';
                 }
 
-                if(strpos('aaa'.$mb_inball_hr,Score2) or strpos('aaa'.$tg_inball_hr,Score2)){
+                if($mb_inball_hr == Score2 or $tg_inball_hr == Score2){
                     $mb_inball_hr='-2';
                     $tg_inball_hr='-2';
                 }
@@ -217,15 +209,27 @@ class FTScoreController extends Controller
                     $tg_inball_hr='-13';
                 }
 
-                // if ($mb_inball==Score14 or $tg_inball==Score14){
-                //     $mb_inball='-14';
-                //     $tg_inball='-14';
-                // }
 
-                // if ($mb_inball_hr==Score14 or $tg_inball_hr==Score14){
-                //     $mb_inball_hr='-14';
-                //     $tg_inball_hr='-14';
-                // }
+                if ($mb_inball==Score14 or $tg_inball==Score14){
+                    $mb_inball='-14';
+                    $tg_inball='-14';
+                }
+
+                if ($mb_inball_hr==Score14 or $tg_inball_hr==Score14){
+                    $mb_inball_hr='-14';
+                    $tg_inball_hr='-14';
+                }
+
+                if ($mb_inball==Score15 or $tg_inball==Score15){
+                    $mb_inball='-15';
+                    $tg_inball='-15';
+                }
+
+                if ($mb_inball_hr==Score15 or $tg_inball_hr==Score15){
+                    $mb_inball_hr='-15';
+                    $tg_inball_hr='-15';
+                }
+                
 
                 if ($mb_inball==Score19 or $tg_inball==Score19){
                     $mb_inball='-19';

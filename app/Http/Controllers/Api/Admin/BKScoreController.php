@@ -27,7 +27,8 @@ class BKScoreController extends Controller
         $settime = $web_system_data['udp_bk_score'];
         $settime = 60;
         $time = $web_system_data['udp_bk_results'];
-        $list_date = date('Y-m-d',time()-$time*60*60);
+        $list_date = date('Y-m-d');
+        // $list_date = "2023-04-14";
 
         $htmlcode = Utils::decrypt($request_data["cryptedData"]);
 
@@ -35,10 +36,14 @@ class BKScoreController extends Controller
 
         $Score_arr=array();
 
-        foreach($jsondata['results_data'] as $league => $data){
-            for($i = 0; $i < count($data['gid']); $i++) {
-                $Score_arr[] = $data['gid'][$i];
+        if (array_key_exists('results_data', $jsondata)) {
+            
+            foreach($jsondata['results_data'] as $league => $data){
+                for($i = 0; $i < count($data['gid']); $i++) {
+                    $Score_arr[] = $data['gid'][$i];
+                }
             }
+            
         }
 
         // return $Score_arr;
@@ -85,38 +90,19 @@ class BKScoreController extends Controller
                 if($ap == 'p' and $hh <> 12){
                     $hh += 12;
                 }
-                $timestamp = $date." ".$hh.":".$mm.":00";  
+                $timestamp = $date." ".$hh.":".$mm.":00";
 
-                // if($mb_inball == '' or $tg_inball == '' or $mb_inball_hr == '' or $tg_inball_hr == '') continue;  //比分不全
 
-                if ($mb_inball == '赛事无PK/ 加时' or $tg_inball == '赛事无PK/ 加时'){
-                    $mb_inball = '-7';
-                    $tg_inball = '-7';
-                }
-
-                if ($mb_inball_hr == '赛事无PK/ 加时' or $tg_inball_hr == '赛事无PK/ 加时'){
-                    $mb_inball_hr = '-7';
-                    $tg_inball_hr = '-7';
-                }
+                if($mb_inball=='' || $tg_inball=='' || $mb_inball=='-' || $tg_inball=='-') continue;
 
                 if ($mb_inball == Score1 or $tg_inball == Score1){
                     $mb_inball='-1';
                     $tg_inball='-1';
                 }
 
-                if ($mb_inball_hr==Score1 or $tg_inball_hr==Score1){
-                    $mb_inball_hr='-1';
-                    $tg_inball_hr='-1';
-                }
-
-                if(strpos('aaa'.$mb_inball,Score2) or strpos('aaa'.$tg_inball,Score2)){
+                if($mb_inball == Score2 or $tg_inball == Score2){
                     $mb_inball='-2';
                     $tg_inball='-2';
-                }
-
-                if(strpos('aaa'.$mb_inball_hr,Score2) or strpos('aaa'.$tg_inball_hr,Score2)){
-                    $mb_inball_hr='-2';
-                    $tg_inball_hr='-2';
                 }
 
                 if ($mb_inball==Score3 or $tg_inball==Score3){
@@ -124,19 +110,9 @@ class BKScoreController extends Controller
                     $tg_inball='-3';
                 }
 
-                if ($mb_inball_hr==Score3 or $tg_inball_hr==Score3){
-                    $mb_inball_hr='-3';
-                    $tg_inball_hr='-3';
-                }
-
                 if ($mb_inball==Score4 or $tg_inball==Score4){
                     $mb_inball='-4';
                     $tg_inball='-4';
-                }
-
-                if ($mb_inball_hr==Score4 or $tg_inball_hr==Score4){
-                    $mb_inball_hr='-4';
-                    $tg_inball_hr='-4';
                 }
 
                 if ($mb_inball==Score5 or $tg_inball==Score5){
@@ -144,19 +120,9 @@ class BKScoreController extends Controller
                     $tg_inball='-5';
                 }
 
-                if ($mb_inball_hr==Score5 or $tg_inball_hr==Score5){
-                    $mb_inball_hr='-5';
-                    $tg_inball_hr='-5';
-                }
-
                 if ($mb_inball==Score6 or $tg_inball==Score6){
                     $mb_inball='-6';
                     $tg_inball='-6';
-                }
-
-                if ($mb_inball_hr==Score6 or $tg_inball_hr==Score6){
-                    $mb_inball_hr='-6';
-                    $tg_inball_hr='-6';
                 }
 
                 if ($mb_inball==Score7 or $tg_inball==Score7){
@@ -164,19 +130,9 @@ class BKScoreController extends Controller
                     $tg_inball='-7';
                 }
 
-                if ($mb_inball_hr==Score7 or $tg_inball_hr==Score7){
-                    $mb_inball_hr='-7';
-                    $tg_inball_hr='-7';
-                }
-
                 if ($mb_inball==Score8 or $tg_inball==Score8){
                     $mb_inball='-8';
                     $tg_inball='-8';
-                }
-
-                if ($mb_inball_hr==Score8 or $tg_inball_hr==Score8){
-                    $mb_inball_hr='-8';
-                    $tg_inball_hr='-8';
                 }
 
                 if ($mb_inball==Score9 or $tg_inball==Score9){
@@ -184,19 +140,9 @@ class BKScoreController extends Controller
                     $tg_inball='-9';
                 }
 
-                if ($mb_inball_hr==Score9 or $tg_inball_hr==Score9){
-                    $mb_inball_hr='-9';
-                    $tg_inball_hr='-9';
-                }
-
                 if ($mb_inball==Score10 or $tg_inball==Score10){
                     $mb_inball='-10';
                     $tg_inball='-10';
-                }
-
-                if ($mb_inball_hr==Score10 or $tg_inball_hr==Score10){
-                    $mb_inball_hr='-10';
-                    $tg_inball_hr='-10';
                 }
 
                 if ($mb_inball==Score11 or $tg_inball==Score11){
@@ -204,19 +150,9 @@ class BKScoreController extends Controller
                     $tg_inball='-11';
                 }
 
-                if ($mb_inball_hr==Score11 or $tg_inball_hr==Score11){
-                    $mb_inball_hr='-11';
-                    $tg_inball_hr='-11';
-                }
-
                 if ($mb_inball==Score12 or $tg_inball==Score12){
                     $mb_inball='-12';
                     $tg_inball='-12';
-                }
-
-                if ($mb_inball_hr==Score12 or $tg_inball_hr==Score12){
-                    $mb_inball_hr='-12';
-                    $tg_inball_hr='-12';
                 }
 
                 if ($mb_inball==Score13 or $tg_inball==Score13){
@@ -224,39 +160,37 @@ class BKScoreController extends Controller
                     $tg_inball='-13';
                 }
 
-                if ($mb_inball_hr==Score13 or $tg_inball_hr==Score13){
-                    $mb_inball_hr='-13';
-                    $tg_inball_hr='-13';
+                if ($mb_inball==Score14 or $tg_inball==Score14){
+                    $mb_inball='-14';
+                    $tg_inball='-14';
                 }
 
-                // if ($mb_inball==Score14 or $tg_inball==Score14){
-                //     $mb_inball='-14';
-                //     $tg_inball='-14';
-                // }
+                if ($mb_inball==Score15 or $tg_inball==Score15){
+                    $mb_inball='-15';
+                    $tg_inball='-15';
+                }
 
-                // if ($mb_inball_hr==Score14 or $tg_inball_hr==Score14){
-                //     $mb_inball_hr='-14';
-                //     $tg_inball_hr='-14';
-                // }
+                if ($mb_inball_hr==Score15 or $tg_inball_hr==Score15){
+                    $mb_inball_hr='-15';
+                    $tg_inball_hr='-15';
+                }
 
                 if ($mb_inball==Score19 or $tg_inball==Score19){
                     $mb_inball='-19';
                     $tg_inball='-19';
                 }
 
-                if ($mb_inball_hr==Score19 or $tg_inball_hr==Score19){
-                    $mb_inball_hr='-19';
-                    $tg_inball_hr='-19';
+
+                if (!is_numeric($mb_inball) or !is_numeric($tg_inball)) {
+                    continue;
                 }
 
+                //赛事取消
 
-                // if (!is_numeric($mb_inball) or !is_numeric($tg_inball)) {
-                //     continue;
-                // }
-
-                // if ($mid === 5982083) {
-                //     return $mid;
-                // }
+                if($mb_inball<0){
+                    $mb_inball_hr=$mb_inball_xb=$mb_inball1=$mb_inball2=$mb_inball3=$mb_inball4=$mb_inball;
+                    $tg_inball_hr=$tg_inball_xb=$tg_inball1=$tg_inball2=$tg_inball3=$tg_inball4=$tg_inball;
+                }
 
 
                 $match_sports = Sport::where("Type", "BK")->where("MID", (int)$mid)->where("M_Date", $list_date)->first();
@@ -264,18 +198,77 @@ class BKScoreController extends Controller
 
                 if (isset($match_sports)) {
 
-                    // return $match_sports["MID"];
-
                     if ($match_sports['MB_Inball'] == "") {
                         Sport::where("Type", "BK")
                             // ->where("GetScore", 1)
                             ->where("M_Date", $list_date)
                             ->where("MID", (int)$mid)
                             ->update([
-                                "MB_Inball" => $mb_inball,
-                                "TG_Inball" => $tg_inball,
                                 "MB_Inball_HR" => $mb_inball_hr,
-                                "TG_Inball_HR" => $tg_inball_hr
+                                "TG_Inball_HR" => $tg_inball_hr,
+                            ]);
+                        Sport::where("Type", "BK")
+                            // ->where("GetScore", 1)
+                            ->where("M_Date", $list_date)
+                            ->where("ECID", (int)$match_sports["ECID"])
+                            ->where('MB_Team', 'like', "%上半场%")
+                            ->update([
+                                "MB_Inball" => $mb_inball_hr,
+                                "TG_Inball" => $tg_inball_hr,
+                            ]);
+                        Sport::where("Type", "BK")
+                            // ->where("GetScore", 1)
+                            ->where("M_Date", $list_date)
+                            ->where("ECID", (int)$match_sports["ECID"])
+                            ->where('MB_Team', 'like', "%下半场%")
+                            ->update([
+                                "MB_Inball" => $mb_inball_xb,
+                                "TG_Inball" => $tg_inball_xb,
+                            ]);
+                        Sport::where("Type", "BK")
+                            // ->where("GetScore", 1)
+                            ->where("M_Date", $list_date)
+                            ->where("ECID", (int)$match_sports["ECID"])
+                            ->where('MB_Team', 'like', "%第一节%")
+                            ->update([
+                                "MB_Inball" => $mb_inball1,
+                                "TG_Inball" => $tg_inball1,
+                            ]);
+                        Sport::where("Type", "BK")
+                            // ->where("GetScore", 1)
+                            ->where("M_Date", $list_date)
+                            ->where("ECID", (int)$match_sports["ECID"])
+                            ->where('MB_Team', 'like', "%第二节%")
+                            ->update([
+                                "MB_Inball" => $mb_inball2,
+                                "TG_Inball" => $tg_inball2,
+                            ]);
+                        Sport::where("Type", "BK")
+                            // ->where("GetScore", 1)
+                            ->where("M_Date", $list_date)
+                            ->where("ECID", (int)$match_sports["ECID"])
+                            ->where('MB_Team', 'like', "%第三节%")
+                            ->update([
+                                "MB_Inball" => $mb_inball3,
+                                "TG_Inball" => $tg_inball3,
+                            ]);
+                        Sport::where("Type", "BK")
+                            // ->where("GetScore", 1)
+                            ->where("M_Date", $list_date)
+                            ->where("ECID", (int)$match_sports["ECID"])
+                            ->where('MB_Team', 'like', "%第四节%")
+                            ->update([
+                                "MB_Inball" => $mb_inball4,
+                                "TG_Inball" => $tg_inball4,
+                            ]);
+                        Sport::where("Type", "BK")
+                            // ->where("GetScore", 1)
+                            ->where("M_Date", $list_date)
+                            ->where("ECID", (int)$match_sports["ECID"])
+                            ->where('MB_Team', 'like', "%加时%")
+                            ->update([
+                                "MB_Inball" => $mb_inball_js,
+                                "TG_Inball" => $tg_inball_js,
                             ]);
                     } elseif( $mb_inball < 0 || $tg_inball < 0 ) {
                         Sport::where("Type", "BK")
@@ -283,10 +276,78 @@ class BKScoreController extends Controller
                             ->where("M_Date", $list_date)
                             ->where("MID", (int)$mid)
                             ->update([
-                                "MB_Inball" => $mb_inball,
-                                "TG_Inball" => $tg_inball,
                                 "MB_Inball_HR" => $mb_inball_hr,
                                 "TG_Inball_HR" => $tg_inball_hr,
+                                "Cancel" => 1
+                            ]);
+                        Sport::where("Type", "BK")
+                            // ->where("GetScore", 1)
+                            ->where("M_Date", $list_date)
+                            ->where("ECID", (int)$match_sports["ECID"])
+                            ->where('MB_Team', 'like', "%上半场%")
+                            ->update([
+                                "MB_Inball" => $mb_inball_hr,
+                                "TG_Inball" => $tg_inball_hr,
+                                "Cancel" => 1
+                            ]);
+                        Sport::where("Type", "BK")
+                            // ->where("GetScore", 1)
+                            ->where("M_Date", $list_date)
+                            ->where("ECID", (int)$match_sports["ECID"])
+                            ->where('MB_Team', 'like', "%下半场%")
+                            ->update([
+                                "MB_Inball" => $mb_inball_xb,
+                                "TG_Inball" => $tg_inball_xb,
+                                "Cancel" => 1
+                            ]);
+                        Sport::where("Type", "BK")
+                            // ->where("GetScore", 1)
+                            ->where("M_Date", $list_date)
+                            ->where("ECID", (int)$match_sports["ECID"])
+                            ->where('MB_Team', 'like', "%第一节%")
+                            ->update([
+                                "MB_Inball" => $mb_inball1,
+                                "TG_Inball" => $tg_inball1,
+                                "Cancel" => 1
+                            ]);
+                        Sport::where("Type", "BK")
+                            // ->where("GetScore", 1)
+                            ->where("M_Date", $list_date)
+                            ->where("ECID", (int)$match_sports["ECID"])
+                            ->where('MB_Team', 'like', "%第二节%")
+                            ->update([
+                                "MB_Inball" => $mb_inball2,
+                                "TG_Inball" => $tg_inball2,
+                                "Cancel" => 1
+                            ]);
+                        Sport::where("Type", "BK")
+                            // ->where("GetScore", 1)
+                            ->where("M_Date", $list_date)
+                            ->where("ECID", (int)$match_sports["ECID"])
+                            ->where('MB_Team', 'like', "%第三节%")
+                            ->update([
+                                "MB_Inball" => $mb_inball3,
+                                "TG_Inball" => $tg_inball3,
+                                "Cancel" => 1
+                            ]);
+                        Sport::where("Type", "BK")
+                            // ->where("GetScore", 1)
+                            ->where("M_Date", $list_date)
+                            ->where("ECID", (int)$match_sports["ECID"])
+                            ->where('MB_Team', 'like', "%第四节%")
+                            ->update([
+                                "MB_Inball" => $mb_inball4,
+                                "TG_Inball" => $tg_inball4,
+                                "Cancel" => 1
+                            ]);
+                        Sport::where("Type", "BK")
+                            // ->where("GetScore", 1)
+                            ->where("M_Date", $list_date)
+                            ->where("ECID", (int)$match_sports["ECID"])
+                            ->where('MB_Team', 'like', "%加时%")
+                            ->update([
+                                "MB_Inball" => $mb_inball_js,
+                                "TG_Inball" => $tg_inball_js,
                                 "Cancel" => 1
                             ]);
                     } else{
@@ -294,28 +355,157 @@ class BKScoreController extends Controller
                         $a= $match_sports['MB_Inball'].$match_sports['TG_Inball'];
                         $b= trim($mb_inball).trim($tg_inball);
 
-                        if($a != $b) {                            
+                        if($a != $b) {
                             Sport::where("Type", "BK")
                                 ->where("GetScore", 1)
                                 ->where("M_Date", $list_date)
                                 ->where("MID", (int)$mid)
                                 ->update([
-                                    "MB_Inball" => $mb_inball,
-                                    "TG_Inball" => $tg_inball,
                                     "MB_Inball_HR" => $mb_inball_hr,
                                     "TG_Inball_HR" => $tg_inball_hr,
                                     "Checked" => 1
                                 ]);
-                        }else{
+                            Sport::where("Type", "BK")
+                                ->where("GetScore", 1)
+                                ->where("M_Date", $list_date)
+                                ->where("ECID", (int)$match_sports["ECID"])
+                                ->where('MB_Team', 'like', "%上半场%")
+                                ->update([
+                                    "MB_Inball" => $mb_inball_hr,
+                                    "TG_Inball" => $tg_inball_hr,
+                                    "Checked" => 1
+                                ]);
+                            Sport::where("Type", "BK")
+                                ->where("GetScore", 1)
+                                ->where("M_Date", $list_date)
+                                ->where("ECID", (int)$match_sports["ECID"])
+                                ->where('MB_Team', 'like', "%下半场%")
+                                ->update([
+                                    "MB_Inball" => $mb_inball_xb,
+                                    "TG_Inball" => $tg_inball_xb,
+                                    "Checked" => 1
+                                ]);
+                            Sport::where("Type", "BK")
+                                ->where("GetScore", 1)
+                                ->where("M_Date", $list_date)
+                                ->where("ECID", (int)$match_sports["ECID"])
+                                ->where('MB_Team', 'like', "%第一节%")
+                                ->update([
+                                    "MB_Inball" => $mb_inball1,
+                                    "TG_Inball" => $tg_inball1,
+                                    "Checked" => 1
+                                ]);
+                            Sport::where("Type", "BK")
+                                ->where("GetScore", 1)
+                                ->where("M_Date", $list_date)
+                                ->where("ECID", (int)$match_sports["ECID"])
+                                ->where('MB_Team', 'like', "%第二节%")
+                                ->update([
+                                    "MB_Inball" => $mb_inball2,
+                                    "TG_Inball" => $tg_inball2,
+                                    "Checked" => 1
+                                ]);
+                            Sport::where("Type", "BK")
+                                ->where("GetScore", 1)
+                                ->where("M_Date", $list_date)
+                                ->where("ECID", (int)$match_sports["ECID"])
+                                ->where('MB_Team', 'like', "%第三节%")
+                                ->update([
+                                    "MB_Inball" => $mb_inball3,
+                                    "TG_Inball" => $tg_inball3,
+                                    "Checked" => 1
+                                ]);
+                            Sport::where("Type", "BK")
+                                ->where("GetScore", 1)
+                                ->where("M_Date", $list_date)
+                                ->where("ECID", (int)$match_sports["ECID"])
+                                ->where('MB_Team', 'like', "%第四节%")
+                                ->update([
+                                    "MB_Inball" => $mb_inball4,
+                                    "TG_Inball" => $tg_inball4,
+                                    "Checked" => 1
+                                ]);
+                            Sport::where("Type", "BK")
+                                ->where("GetScore", 1)
+                                ->where("M_Date", $list_date)
+                                ->where("ECID", (int)$match_sports["ECID"])
+                                ->where('MB_Team', 'like', "%加时%")
+                                ->update([
+                                    "MB_Inball" => $mb_inball_js,
+                                    "TG_Inball" => $tg_inball_js,
+                                    "Checked" => 1
+                                ]);
+                        } else {
                             Sport::where("Type", "BK")
                                 ->where("GetScore", 1)
                                 ->where("M_Date", $list_date)
                                 ->where("MID", (int)$mid)
                                 ->update([
-                                    "MB_Inball" => $mb_inball,
-                                    "TG_Inball" => $tg_inball,
                                     "MB_Inball_HR" => $mb_inball_hr,
-                                    "TG_Inball_HR" => $tg_inball_hr
+                                    "TG_Inball_HR" => $tg_inball_hr,
+                                ]);
+                            Sport::where("Type", "BK")
+                                ->where("GetScore", 1)
+                                ->where("M_Date", $list_date)
+                                ->where("ECID", (int)$match_sports["ECID"])
+                                ->where('MB_Team', 'like', "%上半场%")
+                                ->update([
+                                    "MB_Inball" => $mb_inball_hr,
+                                    "TG_Inball" => $tg_inball_hr,
+                                ]);
+                            Sport::where("Type", "BK")
+                                ->where("GetScore", 1)
+                                ->where("M_Date", $list_date)
+                                ->where("ECID", (int)$match_sports["ECID"])
+                                ->where('MB_Team', 'like', "%下半场%")
+                                ->update([
+                                    "MB_Inball" => $mb_inball_xb,
+                                    "TG_Inball" => $tg_inball_xb,
+                                ]);
+                            Sport::where("Type", "BK")
+                                ->where("GetScore", 1)
+                                ->where("M_Date", $list_date)
+                                ->where("ECID", (int)$match_sports["ECID"])
+                                ->where('MB_Team', 'like', "%第一节%")
+                                ->update([
+                                    "MB_Inball" => $mb_inball1,
+                                    "TG_Inball" => $tg_inball1,
+                                ]);
+                            Sport::where("Type", "BK")
+                                ->where("GetScore", 1)
+                                ->where("M_Date", $list_date)
+                                ->where("ECID", (int)$match_sports["ECID"])
+                                ->where('MB_Team', 'like', "%第二节%")
+                                ->update([
+                                    "MB_Inball" => $mb_inball2,
+                                    "TG_Inball" => $tg_inball2,
+                                ]);
+                            Sport::where("Type", "BK")
+                                ->where("GetScore", 1)
+                                ->where("M_Date", $list_date)
+                                ->where("ECID", (int)$match_sports["ECID"])
+                                ->where('MB_Team', 'like', "%第三节%")
+                                ->update([
+                                    "MB_Inball" => $mb_inball3,
+                                    "TG_Inball" => $tg_inball3,
+                                ]);
+                            Sport::where("Type", "BK")
+                                ->where("GetScore", 1)
+                                ->where("M_Date", $list_date)
+                                ->where("ECID", (int)$match_sports["ECID"])
+                                ->where('MB_Team', 'like', "%第四节%")
+                                ->update([
+                                    "MB_Inball" => $mb_inball4,
+                                    "TG_Inball" => $tg_inball4,
+                                ]);
+                            Sport::where("Type", "BK")
+                                ->where("GetScore", 1)
+                                ->where("M_Date", $list_date)
+                                ->where("ECID", (int)$match_sports["ECID"])
+                                ->where('MB_Team', 'like', "%加时%")
+                                ->update([
+                                    "MB_Inball" => $mb_inball_js,
+                                    "TG_Inball" => $tg_inball_js,
                                 ]);
                         }
                     }
@@ -342,8 +532,8 @@ class BKScoreController extends Controller
                                     ->where("M_Date", $list_date)
                                     ->where("MID", (int)$mid)
                                     ->update([
-                                        "MB_Inball" => $mb_inball,
-                                        "TG_Inball" => $tg_inball,
+                                        "MB_Inball" => $mb_inball1,
+                                        "TG_Inball" => $tg_inball1,
                                         "MB_Inball_HR" => $mb_inball1,
                                         "TG_Inball_HR" => $tg_inball1
                                     ]);
@@ -353,8 +543,8 @@ class BKScoreController extends Controller
                                     ->where("M_Date", $list_date)
                                     ->where("MID", (int)$mid)
                                     ->update([
-                                        "MB_Inball" => $mb_inball,
-                                        "TG_Inball" => $tg_inball,
+                                        "MB_Inball" => $mb_inball1,
+                                        "TG_Inball" => $tg_inball1,
                                         "MB_Inball_HR" => $mb_inball1,
                                         "TG_Inball_HR" => $tg_inball1,
                                         "Cancel" => 1
@@ -370,8 +560,8 @@ class BKScoreController extends Controller
                                         ->where("M_Date", $list_date)
                                         ->where("MID", (int)$mid)
                                         ->update([
-                                            "MB_Inball" => $mb_inball,
-                                            "TG_Inball" => $tg_inball,
+                                            "MB_Inball" => $mb_inball1,
+                                            "TG_Inball" => $tg_inball1,
                                             "MB_Inball_HR" => $mb_inball1,
                                             "TG_Inball_HR" => $tg_inball1,
                                             "Checked" => 1
@@ -382,8 +572,8 @@ class BKScoreController extends Controller
                                         ->where("M_Date", $list_date)
                                         ->where("MID", (int)$mid)
                                         ->update([
-                                            "MB_Inball" => $mb_inball,
-                                            "TG_Inball" => $tg_inball,
+                                            "MB_Inball" => $mb_inball1,
+                                            "TG_Inball" => $tg_inball1,
                                             "MB_Inball_HR" => $mb_inball1,
                                             "TG_Inball_HR" => $tg_inball1
                                         ]);
@@ -416,8 +606,8 @@ class BKScoreController extends Controller
                                     ->where("M_Date", $list_date)
                                     ->where("MID", (int)$mid)
                                     ->update([
-                                        "MB_Inball" => $mb_inball,
-                                        "TG_Inball" => $tg_inball,
+                                        "MB_Inball" => $mb_inball2,
+                                        "TG_Inball" => $tg_inball2,
                                         "MB_Inball_HR" => $mb_inball2,
                                         "TG_Inball_HR" => $tg_inball2
                                     ]);
@@ -429,8 +619,8 @@ class BKScoreController extends Controller
                                     ->where("M_Date", $list_date)
                                     ->where("MID", (int)$mid)
                                     ->update([
-                                        "MB_Inball" => $mb_inball,
-                                        "TG_Inball" => $tg_inball,
+                                        "MB_Inball" => $mb_inball2,
+                                        "TG_Inball" => $tg_inball2,
                                         "MB_Inball_HR" => $mb_inball2,
                                         "TG_Inball_HR" => $tg_inball2,
                                         "Cancel" => 1
@@ -447,8 +637,8 @@ class BKScoreController extends Controller
                                         ->where("M_Date", $list_date)
                                         ->where("MID", (int)$mid)
                                         ->update([
-                                            "MB_Inball" => $mb_inball,
-                                            "TG_Inball" => $tg_inball,
+                                            "MB_Inball" => $mb_inball2,
+                                            "TG_Inball" => $tg_inball2,
                                             "MB_Inball_HR" => $mb_inball2,
                                             "TG_Inball_HR" => $tg_inball2,
                                             "Checked" => 1
@@ -459,8 +649,8 @@ class BKScoreController extends Controller
                                         ->where("M_Date", $list_date)
                                         ->where("MID", (int)$mid)
                                         ->update([
-                                            "MB_Inball" => $mb_inball,
-                                            "TG_Inball" => $tg_inball,
+                                            "MB_Inball" => $mb_inball2,
+                                            "TG_Inball" => $tg_inball2,
                                             "MB_Inball_HR" => $mb_inball2,
                                             "TG_Inball_HR" => $tg_inball2
                                         ]);
@@ -493,8 +683,8 @@ class BKScoreController extends Controller
                                     ->where("M_Date", $list_date)
                                     ->where("MID", (int)$mid)
                                     ->update([
-                                        "MB_Inball" => $mb_inball,
-                                        "TG_Inball" => $tg_inball,
+                                        "MB_Inball" => $mb_inball3,
+                                        "TG_Inball" => $tg_inball3,
                                         "MB_Inball_HR" => $mb_inball3,
                                         "TG_Inball_HR" => $tg_inball3
                                     ]);
@@ -506,8 +696,8 @@ class BKScoreController extends Controller
                                     ->where("M_Date", $list_date)
                                     ->where("MID", (int)$mid)
                                     ->update([
-                                        "MB_Inball" => $mb_inball,
-                                        "TG_Inball" => $tg_inball,
+                                        "MB_Inball" => $mb_inball3,
+                                        "TG_Inball" => $tg_inball3,
                                         "MB_Inball_HR" => $mb_inball3,
                                         "TG_Inball_HR" => $tg_inball3,
                                         "Cancel" => 1
@@ -524,8 +714,8 @@ class BKScoreController extends Controller
                                         ->where("M_Date", $list_date)
                                         ->where("MID", (int)$mid)
                                         ->update([
-                                            "MB_Inball" => $mb_inball,
-                                            "TG_Inball" => $tg_inball,
+                                            "MB_Inball" => $mb_inball3,
+                                            "TG_Inball" => $tg_inball3,
                                             "MB_Inball_HR" => $mb_inball3,
                                             "TG_Inball_HR" => $tg_inball3,
                                             "Checked" => 1
@@ -536,8 +726,8 @@ class BKScoreController extends Controller
                                         ->where("M_Date", $list_date)
                                         ->where("MID", (int)$mid)
                                         ->update([
-                                            "MB_Inball" => $mb_inball,
-                                            "TG_Inball" => $tg_inball,
+                                            "MB_Inball" => $mb_inball3,
+                                            "TG_Inball" => $tg_inball3,
                                             "MB_Inball_HR" => $mb_inball3,
                                             "TG_Inball_HR" => $tg_inball3
                                         ]);
@@ -570,8 +760,8 @@ class BKScoreController extends Controller
                                     ->where("M_Date", $list_date)
                                     ->where("MID", (int)$mid)
                                     ->update([
-                                        "MB_Inball" => $mb_inball,
-                                        "TG_Inball" => $tg_inball,
+                                        "MB_Inball" => $mb_inball4,
+                                        "TG_Inball" => $tg_inball4,
                                         "MB_Inball_HR" => $mb_inball4,
                                         "TG_Inball_HR" => $tg_inball4
                                     ]);
@@ -583,8 +773,8 @@ class BKScoreController extends Controller
                                     ->where("M_Date", $list_date)
                                     ->where("MID", (int)$mid)
                                     ->update([
-                                        "MB_Inball" => $mb_inball,
-                                        "TG_Inball" => $tg_inball,
+                                        "MB_Inball" => $mb_inball4,
+                                        "TG_Inball" => $tg_inball4,
                                         "MB_Inball_HR" => $mb_inball4,
                                         "TG_Inball_HR" => $tg_inball4,
                                         "Cancel" => 1
@@ -601,8 +791,8 @@ class BKScoreController extends Controller
                                         ->where("M_Date", $list_date)
                                         ->where("MID", (int)$mid)
                                         ->update([
-                                            "MB_Inball" => $mb_inball,
-                                            "TG_Inball" => $tg_inball,
+                                            "MB_Inball" => $mb_inball4,
+                                            "TG_Inball" => $tg_inball4,
                                             "MB_Inball_HR" => $mb_inball4,
                                             "TG_Inball_HR" => $tg_inball4,
                                             "Checked" => 1
@@ -613,8 +803,8 @@ class BKScoreController extends Controller
                                         ->where("M_Date", $list_date)
                                         ->where("MID", (int)$mid)
                                         ->update([
-                                            "MB_Inball" => $mb_inball,
-                                            "TG_Inball" => $tg_inball,
+                                            "MB_Inball" => $mb_inball4,
+                                            "TG_Inball" => $tg_inball4,
                                             "MB_Inball_HR" => $mb_inball4,
                                             "TG_Inball_HR" => $tg_inball4
                                         ]);
@@ -647,8 +837,8 @@ class BKScoreController extends Controller
                                     ->where("M_Date", $list_date)
                                     ->where("MID", (int)$mid)
                                     ->update([
-                                        "MB_Inball" => $mb_inball,
-                                        "TG_Inball" => $tg_inball,
+                                        "MB_Inball" => $mb_inball_hr,
+                                        "TG_Inball" => $tg_inball_hr,
                                         "MB_Inball_HR" => $mb_inball_hr,
                                         "TG_Inball_HR" => $tg_inball_hr
                                     ]);
@@ -660,8 +850,8 @@ class BKScoreController extends Controller
                                     ->where("M_Date", $list_date)
                                     ->where("MID", (int)$mid)
                                     ->update([
-                                        "MB_Inball" => $mb_inball,
-                                        "TG_Inball" => $tg_inball,
+                                        "MB_Inball" => $mb_inball_hr,
+                                        "TG_Inball" => $tg_inball_hr,
                                         "MB_Inball_HR" => $mb_inball_hr,
                                         "TG_Inball_HR" => $tg_inball_hr,
                                         "Cancel" => 1
@@ -678,8 +868,8 @@ class BKScoreController extends Controller
                                         ->where("M_Date", $list_date)
                                         ->where("MID", (int)$mid)
                                         ->update([
-                                            "MB_Inball" => $mb_inball,
-                                            "TG_Inball" => $tg_inball,
+                                            "MB_Inball" => $mb_inball_hr,
+                                            "TG_Inball" => $tg_inball_hr,
                                             "MB_Inball_HR" => $mb_inball_hr,
                                             "TG_Inball_HR" => $tg_inball_hr,
                                             "Checked" => 1
@@ -690,8 +880,8 @@ class BKScoreController extends Controller
                                         ->where("M_Date", $list_date)
                                         ->where("MID", (int)$mid)
                                         ->update([
-                                            "MB_Inball" => $mb_inball,
-                                            "TG_Inball" => $tg_inball,
+                                            "MB_Inball" => $mb_inball_hr,
+                                            "TG_Inball" => $tg_inball_hr,
                                             "MB_Inball_HR" => $mb_inball_hr,
                                             "TG_Inball_HR" => $tg_inball_hr
                                         ]);
@@ -724,8 +914,8 @@ class BKScoreController extends Controller
                                     ->where("M_Date", $list_date)
                                     ->where("MID", (int)$mid)
                                     ->update([
-                                        "MB_Inball" => $mb_inball,
-                                        "TG_Inball" => $tg_inball,
+                                        "MB_Inball" => $mb_inball_xb,
+                                        "TG_Inball" => $tg_inball_xb,
                                         "MB_Inball_HR" => $mb_inball_xb,
                                         "TG_Inball_HR" => $tg_inball_xb
                                     ]);
@@ -737,8 +927,8 @@ class BKScoreController extends Controller
                                     ->where("M_Date", $list_date)
                                     ->where("MID", (int)$mid)
                                     ->update([
-                                        "MB_Inball" => $mb_inball,
-                                        "TG_Inball" => $tg_inball,
+                                        "MB_Inball" => $mb_inball_xb,
+                                        "TG_Inball" => $tg_inball_xb,
                                         "MB_Inball_HR" => $mb_inball_xb,
                                         "TG_Inball_HR" => $tg_inball_xb,
                                         "Cancel" => 1
@@ -755,8 +945,8 @@ class BKScoreController extends Controller
                                         ->where("M_Date", $list_date)
                                         ->where("MID", (int)$mid)
                                         ->update([
-                                            "MB_Inball" => $mb_inball,
-                                            "TG_Inball" => $tg_inball,
+                                            "MB_Inball" => $mb_inball_xb,
+                                            "TG_Inball" => $tg_inball_xb,
                                             "MB_Inball_HR" => $mb_inball_xb,
                                             "TG_Inball_HR" => $tg_inball_xb,
                                             "Checked" => 1
@@ -767,8 +957,8 @@ class BKScoreController extends Controller
                                         ->where("M_Date", $list_date)
                                         ->where("MID", (int)$mid)
                                         ->update([
-                                            "MB_Inball" => $mb_inball,
-                                            "TG_Inball" => $tg_inball,
+                                            "MB_Inball" => $mb_inball_xb,
+                                            "TG_Inball" => $tg_inball_xb,
                                             "MB_Inball_HR" => $mb_inball_xb,
                                             "TG_Inball_HR" => $tg_inball_xb
                                         ]);

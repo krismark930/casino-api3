@@ -4,6 +4,898 @@
 
 use Pawlox\VideoThumbnail\Facade\VideoThumbnail;
 
+//广西十分彩开奖函数
+function Ssc_Auto_GXSF($num , $type){
+    $zh = $num[0]+$num[1]+$num[2]+$num[3]+$num[4];
+    if($type==1){
+        return $zh;
+    }
+    if($type==2){
+        if($zh>=55){
+            return '总和大';
+        }else{
+            return '总和小';
+        }
+    }
+    if($type==3){
+        if($zh%2==0){
+            return '总和双';
+        }else{
+            return '总和单';
+        }
+    }
+    if($type==4){
+        if($num[0]>$num[4]){
+            return '龙';
+        }
+        if($num[0]<$num[4]){
+            return '虎';
+        }
+        if($num[0]==$num[4]){
+            return '和';
+        }
+    }
+    if($type==5){
+        $hm         = array();
+        $hm[]       = $num[0];
+        $hm[]       = $num[1];
+        $hm[]       = $num[2];
+        sort($hm);
+        $a = $hm[0].$hm[1].$hm[2];
+        $b=$hm[0].$hm[2];
+        //echo $b;
+        if($hm[0]==$hm[1] && $hm[0]==$hm[2] && $hm[1]==$hm[2]){
+            return '豹子';
+        }else if($hm[0]==$hm[1] || $hm[0]==$hm[2] || $hm[1]==$hm[2]){
+            return '对子';
+        }else if($a == '1211' || $a == '11011' || sorts($hm, 3)){
+            return '顺子';
+        }else if($b=='111' || sorts($hm, 2)){
+            return '半顺';
+        }else{
+            return '杂六';
+        }
+    }
+    if($type==6){
+        $hm         = array();
+        $hm[]       = $num[1];
+        $hm[]       = $num[2];
+        $hm[]       = $num[3];
+        sort($hm);
+        $a = $hm[0].$hm[1].$hm[2];
+        $b=$hm[0].$hm[2];
+        if($hm[0]==$hm[1] && $hm[0]==$hm[2] && $hm[1]==$hm[2]){
+            return '豹子';
+        }else if($hm[0]==$hm[1] || $hm[0]==$hm[2] || $hm[1]==$hm[2]){
+            return '对子';
+        }else if($a == '1211' || $a == '11011' || sorts($hm, 3)){
+            return '顺子';
+        }else if($b=='111' || sorts($hm, 2)){
+            return '半顺';
+        }else{
+            return '杂六';
+        }
+    }
+    if($type==7){
+        $hm         = array();
+        $hm[]       = $num[2];
+        $hm[]       = $num[3];
+        $hm[]       = $num[4];
+        sort($hm);
+        $a = $hm[0].$hm[1].$hm[2];
+        $b=$hm[0].$hm[2];
+        if($hm[0]==$hm[1] && $hm[0]==$hm[2] && $hm[1]==$hm[2]){
+            return '豹子';
+        }else if($hm[0]==$hm[1] || $hm[0]==$hm[2] || $hm[1]==$hm[2]){
+            return '对子';
+        }else if($a == '1211' || $a == '11011' || sorts($hm, 3)){
+            return '顺子';
+        }else if($b=='111' || sorts($hm, 2)){
+            return '半顺';
+        }else{
+            return '杂六';
+        }
+    }
+}
+//广西十分彩单双
+function Ssc_Ds_GXSF($ball){
+    if($ball==21){
+        return '和';
+    }elseif($ball%2==0){
+        return '双';
+    }else{
+        return '单';
+    }
+}
+
+//广西十分彩大小
+function Ssc_Dx_GXSF($ball){
+    if($ball==21){
+        return '和';
+    }elseif($ball>=10){ 
+        return '大';
+    }elseif($ball<=9){
+        return '小';
+    }
+}
+
+function sorts($number,$p){
+    $cc=0;
+    foreach($number as $key=>$value){
+        if(in_array($value-1,$number) or in_array($value+1,$number)){
+            $cc++;
+        }
+    }
+    if($cc>=$p){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+//广东11选5开奖函数
+function Ssc_Auto_GD11($num , $type){
+    $zh = $num[0]+$num[1]+$num[2]+$num[3]+$num[4];
+    if($type==1){
+        return $zh;
+    }
+    if($type==2){
+        if($zh>=31){
+            return '总和大';
+        }elseif($zh==30){
+            return '总和和';
+        }else{
+            return '总和小';
+        }
+    }
+    if($type==3){
+        if($zh%2==0){
+            return '总和双';
+        }else{
+            return '总和单';
+        }
+    }
+    if($type==4){
+        if($num[0]>$num[4]){
+            return '龙';
+        }
+        if($num[0]<$num[4]){
+            return '虎';
+        }
+        if($num[0]==$num[4]){
+            return '和';
+        }
+    }
+    if($type==5){
+        $hm         = array();
+        $hm[]       = $num[0];
+        $hm[]       = $num[1];
+        $hm[]       = $num[2];
+        sort($hm);
+        $a = $hm[0].$hm[1].$hm[2];
+        $b=$hm[0].$hm[2];
+        //echo $b;
+        if($hm[0]==$hm[1] && $hm[0]==$hm[2] && $hm[1]==$hm[2]){
+            return '豹子';
+        }else if($hm[0]==$hm[1] || $hm[0]==$hm[2] || $hm[1]==$hm[2]){
+            return '对子';
+        }else if($a == '1211' || $a == '11011' || sorts($hm, 3)){
+            return '顺子';
+        }else if($b=='111' || sorts($hm, 2)){
+            return '半顺';
+        }else{
+            return '杂六';
+        }
+    }
+    if($type==6){
+        $hm         = array();
+        $hm[]       = $num[1];
+        $hm[]       = $num[2];
+        $hm[]       = $num[3];
+        sort($hm);
+        $a = $hm[0].$hm[1].$hm[2];
+        $b=$hm[0].$hm[2];
+        if($hm[0]==$hm[1] && $hm[0]==$hm[2] && $hm[1]==$hm[2]){
+            return '豹子';
+        }else if($hm[0]==$hm[1] || $hm[0]==$hm[2] || $hm[1]==$hm[2]){
+            return '对子';
+        }else if($a == '1211' || $a == '11011' || sorts($hm, 3)){
+            return '顺子';
+        }else if($b=='111' || sorts($hm, 2)){
+            return '半顺';
+        }else{
+            return '杂六';
+        }
+    }
+    if($type==7){
+        $hm         = array();
+        $hm[]       = $num[2];
+        $hm[]       = $num[3];
+        $hm[]       = $num[4];
+        sort($hm);
+        $a = $hm[0].$hm[1].$hm[2];
+        $b=$hm[0].$hm[2];
+        if($hm[0]==$hm[1] && $hm[0]==$hm[2] && $hm[1]==$hm[2]){
+            return '豹子';
+        }else if($hm[0]==$hm[1] || $hm[0]==$hm[2] || $hm[1]==$hm[2]){
+            return '对子';
+        }else if($a == '1211' || $a == '11011' || sorts($hm, 3)){
+            return '顺子';
+        }else if($b=='111' || sorts($hm, 2)){
+            return '半顺';
+        }else{
+            return '杂六';
+        }
+    }
+}
+//广东11选5单双
+function Ssc_Ds_GD11($ball){
+    if($ball==11){
+        return '和';
+    }elseif($ball%2==0){
+        return '双';
+    }else{
+        return '单';
+    }
+}
+//广东11选5大小
+function Ssc_Dx_GD11($ball){
+    if($ball==11){
+        return '和';
+    }elseif($ball>=6){
+        return '大';
+    }else{
+        return '小';
+    }
+}
+
+//广东11选5开奖函数
+function Ssc_Auto_D3($num , $type){
+    $zh = $num[0]+$num[1]+$num[2];
+    if($type==1){
+        return $zh;
+    }
+    if($type==2){
+        if($zh>=14){
+            return '总和大';
+        }else{
+            return '总和小';
+        }
+    }
+    if($type==3){
+        if($zh%2==0){
+            return '总和双';
+        }else{
+            return '总和单';
+        }
+    }
+    if($type==4){
+        if($num[0]>$num[2]){
+            return '龙';
+        }
+        if($num[0]<$num[2]){
+            return '虎';
+        }
+        if($num[0]==$num[2]){
+            return '和';
+        }
+    }
+    if($type==5){
+        $hm         = array();
+        $hm[]       = $num[0];
+        $hm[]       = $num[1];
+        $hm[]       = $num[2];
+        sort($hm);
+        $a = $hm[0].$hm[1].$hm[2];
+        $b=$hm[0].$hm[2];
+        //echo $b;
+        if($hm[0]==$hm[1] && $hm[0]==$hm[2] && $hm[1]==$hm[2]){
+            return '豹子';
+        }else if($hm[0]==$hm[1] || $hm[0]==$hm[2] || $hm[1]==$hm[2]){
+            return '对子';
+        }else if($a == '019' || $a == '089' || sorts($hm, 3)){
+            return '顺子';
+        }else if($b=='09' || sorts($hm, 2)){
+            return '半顺';
+        }else{
+            return '杂六';
+        }
+    }
+    if($type==6){
+        $hm         = array();
+        $hm[]       = $num[1];
+        $hm[]       = $num[2];
+        $hm[]       = $num[3];
+        sort($hm);
+        $a = $hm[0].$hm[1].$hm[2];
+        $b=$hm[0].$hm[2];
+        if($hm[0]==$hm[1] && $hm[0]==$hm[2] && $hm[1]==$hm[2]){
+            return '豹子';
+        }else if($hm[0]==$hm[1] || $hm[0]==$hm[2] || $hm[1]==$hm[2]){
+            return '对子';
+        }else if($a == '019' || $a == '089' || sorts($hm, 3)){
+            return '顺子';
+        }else if($b=='09' || sorts($hm, 2)){
+            return '半顺';
+        }else{
+            return '杂六';
+        }
+    }
+    if($type==7){
+        $hm         = array();
+        $hm[]       = $num[2];
+        $hm[]       = $num[3];
+        $hm[]       = $num[4];
+        sort($hm);
+        $a = $hm[0].$hm[1].$hm[2];
+        $b=$hm[0].$hm[2];
+        if($hm[0]==$hm[1] && $hm[0]==$hm[2] && $hm[1]==$hm[2]){
+            return '豹子';
+        }else if($hm[0]==$hm[1] || $hm[0]==$hm[2] || $hm[1]==$hm[2]){
+            return '对子';
+        }else if($a == '019' || $a == '089' || sorts($hm, 3)){
+            return '顺子';
+        }else if($b=='09' || sorts($hm, 2)){
+            return '半顺';
+        }else{
+            return '杂六';
+        }
+    } 
+}
+
+//广东快乐10分开奖函数
+function Klsf_Auto($num , $type){
+    $zh = $num[0]+$num[1]+$num[2]+$num[3]+$num[4]+$num[5]+$num[6]+$num[7];
+    if($type==1){
+        return $zh;
+    }
+    if($type==2){
+        if($zh>=85){
+            return '总和大';
+        }
+        if($zh<=83){
+            return '总和小';
+        }
+        if($zh==84){
+            return '总和和';
+        }
+    }
+    if($type==3){
+        if($zh%2==0){
+            return '总和双';
+        }else{
+            return '总和单';
+        }
+    }
+    if($type==4){
+        if($zh%10>=5){
+            return '总和尾大';
+        }else{
+            return '总和尾小';
+        }
+    }
+    if($type==5){
+        if($num[0]>$num[7]){
+            return '龙';
+        }
+        if($num[0]<$num[7]){
+            return '虎';
+        }
+        if($num[0]==$num[7]){
+            return '和';
+        }
+    }
+}
+//广东快乐10分单双
+function Klsf_Ds($ball){
+    if($ball%2==0){
+        return '双';
+    }else{
+        return '单';
+    }
+}
+//广东快乐10分大小
+function Klsf_Dx($ball){
+    if($ball>=11){
+        return '大';
+    }else{
+        return '小';
+    }
+}
+//广东快乐10分尾大小
+function Klsf_Wdx($ball){
+    if($ball%10>=5){
+        return '尾大';
+    }else{
+        return '尾小';
+    }
+}
+//广东快乐10分合单双
+function Klsf_Hdx($ball){
+    if(($ball%10+floor($ball/10))%2==0){
+        return '合数双';
+    }else{
+        return '合数单';
+    }
+}
+//广东快乐10分中发白
+function Klsf_Zfb($ball){
+    if($ball<=7){
+        return '中';
+    }else if($ball>=8 && $ball<=14){
+        return '发';
+    }else{
+        return '白';
+    }
+}
+//广东快乐10分东南西北
+function Klsf_Dnxb($ball){
+    if($ball%4==1){
+        return '东';
+    }else if($ball%4==2){
+        return '南';
+    }else if($ball%4==3){
+        return '西';
+    }else{
+        return '北';
+    }
+}
+
+//北京快乐8开奖函数
+function Ssc_Auto_BJKN($num , $type){
+    $zh=0;
+    for($i=0;$i<20;$i++){
+        $zh=$zh+$num[$i];
+    }
+    if($type==1){
+        return $zh;
+    }
+    if($type==2){  //大小,810
+        if($zh>810){
+            return '总和大';
+        }
+        if($zh<810){
+            return '总和小';
+        }
+        if($zh==810){
+            return '总和810';
+        }
+    }
+    if($type==3){  //单双
+        if($zh%2==0){
+            return '总和双';
+        }else{
+            return '总和单';
+        }
+    }
+
+    if($type==4){  //奇偶和
+        $cc=0;
+        $dd=0;
+        for($i=0;$i<20;$i++){
+            if($num[$i]%2==0) $cc++;
+            if($num[$i]%2==1) $dd++;
+        }
+        if($cc==$dd) return '和';
+        if($cc>$dd)  return '偶';
+        if($cc<$dd)  return '奇';
+    }
+
+    if($type==5){  //上下盘
+        $cc=0;
+        $dd=0;
+        for($i=0;$i<20;$i++){
+            if($num[$i]<=40) $cc++;
+            if($num[$i]>40) $dd++;
+        }
+        if($cc==$dd) return '中';
+        if($cc>$dd)  return '上';
+        if($cc<$dd)  return '下';
+    }       
+}
+
+
+
+function CheckNumber($ball){
+    $ball_arr=array();
+    $ball=rtrim($ball,',');
+    $tt=explode(',',$ball);
+    $flag=1;
+    for($i=0;$i<count($tt);$i++){
+        $number1=$tt[$i];
+        $number2=intval($number1);
+        if(strlen($number1)<>strlen($number2) or $number1<>abs($number2)){
+            $flag=0;
+        }
+        if(in_array($number2,$ball_array)){
+            $flag=0;
+        }else{
+            $ball_array[]=$number2;
+        }
+    }
+    return $flag;
+}
+
+//重庆时时彩开奖函数
+function Ssc_Auto($num , $type){
+    $zh = $num[0]+$num[1]+$num[2]+$num[3]+$num[4];
+    if($type==1){
+        return $zh;
+    }
+    if($type==2){
+        if($zh>=23){
+            return '总和大';
+        }else{
+            return '总和小';
+        }
+    }
+    if($type==3){
+        if($zh%2==0){
+            return '总和双';
+        }else{
+            return '总和单';
+        }
+    }
+    if($type==4){
+        if($num[0]>$num[4]){
+            return '龙';
+        }
+        if($num[0]<$num[4]){
+            return '虎';
+        }
+        if($num[0]==$num[4]){
+            return '和';
+        }
+    }
+    if($type==5){
+        $hm         = array();
+        $hm[]       = $num[0];
+        $hm[]       = $num[1];
+        $hm[]       = $num[2];
+        sort($hm);
+        $a = $hm[0].$hm[1].$hm[2];
+        $b=$hm[0].$hm[2];
+        if($hm[0]==$hm[1] && $hm[1]==$hm[2] && $hm[0]==$hm[2]){
+            return '豹子';
+        }else if($hm[0]==$hm[1] || $hm[1]==$hm[2] || $hm[0]==$hm[2]){
+            return '对子';
+        }else if($a == '019' or $a == '089' or sorts($hm, 3)){
+            return '顺子';
+        }else if($b=='09' or sorts($hm, 2)){
+            return '半顺';
+        }else{
+            return '杂六';
+        }
+    }
+    if($type==6){
+        $hm         = array();
+        $hm[]       = $num[1];
+        $hm[]       = $num[2];
+        $hm[]       = $num[3];
+        sort($hm);
+        $a = $hm[0].$hm[1].$hm[2];
+        $b=$hm[0].$hm[2];
+        if($hm[0]==$hm[1] && $hm[1]==$hm[2] && $hm[0]==$hm[2]){
+            return '豹子';
+        }else if($hm[0]==$hm[1] || $hm[1]==$hm[2] || $hm[0]==$hm[2]){
+            return '对子';
+        }else if($a == '019' or $a == '089' or sorts($hm, 3)){
+            return '顺子';
+        }else if($b=='09' or sorts($hm, 2)){
+            return '半顺';
+        }else{
+            return '杂六';
+        }
+    }
+    if($type==7){
+        $hm         = array();
+        $hm[]       = $num[2];
+        $hm[]       = $num[3];
+        $hm[]       = $num[4];
+        sort($hm);
+        $a = $hm[0].$hm[1].$hm[2];
+        $b=$hm[0].$hm[2];
+        if($hm[0]==$hm[1] && $hm[1]==$hm[2] && $hm[0]==$hm[2]){
+            return '豹子';
+        }else if($hm[0]==$hm[1] || $hm[1]==$hm[2] || $hm[0]==$hm[2]){
+            return '对子';
+        }else if($a == '019' or $a == '089' or sorts($hm, 3)){
+            return '顺子';
+        }else if($b=='09' or sorts($hm, 2)){
+            return '半顺';
+        }else{
+            return '杂六';
+        }
+    }
+    
+    if($type==8){//斗牛
+        $n1=$num[0]; //8
+        $n2=$num[1]; //9
+        $n3=$num[2]; //1
+        $n4=$num[3]; //0
+        $n5=$num[4]; //7
+        $array=$num;
+        $zh=0;
+        //$zh1=$n1+$n2+$n3+$n4+$n5;
+        $zh2=0;
+        for($i=0;$i<5;$i++){
+            //$i = 0;
+            $zh=-1;         
+            $j=$i+1;
+            for($ii=$j;$ii<5;$ii++){
+                // $ii = 1 ;
+                $jj=$ii+1;
+                $zh=-1; 
+                for($iii=$jj;$iii<5;$iii++){
+                    // $iii = 2;
+                    $zh=$array[$i]+$array[$ii]+$array[$iii];
+                    // $zh  = 10;
+                    
+                    if($zh==0 || $zh%10==0) {
+                        
+                        foreach ($array as $key => $value) {
+                            if($key==$i)unset($array[$key]);
+                            if($key==$ii)unset($array[$key]);
+                            if($key==$iii)unset($array[$key]);
+                        }
+                        
+                        foreach ($array as $key => $value) {
+                            $zh2+=$value;
+                        }
+                        
+                        //echo $zh."|".$zh2."<br>";
+                        break;
+                    }
+                }
+                if($zh==0 || $zh%10==0) break;
+            }
+            if($zh==0 || $zh%10==0) break;
+        }
+        //echo "--".$zh."|".$zh2."<br>";
+        if($zh==0 || $zh%10==0){
+            if($zh2>10){
+                return "牛".($zh2-10);
+            }else if(($zh+$zh2)==0 || $zh2==10){
+                return "牛牛";
+            }else{
+                if($zh2==0){
+                    return '牛牛';
+                }else{
+                    return "牛".$zh2;
+                }
+            }
+        }else{
+            return "无牛";
+        }
+    }
+
+    if($type==9){//牛牛
+        $n1=$num[0]; //1
+        $n2=$num[1]; //1
+        $n3=$num[2]; //7
+        $n4=$num[3]; //4
+        $n5=$num[4]; //6
+        $array=$num;
+        $zh=0;
+        //$zh1=$n1+$n2+$n3+$n4+$n5;
+        $zh2=0;
+        for($i=0;$i<5;$i++){
+            //$i = 0;
+            $zh=-1;         
+            $j=$i+1;
+            for($ii=$j;$ii<5;$ii++){
+                // $ii = 1 ;
+                $jj=$ii+1;
+                $zh=-1; 
+                for($iii=$jj;$iii<5;$iii++){
+                    // $iii = 2;
+                    $zh=$array[$i]+$array[$ii]+$array[$iii];
+                    // $zh  = 10;
+                    
+                    if($zh==0 || $zh%10==0) {
+                        
+                        foreach ($array as $key => $value) {
+                            if($key==$i)unset($array[$key]);
+                            if($key==$ii)unset($array[$key]);
+                            if($key==$iii)unset($array[$key]);
+                        }
+                        
+                        foreach ($array as $key => $value) {
+                            $zh2+=$value;
+                        }
+                        
+                        //echo $zh."|".$zh2."<br>";
+                        break;
+                    }
+                }
+                if($zh==0 || $zh%10==0) break;
+            }
+            if($zh==0 || $zh%10==0) break;
+        }//echo "--".$zh."|".$zh2."<br>";
+        if($zh==0 || $zh%10==0){
+            if(($zh2-10)%2==0){
+                return "牛双";
+            }else if(($zh2-10)%2!=0){
+                return "牛单";
+            }else if(($zh+$zh2)==0 || $zh2==10){
+                return "牛双";
+            }
+        }else
+        {
+            return "无牛";
+        }
+        
+    }
+    
+    if($type==10){//牛牛
+        $n1=$num[0]; //1
+        $n2=$num[1]; //1
+        $n3=$num[2]; //7
+        $n4=$num[3]; //4
+        $n5=$num[4]; //6
+        $array=$num;
+        $zh=0;
+        //$zh1=$n1+$n2+$n3+$n4+$n5;
+        $zh2=0;
+        for($i=0;$i<5;$i++){
+            //$i = 0;
+            $zh=-1;         
+            $j=$i+1;
+            for($ii=$j;$ii<5;$ii++){
+                // $ii = 1 ;
+                $jj=$ii+1;
+                $zh=-1; 
+                for($iii=$jj;$iii<5;$iii++){
+                    // $iii = 2;
+                    $zh=$array[$i]+$array[$ii]+$array[$iii];
+                    // $zh  = 10;
+                    
+                    if($zh==0 || $zh%10==0) {
+                        
+                        foreach ($array as $key => $value) {
+                            if($key==$i)unset($array[$key]);
+                            if($key==$ii)unset($array[$key]);
+                            if($key==$iii)unset($array[$key]);
+                        }
+                        
+                        foreach ($array as $key => $value) {
+                            $zh2+=$value;
+                        }
+                        
+                        //echo $zh."|".$zh2."<br>";
+                        break;
+                    }
+                }
+                if($zh==0 || $zh%10==0) break;
+            }
+            if($zh==0 || $zh%10==0) break;
+        }//echo "--".$zh."|".$zh2."<br>";
+        if($zh==0 || $zh%10==0){
+            if($zh2>10 && ($zh2-10) > 5){
+                return "牛大";
+            }else if($zh2>10 && ($zh2-10) < 6){
+                return "牛小";
+            }else if(($zh+$zh2)==0 || $zh2==10){
+                return "牛大";
+            }else if($zh2<=10 && $zh2 > 5){
+                return "牛大";
+            }else if($zh2<=10 && $zh2 < 6){
+                return "牛小";
+            }
+
+        }else
+        {
+            return "无牛";
+        }
+        
+    }
+}
+//重庆时时彩单双
+function Ssc_Ds($ball){
+    if($ball%2==0){
+        return '双';
+    }else{
+        return '单';
+    }
+}
+//重庆时时彩大小
+function Ssc_Dx($ball){
+    if($ball>4){
+        return '大';
+    }else{
+        return '小';
+    }
+}
+
+//北京赛车PK拾开奖函数
+function Bjsc_Auto($num , $type){
+    $zh = $num[0]+$num[1];
+    if($type==1){
+        return $zh;
+    }
+    if($type==2){
+        if($zh==11){
+            return '和';
+        }elseif($zh>11){
+            return '大';
+        }else{
+            return '小';
+        }
+    }
+    if($type==3){
+        if($zh==11){
+            return '和';
+        }elseif($zh%2==0){
+            return '双';
+        }else{
+            return '单';
+        }
+    }
+    if($type==4){
+        if($num[0]==$num[9]){
+            return '和';
+        }elseif($num[0]>$num[9]){
+            return '龙';
+        }else{
+            return '虎';
+        }
+    }
+    if($type==5){
+        if($num[1]==$num[8]){
+            return '和';
+        }elseif($num[1]>$num[8]){
+            return '龙';
+        }else{
+            return '虎';
+        }
+    }
+    if($type==6){
+        if($num[2]==$num[7]){
+            return '和';
+        }elseif($num[2]>$num[7]){
+            return '龙';
+        }else{
+            return '虎';
+        }
+    }
+    if($type==7){
+        if($num[3]==$num[6]){
+            return '和';
+        }elseif($num[3]>$num[6]){
+            return '龙';
+        }else{
+            return '虎';
+        }
+    }
+    if($type==8){
+        if($num[4]==$num[5]){
+            return '和';
+        }elseif($num[4]>$num[5]){
+            return '龙';
+        }else{
+            return '虎';
+        }
+    }
+}
+
+//北京赛车PK拾单双
+function Bjsc_Ds($ball){
+    if($ball%2==0){
+        return '双';
+    }else{
+        return '单';
+    }
+}
+
+//北京赛车PK拾大小
+function Bjsc_Dx($ball){
+    if($ball>=6){
+        return '大';
+    }else{
+        return '小';
+    }
+}
+
 if (!function_exists('getXianEr')) {
     function getXianEr($type,$line,$memrow){
         $Bet_Trun=0;$BET_SO=0;$BET_SC=0;
@@ -157,18 +1049,28 @@ function show_voucher($line, $id, $web_system_data){
     $pmid=$web_system_data['PMID'];
         switch($line){
     case 1:
+    case 101:
         $show_voucher='OU'.($id+$ouid);
         break;
     case 2:
+    case 102:
+    case 56:
+    case 57:
+    case 58:
         $show_voucher='OU'.($id+$ouid);
         break;
     case 3:
+    case 103:
+    case 59:
+    case 60:
+    case 61:
         $show_voucher='OU'.($id+$ouid);
         break;
     case 4:
         $show_voucher='DT'.($id+$dtid);
-        break;  
+        break;
     case 5:
+    case 105:
         $show_voucher='DT'.($id+$dtid);
         break;
     case 6:
@@ -179,20 +1081,44 @@ function show_voucher($line, $id, $web_system_data){
         break;
     case 8:
         $show_voucher='PM'.($id+$pmid);
-        break;              
+        break;
     case 9:
+    case 50:
+    case 51:
+    case 52:
+    case 150:
+    case 151:
+    case 152:
+    case 156:
+    case 157:
+    case 158:
+    case 109:
         $show_voucher='OU'.($id+$ouid);
         break;
     case 10:
+    case 110:
+    case 53:
+    case 54:
+    case 55:
+    case 153:
+    case 154:
+    case 155:
+    case 159:
+    case 160:
+    case 161:
         $show_voucher='OU'.($id+$ouid);
         break;
     case 11:
+    case 111:
         $show_voucher='OU'.($id+$ouid);
         break;
     case 12:
+    case 112:
         $show_voucher='OU'.($id+$ouid);
         break;
     case 13:
+    case 113:
+    case 120:
         $show_voucher='OU'.($id+$ouid);
         break;
     case 14:
@@ -205,24 +1131,18 @@ function show_voucher($line, $id, $web_system_data){
         $show_voucher='DT'.($id+$dtid);
         break;
     case 19:
+    case 119:
         $show_voucher='OU'.($id+$ouid);
         break;
     case 20:
         $show_voucher='OU'.($id+$ouid);
         break;
     case 21:
+    case 121:
         $show_voucher='OU'.($id+$ouid);
         break;
     case 31:
-        $show_voucher='OU'.($id+$ouid);
-        break;
-    case 50:
-        $show_voucher='OU'.($id+$ouid);
-        break;
-    case 51:
-        $show_voucher='OU'.($id+$ouid);
-        break;
-    case 52:
+    case 131:
         $show_voucher='OU'.($id+$ouid);
         break;
     }

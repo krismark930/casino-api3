@@ -22,11 +22,20 @@ use App\Http\Controllers\Admin\DataManipulation\AdminDataAddController;
 use App\Http\Controllers\Admin\AdminDataController;
 use App\Http\Controllers\Admin\AdminRealWaggerController;
 
+use App\Http\Controllers\Admin\ThirdParty\SportScoreResultController;
+
 // API User Controllers
 use App\Http\Controllers\Api\User\BettingController;
 use App\Http\Controllers\Api\User\BKBettingController;
 use App\Http\Controllers\Api\User\UserMatchSportController;
 use App\Http\Controllers\Api\User\ResultController;
+use App\Http\Controllers\Api\User\KatanController;
+use App\Http\Controllers\Api\User\KablController;
+use App\Http\Controllers\Api\User\KakitheController;
+use App\Http\Controllers\Api\User\LotteryScheduleController;
+use App\Http\Controllers\Api\User\LotteryResultController;
+use App\Http\Controllers\Api\User\LotteryOddsController;
+use App\Http\Controllers\Api\User\LotterySaveController;
 
 // API Admin Controllers
 use App\Http\Controllers\Api\Admin\WebSystemDataController;
@@ -35,6 +44,43 @@ use App\Http\Controllers\Api\Admin\MatchSportController;
 use App\Http\Controllers\Api\Admin\MatchSportBKController;
 use App\Http\Controllers\Api\Admin\FTScoreController;
 use App\Http\Controllers\Api\Admin\BKScoreController;
+use App\Http\Controllers\Api\Admin\UserInfoController;
+use App\Http\Controllers\Api\Admin\KitheController;
+use App\Http\Controllers\Api\Admin\YakitheController;
+use App\Http\Controllers\Api\Admin\AdminServerController;
+use App\Http\Controllers\Api\Admin\AdminKablController;
+use App\Http\Controllers\Api\Admin\AdminKamemController;
+use App\Http\Controllers\Api\Admin\AdminKaguanController;
+use App\Http\Controllers\Api\Admin\AdminReportController;
+use App\Http\Controllers\Api\Admin\AdminQueryController;
+use App\Http\Controllers\Api\Admin\AdminRateSettingController;
+use App\Http\Controllers\Api\Admin\AdminAlwaysColorController;
+use App\Http\Controllers\Api\Admin\AdminSysconfigController;
+use App\Http\Controllers\Api\Admin\AdminLotteryuserconfigController;
+use App\Http\Controllers\Api\Admin\AdminLotteryResultB5Controller;
+use App\Http\Controllers\Api\Admin\AdminLotteryResultAZXY10Controller;
+use App\Http\Controllers\Api\Admin\AdminLotteryResultB3Controller;
+use App\Http\Controllers\Api\Admin\AdminLotteryResultBJKNController;
+use App\Http\Controllers\Api\Admin\AdminLotteryResultBJPKController;
+use App\Http\Controllers\Api\Admin\AdminLotteryResultCQSFController;
+use App\Http\Controllers\Api\Admin\AdminLotteryResultGD11Controller;
+use App\Http\Controllers\Api\Admin\AdminLotteryResultGDSFController;
+use App\Http\Controllers\Api\Admin\AdminLotteryResultGXSFController;
+use App\Http\Controllers\Api\Admin\AdminLotteryResultTJSFController;
+use App\Http\Controllers\Api\Admin\AdminLotteryResultXYFTController;
+use App\Http\Controllers\Api\Admin\AdminSixMarkSettingController;
+use App\Http\Controllers\Api\Admin\ThirdpartyLotteryResultController;
+use App\Http\Controllers\Api\Admin\AdminOddsB5Controller;
+use App\Http\Controllers\Api\Admin\AdminOddsAZXY10Controller;
+use App\Http\Controllers\Api\Admin\AdminOddsB3Controller;
+use App\Http\Controllers\Api\Admin\AdminOddsBJKNController;
+use App\Http\Controllers\Api\Admin\AdminOddsBJPKController;
+use App\Http\Controllers\Api\Admin\AdminOddsCQSFController;
+use App\Http\Controllers\Api\Admin\AdminOddsGD11Controller;
+use App\Http\Controllers\Api\Admin\AdminOddsGDSFController;
+use App\Http\Controllers\Api\Admin\AdminOddsGXSFController;
+use App\Http\Controllers\Api\Admin\AdminOddsTJSFController;
+use App\Http\Controllers\Api\Admin\AdminOddsXYFTController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +111,8 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
         Route::post('/ft-bet-history', [BettingController::class, 'getFTBetHistory']);
         // ft betting slip api
         Route::post('/ft-bet-slip', [BettingController::class, 'getFTBetSlip']);
+        // not calculated bet score api
+        Route::post('/not-bet-score', [BettingController::class, 'getNotBetScore']);
 
 
         // bk betting order today api
@@ -84,9 +132,102 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
         Route::get('/get-count', [UserMatchSportController::class, 'getCountSport']);
     });
 
-    Route::group(['prefix' => 'result', 'middleware' => 'CORS'], function ($router){
+    Route::group(['prefix' => 'result'], function ($router) {
         Route::post('/get_result_ft', [ResultController::class, 'getResultFT']);
         Route::post('/get_result_bk', [ResultController::class, 'getResultBK']);
+    });
+
+    // hong kong six mark
+
+    Route::group(['prefix' => 'ka-tan', 'middleware' => 'auth:api'], function ($router){
+        Route::post('/save', [KatanController::class, 'saveKatan']);
+        Route::post('/parlay/save', [KatanController::class, 'saveKatanParlay']);
+        Route::post('/even-code/save', [KatanController::class, 'saveKatanEven']);
+        Route::post('/compatible/save', [KatanController::class, 'saveKatanCompatible']);
+        Route::post('/zodaic-even/save', [KatanController::class, 'saveKatanZodiacEven']);
+        Route::post('/mantissa-even/save', [KatanController::class, 'saveKatanMantissaEven']);
+        Route::post('/miss-all/save', [KatanController::class, 'saveKatanMissAll']);
+        Route::post('/bet-result/main', [KatanController::class, 'getMainBetResult']);
+        Route::post('/bet-result/sub', [KatanController::class, 'getSubBetResult']);
+    });
+
+    Route::group(['prefix' => 'ka-bl'], function ($router){
+        Route::post('/get', [KablController::class, 'getKablData']);
+    });
+
+    Route::group(['prefix' => 'ka-kithe'], function ($router){
+        Route::post('/game-status', [KakitheController::class, 'getCurrentGameStatus']);
+        Route::post('/game-version', [KakitheController::class, 'getGameVersion']);
+        Route::post('/game-result', [KakitheController::class, 'getGameResult']);
+        Route::post('/birth-history', [KakitheController::class, 'getBirthHistory']);
+    });
+
+    // macao six mark
+
+    Route::group(['prefix' => 'macao-ka-tan', 'middleware' => 'auth:api'], function ($router){
+        Route::post('/save', [KatanController::class, 'saveMacaoKatan']);
+        Route::post('/parlay/save', [KatanController::class, 'saveMacaoKatanParlay']);
+        Route::post('/even-code/save', [KatanController::class, 'saveMacaoKatanEven']);
+        Route::post('/compatible/save', [KatanController::class, 'saveMacaoKatanCompatible']);
+        Route::post('/zodaic-even/save', [KatanController::class, 'saveMacaoKatanZodiacEven']);
+        Route::post('/mantissa-even/save', [KatanController::class, 'saveMacaoKatanMantissaEven']);
+        Route::post('/miss-all/save', [KatanController::class, 'saveMacaoKatanMissAll']);
+        Route::post('/bet-result/main', [KatanController::class, 'getMacaoMainBetResult']);
+        Route::post('/bet-result/sub', [KatanController::class, 'getMacaoSubBetResult']);
+    });
+
+    Route::group(['prefix' => 'macao-ka-bl'], function ($router){
+        Route::post('/get', [KablController::class, 'getMacaoKablData']);
+    });
+
+    Route::group(['prefix' => 'macao-ka-kithe'], function ($router){
+        Route::post('/game-status', [KakitheController::class, 'getMacaoCurrentGameStatus']);
+        Route::post('/game-version', [KakitheController::class, 'getMacaoGameVersion']);
+        Route::post('/game-result', [KakitheController::class, 'getMacaoGameResult']);
+        Route::post('/birth-history', [KakitheController::class, 'getMacaoBirthHistory']);
+    });
+
+    // always color
+
+    Route::group(['prefix' => 'lottery-schedule'], function ($router) {
+        Route::post('/b3', [LotteryScheduleController::class, 'getB3Schedule']);
+        Route::post('/b5', [LotteryScheduleController::class, 'getB5Schedule']);
+        Route::post('/gd11', [LotteryScheduleController::class, 'getGD11Schedule']);
+        Route::post('/azxy10', [LotteryScheduleController::class, 'getAZXY10Schedule']);
+        Route::post('/cqsf', [LotteryScheduleController::class, 'getCQSFSchedule']);
+        Route::post('/gdsf', [LotteryScheduleController::class, 'getGDSFSchedule']);
+        Route::post('/tjsf', [LotteryScheduleController::class, 'getTJSFSchedule']);
+        Route::post('/gxsf', [LotteryScheduleController::class, 'getGXSFSchedule']);
+        Route::post('/bjpk', [LotteryScheduleController::class, 'getBJPKSchedule']);
+        Route::post('/xyft', [LotteryScheduleController::class, 'getXYFTSchedule']);
+        Route::post('/status', [LotteryScheduleController::class, 'getLotteryStatus']);
+    });
+
+    Route::group(['prefix' => 'lottery-result'], function ($router) {
+        Route::post('/b5', [LotteryResultController::class, 'getB5Result']);
+        Route::post('/b3', [LotteryResultController::class, 'getB3Result']);
+        Route::post('/other', [LotteryResultController::class, 'getOtherResult']);
+        Route::post('/b5-birth-history', [LotteryResultController::class, 'getB5BirthHistory']);
+        Route::post('/b3-birth-history', [LotteryResultController::class, 'getB3BirthHistory']);
+        Route::post('/other-birth-history', [LotteryResultController::class, 'getOtherBirthHistory']);
+        Route::post('/total-bet-result', [LotteryResultController::class, 'getTotalBetResult']);
+    });
+
+    Route::group(['prefix' => 'lottery-result', 'middleware' => 'auth:api'], function ($router) {
+        Route::post('/total-bet', [LotteryResultController::class, 'getTotalBetResult']);
+        Route::post('/sub-bet', [LotteryResultController::class, 'getSubBetResult']);
+    });
+
+    Route::group(['prefix' => 'lottery-odds'], function ($router) {
+        Route::post('/b5', [LotteryOddsController::class, 'getB5Odds']);
+        Route::post('/b3', [LotteryOddsController::class, 'getB3Odds']);
+        Route::post('/other', [LotteryOddsController::class, 'getOtherOdds']);
+    });
+
+    Route::group(['prefix' => 'lottery-save', 'middleware' => 'auth:api'], function ($router) {
+        Route::post('/b5', [LotterySaveController::class, 'saveB5']);
+        Route::post('/b3', [LotterySaveController::class, 'saveB3']);
+        Route::post('/other', [LotterySaveController::class, 'saveOther']);
     });
 });
 
@@ -97,6 +238,315 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], func
         // get web_system_data api
         Route::get('/all', [WebSystemDataController::class, 'getWebSystemData']);
     });
+
+    Route::post('/user-info', [UserInfoController::class, 'getUserInfo']);
+    Route::post('/record', [UserInfoController::class, 'getRecord']);
+    Route::post('/record-ip', [UserInfoController::class, 'getRecordIP']);
+
+    // hongkong six mark
+
+    Route::group(['prefix' => 'ka-kithe'], function ($router) {
+        Route::post('/all', [KitheController::class, 'getKakitheAll']);
+        Route::post('/lottery-status', [KitheController::class, 'getLotteryStatus']);
+        Route::post('/game-result/save', [KitheController::class, 'saveGameResult']);
+        Route::post('/handicap/update', [KitheController::class, 'updateHandicap']);
+        Route::post('/best/update', [KitheController::class, 'updateBest']);
+        Route::post('/update', [KitheController::class, 'updateKakithe']);
+        Route::post('/status/update', [KitheController::class, 'updateKakitheStatus']);
+        Route::post('/delete', [KitheController::class, 'deleteKakithe']);
+        Route::post('/restore', [KitheController::class, 'restoreKakithe']);
+        Route::post('/edit', [KitheController::class, 'editKakithe']);
+        Route::post('/win', [KitheController::class, 'winKakithe']);
+    });
+
+    Route::group(['prefix' => 'ya-kithe'], function ($router) {
+        Route::post('/all', [YakitheController::class, 'getYakitheAll']);
+        Route::post('/item', [YakitheController::class, 'getYakitheItemById']);
+        Route::post('/update', [YakitheController::class, 'updateYakithe']);
+    });
+
+    Route::group(['prefix' => 'ka-bl'], function ($router) {
+        Route::post('/period', [AdminKablController::class, 'getPeriod']);
+        Route::post('/special', [AdminKablController::class, 'getSpecialCodeData']);
+        Route::post('/positive', [AdminKablController::class, 'getPositiveCodeData']);
+        Route::post('/positive16', [AdminKablController::class, 'getPositiveCode16Data']);
+        Route::post('/regular', [AdminKablController::class, 'getRegularCodeData']);
+        Route::post('/pass', [AdminKablController::class, 'getPassData']);
+        Route::post('/even-code', [AdminKablController::class, 'getEvenCodeData']);
+        Route::post('/one-xiao', [AdminKablController::class, 'getOneXiaoCodeData']);
+    });
+
+    Route::group(['prefix' => 'ka-mem'], function ($router) {
+        Route::post('/all', [AdminKamemController::class, 'getKamemAll']);
+        Route::post('/superior', [AdminKamemController::class, 'getKamemSuperior']);
+        Route::post('/status/update', [AdminKamemController::class, 'updateKamemStatus']);
+        Route::post('/guan/all', [AdminKamemController::class, 'getKaguanMember']);
+        Route::post('/add', [AdminKamemController::class, 'addKamem']);
+    });
+
+    Route::group(['prefix' => 'ka-dan'], function ($router) {
+        Route::post('/superior', [AdminKamemController::class, 'getKadanSuperior']);
+        Route::post('/add', [AdminKamemController::class, 'addKadan']);
+    });
+
+    Route::group(['prefix' => 'ka-zong'], function ($router) {
+        Route::post('/superior', [AdminKamemController::class, 'getKazongSuperior']);
+        Route::post('/add', [AdminKamemController::class, 'addKazong']);
+    });
+
+    Route::group(['prefix' => 'ka-guan'], function ($router) {
+        Route::post('/superior', [AdminKamemController::class, 'getKaguanSuperior']);
+        Route::post('/add', [AdminKamemController::class, 'addKaguan']);
+        Route::post('/all', [AdminKaguanController::class, 'getKaguanAll']);
+        Route::post('/status/update', [AdminKaguanController::class, 'updateKaguanStatus']);
+    });
+
+    Route::group(['prefix' => 'report'], function ($router) {
+        Route::post('/all', [AdminReportController::class, 'getAllReport']);
+        Route::post('/kaguan', [AdminReportController::class, 'getKaguanReport']);
+        Route::post('/kazong', [AdminReportController::class, 'getKazongReport']);
+        Route::post('/kadai', [AdminReportController::class, 'getKadaiReport']);
+        Route::post('/kauser', [AdminReportController::class, 'getKauserReport']);
+        Route::post('/total-bill', [AdminReportController::class, 'getTotalBill']);
+        Route::post('/sub-bill', [AdminReportController::class, 'getSubBill']);
+    });
+
+    Route::group(['prefix' => 'query'], function ($router) {
+        Route::post('/member', [AdminQueryController::class, 'getKaMember']);
+        Route::post('/main', [AdminQueryController::class, 'getKatanMainData']);
+        Route::post('/delete', [AdminQueryController::class, 'deleteKatan']);
+        Route::post('/update', [AdminQueryController::class, 'updateKatan']);
+    });
+
+    Route::group(['prefix' => 'rate-setting'], function ($router) {
+        Route::post('/special-code/get', [AdminRateSettingController::class, 'getSpecialCodeRate']);
+        Route::post('/positive1-6/get', [AdminRateSettingController::class, 'getPositive16Rate']);
+        Route::post('/consecutive-code/get', [AdminRateSettingController::class, 'getConsecutiveCodeRate']);
+        Route::post('/half-wave/get', [AdminRateSettingController::class, 'getHalfWaveRate']);
+        Route::post('/special/get', [AdminRateSettingController::class, 'getSpecialRate']);
+        Route::post('/one-xiao/get', [AdminRateSettingController::class, 'getOneXiaoRate']);
+        Route::post('/plus-update', [AdminRateSettingController::class, 'updateRatePlus']);
+        Route::post('/other-update', [AdminRateSettingController::class, 'upateRateOther']);
+        Route::post('/main-update', [AdminRateSettingController::class, 'upateRateMain']);
+        Route::post('/restore-odds', [AdminRateSettingController::class, 'restoreOdds']);
+    });
+
+    Route::group(['prefix' => 'six-mark'], function ($router) {
+        Route::post('/website-setting/get', [AdminSixMarkSettingController::class, 'getWebsiteSetting']);
+        Route::post('/website-setting/update', [AdminSixMarkSettingController::class, 'updateWebsiteSetting']);
+        Route::post('/odd-diff-setting/get', [AdminSixMarkSettingController::class, 'getOddDiffSetting']);
+        Route::post('/odd-diff-setting/update', [AdminSixMarkSettingController::class, 'updateOddDiffSetting']);
+        Route::post('/auto-precipitation/get', [AdminSixMarkSettingController::class, 'getAutoPrecipitation']);
+        Route::post('/auto-precipitation/update', [AdminSixMarkSettingController::class, 'updateAutoPrecipitation']);
+        Route::post('/single-quota/get', [AdminSixMarkSettingController::class, 'getSingleQuota']);
+        Route::post('/single-quota/update', [AdminSixMarkSettingController::class, 'updateSingleQuota']);
+        Route::post('/water-setting/get', [AdminSixMarkSettingController::class, 'getWaterSetting']);
+        Route::post('/water-setting/update', [AdminSixMarkSettingController::class, 'updateWatherSetting']);
+    });
+
+    // macao six mark
+
+    Route::group(['prefix' => 'macao-ka-kithe'], function ($router) {
+        Route::post('/all', [KitheController::class, 'getMacaoKakitheAll']);
+        Route::post('/lottery-status', [KitheController::class, 'getMacaoLotteryStatus']);
+        Route::post('/game-result/save', [KitheController::class, 'saveMacaoGameResult']);
+        Route::post('/handicap/update', [KitheController::class, 'updateMacaoHandicap']);
+        Route::post('/best/update', [KitheController::class, 'updateMacaoBest']);
+        Route::post('/update', [KitheController::class, 'updateMacaoKakithe']);
+        Route::post('/status/update', [KitheController::class, 'updateMacaoKakitheStatus']);
+        Route::post('/delete', [KitheController::class, 'deleteMacaoKakithe']);
+        Route::post('/restore', [KitheController::class, 'restoreMacaoKakithe']);
+        Route::post('/edit', [KitheController::class, 'editMacaoKakithe']);
+        Route::post('/win', [KitheController::class, 'winMacaoKakithe']);
+    });
+
+    Route::group(['prefix' => 'macao-ya-kithe'], function ($router) {
+        Route::post('/all', [YakitheController::class, 'getMacaoYakitheAll']);
+        Route::post('/item', [YakitheController::class, 'getMacaoYakitheItemById']);
+        Route::post('/update', [YakitheController::class, 'updateMacaoYakithe']);
+    });
+
+    Route::group(['prefix' => 'macao-ka-bl'], function ($router) {
+        Route::post('/period', [AdminKablController::class, 'getMacaoPeriod']);
+        Route::post('/special', [AdminKablController::class, 'getMacaoSpecialCodeData']);
+        Route::post('/positive', [AdminKablController::class, 'getMacaoPositiveCodeData']);
+        Route::post('/positive16', [AdminKablController::class, 'getMacaoPositiveCode16Data']);
+        Route::post('/regular', [AdminKablController::class, 'getMacaoRegularCodeData']);
+        Route::post('/pass', [AdminKablController::class, 'getMacaoPassData']);
+        Route::post('/even-code', [AdminKablController::class, 'getMacaoEvenCodeData']);
+        Route::post('/one-xiao', [AdminKablController::class, 'getMacaoOneXiaoCodeData']);
+    });
+
+    Route::group(['prefix' => 'macao-ka-mem'], function ($router) {
+        Route::post('/all', [AdminKamemController::class, 'getMacaoKamemAll']);
+        Route::post('/superior', [AdminKamemController::class, 'getMacaoKamemSuperior']);
+        Route::post('/status/update', [AdminKamemController::class, 'updateMacaoKamemStatus']);
+        Route::post('/guan/all', [AdminKamemController::class, 'getMacaoKaguanMember']);
+        Route::post('/add', [AdminKamemController::class, 'addMacaoKamem']);
+    });
+
+    Route::group(['prefix' => 'macao-ka-dan'], function ($router) {
+        Route::post('/superior', [AdminKamemController::class, 'getMacaoKadanSuperior']);
+        Route::post('/add', [AdminKamemController::class, 'addMacaoKadan']);
+    });
+
+    Route::group(['prefix' => 'macao-ka-zong'], function ($router) {
+        Route::post('/superior', [AdminKamemController::class, 'getMacaoKazongSuperior']);
+        Route::post('/add', [AdminKamemController::class, 'addMacaoKazong']);
+    });
+
+    Route::group(['prefix' => 'macao-ka-guan'], function ($router) {
+        Route::post('/superior', [AdminKamemController::class, 'getMacaoKaguanSuperior']);
+        Route::post('/add', [AdminKamemController::class, 'addMacaoKaguan']);
+        Route::post('/all', [AdminKaguanController::class, 'getMacaoKaguanAll']);
+        Route::post('/status/update', [AdminKaguanController::class, 'updateMacaoKaguanStatus']);
+    });
+
+    Route::group(['prefix' => 'macao-report'], function ($router) {
+        Route::post('/all', [AdminReportController::class, 'getMacaoAllReport']);
+        Route::post('/kaguan', [AdminReportController::class, 'getMacaoKaguanReport']);
+        Route::post('/kazong', [AdminReportController::class, 'getMacaoKazongReport']);
+        Route::post('/kadai', [AdminReportController::class, 'getMacaoKadaiReport']);
+        Route::post('/kauser', [AdminReportController::class, 'getMacaoKauserReport']);
+        Route::post('/total-bill', [AdminReportController::class, 'getMacaoTotalBill']);
+        Route::post('/sub-bill', [AdminReportController::class, 'getMacaoSubBill']);
+    });
+
+    Route::group(['prefix' => 'macao-query'], function ($router) {
+        Route::post('/member', [AdminQueryController::class, 'getMacaoKaMember']);
+        Route::post('/main', [AdminQueryController::class, 'getMacaoKatanMainData']);
+        Route::post('/delete', [AdminQueryController::class, 'deleteMacaoKatan']);
+        Route::post('/update', [AdminQueryController::class, 'updateMacaoKatan']);
+    });
+
+    Route::group(['prefix' => 'macao-rate-setting'], function ($router) {
+        Route::post('/special-code/get', [AdminRateSettingController::class, 'getMacaoSpecialCodeRate']);
+        Route::post('/positive1-6/get', [AdminRateSettingController::class, 'getMacaoPositive16Rate']);
+        Route::post('/consecutive-code/get', [AdminRateSettingController::class, 'getMacaoConsecutiveCodeRate']);
+        Route::post('/half-wave/get', [AdminRateSettingController::class, 'getMacaoHalfWaveRate']);
+        Route::post('/special/get', [AdminRateSettingController::class, 'getMacaoSpecialRate']);
+        Route::post('/one-xiao/get', [AdminRateSettingController::class, 'getMacaoOneXiaoRate']);
+        Route::post('/plus-update', [AdminRateSettingController::class, 'updateMacaoRatePlus']);
+        Route::post('/other-update', [AdminRateSettingController::class, 'upateMacaoRateOther']);
+        Route::post('/main-update', [AdminRateSettingController::class, 'upateMacaoRateMain']);
+        Route::post('/restore-odds', [AdminRateSettingController::class, 'restoreMacaoOdds']);
+    });
+
+    Route::group(['prefix' => 'macao-six-mark'], function ($router) {
+        Route::post('/website-setting/get', [AdminSixMarkSettingController::class, 'getMacaoWebsiteSetting']);
+        Route::post('/website-setting/update', [AdminSixMarkSettingController::class, 'updateMacaoWebsiteSetting']);
+        Route::post('/odd-diff-setting/get', [AdminSixMarkSettingController::class, 'getMacaoOddDiffSetting']);
+        Route::post('/odd-diff-setting/update', [AdminSixMarkSettingController::class, 'updateMacaoOddDiffSetting']);
+        Route::post('/auto-precipitation/get', [AdminSixMarkSettingController::class, 'getMacaoAutoPrecipitation']);
+        Route::post('/auto-precipitation/update', [AdminSixMarkSettingController::class, 'updateMacaoAutoPrecipitation']);
+        Route::post('/single-quota/get', [AdminSixMarkSettingController::class, 'getMacaoSingleQuota']);
+        Route::post('/single-quota/update', [AdminSixMarkSettingController::class, 'updateMacaoSingleQuota']);
+        Route::post('/water-setting/get', [AdminSixMarkSettingController::class, 'getMacaoWaterSetting']);
+        Route::post('/water-setting/update', [AdminSixMarkSettingController::class, 'updateMacaoWatherSetting']);
+    });
+
+    // always color lottery
+
+
+    Route::group(['prefix' => 'always-color'], function ($router) {
+        Route::post('/order-list/get', [AdminAlwaysColorController::class, 'getOrderList']);
+        Route::post('/order-cancel/all', [AdminAlwaysColorController::class, 'getOrderCancelAll']);
+        Route::post('/lottery-history-all', [AdminAlwaysColorController::class, 'getLotteryHistory']); 
+        Route::post('/user-lottery', [AdminAlwaysColorController::class, 'getUserLottery']);
+        Route::post('/detail-lottery', [AdminAlwaysColorController::class, 'getDetailLottery']);
+    });
+
+    Route::group(['prefix' => 'sys-config'], function ($router) {
+        Route::post('/lottery', [AdminSysconfigController::class, 'getLotteryConfig']);
+        Route::post('/lottery/update', [AdminSysconfigController::class, 'updateLotteryConfig']);
+    });
+
+    Route::group(['prefix' => 'user-config'], function ($router) {
+        Route::post('/lottery/all', [AdminLotteryuserconfigController::class, 'getLotteryUserConfig']);
+        Route::post('/lottery/item', [AdminLotteryuserconfigController::class, 'getLotteryUserConfigItem']);
+        Route::post('/lottery/update', [AdminLotteryuserconfigController::class, 'updateLotteryConfigItem']);
+        Route::post('/discount', [AdminLotteryuserconfigController::class, 'startDiscount']);
+    });
+
+    Route::group(['prefix' => 'lottery-result'], function ($router) {
+        Route::group(['prefix' => 'b5'], function ($router) {
+            Route::post('/all', [AdminLotteryResultB5Controller::class, 'getLotteryResult']);
+            Route::post('/get', [AdminLotteryResultB5Controller::class, 'getLotteryResultById']);
+            Route::post('/save', [AdminLotteryResultB5Controller::class, 'saveLotteryResult']);
+            Route::post('/checkout', [AdminLotteryResultB5Controller::class, 'checkoutResult']);
+        });
+        Route::group(['prefix' => 'azxy10'], function ($router) {
+            Route::post('/all', [AdminLotteryResultAZXY10Controller::class, 'getLotteryResult']);
+            Route::post('/get', [AdminLotteryResultAZXY10Controller::class, 'getLotteryResultById']);
+            Route::post('/save', [AdminLotteryResultAZXY10Controller::class, 'saveLotteryResult']);
+            Route::post('/checkout', [AdminLotteryResultAZXY10Controller::class, 'checkoutResult']);
+        });
+        Route::group(['prefix' => 'b3'], function ($router) {
+            Route::post('/all', [AdminLotteryResultB3Controller::class, 'getLotteryResult']);
+            Route::post('/get', [AdminLotteryResultB3Controller::class, 'getLotteryResultById']);
+            Route::post('/save', [AdminLotteryResultB3Controller::class, 'saveLotteryResult']);
+            Route::post('/checkout', [AdminLotteryResultB3Controller::class, 'checkoutResult']);
+        });
+        Route::group(['prefix' => 'bjkn'], function ($router) {
+            Route::post('/all', [AdminLotteryResultBJKNController::class, 'getLotteryResult']);
+            Route::post('/get', [AdminLotteryResultBJKNController::class, 'getLotteryResultById']);
+            Route::post('/save', [AdminLotteryResultBJKNController::class, 'saveLotteryResult']);
+            Route::post('/checkout', [AdminLotteryResultBJKNController::class, 'checkoutResult']);
+        });
+        Route::group(['prefix' => 'bjpk'], function ($router) {
+            Route::post('/all', [AdminLotteryResultBJPKController::class, 'getLotteryResult']);
+            Route::post('/get', [AdminLotteryResultBJPKController::class, 'getLotteryResultById']);
+            Route::post('/save', [AdminLotteryResultBJPKController::class, 'saveLotteryResult']);
+            Route::post('/checkout', [AdminLotteryResultBJPKController::class, 'checkoutResult']);
+        });
+        Route::group(['prefix' => 'cqsf'], function ($router) {
+            Route::post('/all', [AdminLotteryResultCQSFController::class, 'getLotteryResult']);
+            Route::post('/get', [AdminLotteryResultCQSFController::class, 'getLotteryResultById']);
+            Route::post('/save', [AdminLotteryResultCQSFController::class, 'saveLotteryResult']);
+            Route::post('/checkout', [AdminLotteryResultCQSFController::class, 'checkoutResult']);
+        });
+        Route::group(['prefix' => 'gd11'], function ($router) {
+            Route::post('/all', [AdminLotteryResultGD11Controller::class, 'getLotteryResult']);
+            Route::post('/get', [AdminLotteryResultGD11Controller::class, 'getLotteryResultById']);
+            Route::post('/save', [AdminLotteryResultGD11Controller::class, 'saveLotteryResult']);
+            Route::post('/checkout', [AdminLotteryResultGD11Controller::class, 'checkoutResult']);
+        });
+        Route::group(['prefix' => 'gdsf'], function ($router) {
+            Route::post('/all', [AdminLotteryResultGDSFController::class, 'getLotteryResult']);
+            Route::post('/get', [AdminLotteryResultGDSFController::class, 'getLotteryResultById']);
+            Route::post('/save', [AdminLotteryResultGDSFController::class, 'saveLotteryResult']);
+            Route::post('/checkout', [AdminLotteryResultGDSFController::class, 'checkoutResult']);
+        });
+        Route::group(['prefix' => 'gxsf'], function ($router) {
+            Route::post('/all', [AdminLotteryResultGXSFController::class, 'getLotteryResult']);
+            Route::post('/get', [AdminLotteryResultGXSFController::class, 'getLotteryResultById']);
+            Route::post('/save', [AdminLotteryResultGXSFController::class, 'saveLotteryResult']);
+            Route::post('/checkout', [AdminLotteryResultGXSFController::class, 'checkoutResult']);
+        });
+        Route::group(['prefix' => 'tjsf'], function ($router) {
+            Route::post('/all', [AdminLotteryResultTJSFController::class, 'getLotteryResult']);
+            Route::post('/get', [AdminLotteryResultTJSFController::class, 'getLotteryResultById']);
+            Route::post('/save', [AdminLotteryResultTJSFController::class, 'saveLotteryResult']);
+            Route::post('/checkout', [AdminLotteryResultTJSFController::class, 'checkoutResult']);
+        });
+        Route::group(['prefix' => 'xyft'], function ($router) {
+            Route::post('/all', [AdminLotteryResultXYFTController::class, 'getLotteryResult']);
+            Route::post('/get', [AdminLotteryResultXYFTController::class, 'getLotteryResultById']);
+            Route::post('/save', [AdminLotteryResultXYFTController::class, 'saveLotteryResult']);
+            Route::post('/checkout', [AdminLotteryResultXYFTController::class, 'checkoutResult']);
+        });
+    });
+
+    Route::group(['prefix' => 'odds-setting'], function ($router) {
+        Route::group(['prefix' => 'b5'], function ($router) {
+            Route::post('/get', [AdminOddsB5Controller::class, 'getOdds']);
+            Route::post('/save', [AdminOddsB5Controller::class, 'saveOdds']);
+        });
+        Route::group(['prefix' => 'gdsf'], function ($router) {
+            Route::post('/get', [AdminOddsGDSFController::class, 'getOdds']);
+            Route::post('/save', [AdminOddsGDSFController::class, 'saveOdds']);
+        });
+    });
 });
 
 // routes for third party
@@ -106,6 +556,9 @@ Route::group(['prefix' => 'third-party'], function ($router){
         // get web_system_data api
         Route::get('/all', [WebSystemDataController::class, 'getWebSystemData']);
         Route::put('/{id}', [WebSystemDataController::class, 'updateWebSystemData']);
+    });
+    Route::group(['prefix' => 'server'], function ($router) {
+        Route::get('/update', [AdminServerController::class, 'updateServer']);
     });
     // match_crown routes
     Route::group(['prefix' => 'match-crown'], function ($router) {
@@ -124,8 +577,6 @@ Route::group(['prefix' => 'third-party'], function ($router){
         Route::post('/save-ft-inplay', [MatchSportController::class, 'saveFTDefaultInplay']);
         // save match sport data by showtype "parlay"
         Route::post('/save-ft-parlay', [MatchSportController::class, 'saveFTDefaultParlay']);
-        // save match sport data by HDP in OBT
-        Route::post('/ft-hdp-obt', [MatchSportController::class, 'saveFT_HDP_OBT']);
         // save match sport data by CORNER in OBT
         Route::post('/ft-corner-obt', [MatchSportController::class, 'saveFT_CORNER_INPLAY']);
         // save match sport correct score data by showtype "live"
@@ -147,16 +598,51 @@ Route::group(['prefix' => 'third-party'], function ($router){
     });
     // score routes
     Route::group(['prefix' => 'score'], function ($router) {
+
         // save ft score api
         Route::post('/ft-result', [FTScoreController::class, 'saveFTScore']);
         // save bt score api
         Route::post('/bk-result', [BKScoreController::class, 'saveBKScore']);
+        // third party score data
+        Route::post('/total-result', [SportScoreResultController::class, 'getScoreResult']);
 
         Route::post('/auto_ft_check_score', [SportController::class, 'autoFTCheckScore']);
         Route::post('/auto_bk_check_score', [SportController::class, 'autoBKCheckScore']);
-        Route::post('/auto_paylay_ft_check_score', [SportController::class, 'autoFTParlayCheckScore']);
-        Route::post('/auto_paylay_bk_check_score', [SportController::class, 'autoBKParlayCheckScore']);
+        Route::post('/auto_parlay_ft_check_score', [SportController::class, 'autoFTParlayCheckScore']);
+        Route::post('/auto_parlay_bk_check_score', [SportController::class, 'autoBKParlayCheckScore']);
     });
+    // lottery result routes
+    Route::group(['prefix' => 'lottery-result'], function ($router) {
+        // lottery result api
+        Route::post('/all', [ThirdpartyLotteryResultController::class, 'getLotteryResult']);
+        Route::post('/tcpl3', [ThirdpartyLotteryResultController::class, 'getLotteryResultTCPL3']);
+        Route::post('/fc3d', [ThirdpartyLotteryResultController::class, 'getLotteryResultFC3D']);
+        Route::post('/azxy10', [ThirdpartyLotteryResultController::class, 'checkoutAZXY10']);
+        Route::post('/azxy5', [ThirdpartyLotteryResultController::class, 'checkoutAZXY5']);
+        Route::post('/bjkn', [ThirdpartyLotteryResultController::class, 'checkoutBJKN']);
+        Route::post('/bjpk', [ThirdpartyLotteryResultController::class, 'checkoutBJPK10']);
+        Route::post('/cqsf', [ThirdpartyLotteryResultController::class, 'checkoutCQSF']);
+        Route::post('/cq', [ThirdpartyLotteryResultController::class, 'checkoutCQ']);
+        Route::post('/d3', [ThirdpartyLotteryResultController::class, 'checkoutD3']);
+        Route::post('/ffc5', [ThirdpartyLotteryResultController::class, 'checkoutFFC5']);
+        Route::post('/gd11', [ThirdpartyLotteryResultController::class, 'checkoutGD11X5']);
+        Route::post('/gdsf', [ThirdpartyLotteryResultController::class, 'checkoutGDSF']);
+        Route::post('/gxsf', [ThirdpartyLotteryResultController::class, 'checkoutGXSF']);
+        Route::post('/p3', [ThirdpartyLotteryResultController::class, 'checkoutP3']);
+        Route::post('/t3', [ThirdpartyLotteryResultController::class, 'checkoutT3']);
+        Route::post('/tjsf', [ThirdpartyLotteryResultController::class, 'checkoutTJSF']);
+        Route::post('/tj', [ThirdpartyLotteryResultController::class, 'checkoutTJ']);
+        Route::post('/twssc', [ThirdpartyLotteryResultController::class, 'checkoutTWSSC']);
+        Route::post('/txssc', [ThirdpartyLotteryResultController::class, 'checkoutTXSSC']);
+        Route::post('/jx', [ThirdpartyLotteryResultController::class, 'checkoutXJSSC']);
+        Route::post('/xyft', [ThirdpartyLotteryResultController::class, 'checkoutXYFT']);
+    });
+
+    Route::post('/lottery-status', [KitheController::class, 'getLotteryStatus']);
+    Route::post('/handicap/update', [KitheController::class, 'updateHandicap']);
+
+    Route::post('/macao-lottery-status', [KitheController::class, 'getMacaoLotteryStatus']);
+    Route::post('/macao-handicap/update', [KitheController::class, 'updateMacaoHandicap']);
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
@@ -169,7 +655,7 @@ Route::middleware('auth:api')->get('/deposit', function (Request $request) {
 Route::group(['prefix' => 'users', 'middleware' => 'CORS'], function ($router) {
     Route::post('/register', [UserController::class, 'register'])->name('register.user');
     Route::post('/login', [UserController::class, 'login'])->name('login.user');
-    Route::get('/view-profile', [UserController::class, 'viewProfile'])->name('profile.user');
+    Route::post('/view-profile', [UserController::class, 'viewProfile'])->name('profile.user');
     Route::get('/logout', [UserController::class, 'logout'])->name('logout.user');
 });
 
@@ -193,11 +679,7 @@ Route::group(['prefix' => 'sport', 'middleware' => ['CORS', 'auth:admin']], func
 
     Route::post('/bet-event', [SportController::class, 'betEvent']);
 
-    // Route::post('/add_temp', [SportController::class, 'addTemp']);
-    // Route::get('/delete_temps', [SportController::class, 'deleteTemps']);
-    // Route::get('/get_temps', [SportController::class, 'getTemps']);
-    // Route::post('/edit_temp', [SportController::class, 'editTemp']);
-    // Route::post('/get_betting_records', [SportController::class, 'get_betting_records']);
+    Route::post('/update-get-score', [SportController::class, 'updateGetScore']);
 });
 
 /* Admin routes. */
@@ -270,6 +752,7 @@ Route::group(['prefix' => 'championbetting', 'middleware' => ['CORS', 'auth:admi
     Route::get('/cancel_event', [AdminChampionBettingController::class, 'handleCancelEvent'])->name('admin.championbetting.handleCancelEvent');
     Route::get('/resume_event', [AdminChampionBettingController::class, 'handleResumeEvent'])->name('admin.championbetting.handleResumeEvent');
     Route::get('/balance_event', [AdminChampionBettingController::class, 'handleBalanceEvent'])->name('admin.championbetting.handleBalanceEvent');
+    Route::post('/delete-event', [AdminChampionBettingController::class, 'handleDeleteEvent']);
 });
 
 Route::group(['prefix' => 'alliancerestriction', 'middleware' => ['CORS', 'auth:admin']], function ($router){
@@ -313,7 +796,15 @@ Route::group(['prefix' => 'data-refresh', 'middleware' => ['CORS', 'auth:admin']
 });
 
 Route::group(['prefix' => 'real_wagger', 'middleware' => ['CORS', 'auth:admin']], function ($router){
+    Route::get('/get_league_list', [AdminRealWaggerController::class, 'getLeagueList'])->name('admin.realwagger.getLeagueList');
     Route::get('/get_sdata', [AdminRealWaggerController::class, 'getSTableData'])->name('admin.realwagger.getSTableData');
     Route::get('/get_hdata', [AdminRealWaggerController::class, 'getHTableData'])->name('admin.realwagger.getHTableData');
-    Route::get('/get_league_list', [AdminRealWaggerController::class, 'getLeagueList'])->name('admin.realwagger.getLeagueList');
+    Route::get('/get_rbdata', [AdminRealWaggerController::class, 'getRBTableData'])->name('admin.realwagger.getRBTableData');
+    Route::get('/get_pddata', [AdminRealWaggerController::class, 'getPDTableData'])->name('admin.realwagger.getPDTableData');
+    Route::get('/get_hpddata', [AdminRealWaggerController::class, 'getHPDTableData'])->name('admin.realwagger.getHPDTableData');
+    Route::get('/get_tdata', [AdminRealWaggerController::class, 'getTTableData'])->name('admin.realwagger.getTTableData');
+    Route::get('/get_fdata', [AdminRealWaggerController::class, 'getFTableData'])->name('admin.realwagger.getFTableData');
+    Route::get('/get_pdata', [AdminRealWaggerController::class, 'getPTableData'])->name('admin.realwagger.getPTableData');
+    Route::get('/get_pldata', [AdminRealWaggerController::class, 'getPLTableData'])->name('admin.realwagger.getPLTableData');
+    Route::get('/get_result_data', [AdminRealWaggerController::class, 'getResultTableData'])->name('admin.realwagger.getResultTableData');
 });

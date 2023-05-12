@@ -9,6 +9,8 @@ use App\Models\Web\System;
 use App\Utils\Utils;
 use App\Models\Sport;
 use Exception;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 
 class AdminLiveBettingController extends Controller
@@ -33,18 +35,34 @@ class AdminLiveBettingController extends Controller
       ]);
 
       // Web Report Data
+      $page = $request['page'];
       $m_date = $request['m_date'] ?? date('Y-m-d');
       $sort = $request['sort'] ?? 'BetTime';
       $active = $request['match'];
       $m_name = $request['memname'];
-      // $mids = Report::select('MID')->where('M_Date', $m_date)->get();
+    
+    $data = array();
+    
+    $mids = Report::where('M_Date', $m_date);
 
-      $data = array();
+    if ($active == 1) {
+        $mids = $mids->where("Gtype", "FT")->orWhere("Ptype", "FT");
+    } else if ($active == 2) {
+        $mids = $mids->where("Gtype", "BK")->orWhere("Ptype", "BK");
+    }
 
-      $mids = Report::where('M_Date', $m_date)->where(function($query) {
+      $mids = $mids->where(function($query) {
         $query->where('LineType', 9)
         ->orWhere('LineType', 19)
         ->orWhere('LineType', 10)
+        ->orWhere('LineType', 5)
+        ->orWhere('LineType', 15)
+        ->orWhere('LineType', 50)
+        ->orWhere('LineType', 51)
+        ->orWhere('LineType', 52)
+        ->orWhere('LineType', 53)
+        ->orWhere('LineType', 54)
+        ->orWhere('LineType', 55)
         ->orWhere('LineType', 20)
         ->orWhere('LineType', 21)
         ->orWhere('LineType', 31);
@@ -62,48 +80,166 @@ class AdminLiveBettingController extends Controller
         $mids = $mids->where('M_Name', trim($m_name));
       }
       
-      $mids = $mids->orderBy($sort, "desc")->get();
+      $totalCount = $mids->count();
+      $mids = $mids->offset($page * 20 - 20)->limit(20)->orderBy($sort, "desc")->get();
       foreach($mids as $row){
-        
-        
-        if($row['Cancel'] == 1){
-          $operate = '<font color=red><b>恢复</b></font></a>';
-        }else {
-          $operate = '<font color=blue><b>正常</b></font>';
+
+        $time = strtotime($row['BetTime']);
+        $times = date("Y-m-d", $time).'<br>'.date("H:i:s", $time);        
+
+        if($row['Danger']==1 or $row['Cancel']==1) {
+            $bettimes='<font color="#FFFFFF"><span style="background-color: #FF0000">'.$times.'</span></font>';
+        }else{
+            $bettimes=$times;
         }
-        
-        // Web Sport Data
-        $items = Sport::select('MID')->get();
-        
-        //  state
-        if($row['Active'] == 0){
-          $state = '结算';
-        }else if($row['Active'] == 1){
-          $state = '<font color=red>未结算</font>';
+        if ($row['Cancel']==1) {
+            $betscore='<S><font color=#cc0000>'.number_format($row['BetScore']).'</font></S>';
+        } else {
+            $betscore=number_format($row['BetScore']);
+        }
+
+        if ($row['Cancel'] == 1) {
+            $operate = '<font color=red><b>已注销</b></font></a>';
+        } else {
+            $operate = '<font color=blue><b>正常</b></font>';
+        }
+
+        if ($row["Cancel"] == 1) {
+
+            switch($row['Confirmed']) {
+                case 0:
+                    $M_Result = Score20;
+                    break;
+                case -1:
+                    $M_Result= Score21;
+                    break;
+                case -2:
+                    $M_Result= Score22;
+                    break;
+                case -3:
+                    $M_Result= Score23;
+                    break;
+                case -4:
+                    $M_Result= Score24;
+                    break;
+                case -5:
+                    $M_Result= Score25;
+                    break;
+                case -6:
+                    $M_Result= Score26;
+                    break;
+                case -7:
+                    $M_Result= Score27;
+                    break;
+                case -8:
+                    $M_Result= Score28;
+                    break;
+                case -9:
+                    $M_Result= Score29;
+                    break;
+                case -10:
+                    $M_Result= Score30;
+                    break;
+                case -11:
+                    $M_Result= Score31;
+                    break;
+                case -12:
+                    $M_Result= Score32;
+                    break;
+                case -13:
+                    $M_Result= Score33;
+                    break;
+                case -14:
+                    $M_Result= Score34;
+                    break;
+                case -15:
+                    $M_Result= Score35;
+                    break;
+                case -16:
+                    $M_Result= Score36;
+                    break;
+                case -17:
+                    $M_Result= Score37;
+                    break;
+                case -18:
+                    $M_Result= Score38;
+                    break;
+                case -19:
+                    $M_Result= Score39;
+                    break;
+                case -20:
+                    $M_Result= Score40;
+                    break;
+                case -21:
+                    $M_Result= Score41;
+                    break;
+            }
+
+            $M_Result = "<font color=red>".$M_Result."</font>";
+
+        } else {
+
+            $M_Result = "<font>".$row["M_Result"]."</font>";
+        }
+
+        if ($row["Checked"] == 0) {
+
+            if($row['LineType']==8){
+                $state="<font color=red>未结算</font>";
+            }elseif($row['LineType']==16){
+                $state="<font color=blue>结算注单</font>";
+            }else{
+                $state="<font color=blue>结算注单</font>";
+                $sport = Sport::where("MID", $row["MID"])->first("isSub");
+                if($sport['isSub'] ==1 ) $state.='<br><font color=red>副盘</font>';
+            }
+
+        } else {                    
+            $state = '<font color=red>未结算</font>';
+            if($row['TurnRate']==0){
+                if($row['isFS']==1){
+                    $state="<font color='blue'>已结算<br>已返水</font>";
+                }else{
+                    $state="<font color='red'>已结算<br>未返水</font>";
+                }
+            }else{
+                $state="<font color='blue'>已结算</font>";
+            }
         }
         
         $temp = array(
           'id' => $row->ID,
-          'betTime' => $row['BetTime'],
+          'OpenType' => $row['OpenType'],
+            'OrderID' => $row['OrderID'],
+          'TurnRate' => $row['TurnRate'],
+          'betTime' => $bettimes,
           'userName' => $row['M_Name'],
-          'gameType' => $row['BetType'],
+          'gameType' => $row["Gtype"] == "FT" ? "足球".$row['BetType'] : "篮球".$row['BetType'],
           'content' => $row['Middle'],
           'state' => $state,
-        'betAmount' => $row['BetScore'],
-        'winableAmount' => $row['Gwin'],
-        'result' => '0',
-        'operate' => $operate,
-        'function' => 'function',
-      );
-      array_push($data, $temp);
-    }
-    return $data;
+          'betAmount' => $betscore,
+          'winableAmount' => $row['Gwin'],
+          'result' => $M_Result,
+          'operate' => $operate,
+          'function' => 'function',
+        );
+        array_push($data, $temp);
+      }
+
+        $response['data'] = $data;
+        $response['totalCount'] = $totalCount;
+        $response['message'] = 'Live Betting Data updated successfully';
+        $response['success'] = TRUE;
+        $response['status'] = STATUS_OK;
+
     }catch (Exception $e) {
       $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
       // $response['message'] = "ok";
       Log::error($e->getTraceAsString());
       $response['status'] = STATUS_GENERAL_ERROR;
     }
+
+    return response()->json($response, $response['status']);
   }
 
   public function getFunctionItems() {
@@ -156,7 +292,8 @@ class AdminLiveBettingController extends Controller
         'T_Result' => '',
         'Cancel' => '0',
         'Confirmed' => '0',
-        'danger' => '0'
+        'danger' => '0',
+        'Checked' => '0'
       ]);
       return 'success';
     } catch(Exception $e) {
