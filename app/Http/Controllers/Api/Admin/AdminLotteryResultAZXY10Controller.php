@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\LotteryResultAZXY10;
 use App\Models\OrderLottery;
 use App\Models\OrderLotterySub;
+use App\Models\Web\MoneyLog;
 use Carbon\Carbon;
 use App\Utils\Utils;
 
@@ -262,7 +263,6 @@ class AdminLotteryResultAZXY10Controller extends Controller
                         $userid = $order['user_id'];
                         $datereg = $order['order_sub_num'];
                         $resultMoney = User::find($userid);
-                        $resultMoney = get_object_vars($resultMoney);
                         $assets = round($resultMoney['Money'],2);
                         OrderLottery::where("id", $order["id"])->update(["status" => 0]);
                         OrderLotterySub::where("id", $order["sub_id"])
@@ -290,7 +290,7 @@ class AdminLotteryResultAZXY10Controller extends Controller
                                 $datetime = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
 
                                 $new_log = new MoneyLog;
-                                $new_log->user_id = $user_id;
+                                $new_log->user_id = $userid;
                                 $new_log->order_num = $datereg;
                                 $new_log->about = $lottery_name;
                                 $new_log->update_time = $datetime;
@@ -359,39 +359,43 @@ class AdminLotteryResultAZXY10Controller extends Controller
                 $betInfo = explode(":",$order["number"]);
                 $rTypeName = $order["rtype_str"];
                 $quick_type = $order["quick_type"];
-                if($betInfo[1]=="LOCATE"){//每球定位
-                    $selectBall = $betInfo[2];
-                    $betContent = $betInfo[0];
-                }elseif($betInfo[2]=="DRAGON" || $betInfo[2]=="TIGER"){//龙虎
-                    $selectBall = $betInfo[0];
-                    $betContent = $betInfo[0].":".$betInfo[1].":".$betInfo[2];
-                }elseif($betInfo[0].":".$betInfo[1].":".$betInfo[2]=="SUM:FIRST:2"){//冠亚军和
-                    $selectBall = "冠亚军和";
-                    if(count($betInfo)==4){
-                        $betContent = $betInfo[3];
-                    }else{
-                        $zhArray        = array();
-                        if($betInfo[4]=="11"){
-                            $zhArray[] = $betInfo[4];
-                        }else{
-                            $zhArray[] = $betInfo[4];
-                            $zhArray[] = $betInfo[5];
-                            $zhArray[] = $betInfo[6];
-                            $zhArray[] = $betInfo[7];
-                        }
-                    }
-                }elseif($rTypeName=="快速-澳洲幸运10"){
-                    $selectBall = "quick";
-                }else{//每球 其他，如龙虎、大小、单双
-                    $selectBall = $betInfo[0];
-                    $betContent = $betInfo[1];
-                }
+                // if(count($betInfo) > 1 && $betInfo[1]=="LOCATE"){//每球定位
+                //     $selectBall = $betInfo[2];
+                //     $betContent = $betInfo[0];
+                // }elseif(count($betInfo) > 2 && ($betInfo[2]=="DRAGON" || $betInfo[2]=="TIGER"){//龙虎
+                //     $selectBall = $betInfo[0];
+                //     $betContent = $betInfo[0].":".$betInfo[1].":".$betInfo[2];
+                // }elseif(count($betInfo) > 2 && $betInfo[0].":".$betInfo[1].":".$betInfo[2]=="SUM:FIRST:2"){//冠亚军和
+                //     $selectBall = "冠亚军和";
+                //     if(count($betInfo)==4){
+                //         $betContent = $betInfo[3];
+                //     }else{
+                //         $zhArray        = array();
+                //         if($betInfo[4]=="11"){
+                //             $zhArray[] = $betInfo[4];
+                //         }else{
+                //             $zhArray[] = $betInfo[4];
+                //             $zhArray[] = $betInfo[5];
+                //             $zhArray[] = $betInfo[6];
+                //             $zhArray[] = $betInfo[7];
+                //         }
+                //     }
+                // }elseif($rTypeName=="快速-澳洲幸运10"){
+                //     $selectBall = "quick";
+                // }else{//每球 其他，如龙虎、大小、单双
+                //     $selectBall = $betInfo[0];
+                //     $betContent = $betInfo[1];
+                // }
+
+
+                $selectBall = "quick";
+                $betContent = "";
+                $isWinMulti = false;
 
                 $userid = $order['user_id'];
                 $datereg = $order['order_sub_num'];
                 $resultMoney = User::find($userid);
-                $resultMoney = get_object_vars($resultMoney);
-                $assets =  round($resultMoney['money'],2);
+                $assets =  round($resultMoney['Money'],2);
 
                 if(in_array($selectBall,array("1","2","3","4","5","6","7","8","9","10"))){
                     //各种玩法，算法
@@ -586,14 +590,14 @@ class AdminLotteryResultAZXY10Controller extends Controller
 
                 if ($isWinMulti) {
                     OrderLotterySub::where("id", $order["sub_id"])
-                            ->update(["win" => $win_money]);
+                            ->update(["win" => $bet_money_total]);
                 }
 
                 if($win_sign == "1" ||$win_sign == "2" || ($win_sign == "0" && $order['fs']>0)){
 
                     $q1 = User::where("id", $userid)
                         ->where("Pay_Type", 1)
-                        ->increment('Money', $win_money);
+                        ->increment('Money', $bet_money_total);
 
                     //会员金额操作成功
 
@@ -604,7 +608,7 @@ class AdminLotteryResultAZXY10Controller extends Controller
                         $datetime = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
 
                         $new_log = new MoneyLog;
-                        $new_log->user_id = $user_id;
+                        $new_log->user_id = $userid;
                         $new_log->order_num = $datereg;
                         $new_log->about = $lottery_name;
                         $new_log->update_time = $datetime;

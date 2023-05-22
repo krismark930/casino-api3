@@ -323,36 +323,41 @@ class AdminLotteryResultGXSFController extends Controller
                 $betInfo = explode(":",$order["number"]);
                 $rTypeName = $order["rtype_str"];
                 $quick_type = $order["quick_type"];
-                if($betInfo[1]=="LOCATE"){//每球定位
-                    $selectBall = $betInfo[2];
-                    $betContent = $betInfo[0];
-                    if($betInfo[2]=="S"){
-                        $selectBall = "5";
-                    }
-                }elseif($betInfo[1]=="MATCH"){//一中一
-                    $selectBall = "一中一";
-                    $betContent = $betInfo[0];
-                }elseif($betInfo[0]!="ALL" && in_array($betInfo[1].":".$betInfo[2],array("LAST:OVER","LAST:UNDER","SUM:ODD","SUM:EVEN"))){//每球 尾数，总和
-                    $selectBall = $betInfo[0];
-                    $betContent = $betInfo[1].':'.$betInfo[2];
-                    if($betInfo[0]=="S"){
-                        $selectBall = "5";
-                    }
-                }elseif(in_array($betInfo[1].":".$betInfo[2].":".$betInfo[3],array("OVER:S:ODD","OVER:S:EVEN","UNDER:S:ODD","UNDER:S:EVEN"))){//大单、大双、小单、小双
-                    $selectBall = $betInfo[0];
-                    $betContent = $betInfo[1].":".$betInfo[2].":".$betInfo[3];
-                    if($betInfo[0]=="S"){
-                        $selectBall = "5";
-                    }
-                }elseif($rTypeName=="快速-广西十分彩"){
-                    $selectBall = "quick";
-                }else{//每球 其他，如四季五行、大小、单双、红蓝绿波
-                    $selectBall = $betInfo[0];
-                    $betContent = $betInfo[1];
-                    if($betInfo[0]=="S"){
-                        $selectBall = "5";
-                    }
-                }
+
+                // if($betInfo[1]=="LOCATE"){//每球定位
+                //     $selectBall = $betInfo[2];
+                //     $betContent = $betInfo[0];
+                //     if($betInfo[2]=="S"){
+                //         $selectBall = "5";
+                //     }
+                // }elseif($betInfo[1]=="MATCH"){//一中一
+                //     $selectBall = "一中一";
+                //     $betContent = $betInfo[0];
+                // }elseif($betInfo[0]!="ALL" && in_array($betInfo[1].":".$betInfo[2],array("LAST:OVER","LAST:UNDER","SUM:ODD","SUM:EVEN"))){//每球 尾数，总和
+                //     $selectBall = $betInfo[0];
+                //     $betContent = $betInfo[1].':'.$betInfo[2];
+                //     if($betInfo[0]=="S"){
+                //         $selectBall = "5";
+                //     }
+                // }elseif(in_array($betInfo[1].":".$betInfo[2].":".$betInfo[3],array("OVER:S:ODD","OVER:S:EVEN","UNDER:S:ODD","UNDER:S:EVEN"))){//大单、大双、小单、小双
+                //     $selectBall = $betInfo[0];
+                //     $betContent = $betInfo[1].":".$betInfo[2].":".$betInfo[3];
+                //     if($betInfo[0]=="S"){
+                //         $selectBall = "5";
+                //     }
+                // }elseif($rTypeName=="快速-广西十分彩"){
+                //     $selectBall = "quick";
+                // }else{//每球 其他，如四季五行、大小、单双、红蓝绿波
+                //     $selectBall = $betInfo[0];
+                //     $betContent = $betInfo[1];
+                //     if($betInfo[0]=="S"){
+                //         $selectBall = "5";
+                //     }
+                // }
+
+
+                $selectBall = "quick";
+                $betContent = "";
 
                 $userid = $order['user_id'];
                 $datereg = $order['order_sub_num'];

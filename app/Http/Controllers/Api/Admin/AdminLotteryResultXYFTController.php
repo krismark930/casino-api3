@@ -359,33 +359,39 @@ class AdminLotteryResultXYFTController extends Controller
                 $betInfo = explode(":",$order["number"]);
                 $rTypeName = $order["rtype_str"];
                 $quick_type = $order["quick_type"];
-                if($betInfo[1]=="LOCATE"){//每球定位
-                    $selectBall = $betInfo[2];
-                    $betContent = $betInfo[0];
-                }elseif($betInfo[2]=="DRAGON" || $betInfo[2]=="TIGER"){//龙虎
-                    $selectBall = $betInfo[0];
-                    $betContent = $betInfo[0].":".$betInfo[1].":".$betInfo[2];
-                }elseif($betInfo[0].":".$betInfo[1].":".$betInfo[2]=="SUM:FIRST:2"){//冠亚军和
-                    $selectBall = "冠亚军和";
-                    if(count($betInfo)==4){
-                        $betContent = $betInfo[3];
-                    }else{
-                        $zhArray        = array();
-                        if($betInfo[4]=="11"){
-                            $zhArray[] = $betInfo[4];
-                        }else{
-                            $zhArray[] = $betInfo[4];
-                            $zhArray[] = $betInfo[5];
-                            $zhArray[] = $betInfo[6];
-                            $zhArray[] = $betInfo[7];
-                        }
-                    }
-                }elseif($rTypeName=="快速-幸运飞艇"){
-                    $selectBall = "quick";
-                }else{//每球 其他，如龙虎、大小、单双
-                    $selectBall = $betInfo[0];
-                    $betContent = $betInfo[1];
-                }
+                
+                // if($betInfo[1]=="LOCATE"){//每球定位
+                //     $selectBall = $betInfo[2];
+                //     $betContent = $betInfo[0];
+                // }elseif($betInfo[2]=="DRAGON" || $betInfo[2]=="TIGER"){//龙虎
+                //     $selectBall = $betInfo[0];
+                //     $betContent = $betInfo[0].":".$betInfo[1].":".$betInfo[2];
+                // }elseif($betInfo[0].":".$betInfo[1].":".$betInfo[2]=="SUM:FIRST:2"){//冠亚军和
+                //     $selectBall = "冠亚军和";
+                //     if(count($betInfo)==4){
+                //         $betContent = $betInfo[3];
+                //     }else{
+                //         $zhArray        = array();
+                //         if($betInfo[4]=="11"){
+                //             $zhArray[] = $betInfo[4];
+                //         }else{
+                //             $zhArray[] = $betInfo[4];
+                //             $zhArray[] = $betInfo[5];
+                //             $zhArray[] = $betInfo[6];
+                //             $zhArray[] = $betInfo[7];
+                //         }
+                //     }
+                // }elseif($rTypeName=="快速-幸运飞艇"){
+                //     $selectBall = "quick";
+                // }else{//每球 其他，如龙虎、大小、单双
+                //     $selectBall = $betInfo[0];
+                //     $betContent = $betInfo[1];
+                // }
+
+
+                $selectBall = "quick";
+                $betContent = "";
+                $isWinMulti = false;
 
                 $userid = $order['user_id'];
                 $datereg = $order['order_sub_num'];

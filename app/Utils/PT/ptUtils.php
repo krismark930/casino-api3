@@ -2,382 +2,167 @@
 
 namespace App\Utils\PT;
 
-use App\Models\Web\Sys800;
-use App\Utils\AG\DES1;
-use App\Utils\Utils;
-use Exception;
-use Illuminate\Support\Facades\DB;
+use App\Utils\MG\des;
 
 class PTUtils {
 
-    var $X_Operator;
-    var $X_Key;
-    var $OG_Token;
-    var $Token_Uptime;
-    var $ApiUrl="https://mog326.haa477.com"; //服务APIURL
-    var $ApiUrl2='https://tigerapi.oriental-game.com:38888  ';  //获取数据APIURL
+    var $PT_agent = "H07_PT";
+    var $giurl_PT;
+    var $md5key_PT;
+    var $deskey_PT;
 
-    function OGUtils($sysConfig) {
-        $this->X_Operator=$sysConfig['OG_Agent'];
-        $this->X_Key=$sysConfig['OG_Key'];
-        $this->OG_Token=$sysConfig['OG_Token'];
-        $this->Token_Uptime=$sysConfig['Token_Uptime'];
-     }
-    function Add_OG_Member($username,$fullname='',$email=''){  //开户
-        $postdata=array();
-        $postdata['username']=$username;
-        $postdata['country']='china';
-        if($fullname){
-            $postdata['fullname']=$fullname;
-        }else{
-            $postdata['fullname']=$username;
-        }
-        if($email){
-            $postdata['email']=$email;
-        }else{
-            $postdata['email']=$username.'@qq.com';
-        }
-        $postdata['language']='cn';
-        $postdata['birthdate']=date("Y-m-d");
-
-        $OG_Host=str_replace('https://','', $this->ApiUrl);
-        $OG_Host=str_replace('http://','',$OG_Host);
-        $header = array();
-        $header[] = 'Host: '.$OG_Host;
-        $header[] = 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0 FirePHP/0.7.4';
-        $header[] = 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
-        $header[] = 'Accept-Language: zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3';
-        $header[] = 'Referer: '. $this->ApiUrl.'/';
-        $header[] = 'x-insight: activate';
-        $header[] = 'Connection: keep-alive';
-        $header[] = 'X-Token: '. $this->OG_Token;
-        $url= $this->ApiUrl.'/register';
-        $htmlcode= $this->curl_info_s($url,null,null,$postdata, $this->ApiUrl,$header);
-        //echo $htmlcode;exit;
-        $json_data=json_decode($htmlcode,true);
-        //print_r($json_data);exit;
-        if($json_data['status']<>'success'){
-            $t=date("Y-m-d H:i:s");
-            $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/og_".date("Ymd").".txt";
-            $f=fopen($tmpfile,'a');
-            fwrite($f,$t."\r\n会员开户\r\n$htmlcode\r\n\r\n");
-            fclose($f);
-            return 0;
-        }else{
-            return 1;
-        }
+    public function __construct($row) {
     }
 
-    function OG_GameUrl($username){  //获取游戏连接
-
-        $OG_Host=str_replace('https://','', $this->ApiUrl);
-        $OG_Host=str_replace('http://','',$OG_Host);
-        $header = array();
-        $header[] = 'Host: '.$OG_Host;
-        $header[] = 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0 FirePHP/0.7.4';
-        $header[] = 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
-        $header[] = 'Accept-Language: zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3';
-        $header[] = 'Referer: '. $this->ApiUrl.'/';
-        $header[] = 'x-insight: activate';
-        $header[] = 'Connection: keep-alive';
-        $header[] = 'X-Token: '. $this->OG_Token;
-        $url= $this->ApiUrl.'/game-providers/30/games/ogplus/key?username='.$username;  //获取游戏key
-        $htmlcode= $this->getUrl_OG($url,15,$header);
-        $json_data=json_decode($htmlcode,true);
-        if($json_data['status']<>'success'){
+    function Addmember_PT($username,$password,$tp=1){
+        $crypt = new DES($this->deskey_PT);
+        $para="cagent=".$this->PT_agent."/\\\\/loginname=".$username."/\\\\/method=lg/\\\\/actype=".$tp."/\\\/password=".$password."/\\\\/oddtype=A/\\\\/cur=CNY";
+        $params=$crypt->encrypt($para);
+        $key=md5($params.$this->md5key_PT);
+        $url=$this->giurl_PT."doBusiness.do?params=".$params."&key=".$key;
+        $xmlcode=$this->getUrl_PT($url);
+        $result=$this->getResult_PT($xmlcode);
+        if($result['info']<>'0'){
             $t=date("Y-m-d H:i:s");
-            $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/og_".date("Ymd").".txt";
+            $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/pt_".date("Ymd").".txt";
             $f=fopen($tmpfile,'a');
-            fwrite($f,$t."\r\n获取游戏金钥\r\n$htmlcode\r\n\r\n");
+            fwrite($f,$t."\r\n会员开户\r\n$xmlcode\r\n\r\n");
             fclose($f);
-            return '';
-        }
-        $key=$json_data['data']['key'];
-        if(Utils::Mobile()){
-            $type='mobile';
-        }else{
-            $type='desktop';
-        }
-        $url= $this->ApiUrl.'/game-providers/30/play?key='.$key.'&type='.$type;  //获取游戏key
-        $htmlcode= $this->getUrl_OG($url,15);
-        $json_data=json_decode($htmlcode,true);
-        //print_r($json_data);exit;
-        if($json_data['status']<>'success'){
-            $t=date("Y-m-d H:i:s");
-            $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/og_".date("Ymd").".txt";
-            $f=fopen($tmpfile,'a');
-            fwrite($f,$t."\r\n获取游戏网址\r\n$htmlcode\r\n\r\n");
-            fclose($f);
-            return '';
-        }else{
-            return $json_data['data']['url'];
-        }
-    }
-
-    function OG_GameUrl2(){  //试玩
-        $this->ApiUrl="https://marsapi-test.oriental-game.com:8443"; //测试环境
-        $this->X_Operator='mog326jty';
-        $this->X_Key='DHqJTQRSjQvwZjFC';
-        $this->GetToken();  //获取测试环境Token
-        $username= $this->getpassword_OG();
-        $result= $this->Add_OG_Member($username,"TryAccount",$username."@qq.com");
-        if($result==0) return '';
-        $result= $this->OG_Deposit($username,'',10000,$action="IN");
-        if($result['result']==0) return '';
-        $GameUrl= $this->OG_GameUrl($username);
-        return $GameUrl;
-    }
-
-    function OG_Money($username,$password=''){  //获取余额
-        global $ApiUrl,$OG_Token;
-        $OG_Host=str_replace('https://','',$ApiUrl);
-        $OG_Host=str_replace('http://','',$OG_Host);
-        $header = array();
-        $header[] = 'Host: '.$OG_Host;
-        $header[] = 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0 FirePHP/0.7.4';
-        $header[] = 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
-        $header[] = 'Accept-Language: zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3';
-        $header[] = 'Referer: '.$ApiUrl.'/';
-        $header[] = 'x-insight: activate';
-        $header[] = 'Connection: keep-alive';
-        $header[] = 'X-Token: '.$OG_Token;
-        $url=$ApiUrl.'/game-providers/30/balance?username='.$username;
-        $htmlcode= $this->getUrl_OG($url,15,$header);
-        $json_data=json_decode($htmlcode,true);
-        if($json_data['status']<>'success'){
-            $t=date("Y-m-d H:i:s");
-            $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/og_".date("Ymd").".txt";
-            $f=fopen($tmpfile,'a');
-            fwrite($f,$t."\r\n获取余额\r\n$htmlcode\r\n\r\n");
-            fclose($f);
-            return 0;
-        }else{
-            return $json_data['data']['balance'];
-        }
-    }
-
-    function OG_Deposit($username,$transferId,$balance,$action="IN"){  //转换额度 transferId定单号  balance金额
-        global $ApiUrl,$OG_Token;
-        $OG_Host=str_replace('https://','',$ApiUrl);
-        $OG_Host=str_replace('http://','',$OG_Host);
-        $header = array();
-        $header[] = 'Host: '.$OG_Host;
-        $header[] = 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0 FirePHP/0.7.4';
-        $header[] = 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
-        $header[] = 'Accept-Language: zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3';
-        $header[] = 'Referer: '.$ApiUrl.'/';
-        $header[] = 'x-insight: activate';
-        $header[] = 'Connection: keep-alive';
-        $header[] = 'X-Token: '.$OG_Token;
-        if($transferId=='') $transferId=substr($action,0,1).date("YmdHis").mt_rand(1000,9999);
-        $postdata=array();
-        $postdata['username']=$username;
-        $postdata['balance']=$balance;
-        $postdata['action']=$action;
-        $postdata['transferId']=$transferId;
-        $url=$ApiUrl.'/game-providers/30/balance';
-        $htmlcode= $this->curl_info_s($url,null,null,$postdata,$ApiUrl,$header);
-        $json_data=json_decode($htmlcode,true);
-        //print_r($json_data);exit;
-        $result=array();
-        $result['billno']=$transferId;
-        if($json_data['status']<>'success'){
-            $t=date("Y-m-d H:i:s");
-            $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/og_".date("Ymd").".txt";
-            $f=fopen($tmpfile,'a');
-            fwrite($f,$t."\r\n转账\r\n$htmlcode\r\n\r\n");
-            fclose($f);
-            $result['result']=0;
-        }else{
-            $result['result']=1;
         }
         return $result;
     }
 
+    function getGameUrl_PT($username,$password,$oddtype="A",$dm="www.bbin-api8.com",$tp=1,$gameType=0){
+        $crypt = new DES($this->deskey_PT);
+        $para="cagent=".$this->PT_agent."/\\\\/loginname=".$username."/\\\\/actype=".$tp."/\\\\/password=".$password."/\\\\/dm=".$dm."/\\\\/sid=".$this->PT_agent.date("ymdhis").rand(1000,9999)."/\\\\/lang=1/\\\\/gameType=".$gameType."/\\\\/oddtype=".$oddtype."/\\\\/cur=CNY";
+        $params=$crypt->encrypt($para);
+        $key=md5($params.$this->md5key_PT);
+        $url=$gciurl_PT."forwardGame.do?params=".$params."&key=".$key;
+        return  $url;
+    }
 
-    function OG_QosBillno($username,$transferId, $action = ''){  //查询额度转换定单状态
-        $OG_Host=str_replace('https://','',$this->ApiUrl);
-        $OG_Host=str_replace('http://','',$OG_Host);
-        $header = array();
-        $header[] = 'Host: '.$OG_Host;
-        $header[] = 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0 FirePHP/0.7.4';
-        $header[] = 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
-        $header[] = 'Accept-Language: zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3';
-        $header[] = 'Referer: '.$this->ApiUrl.'/';
-        $header[] = 'x-insight: activate';
-        $header[] = 'Connection: keep-alive';
-        $header[] = 'X-Token: '.$this->OG_Token;
-        if($transferId=='') $transferId=substr($action,0,1).date("YmdHis").mt_rand(1000,9999);
-        $postdata=array();
-        $postdata['username']=$username;
-        $postdata['transferId']=$transferId;
-        $url=$this->ApiUrl.'/game-providers/30/confirm-transfer';
-        $htmlcode= $this->curl_info_s($url,null,null,$postdata,$this->ApiUrl,$header);
-        $json_data=json_decode($htmlcode,true);
-        if($json_data['status']<>'success'){
+    function getMoney_PT($username,$password,$tp=1){
+        $crypt = new DES($this->deskey_PT);
+        $para="cagent=".$this->PT_agent."/\\\\/loginname=".$username."/\\\\/method=gb/\\\\/actype=".$tp."/\\\\/password=".$password."/\\\\/cur=CNY";
+        $params=$crypt->encrypt($para);
+        $key=md5($params.$this->md5key_PT);
+        $url=$this->giurl_PT."doBusiness.do?params=".$params."&key=".$key;
+        $xmlcode=$this->getUrl_PT($url);
+        $result=$this->getResult_PT($xmlcode);
+        return  intval($result['info']);
+    }
+// d存款 w提款 vd VIP存款 vw VIP提款
+    function Deposit_PT($username,$password,$Gold,$tp="IN") 
+    {
+        $crypt = new DES($this->deskey_PT);
+        $billno=date("YmdHis").rand(1000,9999);
+        if($tp=="IN"){
+            $billno=$billno."8";
+        }else{
+            $billno=$billno."0";
+        }
+        $para="cagent=".$this->PT_agent."/\\\\/method=tc/\\\\/loginname=".$username."/\\\\/billno=".$billno."/\\\\/type=".$tp."/\\\\/credit=".number_format($Gold,2,null,"")."/\\\\/actype=1/\\\\/password=".$password."/\\\\/cur=CNY";
+        $params=$crypt->encrypt($para);
+        $key=md5($params.$this->md5key_PT);
+        $url=$this->giurl_PT."doBusiness.do?params=".$params."&key=".$key;
+        $xmlcode=$this->getUrl_PT($url);
+
+        $t=date("Y-m-d H:i:s");
+        $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/PT_".date("Ymd").".txt";
+        $f=fopen($tmpfile,'a');
+        fwrite($f,"预转账$t\r\n会员号:$username  金额:$Gold  定单号:$billno\r\n$xmlcode\r\n\r\n");
+        fclose($f);
+
+        $result=$this->getResult_PT($xmlcode);
+        if($result['info']=='0' and $result['msg']==""){
+            $para="cagent=".$this->PT_agent."/\\\\/loginname=".$username."/\\\\/method=tcc/\\\\/billno=".$billno."/\\\\/type=".$tp."/\\\\/credit=".number_format($Gold,2,null,"")."/\\\\/actype=1/\\\\/flag=1/\\\\/password=".$password."/\\\\/cur=CNY";
+            $params=$crypt->encrypt($para);
+            $key=md5($params.$this->md5key_PT);
+            $url=$this->giurl_PT."doBusiness.do?params=".$params."&key=".$key;
+            unset($xmlcode);
+            $xmlcode=getUrl_PT($url);
+
             $t=date("Y-m-d H:i:s");
-            $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/og_".date("Ymd").".txt";
+            $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/PT_".date("Ymd").".txt";
             $f=fopen($tmpfile,'a');
-            fwrite($f,$t."\r\n转账查询\r\n$htmlcode\r\n\r\n");
+            fwrite($f,"确认$t\r\n会员号:$username  金额:".$Gold."  定单号:$billno\r\n$xmlcode\r\n\r\n");
             fclose($f);
-            return 0;
-        }else{
-            return 1;
+
+            unset($result);
+            $result=getResult_PT($xmlcode);
         }
+        $result['billno']=$billno;
+        return $result;
     }
 
-    function OG_Limit($username='default',$min=10,$max=10000){  //修改限红
-        $OG_Host=str_replace('https://','',$this->ApiUrl);
-        $OG_Host=str_replace('http://','',$OG_Host);
-        $header = array();
-        $header[] = 'Host: '.$OG_Host;
-        $header[] = 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0 FirePHP/0.7.4';
-        $header[] = 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
-        $header[] = 'Accept-Language: zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3';
-        $header[] = 'Referer: '.$this->ApiUrl.'/';
-        $header[] = 'x-insight: activate';
-        $header[] = 'Connection: keep-alive';
-        $header[] = 'X-Token: '.$this->OG_Token;
-        $postdata=array();
-        $postdata['min']=$min;
-        $postdata['max']=$max;
-        if($username=='default'){  //默认为预设会员
-            $url=$this->ApiUrl.'/game-providers/30/operator-bet-limit';
-        }else{
-            $url=$this->ApiUrl.'/game-providers/30/user-bet-limit';
-            $postdata['username']=$username;
-        }
-        $htmlcode= $this->curl_info_s($url,null,null,$postdata,$this->ApiUrl,$header);
-        $json_data=json_decode($htmlcode,true);
-        //print_r($json_data);exit;
-        if($json_data['status']<>'success'){
-            $t=date("Y-m-d H:i:s");
-            $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/og_".date("Ymd").".txt";
-            $f=fopen($tmpfile,'a');
-            fwrite($f,$t."\r\n修改限红\r\n$htmlcode\r\n\r\n");
-            fclose($f);
-            return 0;
-        }else{
-            return 1;
-        }
+    function QosBillno_PT($billno){
+        $crypt = new DES($this->deskey_PT);
+        $para="cagent=".$this->PT_agent."/\\\\/billno=".$billno."/\\\\/method=qos/\\\\/actype=1/\\\\/cur=CNY";
+        $params=$crypt->encrypt($para);
+        $key=md5($params.$this->md5key_PT);
+        $url=$this->giurl_PT."doBusiness.do?params=".$params."&key=".$key;
+        $xmlcode=$this->getUrl_PT($url);
+        return  $this->getResult_PT($xmlcode);
     }
 
-
-    function GetToken($type=1){  //获取TOKEN type=1正常  type:2 试玩
-
-        $OG_Host=str_replace('https://','',$this->ApiUrl);
-        $OG_Host=str_replace('http://','',$OG_Host);
-        $header = array();
-        $header[] = 'Host: '.$OG_Host;
-        $header[] = 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0 FirePHP/0.7.4';
-        $header[] = 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
-        $header[] = 'Accept-Language: zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3';
-        $header[] = 'Referer: '.$this->ApiUrl.'/';
-        $header[] = 'x-insight: activate';
-        $header[] = 'Connection: keep-alive';
-        $header[] = 'X-Operator: '.$this->X_Operator;
-        $header[] = 'X-key: '.$this->X_Key;
-        //print_r($header);exit;
-        $url=$this->ApiUrl.'/token';
-        $htmlcode= $this->curl_info_s($url,null,null,null,$this->ApiUrl,$header);
-        $json_data=json_decode($htmlcode,true);
-        //print_r($json_data);
-        if($json_data['status']=='success'){
-            $OG_Token=$json_data['data']['token'];
-            $Token_Uptime=time();
-            if($type==1){
-                DB::update("update sys_config set OG_Token='$OG_Token',Token_Uptime='$Token_Uptime'");
-            }
-        }
-    }
-
-
-    function getUrl_OG($url,$timeout=60,$header=null, $post = null){
+    function getUrl_PT($url){
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
-        if($header){  //设置header
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-        }
-        if($post){  //启用POST提交
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $post);  //设置POST提交的字符串
-        }
-        curl_setopt($ch, CURLOPT_TIMEOUT,$timeout);  //超时60秒
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // 对认证证书来源的检查
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1); // 从证书中检查SSL加密算法是否存在
-        curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);  //设置浏览器类型，含代理号
+        curl_setopt($ch, CURLOPT_TIMEOUT,60);  //超时60秒
+        curl_setopt($ch, CURLOPT_USERAGENT, ' WEB_LIB_GI_'.$this->PT_agent);  //设置浏览器类型，含代理号
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $html = curl_exec($ch);
         return $html;
     }
 
-
-    function curl_info_s($info_url, $cookie_jar = null, $post_cookiefile = null, $post = null, $referer = null, $header = null, $returnCooke = null, $proxy = null){
-        try{
-            $ch = curl_init();
-            if($proxy){ //设置代理
-                curl_setopt($ch, CURLOPT_PROXY, $proxy);
-            }
-            //curl_setopt($ch,CURLOPT_PROXYUSERPWD,"user:pwd");
-            curl_setopt($ch, CURLOPT_URL, $info_url);  //设置网址
-            if ($cookie_jar){  //设置COOKIE
-                curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_jar);  //当会话结束的时候保存一个Cookie
-                curl_setopt($ch, CURLOPT_COOKIE, $cookie_jar);  // 传递一个包含HTTP cookie的头连接
-            }
-            if ($post_cookiefile){  //传递一个包含cookie数据的文件的名字的字符串
-                curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_jar);
-            }
-            if ($post){  //启用POST提交
-                curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $post);  //设置POST提交的字符串
-            }
-            if ($header){  //设置header
-                curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-            }
-            curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);  //模拟用户使用的浏览器
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);  //自动跳转
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);  //要求结果保存到字符串中还是输出到屏幕上 0为输出1为保存字符串
-            curl_setopt($ch, CURLOPT_TIMEOUT, 60);  // 超时的时间（秒）
-            if($returnCooke){  //如果你想把一个头包含在输出中，设置这个选项为一个非零值
-                curl_setopt($ch, CURLOPT_HEADER, true);
-            }else{
-                curl_setopt($ch, CURLOPT_HEADER, false);
-            }
-            curl_setopt($ch, CURLOPT_NOBODY, false);  //如果你不想在输出中包含body部分，设置这个选项为一个非零值
-            curl_setopt($ch, CURLOPT_REFERER, $referer);  //设置referer
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // 对认证证书来源的检查
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1); // 从证书中检查SSL加密算法是否存在
-            $content = curl_exec($ch); //请求网页
-            $result=$content;
-            if($returnCooke){
-                // 解析HTTP数据流
-                list($header, $body) = explode("\r\n\r\n", $content);
-                // 解析COOKIE
-                if($returnCooke== 'cookie'){
-                    preg_match_all("/set\-cookie:([^\r\n]*)/i", $header, $matches);
-                    $result=implode('; ', $matches[1]);
-                }else if($returnCooke== 'location'){
-                    preg_match("/Location:([^\r\n]*)/i", $header, $matches);
-                    $result=$matches[1];
-                }
-            }
-            return $result;
-            // 关闭URL请求
-            curl_close($ch);
-        } catch (Exception $e){
-            return 'error';
+    function getResult_PT($content){
+        $info=$this->getContent_PT($content,'info="','"',1);
+        $msg=$this->getContent_PT($content,'msg="','"',1);
+        $result=array();
+        $result['info']=$info;
+        $result['msg']=$msg;
+        if($content=="" or !strpos($content,'info=')>0){
+            $result['info']='error';
+            $result['msg']='网络异常!';
         }
-        return trim(ltrim($content));
+        return $result;
     }
 
-    function getpassword_OG($len=10){
-        $key='0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z';
-        $kk=explode(",",$key);
-        $pass="";
-        for($i=1;$i<=$len;$i++){
-            $pass=$pass.$kk[mt_rand(0,sizeof($kk)-1)];
-        }
-        return $pass;
+    function getContent_PT($sourceStr,$star,$end,$flag )
+    {
+      switch ($flag) {
+        case 0:  //取指定字符前面的
+            echo strrpos( $sourceStr, $end );
+            echo '-----'.strlen( $end );
+            $content = substr( $sourceStr, 0, strrpos( $sourceStr, $end ) + strlen( $end ) );
+            break;
+        case 1:  //取指定字符之间的,不包括指定字符
+            $content = substr( $sourceStr, strpos( $sourceStr,$star)+ strlen( $star ));
+            $content = substr( $content, 0, strpos( $content, $end ) );
+            break;
+        case 2:  //取指定字符之间的，包括指定字符
+            $content =strstr( $sourceStr, $star );
+            $content = substr( $content, 0, strpos( $content, $end ) + strlen( $end ) );
+            break;
+        case 3:  //取指定字符之后的，不包括指定字符
+            $content = substr( $sourceStr, strrpos( $sourceStr,$star)+ strlen( $star ));
+            break;
+        case 4:  //取指定字符之后的，包括指定字符
+            $content =strstr( $sourceStr, $star );
+            break;
+      }
+      return $content;
+    }
+
+    function getpassword_PT($len=10)
+    {
+     $key='0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z';
+     $kk=explode(",",$key);
+     $pass="";
+     for($i=1;$i<=$len;$i++){
+         $pass=$pass.$kk[mt_rand(0,sizeof($kk)-1)];
+     }
+     return $pass;
     }
 }

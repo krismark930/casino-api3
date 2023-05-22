@@ -934,8 +934,8 @@ class UserController extends Controller {
 
         try {
             $user = Auth::guard("api")->user();
-            $user = User::where("UserName", $user["UserName"])->first(['Money']);
-            $response['data'] = $user['Money'];
+            $user = User::where("UserName", $user["UserName"])->first();
+            $response['data'] = $user;
             $response['message'] = 'Profile detail fetched successfully';
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;

@@ -248,7 +248,7 @@ class AdminLotteryuserconfigController extends Controller
         }
 
         return response()->json($response, $response['status']);
-    }  
+    }
 
     public function startDiscount(Request $request) {
 
@@ -382,6 +382,7 @@ class AdminLotteryuserconfigController extends Controller
                     $q1 = User::where('UserName', $item["username"])->increment('Money', $money_ts);
 
                     if($q1==1) {
+                        $datetime = date("Y-m-d H:i:s");
                         $currentAmount = Utils::GetField($item["username"], 'Money');
                         $user_id = Utils::GetField($item["username"], 'id');
                         $new_log = new MoneyLog;
@@ -390,7 +391,7 @@ class AdminLotteryuserconfigController extends Controller
                         $new_log->about =  $user["UserName"] . "彩票返水<br>有效金额:$VGOLD<br>返水金额:$money_ts";
                         $new_log->update_time = $datetime;
                         $new_log->type = $user["UserName"]."彩票返水";
-                        $new_log->money_ts = $cash;
+                        $new_log->order_value = $money_ts;
                         $new_log->assets = $previousAmount;
                         $new_log->balance = $currentAmount;
                         $new_log->save();

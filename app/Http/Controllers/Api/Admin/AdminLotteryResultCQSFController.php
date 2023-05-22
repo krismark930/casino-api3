@@ -378,36 +378,42 @@ class AdminLotteryResultCQSFController extends Controller
                 $betInfo = explode(":",$order["number"]);
                 $rTypeName = $order["rtype_str"];
                 $quick_type = $order["quick_type"];
-                if($betInfo[1]=="LOCATE"){//每球定位
-                    $selectBall = $betInfo[2];
-                    $betContent = $betInfo[0];
-                    if($betInfo[2]=="S"){
-                        $selectBall = "8";
-                    }
-                }elseif($betInfo[1]=="MATCH"){//一中一
-                    $selectBall = "一中一";
-                    $betContent = $betInfo[0];
-                }elseif($betInfo[0]!="ALL" && in_array($betInfo[1].":".$betInfo[2],array("LAST:OVER","LAST:UNDER","SUM:ODD","SUM:EVEN"))){//每球 尾数，总和
-                    $selectBall = $betInfo[0];
-                    $betContent = $betInfo[1].':'.$betInfo[2];
-                    if($betInfo[0]=="S"){
-                        $selectBall = "8";
-                    }
-                }elseif($betInfo[0]=="ALL" || in_array($betInfo[1].":".$betInfo[2],array("S:DRAGON","S:TIGER"))){//所有球总和
-                    $selectBall = "总和";
-                    $betContent = $betInfo[1].':'.$betInfo[2];
-                    if($order["number"]=="ALL:SUM:LAST:OVER" || $order["number"]=="ALL:SUM:LAST:UNDER"){
-                        $betContent = $betInfo[1].':'.$betInfo[2].':'.$betInfo[3];
-                    }
-                }elseif($rTypeName=="快速-重庆快乐十分"){
-                    $selectBall = "quick";
-                }else{//每球 其他，如中发白、四季五行、龙虎、大小、单双
-                    $selectBall = $betInfo[0];
-                    $betContent = $betInfo[1];
-                    if($betInfo[0]=="S"){
-                        $selectBall = "8";
-                    }
-                }
+                
+                // if($betInfo[1]=="LOCATE"){//每球定位
+                //     $selectBall = $betInfo[2];
+                //     $betContent = $betInfo[0];
+                //     if($betInfo[2]=="S"){
+                //         $selectBall = "8";
+                //     }
+                // }elseif($betInfo[1]=="MATCH"){//一中一
+                //     $selectBall = "一中一";
+                //     $betContent = $betInfo[0];
+                // }elseif($betInfo[0]!="ALL" && in_array($betInfo[1].":".$betInfo[2],array("LAST:OVER","LAST:UNDER","SUM:ODD","SUM:EVEN"))){//每球 尾数，总和
+                //     $selectBall = $betInfo[0];
+                //     $betContent = $betInfo[1].':'.$betInfo[2];
+                //     if($betInfo[0]=="S"){
+                //         $selectBall = "8";
+                //     }
+                // }elseif($betInfo[0]=="ALL" || in_array($betInfo[1].":".$betInfo[2],array("S:DRAGON","S:TIGER"))){//所有球总和
+                //     $selectBall = "总和";
+                //     $betContent = $betInfo[1].':'.$betInfo[2];
+                //     if($order["number"]=="ALL:SUM:LAST:OVER" || $order["number"]=="ALL:SUM:LAST:UNDER"){
+                //         $betContent = $betInfo[1].':'.$betInfo[2].':'.$betInfo[3];
+                //     }
+                // }elseif($rTypeName=="快速-重庆快乐十分"){
+                //     $selectBall = "quick";
+                // }else{//每球 其他，如中发白、四季五行、龙虎、大小、单双
+                //     $selectBall = $betInfo[0];
+                //     $betContent = $betInfo[1];
+                //     if($betInfo[0]=="S"){
+                //         $selectBall = "8";
+                //     }
+                // }
+
+
+                $selectBall = "quick";
+                $betContent = "";
+                $isWinMulti = false;
 
                 $userid = $order['user_id'];
                 $datereg = $order['order_sub_num'];

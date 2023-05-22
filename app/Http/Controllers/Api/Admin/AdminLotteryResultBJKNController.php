@@ -394,22 +394,27 @@ class AdminLotteryResultBJKNController extends Controller
                 $betInfo = explode(":",$order["number"]);
                 $rTypeName = $order["rtype_str"];
                 $quick_type = $order["quick_type"];
-                if(in_array($betInfo[0],array("TOP","MIDDLE","BOTTOM","ODD","TIE","EVEN"))){//上中下、奇偶和盘
-                    $selectBall = "ONE";
-                    $betContent = $betInfo[0];
-                }elseif($betInfo[0]=="ALL"){//所有球总和、五行过关
-                    $selectBall = "ONE";
-                    $betContent = $betInfo[1].':'.$betInfo[2];
-                    if(in_array($betInfo[2].':'.$betInfo[3],array("UNDER:ODD","UNDER:EVEN","OVER:ODD","OVER:EVEN"))){
-                        $betContent = "SUM:".$betInfo[2].':SUM:'.$betInfo[3];
-                    }
-                }elseif(in_array($quick_type,array("选一","和值","上中下","奇和偶"))){
-                    $selectBall = "quick";
-                }else{//多选
-                    $selectBall = "multi";
-                    $betContentArray = explode(",",$order["number"]);
-                    $oddsArray = explode(",",$order["bet_rate"]);
-                }
+                // if(in_array($betInfo[0],array("TOP","MIDDLE","BOTTOM","ODD","TIE","EVEN"))){//上中下、奇偶和盘
+                //     $selectBall = "ONE";
+                //     $betContent = $betInfo[0];
+                // }elseif($betInfo[0]=="ALL"){//所有球总和、五行过关
+                //     $selectBall = "ONE";
+                //     $betContent = $betInfo[1].':'.$betInfo[2];
+                //     if(in_array($betInfo[2].':'.$betInfo[3],array("UNDER:ODD","UNDER:EVEN","OVER:ODD","OVER:EVEN"))){
+                //         $betContent = "SUM:".$betInfo[2].':SUM:'.$betInfo[3];
+                //     }
+                // }elseif(in_array($quick_type,array("选一","和值","上中下","奇和偶"))){
+                //     $selectBall = "quick";
+                // }else{//多选
+                //     $selectBall = "multi";
+                //     $betContentArray = explode(",",$order["number"]);
+                //     $oddsArray = explode(",",$order["bet_rate"]);
+                // }
+
+
+                $selectBall = "quick";
+                $betContent = "";
+                $isWinMulti = false;
 
                 $userid = $order['user_id'];
                 $datereg = $order['order_sub_num'];

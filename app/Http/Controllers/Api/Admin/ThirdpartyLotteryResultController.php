@@ -31,6 +31,8 @@ use Carbon\Carbon;
 
 class ThirdpartyLotteryResultController extends Controller
 {
+    // lottery result
+
     public function getLotteryResult(Request $request) {
 
         $response = [];
@@ -578,6 +580,762 @@ class ThirdpartyLotteryResultController extends Controller
         return response()->json($response, $response['status']); 
     }
 
+    public function getLotteryResultCQSSC(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        $request_data = $request->all();
+
+        $data = $request_data["data"];
+
+        $current_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
+
+        foreach($data as $item) {
+
+            $tempNum = explode(",", $item['code']);
+            $ball_1 = $tempNum[0];
+            $ball_2 = $tempNum[1];
+            $ball_3 = $tempNum[2];
+            $ball_4 = $tempNum[3];
+            $ball_5 = $tempNum[4];
+            $result = LotteryResultCQ::where("qishu", $item["issue"])->first();                
+            if (!isset($result)) {
+                $result = new LotteryResultCQ;
+                $result->create_time = $current_time;
+                $result->qishu = $item["issue"];
+                $result->datetime = $item["opendate"];
+                $result->ball_1 = $ball_1;
+                $result->ball_2 = $ball_2;
+                $result->ball_3 = $ball_3;
+                $result->ball_4 = $ball_4;
+                $result->ball_5 = $ball_5;
+                $result->state = 0;
+                $result->save();
+            }
+        }
+
+        if (isset($data)) {
+            $response['data'] = $data;
+            $response['message'] = 'Lottery Result CQSSC fetched successfully!';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } else {
+            $response['message'] = 'Lottery Result CQSSC Data can not found!';
+        }
+        return response()->json($response, $response['status']); 
+    }
+
+    public function getLotteryResultHN300(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        $request_data = $request->all();
+
+        $data = $request_data["data"];
+
+        $current_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
+
+        foreach($data as $item) {
+
+            $tempNum = explode(",", $item['code']);
+            $ball_1 = $tempNum[0];
+            $ball_2 = $tempNum[1];
+            $ball_3 = $tempNum[2];
+            $ball_4 = $tempNum[3];
+            $ball_5 = $tempNum[4];
+            $item["issue"] = explode("-", $item["issue"])[0].explode("-", $item["issue"])[1];
+            $result = LotteryResultFFC5::where("qishu", $item["issue"])->first();                
+            if (!isset($result)) {
+                $result = new LotteryResultFFC5;
+                $result->create_time = $current_time;
+                $result->qishu = $item["issue"];
+                $result->datetime = $item["opendate"];
+                $result->ball_1 = $ball_1;
+                $result->ball_2 = $ball_2;
+                $result->ball_3 = $ball_3;
+                $result->ball_4 = $ball_4;
+                $result->ball_5 = $ball_5;
+                $result->state = 0;
+                $result->save();
+            }
+        }
+
+        if (isset($data)) {
+            $response['data'] = $data;
+            $response['message'] = 'Lottery Result FFC5 fetched successfully!';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } else {
+            $response['message'] = 'Lottery Result FFC5 Data can not found!';
+        }
+        return response()->json($response, $response['status']); 
+    }
+
+    public function getLotteryResultTXFFC(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        $request_data = $request->all();
+
+        $data = $request_data["data"];
+
+        $current_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
+
+        foreach($data as $item) {
+
+            $tempNum = explode(",", $item['code']);
+            $ball_1 = $tempNum[0];
+            $ball_2 = $tempNum[1];
+            $ball_3 = $tempNum[2];
+            $ball_4 = $tempNum[3];
+            $ball_5 = $tempNum[4];
+            $item["issue"] = explode("-", $item["issue"])[0].explode("-", $item["issue"])[1];
+            $result = LotteryResultTXSSC::where("qishu", $item["issue"])->first();                
+            if (!isset($result)) {
+                $result = new LotteryResultTXSSC;
+                $result->create_time = $current_time;
+                $result->qishu = $item["issue"];
+                $result->datetime = $item["opendate"];
+                $result->ball_1 = $ball_1;
+                $result->ball_2 = $ball_2;
+                $result->ball_3 = $ball_3;
+                $result->ball_4 = $ball_4;
+                $result->ball_5 = $ball_5;
+                $result->state = 0;
+                $result->save();
+            }
+        }
+
+        if (isset($data)) {
+            $response['data'] = $data;
+            $response['message'] = 'Lottery Result TXSSC fetched successfully!';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } else {
+            $response['message'] = 'Lottery Result TXSSC Data can not found!';
+        }
+        return response()->json($response, $response['status']); 
+    }
+
+    public function getLotteryResultTW300(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        $request_data = $request->all();
+
+        $data = $request_data["data"];
+
+        $current_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
+
+        // foreach($data as $item) {
+
+        //     $tempNum = explode(",", $item['code']);
+        //     $ball_1 = $tempNum[0];
+        //     $ball_2 = $tempNum[1];
+        //     $ball_3 = $tempNum[2];
+        //     $ball_4 = $tempNum[3];
+        //     $ball_5 = $tempNum[4];
+        //     $result = LotteryResultTWSSC::where("qishu", $item["issue"])->first();                
+        //     if (!isset($result)) {
+        //         $result = new LotteryResultTWSSC;
+        //         $result->create_time = $current_time;
+        //         $result->qishu = $item["issue"];
+        //         $result->datetime = $item["opendate"];
+        //         $result->ball_1 = $ball_1;
+        //         $result->ball_2 = $ball_2;
+        //         $result->ball_3 = $ball_3;
+        //         $result->ball_4 = $ball_4;
+        //         $result->ball_5 = $ball_5;
+        //         $result->state = 0;
+        //         $result->save();
+        //     }
+        // }
+
+        if (isset($data)) {
+            $response['data'] = $data;
+            $response['message'] = 'Lottery Result TWSSC fetched successfully!';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } else {
+            $response['message'] = 'Lottery Result TWSSC Data can not found!';
+        }
+        return response()->json($response, $response['status']); 
+    }
+
+    public function getLotteryResultAZXY5(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        $request_data = $request->all();
+
+        $data = $request_data["data"];
+
+        $current_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
+
+        foreach($data as $item) {
+
+            $tempNum = explode(",", $item['code']);
+            $ball_1 = $tempNum[0];
+            $ball_2 = $tempNum[1];
+            $ball_3 = $tempNum[2];
+            $ball_4 = $tempNum[3];
+            $ball_5 = $tempNum[4];
+            $result = LotteryResultAZXY5::where("qishu", $item["issue"])->first();                
+            if (!isset($result)) {
+                $result = new LotteryResultAZXY5;
+                $result->create_time = $current_time;
+                $result->qishu = $item["issue"];
+                $result->datetime = $item["opendate"];
+                $result->ball_1 = $ball_1;
+                $result->ball_2 = $ball_2;
+                $result->ball_3 = $ball_3;
+                $result->ball_4 = $ball_4;
+                $result->ball_5 = $ball_5;
+                $result->state = 0;
+                $result->save();
+            }
+        }
+
+        if (isset($data)) {
+            $response['data'] = $data;
+            $response['message'] = 'Lottery Result AZXY5 fetched successfully!';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } else {
+            $response['message'] = 'Lottery Result AZXY5 Data can not found!';
+        }
+        return response()->json($response, $response['status']); 
+    }
+
+    public function getLotteryResultXJSSC(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        $request_data = $request->all();
+
+        $data = $request_data["data"];
+
+        $current_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
+
+        foreach($data as $item) {
+
+            $tempNum = explode(",", $item['code']);
+            $ball_1 = $tempNum[0];
+            $ball_2 = $tempNum[1];
+            $ball_3 = $tempNum[2];
+            $ball_4 = $tempNum[3];
+            $ball_5 = $tempNum[4];
+            $result = LotteryResultJX::where("qishu", $item["issue"])->first();                
+            if (!isset($result)) {
+                $result = new LotteryResultJX;
+                $result->create_time = $current_time;
+                $result->qishu = $item["issue"];
+                $result->datetime = $item["opendate"];
+                $result->ball_1 = $ball_1;
+                $result->ball_2 = $ball_2;
+                $result->ball_3 = $ball_3;
+                $result->ball_4 = $ball_4;
+                $result->ball_5 = $ball_5;
+                $result->state = 0;
+                $result->save();
+            }
+        }
+
+        if (isset($data)) {
+            $response['data'] = $data;
+            $response['message'] = 'Lottery Result JX fetched successfully!';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } else {
+            $response['message'] = 'Lottery Result JX Data can not found!';
+        }
+        return response()->json($response, $response['status']); 
+    }
+
+    public function getLotteryResultTJSSC(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        $request_data = $request->all();
+
+        $data = $request_data["data"];
+
+        $current_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
+
+        foreach($data as $item) {
+
+            $tempNum = explode(",", $item['code']);
+            $ball_1 = $tempNum[0];
+            $ball_2 = $tempNum[1];
+            $ball_3 = $tempNum[2];
+            $ball_4 = $tempNum[3];
+            $ball_5 = $tempNum[4];
+            $result = LotteryResultTJ::where("qishu", $item["issue"])->first();                
+            if (!isset($result)) {
+                $result = new LotteryResultTJ;
+                $result->create_time = $current_time;
+                $result->qishu = $item["issue"];
+                $result->datetime = $item["opendate"];
+                $result->ball_1 = $ball_1;
+                $result->ball_2 = $ball_2;
+                $result->ball_3 = $ball_3;
+                $result->ball_4 = $ball_4;
+                $result->ball_5 = $ball_5;
+                $result->state = 0;
+                $result->save();
+            }
+        }
+
+        if (isset($data)) {
+            $response['data'] = $data;
+            $response['message'] = 'Lottery Result TJSSC fetched successfully!';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } else {
+            $response['message'] = 'Lottery Result TJSSC Data can not found!';
+        }
+        return response()->json($response, $response['status']); 
+    }
+
+    public function getLotteryResultGD11X5(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        $request_data = $request->all();
+
+        $data = $request_data["data"];
+
+        $current_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
+
+        foreach($data as $item) {
+
+            $tempNum = explode(",", $item['code']);
+            $ball_1 = $tempNum[0];
+            $ball_2 = $tempNum[1];
+            $ball_3 = $tempNum[2];
+            $ball_4 = $tempNum[3];
+            $ball_5 = $tempNum[4];
+            $result = LotteryResultGD11::where("qishu", $item["issue"])->first();                
+            if (!isset($result)) {
+                $result = new LotteryResultGD11;
+                $result->create_time = $current_time;
+                $result->qishu = $item["issue"];
+                $result->datetime = $item["opendate"];
+                $result->ball_1 = $ball_1;
+                $result->ball_2 = $ball_2;
+                $result->ball_3 = $ball_3;
+                $result->ball_4 = $ball_4;
+                $result->ball_5 = $ball_5;
+                $result->state = 0;
+                $result->save();
+            }
+        }
+
+        if (isset($data)) {
+            $response['data'] = $data;
+            $response['message'] = 'Lottery Result GD11 fetched successfully!';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } else {
+            $response['message'] = 'Lottery Result GD11 Data can not found!';
+        }
+        return response()->json($response, $response['status']); 
+    }
+
+    public function getLotteryResultAZXY10(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        $request_data = $request->all();
+
+        $data = $request_data["data"];
+
+        $current_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
+
+        foreach($data as $item) {
+
+            $tempNum = explode(",", $item['code']);
+            $ball_1 = $tempNum[0];
+            $ball_2 = $tempNum[1];
+            $ball_3 = $tempNum[2];
+            $ball_4 = $tempNum[3];
+            $ball_5 = $tempNum[4];
+            $ball_6 = $tempNum[5];
+            $ball_7 = $tempNum[6];
+            $ball_8 = $tempNum[7];
+            $ball_9 = $tempNum[8];
+            $ball_10 = $tempNum[9];
+            $result = LotteryResultAZXY10::where("qishu", $item["issue"])->first();                
+            if (!isset($result)) {
+                $result = new LotteryResultAZXY10;
+                $result->create_time = $current_time;
+                $result->qishu = $item["issue"];
+                $result->datetime = $item["opendate"];
+                $result->ball_1 = $ball_1;
+                $result->ball_2 = $ball_2;
+                $result->ball_3 = $ball_3;
+                $result->ball_4 = $ball_4;
+                $result->ball_5 = $ball_5;
+                $result->ball_6 = $ball_6;
+                $result->ball_7 = $ball_7;
+                $result->ball_8 = $ball_8;
+                $result->ball_9 = $ball_9;
+                $result->ball_10 = $ball_10;
+                $result->state = 0;
+                $result->save();
+            }
+        }
+
+        if (isset($data)) {
+            $response['data'] = $data;
+            $response['message'] = 'Lottery Result AZXY10 fetched successfully!';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } else {
+            $response['message'] = 'Lottery Result AZXY10 Data can not found!';
+        }
+        return response()->json($response, $response['status']); 
+    }
+
+    public function getLotteryResultBJPK10(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        $request_data = $request->all();
+
+        $data = $request_data["data"];
+
+        $current_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
+
+        foreach($data as $item) {
+
+            $tempNum = explode(",", $item['code']);
+            $ball_1 = $tempNum[0];
+            $ball_2 = $tempNum[1];
+            $ball_3 = $tempNum[2];
+            $ball_4 = $tempNum[3];
+            $ball_5 = $tempNum[4];
+            $ball_6 = $tempNum[5];
+            $ball_7 = $tempNum[6];
+            $ball_8 = $tempNum[7];
+            $ball_9 = $tempNum[8];
+            $ball_10 = $tempNum[9];
+            $result = LotteryResultBJPK::where("qishu", $item["issue"])->first();                
+            if (!isset($result)) {
+                $result = new LotteryResultBJPK;
+                $result->create_time = $current_time;
+                $result->qishu = $item["issue"];
+                $result->datetime = $item["opendate"];
+                $result->ball_1 = $ball_1;
+                $result->ball_2 = $ball_2;
+                $result->ball_3 = $ball_3;
+                $result->ball_4 = $ball_4;
+                $result->ball_5 = $ball_5;
+                $result->ball_6 = $ball_6;
+                $result->ball_7 = $ball_7;
+                $result->ball_8 = $ball_8;
+                $result->ball_9 = $ball_9;
+                $result->ball_10 = $ball_10;
+                $result->state = 0;
+                $result->save();
+            }
+        }
+
+        if (isset($data)) {
+            $response['data'] = $data;
+            $response['message'] = 'Lottery Result BJPK fetched successfully!';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } else {
+            $response['message'] = 'Lottery Result BJPK Data can not found!';
+        }
+        return response()->json($response, $response['status']); 
+    }
+
+    public function getLotteryResultXYFT(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        $request_data = $request->all();
+
+        $data = $request_data["data"];
+
+        $current_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
+
+        foreach($data as $item) {
+
+            $tempNum = explode(",", $item['code']);
+            $ball_1 = $tempNum[0];
+            $ball_2 = $tempNum[1];
+            $ball_3 = $tempNum[2];
+            $ball_4 = $tempNum[3];
+            $ball_5 = $tempNum[4];
+            $ball_6 = $tempNum[5];
+            $ball_7 = $tempNum[6];
+            $ball_8 = $tempNum[7];
+            $ball_9 = $tempNum[8];
+            $ball_10 = $tempNum[9];
+            $item["issue"] = explode("-", $item["issue"])[0].explode("-", $item["issue"])[1];
+            $result = LotteryResultXYFT::where("qishu", $item["issue"])->first();                
+            if (!isset($result)) {
+                $result = new LotteryResultXYFT;
+                $result->create_time = $current_time;
+                $result->qishu = $item["issue"];
+                $result->datetime = $item["opendate"];
+                $result->ball_1 = $ball_1;
+                $result->ball_2 = $ball_2;
+                $result->ball_3 = $ball_3;
+                $result->ball_4 = $ball_4;
+                $result->ball_5 = $ball_5;
+                $result->ball_6 = $ball_6;
+                $result->ball_7 = $ball_7;
+                $result->ball_8 = $ball_8;
+                $result->ball_9 = $ball_9;
+                $result->ball_10 = $ball_10;
+                $result->state = 0;
+                $result->save();
+            }
+        }
+
+        if (isset($data)) {
+            $response['data'] = $data;
+            $response['message'] = 'Lottery Result XYFT fetched successfully!';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } else {
+            $response['message'] = 'Lottery Result XYFT Data can not found!';
+        }
+        return response()->json($response, $response['status']); 
+    }
+
+    public function getLotteryResultCQXYNC(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        $request_data = $request->all();
+
+        $data = $request_data["data"];
+
+        $current_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
+
+        foreach($data as $item) {
+
+            $tempNum = explode(",", $item['code']);
+            $ball_1 = $tempNum[0];
+            $ball_2 = $tempNum[1];
+            $ball_3 = $tempNum[2];
+            $ball_4 = $tempNum[3];
+            $ball_5 = $tempNum[4];
+            $ball_6 = $tempNum[5];
+            $ball_7 = $tempNum[6];
+            $ball_8 = $tempNum[7];
+            $result = LotteryResultCQSF::where("qishu", $item["issue"])->first();                
+            if (!isset($result)) {
+                $result = new LotteryResultCQSF;
+                $result->create_time = $current_time;
+                $result->qishu = $item["issue"];
+                $result->datetime = $item["opendate"];
+                $result->ball_1 = $ball_1;
+                $result->ball_2 = $ball_2;
+                $result->ball_3 = $ball_3;
+                $result->ball_4 = $ball_4;
+                $result->ball_5 = $ball_5;
+                $result->ball_6 = $ball_6;
+                $result->ball_7 = $ball_7;
+                $result->ball_8 = $ball_8;
+                $result->state = 0;
+                $result->save();
+            }
+        }
+
+        if (isset($data)) {
+            $response['data'] = $data;
+            $response['message'] = 'Lottery Result CQSF fetched successfully!';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } else {
+            $response['message'] = 'Lottery Result CQSF Data can not found!';
+        }
+        return response()->json($response, $response['status']); 
+    }
+
+    public function getLotteryResultTJKL10(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        $request_data = $request->all();
+
+        $data = $request_data["data"];
+
+        $current_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
+
+        foreach($data as $item) {
+
+            $tempNum = explode(",", $item['code']);
+            $ball_1 = $tempNum[0];
+            $ball_2 = $tempNum[1];
+            $ball_3 = $tempNum[2];
+            $ball_4 = $tempNum[3];
+            $ball_5 = $tempNum[4];
+            $ball_6 = $tempNum[5];
+            $ball_7 = $tempNum[6];
+            $ball_8 = $tempNum[7];
+            $result = LotteryResultTJSF::where("qishu", $item["issue"])->first();                
+            if (!isset($result)) {
+                $result = new LotteryResultTJSF;
+                $result->create_time = $current_time;
+                $result->qishu = $item["issue"];
+                $result->datetime = $item["opendate"];
+                $result->ball_1 = $ball_1;
+                $result->ball_2 = $ball_2;
+                $result->ball_3 = $ball_3;
+                $result->ball_4 = $ball_4;
+                $result->ball_5 = $ball_5;
+                $result->ball_6 = $ball_6;
+                $result->ball_7 = $ball_7;
+                $result->ball_8 = $ball_8;
+                $result->state = 0;
+                $result->save();
+            }
+        }
+
+        if (isset($data)) {
+            $response['data'] = $data;
+            $response['message'] = 'Lottery Result TJSF fetched successfully!';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } else {
+            $response['message'] = 'Lottery Result TJSF Data can not found!';
+        }
+        return response()->json($response, $response['status']); 
+    }
+
+    public function getLotteryResultGDKL10(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        $request_data = $request->all();
+
+        $data = $request_data["data"];
+
+        $current_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
+
+        foreach($data as $item) {
+
+            $tempNum = explode(",", $item['code']);
+            $ball_1 = $tempNum[0];
+            $ball_2 = $tempNum[1];
+            $ball_3 = $tempNum[2];
+            $ball_4 = $tempNum[3];
+            $ball_5 = $tempNum[4];
+            $ball_6 = $tempNum[5];
+            $ball_7 = $tempNum[6];
+            $ball_8 = $tempNum[7];
+            $result = LotteryResultGDSF::where("qishu", $item["issue"])->first();                
+            if (!isset($result)) {
+                $result = new LotteryResultGDSF;
+                $result->create_time = $current_time;
+                $result->qishu = $item["issue"];
+                $result->datetime = $item["opendate"];
+                $result->ball_1 = $ball_1;
+                $result->ball_2 = $ball_2;
+                $result->ball_3 = $ball_3;
+                $result->ball_4 = $ball_4;
+                $result->ball_5 = $ball_5;
+                $result->ball_6 = $ball_6;
+                $result->ball_7 = $ball_7;
+                $result->ball_8 = $ball_8;
+                $result->state = 0;
+                $result->save();
+            }
+        }
+
+        if (isset($data)) {
+            $response['data'] = $data;
+            $response['message'] = 'Lottery Result GDSF fetched successfully!';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } else {
+            $response['message'] = 'Lottery Result GDSF Data can not found!';
+        }
+        return response()->json($response, $response['status']); 
+    }
+
+    public function getLotteryResultGXKL10(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        $request_data = $request->all();
+
+        $data = $request_data["data"];
+
+        $current_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
+
+        foreach($data as $item) {
+
+            $tempNum = explode(",", $item['code']);
+            $ball_1 = $tempNum[0];
+            $ball_2 = $tempNum[1];
+            $ball_3 = $tempNum[2];
+            $ball_4 = $tempNum[3];
+            $ball_5 = $tempNum[4];
+            $result = LotteryResultGXSF::where("qishu", $item["issue"])->first();                
+            if (!isset($result)) {
+                $result = new LotteryResultGXSF;
+                $result->create_time = $current_time;
+                $result->qishu = $item["issue"];
+                $result->datetime = $item["opendate"];
+                $result->ball_1 = $ball_1;
+                $result->ball_2 = $ball_2;
+                $result->ball_3 = $ball_3;
+                $result->ball_4 = $ball_4;
+                $result->ball_5 = $ball_5;
+                $result->state = 0;
+                $result->save();
+            }
+        }
+
+        if (isset($data)) {
+            $response['data'] = $data;
+            $response['message'] = 'Lottery Result GXSF fetched successfully!';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } else {
+            $response['message'] = 'Lottery Result GXSF Data can not found!';
+        }
+        return response()->json($response, $response['status']); 
+    }
+
     public function getLotteryResultTCPL3(Request $request) {
 
         $response = [];
@@ -612,11 +1370,11 @@ class ThirdpartyLotteryResultController extends Controller
 
         if (isset($data)) {
             $response['data'] = $data;
-            $response['message'] = 'Lottery Result fetched successfully!';
+            $response['message'] = 'Lottery Result P3 fetched successfully!';
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
         } else {
-            $response['message'] = 'Lottery Result Data can not found!';
+            $response['message'] = 'Lottery Result P3 Data can not found!';
         }
         return response()->json($response, $response['status']); 
     }
@@ -655,14 +1413,59 @@ class ThirdpartyLotteryResultController extends Controller
 
         if (isset($data)) {
             $response['data'] = $data;
-            $response['message'] = 'Lottery Result fetched successfully!';
+            $response['message'] = 'Lottery Result D3 fetched successfully!';
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
         } else {
-            $response['message'] = 'Lottery Result Data can not found!';
+            $response['message'] = 'Lottery Result D3 Data can not found!';
         }
         return response()->json($response, $response['status']); 
     }
+
+    public function getLotteryResultSHSSL(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        $request_data = $request->all();
+
+        $data = $request_data["data"];
+
+        $current_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
+
+        foreach($data as $item) {
+            
+            $tempNum = explode(",", $item['code']);
+            $ball_1 = $tempNum[0];
+            $ball_2 = $tempNum[1];
+            $ball_3 = $tempNum[2];
+            $result = LotteryResultT3::where("qishu", $item["issue"])->first();                
+            if (!isset($result)) {
+                $result = new LotteryResultT3;
+                $result->create_time = $current_time;
+                $result->qishu = $item["issue"];
+                $result->datetime = $item["opendate"];
+                $result->ball_1 = $ball_1;
+                $result->ball_2 = $ball_2;
+                $result->ball_3 = $ball_3;
+                $result->state = 0;
+                $result->save();
+            }
+        }
+
+        if (isset($data)) {
+            $response['data'] = $data;
+            $response['message'] = 'Lottery Result T3 fetched successfully!';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } else {
+            $response['message'] = 'Lottery Result T3 Data can not found!';
+        }
+        return response()->json($response, $response['status']); 
+    }
+
+    // lottery result checkout
 
     public function checkoutAZXY10(Request $request) {
 
