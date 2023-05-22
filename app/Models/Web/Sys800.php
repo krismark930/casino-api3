@@ -34,6 +34,7 @@ class Sys800 extends Model {
         'Order_Code',
         'Checked',
         'Music',
+        'Notes',
     ];
 
     protected $table = 'web_sys800_data';

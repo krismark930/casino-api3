@@ -38,20 +38,20 @@ class DES
 
     protected function pad_or_unpad($str, $ext)
     {
-        // if ( is_null($this->pad_method) )
-        // {
-        //     return $str;
-        // }
-        // else
-        // {
-        //     $func_name = __CLASS__ . '::' . $this->pad_method . '_' . $ext . 'pad';
-        //     if ( is_callable($func_name) )
-        //     {
-        //         $size = mcrypt_get_block_size($this->cipher, $this->mode);
-        //         return call_user_func($func_name, $str, $size);
-        //     }
-        // }
-        // return $str;
+        if ( is_null($this->pad_method) )
+        {
+            return $str;
+        }
+        else
+        {
+            $func_name = __CLASS__ . '::' . $this->pad_method . '_' . $ext . 'pad';
+            if ( is_callable($func_name) )
+            {
+                $size = mcrypt_get_block_size('MCRYPT_3DES', 'ecb');
+                return call_user_func($func_name, $str, $size);
+            }
+        }
+        return $str;
     }
 
     protected function pad($str)
@@ -66,46 +66,43 @@ class DES
 
     public function encrypt($str)
     {
-        // $str = $this->pad($str);
-        // $td = mcrypt_module_open($this->cipher, '', $this->mode, '');
+        $iv_size = openssl_cipher_iv_length('AES-128-ECB');
+        $iv = '';
+        if ($iv_size > 0) {
+            $iv = openssl_random_pseudo_bytes($iv_size);
+        }
 
-        // if ( empty($this->iv) )
-        // {
-        //     $iv = @mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
-        // }
-        // else
-        // {
-        //     $iv = $this->iv;
-        // }
+        $encrypted = openssl_encrypt($str, "AES-128-ECB", $this->secret_key, OPENSSL_RAW_DATA, $iv);
 
-        // mcrypt_generic_init($td, $this->secret_key, $iv);
-        // $cyper_text = mcrypt_generic($td, $str);
-        // $rt=base64_encode($cyper_text);
-        // mcrypt_generic_deinit($td);
-        // mcrypt_module_close($td);
+        $encrypted = base64_encode($encrypted);
 
-        return "";//$rt;
+        return $encrypted;
     }
 
-    public function decrypt($str){
-        // $td = mcrypt_module_open($this->cipher, '', $this->mode, '');
+    public function decrypt($str) {
 
-        // if ( empty($this->iv) )
-        // {
-        //     $iv = @mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
-        // }
-        // else
-        // {
-        //     $iv = $this->iv;
-        // }
+        $iv_size = openssl_cipher_iv_length('AES-128-ECB');
+        $iv = '';
+        if ($iv_size > 0) {
+            $iv = openssl_random_pseudo_bytes($iv_size);
+        }
 
-        // mcrypt_generic_init($td, $this->secret_key, $iv);
-        // $decrypted_text = mdecrypt_generic($td, base64_decode($str));
-        // $rt = $decrypted_text;
-        // mcrypt_generic_deinit($td);
-        // mcrypt_module_close($td);
+        $encrypted = base64_decode($str);
 
-        // return $this->unpad($rt);
+        if (!$encrypted) {
+            error_log("Invalid base64 string: $encrypted");
+            return false;
+        }
+
+        $decrypted = openssl_decrypt($encrypted, 'AES-128-ECB', $this->secret_key, OPENSSL_RAW_DATA, $iv);
+
+        if ($decrypted === false) {
+            $error = openssl_error_string();
+            error_log("Decryption error: $error");
+            return false;
+        }
+
+        return $decrypted;
     }
 
     public static function hex2bin($hexdata) {
@@ -126,16 +123,21 @@ class DES
 
     public static function pkcs5_unpad($text)
     {
-        // $pad = ord($text{strlen($text) - 1});
-        // if ($pad > strlen($text)) return false;
-        // if (strspn($text, chr($pad), strlen($text) - $pad) != $pad) return false;
-        // return substr($text, 0, -1 * $pad);
+        $pad_length = ord($text[strlen($text) - 1]);
+
+        if ($pad_length > strlen($text)) {
+            return false;
+        }
+
+        return substr($text, 0, -1 * $pad_length);
     }
+
     public function getMillisecond() {
         list($t1, $t2) = explode(' ', microtime());
         return $t2 .  ceil( ($t1 * 1000) );
     }
-    function getOrderId($agent){
+
+    public function getOrderId($agent){
         list($usec, $sec) = explode(" ", microtime());
         $msec=round($usec*1000);
         return $agent.date("YmdHis").$msec;

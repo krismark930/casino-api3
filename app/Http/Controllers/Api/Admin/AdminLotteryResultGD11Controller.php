@@ -397,136 +397,175 @@ class AdminLotteryResultGD11Controller extends Controller
                 $quick_type = $order["quick_type"];
                 $rTypeName = $order["rtype_str"];
 
-                if($betInfo[1]=="LOCATE"){//每球定位
-                    $selectBall = $betInfo[2];
-                    if($selectBall == "1"){
-                        if($betInfo[0]==$ball1){
-                            $is_win = "true";
-                        }
-                    }elseif($selectBall == "2"){
-                        if($betInfo[0]==$ball2){
-                            $is_win = "true";
-                        }
-                    }elseif($selectBall == "3"){
-                        if($betInfo[0]==$ball3){
-                            $is_win = "true";
-                        }
-                    }elseif($selectBall == "4"){
-                        if($betInfo[0]==$ball4){
-                            $is_win = "true";
-                        }
-                    }elseif($selectBall == "5"){
-                        if($betInfo[0]==$ball5){
-                            $is_win = "true";
-                        }
-                    }
-                }elseif($betInfo[1]=="MATCH"){
-                    if(in_array($betInfo[0],$ballArray)){
+                // if($betInfo[1]=="LOCATE"){//每球定位
+                //     $selectBall = $betInfo[2];
+                //     if($selectBall == "1"){
+                //         if($betInfo[0]==$ball1){
+                //             $is_win = "true";
+                //         }
+                //     }elseif($selectBall == "2"){
+                //         if($betInfo[0]==$ball2){
+                //             $is_win = "true";
+                //         }
+                //     }elseif($selectBall == "3"){
+                //         if($betInfo[0]==$ball3){
+                //             $is_win = "true";
+                //         }
+                //     }elseif($selectBall == "4"){
+                //         if($betInfo[0]==$ball4){
+                //             $is_win = "true";
+                //         }
+                //     }elseif($selectBall == "5"){
+                //         if($betInfo[0]==$ball5){
+                //             $is_win = "true";
+                //         }
+                //     }
+                // }elseif($betInfo[1]=="MATCH"){
+                //     if(in_array($betInfo[0],$ballArray)){
+                //         $is_win = "true";
+                //     }
+                // }elseif($betInfo[0]=="TOTAL"){
+                //     if(in_array($betInfo[1],array($zh_dx_en,$zh_ds_en,$zh_tiger_en))){
+                //         $is_win = "true";
+                //     }elseif(($betInfo[1]=="OVER" || $betInfo[1]=="UNDER") && $zh_dx=="总和30"){
+                //         $is_win = "tie";
+                //     }
+                // }elseif($betInfo[0]=="BEFORE" || $betInfo[0]=="MIDDLE" || $betInfo[0]=="AFTER"){
+                //     if(($betInfo[0]=="BEFORE") && ($betInfo[1]==$before_shunzi_en)){
+                //         $is_win = "true";
+                //     }elseif(($betInfo[0]=="MIDDLE") && ($betInfo[1]==$middle_shunzi_en)){
+                //         $is_win = "true";
+                //     }elseif(($betInfo[0]=="AFTER") && ($betInfo[1]==$after_shunzi_en)){
+                //         $is_win = "true";
+                //     }
+                // }elseif($rTypeName=="快速-广东11选5"){
+                //     $betInfo = $order["number"];
+                //     if($quick_type=="第一球"){
+                //         if($betInfo==$dx_1 || $betInfo==$ds_1 || $betInfo==$ball1){
+                //             $is_win = "true";
+                //         }
+                //     }elseif($quick_type=="第二球"){
+                //         if($betInfo==$dx_2 || $betInfo==$ds_2 || $betInfo==$ball2){
+                //             $is_win = "true";
+                //         }
+                //     }elseif($quick_type=="第三球"){
+                //         if($betInfo==$dx_3 || $betInfo==$ds_3 || $betInfo==$ball3){
+                //             $is_win = "true";
+                //         }
+                //     }elseif($quick_type=="第四球"){
+                //         if($betInfo==$dx_4 || $betInfo==$ds_4 || $betInfo==$ball4){
+                //             $is_win = "true";
+                //         }
+                //     }elseif($quick_type=="第五球"){
+                //         if($betInfo==$dx_5 || $betInfo==$ds_5 || $betInfo==$ball5){
+                //             $is_win = "true";
+                //         }
+                //     }elseif($quick_type=="总和龙虎和"){
+                //         if(in_array($betInfo,array($hms[1],$hms[2],$hms[3]))){
+                //             $is_win = "true";
+                //         }elseif(($betInfo=="总和大" || $betInfo=="总和小") &&$zh_dx=="总和30"){
+                //             $is_win = "tie";
+                //         }
+                //     }elseif($quick_type=="前三"){
+                //         if($betInfo==$hms[4]){
+                //             $is_win = "true";
+                //         }
+                //     }elseif($quick_type=="中三"){
+                //         if($betInfo==$hms[5]){
+                //             $is_win = "true";
+                //         }
+                //     }elseif($quick_type=="后三"){
+                //         if($betInfo==$hms[6]){
+                //             $is_win = "true";
+                //         }
+                //     }
+                // }else{
+                //     if($betInfo[0]=="1"){
+                //         if(in_array($betInfo[1],array($ball1_Ds_en,$ball1_Dx_en))){
+                //             $is_win = "true";
+                //         }
+                //         if($betInfo[2]){
+                //             if(in_array($betInfo[1].":".$betInfo[2],array($ball1_HsDs_en,$ball1_WsDx_en))){
+                //                 $is_win = "true";
+                //             }
+                //         }
+                //     }elseif($betInfo[0] == "2"){
+                //         if(in_array($betInfo[1],array($ball2_Ds_en,$ball2_Dx_en))){
+                //             $is_win = "true";
+                //         }
+                //         if($betInfo[2]){
+                //             if(in_array($betInfo[1].":".$betInfo[2],array($ball2_HsDs_en,$ball2_WsDx_en))){
+                //                 $is_win = "true";
+                //             }
+                //         }
+                //     }elseif($betInfo[0] == "3"){
+                //         if(in_array($betInfo[1],array($ball3_Ds_en,$ball3_Dx_en))){
+                //             $is_win = "true";
+                //         }
+                //         if($betInfo[2]){
+                //             if(in_array($betInfo[1].":".$betInfo[2],array($ball3_HsDs_en,$ball3_WsDx_en))){
+                //                 $is_win = "true";
+                //             }
+                //         }
+                //     }elseif($betInfo[0] == "4"){
+                //         if(in_array($betInfo[1],array($ball4_Ds_en,$ball4_Dx_en))){
+                //             $is_win = "true";
+                //         }
+                //         if($betInfo[2]){
+                //             if(in_array($betInfo[1].":".$betInfo[2],array($ball4_HsDs_en,$ball4_WsDx_en))){
+                //                 $is_win = "true";
+                //             }
+                //         }
+                //     }elseif($betInfo[0] == "5"){
+                //         if(in_array($betInfo[1],array($ball5_Ds_en,$ball5_Dx_en))){
+                //             $is_win = "true";
+                //         }
+                //         if($betInfo[2]){
+                //             if(in_array($betInfo[1].":".$betInfo[2],array($ball5_HsDs_en,$ball5_WsDx_en))){
+                //                 $is_win = "true";
+                //             }
+                //         }
+                //     }
+                // }
+                
+                $betInfo = $order["number"];
+                if($quick_type=="第一球"){
+                    if($betInfo==$dx_1 || $betInfo==$ds_1 || $betInfo==$ball1){
                         $is_win = "true";
                     }
-                }elseif($betInfo[0]=="TOTAL"){
-                    if(in_array($betInfo[1],array($zh_dx_en,$zh_ds_en,$zh_tiger_en))){
+                }elseif($quick_type=="第二球"){
+                    if($betInfo==$dx_2 || $betInfo==$ds_2 || $betInfo==$ball2){
                         $is_win = "true";
-                    }elseif(($betInfo[1]=="OVER" || $betInfo[1]=="UNDER") && $zh_dx=="总和30"){
+                    }
+                }elseif($quick_type=="第三球"){
+                    if($betInfo==$dx_3 || $betInfo==$ds_3 || $betInfo==$ball3){
+                        $is_win = "true";
+                    }
+                }elseif($quick_type=="第四球"){
+                    if($betInfo==$dx_4 || $betInfo==$ds_4 || $betInfo==$ball4){
+                        $is_win = "true";
+                    }
+                }elseif($quick_type=="第五球"){
+                    if($betInfo==$dx_5 || $betInfo==$ds_5 || $betInfo==$ball5){
+                        $is_win = "true";
+                    }
+                }elseif($quick_type=="总和龙虎和"){
+                    if(in_array($betInfo,array($hms[1],$hms[2],$hms[3]))){
+                        $is_win = "true";
+                    }elseif(($betInfo=="总和大" || $betInfo=="总和小") &&$zh_dx=="总和30"){
                         $is_win = "tie";
                     }
-                }elseif($betInfo[0]=="BEFORE" || $betInfo[0]=="MIDDLE" || $betInfo[0]=="AFTER"){
-                    if(($betInfo[0]=="BEFORE") && ($betInfo[1]==$before_shunzi_en)){
-                        $is_win = "true";
-                    }elseif(($betInfo[0]=="MIDDLE") && ($betInfo[1]==$middle_shunzi_en)){
-                        $is_win = "true";
-                    }elseif(($betInfo[0]=="AFTER") && ($betInfo[1]==$after_shunzi_en)){
+                }elseif($quick_type=="前三"){
+                    if($betInfo==$hms[4]){
                         $is_win = "true";
                     }
-                }
-                elseif($rTypeName=="快速-广东11选5"){
-                    $betInfo = $order["number"];
-                    if($quick_type=="第一球"){
-                        if($betInfo==$dx_1 || $betInfo==$ds_1 || $betInfo==$ball1){
-                            $is_win = "true";
-                        }
-                    }elseif($quick_type=="第二球"){
-                        if($betInfo==$dx_2 || $betInfo==$ds_2 || $betInfo==$ball2){
-                            $is_win = "true";
-                        }
-                    }elseif($quick_type=="第三球"){
-                        if($betInfo==$dx_3 || $betInfo==$ds_3 || $betInfo==$ball3){
-                            $is_win = "true";
-                        }
-                    }elseif($quick_type=="第四球"){
-                        if($betInfo==$dx_4 || $betInfo==$ds_4 || $betInfo==$ball4){
-                            $is_win = "true";
-                        }
-                    }elseif($quick_type=="第五球"){
-                        if($betInfo==$dx_5 || $betInfo==$ds_5 || $betInfo==$ball5){
-                            $is_win = "true";
-                        }
-                    }elseif($quick_type=="总和龙虎和"){
-                        if(in_array($betInfo,array($hms[1],$hms[2],$hms[3]))){
-                            $is_win = "true";
-                        }elseif(($betInfo=="总和大" || $betInfo=="总和小") &&$zh_dx=="总和30"){
-                            $is_win = "tie";
-                        }
-                    }elseif($quick_type=="前三"){
-                        if($betInfo==$hms[4]){
-                            $is_win = "true";
-                        }
-                    }elseif($quick_type=="中三"){
-                        if($betInfo==$hms[5]){
-                            $is_win = "true";
-                        }
-                    }elseif($quick_type=="后三"){
-                        if($betInfo==$hms[6]){
-                            $is_win = "true";
-                        }
+                }elseif($quick_type=="中三"){
+                    if($betInfo==$hms[5]){
+                        $is_win = "true";
                     }
-                }
-                else{
-                    if($betInfo[0]=="1"){
-                        if(in_array($betInfo[1],array($ball1_Ds_en,$ball1_Dx_en))){
-                            $is_win = "true";
-                        }
-                        if($betInfo[2]){
-                            if(in_array($betInfo[1].":".$betInfo[2],array($ball1_HsDs_en,$ball1_WsDx_en))){
-                                $is_win = "true";
-                            }
-                        }
-                    }elseif($betInfo[0] == "2"){
-                        if(in_array($betInfo[1],array($ball2_Ds_en,$ball2_Dx_en))){
-                            $is_win = "true";
-                        }
-                        if($betInfo[2]){
-                            if(in_array($betInfo[1].":".$betInfo[2],array($ball2_HsDs_en,$ball2_WsDx_en))){
-                                $is_win = "true";
-                            }
-                        }
-                    }elseif($betInfo[0] == "3"){
-                        if(in_array($betInfo[1],array($ball3_Ds_en,$ball3_Dx_en))){
-                            $is_win = "true";
-                        }
-                        if($betInfo[2]){
-                            if(in_array($betInfo[1].":".$betInfo[2],array($ball3_HsDs_en,$ball3_WsDx_en))){
-                                $is_win = "true";
-                            }
-                        }
-                    }elseif($betInfo[0] == "4"){
-                        if(in_array($betInfo[1],array($ball4_Ds_en,$ball4_Dx_en))){
-                            $is_win = "true";
-                        }
-                        if($betInfo[2]){
-                            if(in_array($betInfo[1].":".$betInfo[2],array($ball4_HsDs_en,$ball4_WsDx_en))){
-                                $is_win = "true";
-                            }
-                        }
-                    }elseif($betInfo[0] == "5"){
-                        if(in_array($betInfo[1],array($ball5_Ds_en,$ball5_Dx_en))){
-                            $is_win = "true";
-                        }
-                        if($betInfo[2]){
-                            if(in_array($betInfo[1].":".$betInfo[2],array($ball5_HsDs_en,$ball5_WsDx_en))){
-                                $is_win = "true";
-                            }
-                        }
+                }elseif($quick_type=="后三"){
+                    if($betInfo==$hms[6]){
+                        $is_win = "true";
                     }
                 }
 

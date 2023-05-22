@@ -36,6 +36,12 @@ use App\Http\Controllers\Api\User\LotteryScheduleController;
 use App\Http\Controllers\Api\User\LotteryResultController;
 use App\Http\Controllers\Api\User\LotteryOddsController;
 use App\Http\Controllers\Api\User\LotterySaveController;
+use App\Http\Controllers\Api\User\ChessController;
+use App\Http\Controllers\Api\User\OGController;
+use App\Http\Controllers\Api\User\AGController;
+use App\Http\Controllers\Api\User\BBINController;
+use App\Http\Controllers\Api\User\MGController;
+use App\Http\Controllers\Api\User\PTController;
 
 // API Admin Controllers
 use App\Http\Controllers\Api\Admin\WebSystemDataController;
@@ -81,6 +87,8 @@ use App\Http\Controllers\Api\Admin\AdminOddsGDSFController;
 use App\Http\Controllers\Api\Admin\AdminOddsGXSFController;
 use App\Http\Controllers\Api\Admin\AdminOddsTJSFController;
 use App\Http\Controllers\Api\Admin\AdminOddsXYFTController;
+use App\Http\Controllers\Api\Admin\HumanManagementController;
+use App\Http\Controllers\Api\Admin\AdminPaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -228,6 +236,22 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
         Route::post('/b5', [LotterySaveController::class, 'saveB5']);
         Route::post('/b3', [LotterySaveController::class, 'saveB3']);
         Route::post('/other', [LotterySaveController::class, 'saveOther']);
+    });
+
+    Route::group(['prefix' => 'other-game'], function ($router) {
+        Route::post('/chess-all', [ChessController::class, 'getChessGameAll']);
+        Route::post('/ag-all', [AGController::class, 'getAGGameAll']);
+        Route::post('/bbin-all', [BBINController::class, 'getBBINGameAll']);
+        Route::post('/mg-all', [MGController::class, 'getMGGameAll']);
+        Route::post('/pt-all', [PTController::class, 'getPTGameAll']);
+        Route::group(['middleware' => 'auth:api'], function ($router) {
+            Route::post('/ky-url', [ChessController::class, 'getKYUrl']);
+            Route::post('/og-url', [OGController::class, 'getOGUrl']);
+            Route::post('/ag-url', [AGController::class, 'getAGUrl']);
+            Route::post('/bbin-url', [BBINController::class, 'getBBINUrl']);
+            Route::post('/mg-url', [MGController::class, 'getMGUrl']);
+            Route::post('/pt-url', [PTController::class, 'getPTUrl']);
+        });
     });
 });
 
@@ -547,6 +571,38 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], func
             Route::post('/save', [AdminOddsGDSFController::class, 'saveOdds']);
         });
     });
+
+    // human management
+
+    Route::group(['prefix' => 'human-management'], function ($router) {
+        Route::post('/query', [HumanManagementController::class, 'getQuery']);
+        Route::post('/query-ky', [HumanManagementController::class, 'getQueryKy']);
+        Route::post('/query-htr', [HumanManagementController::class, 'getQueryHtr']);
+        Route::post('/report', [HumanManagementController::class, 'getReport']);
+        Route::post('/report-ky', [HumanManagementController::class, 'getReportKy']);
+        Route::post('/report-htr', [HumanManagementController::class, 'getReportHtr']);
+        Route::post('/discount-zr', [HumanManagementController::class, 'discountZr']);
+        Route::post('/discount-dz', [HumanManagementController::class, 'discountDz']);
+        Route::post('/discount-ky', [HumanManagementController::class, 'discountKy']);
+        Route::post('/discount-htr', [HumanManagementController::class, 'discountHtr']);
+        Route::post('/game-system', [HumanManagementController::class, 'getThirdpartyGameData']);
+        Route::post('/game-open', [HumanManagementController::class, 'gameOpen']);
+        Route::post('/game-delete', [HumanManagementController::class, 'deleteGame']);
+        Route::post('/game-edit', [HumanManagementController::class, 'editGame']);
+        Route::post('/game-update', [HumanManagementController::class, 'updateGame']);
+        Route::post('/game-add', [HumanManagementController::class, 'addGame']);
+    });
+
+    // payment management
+
+    Route::group(['prefix' => 'payment'], function ($router) {
+        Route::post('/cash-system', [AdminPaymentController::class, 'getCashSystem']);
+        Route::post('/cash-review', [AdminPaymentController::class, 'reviewCash']);
+        Route::post('/cash-cancel', [AdminPaymentController::class, 'rejectCash']);
+        Route::post('/cash-delete', [AdminPaymentController::class, 'deleteCash']);
+        Route::post('/cash-save', [AdminPaymentController::class, 'saveCash']);
+        Route::post('/cash-bulk-save', [AdminPaymentController::class, 'saveBulkCash']);
+    });
 });
 
 // routes for third party
@@ -615,8 +671,26 @@ Route::group(['prefix' => 'third-party'], function ($router){
     Route::group(['prefix' => 'lottery-result'], function ($router) {
         // lottery result api
         Route::post('/all', [ThirdpartyLotteryResultController::class, 'getLotteryResult']);
-        Route::post('/tcpl3', [ThirdpartyLotteryResultController::class, 'getLotteryResultTCPL3']);
-        Route::post('/fc3d', [ThirdpartyLotteryResultController::class, 'getLotteryResultFC3D']);
+        Route::post('/get-cqssc', [ThirdpartyLotteryResultController::class, 'getLotteryResultCQSSC']);
+        Route::post('/get-ffc5', [ThirdpartyLotteryResultController::class, 'getLotteryResultHN300']);
+        Route::post('/get-txssc', [ThirdpartyLotteryResultController::class, 'getLotteryResultTXFFC']);
+        Route::post('/get-twssc', [ThirdpartyLotteryResultController::class, 'getLotteryResultTW300']);
+        Route::post('/get-azxy5', [ThirdpartyLotteryResultController::class, 'getLotteryResultAZXY5']);
+        Route::post('/get-xjssc', [ThirdpartyLotteryResultController::class, 'getLotteryResultXJSSC']);
+        Route::post('/get-tjssc', [ThirdpartyLotteryResultController::class, 'getLotteryResultTJSSC']);
+        Route::post('/get-gd11', [ThirdpartyLotteryResultController::class, 'getLotteryResultGD11X5']);
+        Route::post('/get-azxy10', [ThirdpartyLotteryResultController::class, 'getLotteryResultAZXY10']);
+        Route::post('/get-bjpk', [ThirdpartyLotteryResultController::class, 'getLotteryResultBJPK10']);
+        Route::post('/get-xyft', [ThirdpartyLotteryResultController::class, 'getLotteryResultXYFT']);
+        Route::post('/get-cqsf', [ThirdpartyLotteryResultController::class, 'getLotteryResultCQXYNC']);
+        Route::post('/get-tjsf', [ThirdpartyLotteryResultController::class, 'getLotteryResultTJKL10']);
+        Route::post('/get-gdsf', [ThirdpartyLotteryResultController::class, 'getLotteryResultGDKL10']);
+        Route::post('/get-gxsf', [ThirdpartyLotteryResultController::class, 'getLotteryResultGXKL10']);
+        Route::post('/get-shssl', [ThirdpartyLotteryResultController::class, 'getLotteryResultSHSSL']);
+        Route::post('/get-tcpl3', [ThirdpartyLotteryResultController::class, 'getLotteryResultTCPL3']);
+        Route::post('/get-fc3d', [ThirdpartyLotteryResultController::class, 'getLotteryResultFC3D']);
+
+        // checkout result api
         Route::post('/azxy10', [ThirdpartyLotteryResultController::class, 'checkoutAZXY10']);
         Route::post('/azxy5', [ThirdpartyLotteryResultController::class, 'checkoutAZXY5']);
         Route::post('/bjkn', [ThirdpartyLotteryResultController::class, 'checkoutBJKN']);
@@ -643,13 +717,18 @@ Route::group(['prefix' => 'third-party'], function ($router){
 
     Route::post('/macao-lottery-status', [KitheController::class, 'getMacaoLotteryStatus']);
     Route::post('/macao-handicap/update', [KitheController::class, 'updateMacaoHandicap']);
-});
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-Route::middleware('auth:api')->get('/deposit', function (Request $request) {
-    return $request->user();
+    // other game routes
+    Route::group(['prefix' => 'other-game'], function ($router) {
+        Route::post('/og-token', [OGController::class, 'getOGToken']);
+        Route::post('/og-transaction', [OGController::class, 'getOGTransaction']);
+        Route::post('/ag-transaction', [AGController::class, 'getAGTransaction']);
+        Route::post('/yoplay-transaction', [AGController::class, 'getYoplayTransaction']);
+        Route::post('/bbin-transaction', [BBINController::class, 'getBBINTransaction']);
+        Route::post('/mg-transaction', [MGController::class, 'getMGTransaction']);
+        Route::post('/pt-transaction', [PTController::class, 'getPTTransaction']);
+        Route::post('/ky-transaction', [ChessController::class, 'getKYTransaction']);
+    });
 });
 
 Route::group(['prefix' => 'users', 'middleware' => 'CORS'], function ($router) {
@@ -706,8 +785,9 @@ Route::group(['prefix'=>'admin', 'middleware'=>'CORS'], function ($router) {
     });
 });
 
-Route::group(['prefix' => 'deposit', 'middleware' => 'CORS'], function ($router) {
-    Route::get('/getBank', [DepositController::class, 'getBank'])->name('web.deposit.getBank');
+Route::group(['prefix' => 'deposit', 'middleware' => ['CORS', 'auth:api']], function ($router) {
+    Route::post('/getBank', [DepositController::class, 'getBank'])->name('web.deposit.getBank');
+    Route::post('/get-crypto', [DepositController::class, 'getCrypto']);
     Route::post('/addMoney', [DepositController::class, 'addMoney'])->name('web.deposit.addMoney');
 });
 Route::group(['prefix' => 'transfer', 'middleware' => 'CORS'], function ($router) {
@@ -808,3 +888,4 @@ Route::group(['prefix' => 'real_wagger', 'middleware' => ['CORS', 'auth:admin']]
     Route::get('/get_pldata', [AdminRealWaggerController::class, 'getPLTableData'])->name('admin.realwagger.getPLTableData');
     Route::get('/get_result_data', [AdminRealWaggerController::class, 'getResultTableData'])->name('admin.realwagger.getResultTableData');
 });
+

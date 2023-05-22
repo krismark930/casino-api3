@@ -11,7 +11,7 @@ class KaTan extends Model
     
     protected $table = "ka_tan";
 
-    protected $fillable = [        
+    protected $fillable = [
         "num",
         "username",
         "kithe",

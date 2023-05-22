@@ -3,26 +3,29 @@
 namespace App\Utils\OG;
 
 use App\Models\Web\Sys800;
-use App\Utils\AG\DES1;
 use App\Utils\Utils;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
 class OGUtils {
 
-    var $X_Operator;
-    var $X_Key;
+    var $X_Operator = "marstestcny";
+    var $X_Key = 'eBsSqWQ2mdiTZM6G';
     var $OG_Token;
     var $Token_Uptime;
-    var $ApiUrl="https://mog326.haa477.com"; //服务APIURL
-    var $ApiUrl2='https://tigerapi.oriental-game.com:38888  ';  //获取数据APIURL
+    // 服务APIURL
+    // var $ApiUrl="https://mog326.haa477.com";
+    var $ApiUrl="https://marsapi-test.haa477.com:8443"; 
+    var $ApiUrl2='https://marsapi-test.haa477.com:8443';  //获取数据APIURL
 
-    function OGUtils($sysConfig) {
+    public function __construct($sysConfig) {
         $this->X_Operator=$sysConfig['OG_Agent'];
         $this->X_Key=$sysConfig['OG_Key'];
         $this->OG_Token=$sysConfig['OG_Token'];
         $this->Token_Uptime=$sysConfig['Token_Uptime'];
-     }
+    }
+
     function Add_OG_Member($username,$fullname='',$email=''){  //开户
         $postdata=array();
         $postdata['username']=$username;
@@ -53,9 +56,7 @@ class OGUtils {
         $header[] = 'X-Token: '. $this->OG_Token;
         $url= $this->ApiUrl.'/register';
         $htmlcode= $this->curl_info_s($url,null,null,$postdata, $this->ApiUrl,$header);
-        //echo $htmlcode;exit;
         $json_data=json_decode($htmlcode,true);
-        //print_r($json_data);exit;
         if($json_data['status']<>'success'){
             $t=date("Y-m-d H:i:s");
             $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/og_".date("Ymd").".txt";
@@ -68,7 +69,7 @@ class OGUtils {
         }
     }
 
-    function OG_GameUrl($username){  //获取游戏连接
+    function OG_GameUrl($username) {  //获取游戏连接
 
         $OG_Host=str_replace('https://','', $this->ApiUrl);
         $OG_Host=str_replace('http://','',$OG_Host);
@@ -101,8 +102,7 @@ class OGUtils {
         $url= $this->ApiUrl.'/game-providers/30/play?key='.$key.'&type='.$type;  //获取游戏key
         $htmlcode= $this->getUrl_OG($url,15);
         $json_data=json_decode($htmlcode,true);
-        //print_r($json_data);exit;
-        if($json_data['status']<>'success'){
+        if($json_data['status']<>'success') {
             $t=date("Y-m-d H:i:s");
             $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/og_".date("Ymd").".txt";
             $f=fopen($tmpfile,'a');
@@ -114,10 +114,10 @@ class OGUtils {
         }
     }
 
-    function OG_GameUrl2(){  //试玩
-        $this->ApiUrl="https://marsapi-test.oriental-game.com:8443"; //测试环境
-        $this->X_Operator='mog326jty';
-        $this->X_Key='DHqJTQRSjQvwZjFC';
+    function OG_GameUrl2() {  //试玩
+        $this->ApiUrl="https://marsapi-test.haa477.com:8443"; //测试环境
+        $this->X_Operator='marstestcny';
+        $this->X_Key='eBsSqWQ2mdiTZM6G';
         $this->GetToken();  //获取测试环境Token
         $username= $this->getpassword_OG();
         $result= $this->Add_OG_Member($username,"TryAccount",$username."@qq.com");
@@ -128,23 +128,23 @@ class OGUtils {
         return $GameUrl;
     }
 
-    function OG_Money($username,$password=''){  //获取余额
-        global $ApiUrl,$OG_Token;
-        $OG_Host=str_replace('https://','',$ApiUrl);
+    function OG_Money($username){  
+        //获取余额
+        $OG_Host=str_replace('https://','',$this->ApiUrl);
         $OG_Host=str_replace('http://','',$OG_Host);
         $header = array();
         $header[] = 'Host: '.$OG_Host;
         $header[] = 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0 FirePHP/0.7.4';
         $header[] = 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
         $header[] = 'Accept-Language: zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3';
-        $header[] = 'Referer: '.$ApiUrl.'/';
+        $header[] = 'Referer: '.$this->ApiUrl.'/';
         $header[] = 'x-insight: activate';
         $header[] = 'Connection: keep-alive';
-        $header[] = 'X-Token: '.$OG_Token;
-        $url=$ApiUrl.'/game-providers/30/balance?username='.$username;
+        $header[] = 'X-Token: '.$this->OG_Token;
+        $url=$this->ApiUrl.'/game-providers/30/balance?username='.$username;
         $htmlcode= $this->getUrl_OG($url,15,$header);
         $json_data=json_decode($htmlcode,true);
-        if($json_data['status']<>'success'){
+        if($json_data['status']<>'success') {
             $t=date("Y-m-d H:i:s");
             $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/og_".date("Ymd").".txt";
             $f=fopen($tmpfile,'a');
@@ -156,27 +156,27 @@ class OGUtils {
         }
     }
 
-    function OG_Deposit($username,$transferId,$balance,$action="IN"){  //转换额度 transferId定单号  balance金额
-        global $ApiUrl,$OG_Token;
-        $OG_Host=str_replace('https://','',$ApiUrl);
+    function OG_Deposit($username,$transferId,$balance,$action="IN"){  
+        //转换额度 transferId定单号  balance金额
+        $OG_Host=str_replace('https://','',$this->ApiUrl);
         $OG_Host=str_replace('http://','',$OG_Host);
         $header = array();
         $header[] = 'Host: '.$OG_Host;
         $header[] = 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0 FirePHP/0.7.4';
         $header[] = 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
         $header[] = 'Accept-Language: zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3';
-        $header[] = 'Referer: '.$ApiUrl.'/';
+        $header[] = 'Referer: '.$this->ApiUrl.'/';
         $header[] = 'x-insight: activate';
         $header[] = 'Connection: keep-alive';
-        $header[] = 'X-Token: '.$OG_Token;
+        $header[] = 'X-Token: '.$this->OG_Token;
         if($transferId=='') $transferId=substr($action,0,1).date("YmdHis").mt_rand(1000,9999);
         $postdata=array();
         $postdata['username']=$username;
         $postdata['balance']=$balance;
         $postdata['action']=$action;
         $postdata['transferId']=$transferId;
-        $url=$ApiUrl.'/game-providers/30/balance';
-        $htmlcode= $this->curl_info_s($url,null,null,$postdata,$ApiUrl,$header);
+        $url=$this->ApiUrl.'/game-providers/30/balance';
+        $htmlcode= $this->curl_info_s($url,null,null,$postdata,$this->ApiUrl,$header);
         $json_data=json_decode($htmlcode,true);
         //print_r($json_data);exit;
         $result=array();
@@ -277,19 +277,35 @@ class OGUtils {
         $header[] = 'Connection: keep-alive';
         $header[] = 'X-Operator: '.$this->X_Operator;
         $header[] = 'X-key: '.$this->X_Key;
-        //print_r($header);exit;
         $url=$this->ApiUrl.'/token';
         $htmlcode= $this->curl_info_s($url,null,null,null,$this->ApiUrl,$header);
         $json_data=json_decode($htmlcode,true);
-        //print_r($json_data);
         if($json_data['status']=='success'){
-            $OG_Token=$json_data['data']['token'];
-            $Token_Uptime=time();
+            $this->OG_Token=$json_data['data']['token'];
+
+            $Token_Uptime = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
+
             if($type==1){
-                DB::update("update sys_config set OG_Token='$OG_Token',Token_Uptime='$Token_Uptime'");
+                DB::update("update sys_config set OG_Token='$this->OG_Token',OG_CJ_Time='$Token_Uptime'");
             }
         }
     }
+
+    function GetGameData($SDate) {
+        //获取下注记录
+        $ApiUrl = "https://tigerapi.pwqr820.com:38888"; // test
+        // $ApiUrl = "https://tigerapi.all5555.com:38888"; // normal
+        $postdata=array();
+        $postdata['Operator']=$this->X_Operator;
+        $postdata['Key']=$this->X_Key;
+        $postdata['SDate']=$SDate;
+        $postdata['EDate']=date("Y-m-d H:i:s",strtotime($SDate)+600);
+        $postdata['Provider']="ogplus";
+        $url=$ApiUrl.'/transaction';
+        $htmlcode=$this->curl_info_s($url,null,null,$postdata,$ApiUrl);
+        $json_data=json_decode($htmlcode,true);
+        return $json_data;
+    }    
 
 
     function getUrl_OG($url,$timeout=60,$header=null, $post = null){
@@ -299,15 +315,15 @@ class OGUtils {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         }
         if($post){  //启用POST提交
-            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POST, 2);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $post);  //设置POST提交的字符串
         }
         curl_setopt($ch, CURLOPT_TIMEOUT,$timeout);  //超时60秒
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // 对认证证书来源的检查
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1); // 从证书中检查SSL加密算法是否存在
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2); // 从证书中检查SSL加密算法是否存在
         curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);  //设置浏览器类型，含代理号
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 2);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 2);
         $html = curl_exec($ch);
         return $html;
     }
@@ -329,15 +345,15 @@ class OGUtils {
                 curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_jar);
             }
             if ($post){  //启用POST提交
-                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POST, 2);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $post);  //设置POST提交的字符串
             }
             if ($header){  //设置header
                 curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
             }
             curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);  //模拟用户使用的浏览器
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);  //自动跳转
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);  //要求结果保存到字符串中还是输出到屏幕上 0为输出1为保存字符串
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 2);  //自动跳转
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 2);  //要求结果保存到字符串中还是输出到屏幕上 0为输出1为保存字符串
             curl_setopt($ch, CURLOPT_TIMEOUT, 60);  // 超时的时间（秒）
             if($returnCooke){  //如果你想把一个头包含在输出中，设置这个选项为一个非零值
                 curl_setopt($ch, CURLOPT_HEADER, true);
@@ -347,7 +363,7 @@ class OGUtils {
             curl_setopt($ch, CURLOPT_NOBODY, false);  //如果你不想在输出中包含body部分，设置这个选项为一个非零值
             curl_setopt($ch, CURLOPT_REFERER, $referer);  //设置referer
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // 对认证证书来源的检查
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1); // 从证书中检查SSL加密算法是否存在
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2); // 从证书中检查SSL加密算法是否存在
             $content = curl_exec($ch); //请求网页
             $result=$content;
             if($returnCooke){

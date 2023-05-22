@@ -60,7 +60,7 @@ class LotteryScheduleController extends Controller
                         $s_time = Carbon::parse($current_time);
                         $result["diff_time"] = $e_time->diffInSeconds($s_time) * 1000 + 60000;
                     } else {
-                        $first_lottery = LotterySchedule::where("lottery_type", $lottery_type)->orderBy("id", "asc")->first();
+                        $first_lottery = LotterySchedule::where("qishu", "010")->orderBy("id", "asc")->first();
                         $last_lottery = LotterySchedule::where("lottery_type", $lottery_type)->orderBy("id", "desc")->first();
                         $result = $first_lottery;
                         $isLateNight = false;
@@ -154,13 +154,7 @@ class LotteryScheduleController extends Controller
                         $last_lottery = LotterySchedule::where("lottery_type", $lottery_type)->orderBy("id", "desc")->first();
                         $result = $first_lottery;
                         $isLateNight = false;
-                        if ($current_time >= $last_lottery["kaijiang_time"]) {
-                            $isLateNight = true;
-                        }
-                        $current_date = $isLateNight ? Carbon::now('Asia/Hong_Kong')->addDays(1)->format('Ymd') : Carbon::now('Asia/Hong_Kong')->format('Ymd');
-                        if(intval($result['qishu'])>=43) {
-                            $current_date = Carbon::now('Asia/Hong_Kong')->format('Ymd');
-                        }
+                        $current_date = Carbon::now('Asia/Hong_Kong')->format('Ymd');
                         $result["qishu"] = $current_date.$result["qishu"];
                         $result["is_open"] = false;
                         $result["diff_time"] = 0;

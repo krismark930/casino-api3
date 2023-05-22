@@ -2,35 +2,29 @@
 
 namespace App\Utils\MG;
 
-use App\Utils\AG\DES1;
+use App\Utils\MG\des;
 
 class MGUtils {
 
-    var $MG_agent;
+    var $MG_agent = "H07_NMGE";
     var $giurl_MG;
     var $md5key_MG;
     var $deskey_MG;
 
-    function MGUtils($row) {
+    public function __construct($row) {
         $this->MG_agent = $row['KY_Agent'];
-        $this->giurl_MG = $row['KY_md5key'];
-        $this->md5key_MG = $row['KY_aeskey'];
-        $this->md5key_MG = $row['KY_aeskey'];
-     }
+        $this->md5key_MG = $row['KY_md5key'];
+        $this->deskey_MG = $row['KY_aeskey'];
+    }
+
     function Addmember_MG($username,$password,$tp=1){
-        global $MG_agent;
-        global $giurl_MG;
-        global $md5key_MG;
-        global $deskey_MG;
-        $crypt = new DES3($deskey_MG);
-        $para="cagent=".$MG_agent."/\\\\/loginname=".$username."/\\\\/method=lg/\\\\/actype=".$tp."/\\\/password=".$password."/\\\\/oddtype=A/\\\\/cur=CNY";
+        $crypt = new DES($this->deskey_MG);
+        $para="cagent=".$this->MG_agent."/\\\\/loginname=".$username."/\\\\/method=lg/\\\\/actype=".$tp."/\\\/password=".$password."/\\\\/oddtype=A/\\\\/cur=CNY";
         //echo $para;exit;
         $params=$crypt->encrypt($para);
-        $key=md5($params.$md5key_MG);
-        $url=$giurl_MG."doBusiness.do?params=".$params."&key=".$key;
-        if($_GET['debug']=='2'){echo $url;exit;}
+        $key=md5($params.$this->md5key_MG);
+        $url=$this->giurl_MG."doBusiness.do?params=".$params."&key=".$key;
         $xmlcode=$this->getUrl_MG($url);
-        if($_GET['debug']=='1'){echo $xmlcode;exit;}
         $result=$this->getResult_MG($xmlcode);
         if($result['info']<>'0'){
             $t=date("Y-m-d H:i:s");
@@ -43,56 +37,41 @@ class MGUtils {
     }
 
     function getGameUrl_MG($username,$password,$oddtype="A",$dm="www.bbin-api8.com",$tp=1,$gameType=0){
-        global $MG_agent;
-        global $giurl_MG;
-        global $gciurl_MG;
-        global $md5key_MG;
-        global $deskey_MG;
-        $crypt = new DES3($deskey_MG);
-        $para="cagent=".$MG_agent."/\\\\/loginname=".$username."/\\\\/actype=".$tp."/\\\\/password=".$password."/\\\\/dm=".$dm."/\\\\/sid=".$MG_agent.date("ymdhis").rand(1000,9999)."/\\\\/lang=1/\\\\/gameType=".$gameType."/\\\\/oddtype=".$oddtype."/\\\\/cur=CNY";
+        $crypt = new DES($this->deskey_MG);
+        $para="cagent=".$this->MG_agent."/\\\\/loginname=".$username."/\\\\/actype=".$tp."/\\\\/password=".$password."/\\\\/dm=".$dm."/\\\\/sid=".$this->MG_agent.date("ymdhis").rand(1000,9999)."/\\\\/lang=1/\\\\/gameType=".$gameType."/\\\\/oddtype=".$oddtype."/\\\\/cur=CNY";
         $params=$crypt->encrypt($para);
-        $key=md5($params.$md5key_MG);
-        $url=$gciurl_MG."forwardGame.do?params=".$params."&key=".$key;
-        if($_GET['debug']=='2'){echo $url;exit;}
+        $key=md5($params.$this->md5key_MG);
+        $url=$this->giurl_MG."forwardGame.do?params=".$params."&key=".$key;
         return  $url;
     }
 
     function getMoney_MG($username,$password,$tp=1){
-        global $MG_agent;
-        global $giurl_MG;
-        global $md5key_MG;
-        global $deskey_MG;
-        $crypt = new DES3($deskey_MG);
-        $para="cagent=".$MG_agent."/\\\\/loginname=".$username."/\\\\/method=gb/\\\\/actype=".$tp."/\\\\/password=".$password."/\\\\/cur=CNY";
+        $crypt = new DES($this->deskey_MG);
+        $para="cagent=".$this->MG_agent."/\\\\/loginname=".$username."/\\\\/method=gb/\\\\/actype=".$tp."/\\\\/password=".$password."/\\\\/cur=CNY";
         //echo $para;exit;
         $params=$crypt->encrypt($para);
-        $key=md5($params.$md5key_MG);
-        $url=$giurl_MG."doBusiness.do?params=".$params."&key=".$key;
-        if($_GET['debug']=='2'){echo $url;exit;}
+        $key=md5($params.$this->md5key_MG);
+        $url=$this->giurl_MG."doBusiness.do?params=".$params."&key=".$key;
         $xmlcode=$this->getUrl_MG($url);
-        if($_GET['debug']=='1'){echo $xmlcode;exit;}
         $result=$this->getResult_MG($xmlcode);
         return  intval($result['info']);
     }
 
-    function Deposit_MG($username,$password,$Gold,$tp="IN") // d存款 w提款 vd VIP存款 vw VIP提款
+    // d存款 w提款 vd VIP存款 vw VIP提款
+
+    function Deposit_MG($username,$password,$Gold,$tp="IN") 
     {
-        global $MG_agent;
-        global $giurl_MG;
-        global $md5key_MG;
-        global $deskey_MG;
-        $crypt = new DES3($deskey_MG);
+        $crypt = new DES($this->deskey_MG);
         $billno=date("YmdHis").rand(1000,9999);
         if($tp=="IN"){
             $billno=$billno."8";
         }else{
             $billno=$billno."0";
         }
-        $para="cagent=".$MG_agent."/\\\\/method=tc/\\\\/loginname=".$username."/\\\\/billno=".$billno."/\\\\/type=".$tp."/\\\\/credit=".number_format($Gold,2,null,"")."/\\\\/actype=1/\\\\/password=".$password."/\\\\/cur=CNY";
+        $para="cagent=".$this->MG_agent."/\\\\/method=tc/\\\\/loginname=".$username."/\\\\/billno=".$billno."/\\\\/type=".$tp."/\\\\/credit=".number_format($Gold,2,null,"")."/\\\\/actype=1/\\\\/password=".$password."/\\\\/cur=CNY";
         $params=$crypt->encrypt($para);
-        $key=md5($params.$md5key_MG);
-        $url=$giurl_MG."doBusiness.do?params=".$params."&key=".$key;
-        if($_GET['debug']=='2'){echo $url;exit;}
+        $key=md5($params.$this->md5key_MG);
+        $url=$this->giurl_MG."doBusiness.do?params=".$params."&key=".$key;
         $xmlcode=$this->getUrl_MG($url);
 
         $t=date("Y-m-d H:i:s");
@@ -106,10 +85,10 @@ class MGUtils {
         $result=$this->getResult_MG($xmlcode);
         //print_r($result);exit;
         if($result['info']=='0'){
-            $para="cagent=".$MG_agent."/\\\\/loginname=".$username."/\\\\/method=tcc/\\\\/billno=".$billno."/\\\\/type=".$tp."/\\\\/credit=".number_format($Gold,2,null,"")."/\\\\/actype=1/\\\\/flag=1/\\\\/password=".$password."/\\\\/cur=CNY";
+            $para="cagent=".$this->MG_agent."/\\\\/loginname=".$username."/\\\\/method=tcc/\\\\/billno=".$billno."/\\\\/type=".$tp."/\\\\/credit=".number_format($Gold,2,null,"")."/\\\\/actype=1/\\\\/flag=1/\\\\/password=".$password."/\\\\/cur=CNY";
             $params=$crypt->encrypt($para);
-            $key=md5($params.$md5key_MG);
-            $url=$giurl_MG."doBusiness.do?params=".$params."&key=".$key;
+            $key=md5($params.$this->md5key_MG);
+            $url=$this->giurl_MG."doBusiness.do?params=".$params."&key=".$key;
             unset($xmlcode);
             $xmlcode=$this->getUrl_MG($url);
 
@@ -127,28 +106,21 @@ class MGUtils {
     }
 
     function QosBillno_MG($billno){
-        global $MG_agent;
-        global $giurl_MG;
-        global $md5key_MG;
-        global $deskey_MG;
-        $crypt = new DES3($deskey_MG);
-        //$para="cagent=".$MG_agent."/\\\\/loginname=".$username."/\\\\/method=lg/\\\\/actype=".$tp."/\\\/password=".$password."/\\\\/oddtype=A/\\\\/cur=CNY";
-        $para="cagent=".$MG_agent."/\\\\/billno=".$billno."/\\\\/method=qos/\\\\/actype=1/\\\\/cur=CNY";
+        $crypt = new DES($this->deskey_MG);
+        //$para="cagent=".$this->MG_agent."/\\\\/loginname=".$username."/\\\\/method=lg/\\\\/actype=".$tp."/\\\/password=".$password."/\\\\/oddtype=A/\\\\/cur=CNY";
+        $para="cagent=".$this->MG_agent."/\\\\/billno=".$billno."/\\\\/method=qos/\\\\/actype=1/\\\\/cur=CNY";
         $params=$crypt->encrypt($para);
-        $key=md5($params.$md5key_MG);
-        $url=$giurl_MG."doBusiness.do?params=".$params."&key=".$key;
-        if($_GET['debug']=='2'){echo $url;exit;}
+        $key=md5($params.$this->md5key_MG);
+        $url=$this->giurl_MG."doBusiness.do?params=".$params."&key=".$key;
         $xmlcode=$this->getUrl_MG($url);
-        if($_GET['debug']=='1'){echo $xmlcode;exit;}
         return  $this->getResult_MG($xmlcode);
     }
 
     function getUrl_MG($url){
-        global $MG_agent;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_TIMEOUT,30);  //超时60秒
-        curl_setopt($ch, CURLOPT_USERAGENT, ' WEB_LIB_GI_'.$MG_agent);  //设置浏览器类型，含代理号
+        curl_setopt($ch, CURLOPT_USERAGENT, ' WEB_LIB_GI_'.$this->MG_agent);  //设置浏览器类型，含代理号
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $html = curl_exec($ch);

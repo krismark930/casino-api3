@@ -56,25 +56,25 @@ class LotteryResultController extends Controller
                 
             switch ($g_type) {
                 case "cq":
-                    $result = LotteryResultCQ::orderBy("qishu", "desc")->first();
+                    $result = LotteryResultCQ::orderBy("datetime", "desc")->first();
                     break;
                 case "ffc5":
-                    $result = LotteryResultFFC5::orderBy("qishu", "desc")->first();
+                    $result = LotteryResultFFC5::orderBy("datetime", "desc")->first();
                     break;
                 case "txssc":
-                    $result = LotteryResultTXSSC::orderBy("qishu", "desc")->first();
+                    $result = LotteryResultTXSSC::orderBy("datetime", "desc")->first();
                     break;
                 case "twssc":
-                    $result = LotteryResultTWSSC::orderBy("qishu", "desc")->first();
+                    $result = LotteryResultTWSSC::orderBy("datetime", "desc")->first();
                     break;
                 case "azxy5":
-                    $result = LotteryResultAZXY5::orderBy("qishu", "desc")->first();
+                    $result = LotteryResultAZXY5::orderBy("datetime", "desc")->first();
                     break;
                 case "jx":
-                    $result = LotteryResultJX::orderBy("qishu", "desc")->first();
+                    $result = LotteryResultJX::orderBy("datetime", "desc")->first();
                     break;
                 case "tj":
-                    $result = LotteryResultTJ::orderBy("qishu", "desc")->first();
+                    $result = LotteryResultTJ::orderBy("datetime", "desc")->first();
                     break;
             }
 
@@ -116,13 +116,13 @@ class LotteryResultController extends Controller
                 
             switch ($g_type) {
                 case "d3":
-                    $result = LotteryResultD3::orderBy("qishu", "desc")->first();
+                    $result = LotteryResultD3::orderBy("datetime", "desc")->first();
                     break;
                 case "p3":
-                    $result = LotteryResultP3::orderBy("qishu", "desc")->first();
+                    $result = LotteryResultP3::orderBy("datetime", "desc")->first();
                     break;
                 case "t3":
-                    $result = LotteryResultT3::orderBy("qishu", "desc")->first();
+                    $result = LotteryResultT3::orderBy("datetime", "desc")->first();
                     break;
             }
 
@@ -164,28 +164,28 @@ class LotteryResultController extends Controller
                 
             switch ($g_type) {
                 case "gd11":
-                    $result = LotteryResultGD11::orderBy("qishu", "desc")->first();
+                    $result = LotteryResultGD11::orderBy("datetime", "desc")->first();
                     break;
                 case "azxy10":
-                    $result = LotteryResultAZXY10::orderBy("qishu", "desc")->first();
+                    $result = LotteryResultAZXY10::orderBy("datetime", "desc")->first();
                     break;
                 case "cqsf":
-                    $result = LotteryResultCQSF::orderBy("qishu", "desc")->first();
+                    $result = LotteryResultCQSF::orderBy("datetime", "desc")->first();
                     break;
                 case "gdsf":
-                    $result = LotteryResultGDSF::orderBy("qishu", "desc")->first();
+                    $result = LotteryResultGDSF::orderBy("datetime", "desc")->first();
                     break;
                 case "gxsf":
-                    $result = LotteryResultGXSF::orderBy("qishu", "desc")->first();
+                    $result = LotteryResultGXSF::orderBy("datetime", "desc")->first();
                     break;
                 case "tjsf":
-                    $result = LotteryResultTJSF::orderBy("qishu", "desc")->first();
+                    $result = LotteryResultTJSF::orderBy("datetime", "desc")->first();
                     break;
                 case "bjpk":
-                    $result = LotteryResultBJPK::orderBy("qishu", "desc")->first();
+                    $result = LotteryResultBJPK::orderBy("datetime", "desc")->first();
                     break;
                 case "xyft":
-                    $result = LotteryResultXYFT::orderBy("qishu", "desc")->first();
+                    $result = LotteryResultXYFT::orderBy("datetime", "desc")->first();
                     break;
             }
 

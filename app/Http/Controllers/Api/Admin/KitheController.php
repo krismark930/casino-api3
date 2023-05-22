@@ -1226,7 +1226,7 @@ class KitheController extends Controller
                 $class3 = Utils::ka_Color_s($tmtm);
 
                 KaTan::where("kithe", $kithe)
-                    ->where("class1", "正特")
+                    ->where("class1", "正1-6")
                     ->where("class2", $class2)
                     ->where("bm", "!=", 0)
                     ->where(function ($query) {
@@ -1237,14 +1237,14 @@ class KitheController extends Controller
                     ->update(["bm" => 0]);
 
                 KaTan::where("kithe", $kithe)
-                    ->where("class1", "正特")
+                    ->where("class1", "正1-6")
                     ->where("class2", $class2)
                     ->where("class3", $class3)
                     ->update(["bm" => 1]);
 
                 $result1 = Katan::select(DB::raw('sum(sum_m) as sum_m, count(*) as re'))
                     ->where("kithe", $kithe)
-                    ->where("class1", "正特")
+                    ->where("class1", "正1-6")
                     ->where("class2", $class2)
                     ->where("class3", $class3)
                     ->first();
@@ -4983,7 +4983,7 @@ class KitheController extends Controller
                 $class3 = Utils::ka_Color_s($tmtm);
 
                 MacaoKatan::where("kithe", $kithe)
-                    ->where("class1", "正特")
+                    ->where("class1", "正1-6")
                     ->where("class2", $class2)
                     ->where("bm", "!=", 0)
                     ->where(function ($query) {
@@ -4994,14 +4994,14 @@ class KitheController extends Controller
                     ->update(["bm" => 0]);
 
                 MacaoKatan::where("kithe", $kithe)
-                    ->where("class1", "正特")
+                    ->where("class1", "正1-6")
                     ->where("class2", $class2)
                     ->where("class3", $class3)
                     ->update(["bm" => 1]);
 
                 $result1 = MacaoKatan::select(DB::raw('sum(sum_m) as sum_m, count(*) as re'))
                     ->where("kithe", $kithe)
-                    ->where("class1", "正特")
+                    ->where("class1", "正1-6")
                     ->where("class2", $class2)
                     ->where("class3", $class3)
                     ->first();
