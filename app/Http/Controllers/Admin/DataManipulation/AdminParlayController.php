@@ -59,23 +59,17 @@ class AdminParlayController extends Controller
   }
 
   public function getItems(Request $request) {
-    $id = $request['id'];
-    $type = $request['type'];
+    $page = $request['page'];
+    // $id = $request['id'];
+    // $type = $request['type'];
     $date = date('Y-m-d');
 
     try {
       $rows = Report::where('M_Date', $date)
-        ->where('Line_Type', '8');
-      $typeArr = ['', 'FT', 'BK', 'BS', 'TN', 'VB', 'OP', 'FU', 'FS'];
-      $typeIndex = array_search($type, $typeArr);
-      if($typeIndex == 8) {
-        $rows = $rows->where('Active', $typeIndex);
-      } else {
-        $rows = $rows->where('Active', $typeIndex)
-          ->orWhere('Active', $typeIndex.$typeIndex);
-      }
-      $rows = $rows->orderBy('bettime')
-        ->limit(20)->get();
+        ->where('LineType', '8');
+      $totalCount = $rows->count();
+      $rows = $rows->orderBy('BetTime')
+        ->offset($page * 20 - 20)->limit(20)->get();
 
       $data = array();
       foreach($rows as $row) {
@@ -84,7 +78,7 @@ class AdminParlayController extends Controller
         $Rep_Malay = '马来盘'; 
         $Rep_Indo = '印尼盘'; 
         $Rep_Euro = '欧洲盘'; 
-        switch ($row['OddsType']){
+        switch ($row['OddsType']) {
           case 'H':
               $Odds='<BR><font color =green>'.$Rep_HK.'</font>';
             break;
@@ -100,37 +94,40 @@ class AdminParlayController extends Controller
           case '':
               $Odds='';
             break;
-          }
-          $zt = [
-            '[注单确认]',
-            '[取消]',
-            '[赛事腰斩]',
-            '[赛事改期]',
-            '[赛事延期]',
-            '[赛事延赛]',
-            '[赛事取消]',
-            '[赛事无PK加时]',
-            '[球员弃权]',
-            '[队名错误]',
-            '[主客场错误]',
-            '[先发投手更换]',
-            '[选手更换]',
-            '[联赛名称错误]',
-            '[盘口错误]',
-            '[提前开赛]',
-            '[比分错误]',
-            '[未接受注单]',
-            '[进球取消]',
-            '[红卡取消]',
-            '[非正常投注]',
-            '[赔率错误]'
-          ][-$row['Confirmed']];
+        }
+        $ztIndex = intval(-$row['Confirmed']);
+        if($ztIndex > 32) $ztIndex -= 20;
+        $zt = [
+          '[注单确认]',
+          '[取消]',
+          '[赛事腰斩]',
+          '[赛事改期]',
+          '[赛事延期]',
+          '[赛事延赛]',
+          '[赛事取消]',
+          '[赛事无PK加时]',
+          '[球员弃权]',
+          '[队名错误]',
+          '[主客场错误]',
+          '[先发投手更换]',
+          '[选手更换]',
+          '[联赛名称错误]',
+          '[盘口错误]',
+          '[提前开赛]',
+          '[比分错误]',
+          '[未接受注单]',
+          '[进球取消]',
+          '[红卡取消]',
+          '[非正常投注]',
+          '[赔率错误]'
+        ][$ztIndex];
         array_push($data, array(
           'id' => $row['ID'],
           'gid' => $row['MID'],
           'payType' => $row['Pay_Type'],
           'result' => $row['M_Result'],
           'user' => $row['M_Name'],
+          //------------------------------
           'betTimes' => $row['BetTime'],
           'mName' => $row['M_Name'].'<br/><font color="#cc0000">'.$row['OpenType'].'&nbsp;&nbsp;'.$row['TurnRate'].'</font>',
           'betType' => $Title.$row['BetType'].$Odds.'<br/><font color="#0000cc">'.$this->show_voucher($row['LineType'], $row['ID']).'</font>',
@@ -141,7 +138,10 @@ class AdminParlayController extends Controller
           'cancel' => $row['Cancel'],
         ));
       }
-      return $data;
+      return array(
+        'data' => $data,
+        'totalCount' => $totalCount,
+      );
     } catch (Exception $e) {
       return response()->json($e, 500);
     }
@@ -149,7 +149,6 @@ class AdminParlayController extends Controller
 
   public function getFunctions(Request $request) {
     return [
-      '注单确认',
       '[取消]',
       '[赛事腰斩]',
       '[赛事改期]',
@@ -289,6 +288,20 @@ class AdminParlayController extends Controller
       return;
     } catch(Exception $e) {
       return response()->json('操作失败!', 500);
+    }
+  }
+
+  public function modifyEvent(Request $request) {
+    $id = $request['id'];
+    $mid = $request['mid'];
+
+    try {
+      Report::where('ID', $id)->update(array(
+        'MID' => $mid
+      ));
+      return response()->json('success', 200);
+    } catch(Exception $e) {
+      return response()->json($e, 500);
     }
   }
 

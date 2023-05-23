@@ -18,20 +18,21 @@ use App\Models\Web\MGLogs;
 use App\Models\Web\PTLogs;
 use App\Models\Web\KYLogs;
 use Illuminate\Support\Facades\DB;
-use App\Utils\BBIN\BBINUtils;
-use App\Utils\AG\AGUtils;
-use App\Utils\OG\OGUtils;
-use App\Utils\MG\MGUtils;
-use App\Utils\PT\PTUtils;
-use App\Utils\KY\KYUtils;
+use App\Utils\BBIN\bbinUtils;
+use App\Utils\AG\agUtils;
+use App\Utils\OG\ogUtils;
+use App\Utils\MG\mgUtils;
+use App\Utils\PT\ptUtils;
+use App\Utils\KY\kyUtils;
 use App\Utils\Utils;
 class TransferController extends Controller {
 
-    public function __construct(){
+    public function __construct() {
         //$this->middleware("auth:api");
     }
     // BBIN handle
     function handleBBIN(Request $request, User $user, SysConfig $sysConfig ) {
+        $BBINUtils = new BBINUtils($sysConfig);
         $BBIN_username = $user->BBIN_User;
         $BBIN_password = $user->BBIN_Pass;
         $username = $user->UserName;
@@ -51,11 +52,10 @@ class TransferController extends Controller {
         }
 
         $date=date("Y-m-d");
-        //"select sum(Gold) from BBIN_logs where Type='IN' and left(DateTime,10)='$date'";
+
         $row2  = DB::select("select sum(Gold) as IN_Money from BBIN_logs where Type='IN' and left(DateTime,10)='$date'");
         $IN_Money=intval($row2[0]->IN_Money);
 
-        //"select sum(Gold) as OUT_Money from BBIN_logs where Type='OUT' and left(DateTime,10)='$date'";
         $row2  = DB::select("select sum(Gold) as OUT_Money from BBIN_logs where Type='OUT' and left(DateTime,10)='$date'");
         $OUT_Money=intval($row2[0]->OUT_Money);
         if(($IN_Money+$money2-$OUT_Money)>$BBIN_Limit){
@@ -77,27 +77,20 @@ class TransferController extends Controller {
         if($BBIN_username==null or $BBIN_username==""){
             $WebCode =ltrim(trim($sysConfig['AG_User']));
             if(!preg_match("/^[A-Za-z0-9]{4,12}$/", $user['UserName'])){
-                $BBIN_username = BBINUtils::getpassword_bbin(10);
+                $BBIN_username = $BBINUtils->getpassword_bbin(10);
             }else{
-                $BBIN_username=trim($user['UserName']).BBINUtils::getpassword_bbin(1);
+                $BBIN_username=trim($user['UserName']).$BBINUtils->getpassword_bbin(1);
             }
             $BBIN_username='h07'.$WebCode.$BBIN_username;
             $BBIN_username=strtolower($BBIN_username);
-            $BBIN_password=strtolower(BBINUtils::getpassword_bbin(10));
+            $BBIN_password=strtolower($BBINUtils->getpassword_bbin(10));
 
 
-            // $result= BBINUtils::Addmember_BBIN($BBIN_username,$BBIN_password,1);
-            // if($result['info']=='0'){
-            if(true){
+            $result= $BBINUtils->Addmember_BBIN($BBIN_username,$BBIN_password,1);
+            if($result['info']=='0'){
                 $msql="update web_member_data set BBIN_User='".$BBIN_username."',BBIN_Pass='".$BBIN_password."' where UserName='".$username."'";
                 $update = User::where('UserName', $username)->update(['BBIN_User' => $BBIN_username,
                 'BBIN_Pass' => $BBIN_password]);
-                if($update){
-
-                }else{
-
-                };// or die($msql);
-                //echo("<script>alert('恭喜您，真人账号激活成功！');</script>");
             }else{
                 return response()->json(['success'=>false, 'message'=> '网络异常，请与在线客服联系！']);
             }
@@ -108,8 +101,9 @@ class TransferController extends Controller {
             }else{  //转入前扣款
                 $assets= $user['Money'];//GetField($username,'Money');
                 $user_id=$user['id'];//GetField($username,'id');
+                $bbin_money = $user["BBIN_Money"];
                 Utils::ProcessUpdate($username);  //防止并发
-                $result = DB::update("update web_member_data set Money=Money-$money where Username='$username'");
+                $result = DB::update("update web_member_data set Money=Money-$money, BBIN_Money=BBIN_Money+$money where Username='$username'");
 
                 if($result){
                     $balance = $assets-$money;
@@ -174,14 +168,12 @@ class TransferController extends Controller {
         }
 
         if($tp=="OUT"){  //转出
-            $money2= 500;//BBINUtils::getMoney_BBIN($BBIN_username, $BBIN_password); //获取真人余额
+            $money2 = $BBINUtils->getMoney_BBIN($BBIN_username, $BBIN_password); //获取真人余额
             if($money>$money2){
                 return response()->json(['success'=>false, 'message'=> '转账金额不能大于真人账号余额!']);
             }
         }
 
-        //转换前添加记录
-        //$tr_sql="insert into 'BBIN_logs' set Username='$username',Type='$tp',Gold='$money',Billno='0',DateTime='".date("Y-m-d H:i:s",time())."',Result='0',Checked='0'";
 
         $bbinLogData = [
             "Username" => $username,
@@ -200,15 +192,12 @@ class TransferController extends Controller {
 
         }
         //转换操作
-        //$results= BBINUtils::Deposit_BBIN($BBIN_username,$BBIN_password,$money,$tp);
-        $billno='test';//$results['billno'];
+        $results= $BBINUtils->Deposit_BBIN($BBIN_username,$BBIN_password,$money,$tp);
+        $billno=$results['billno'];
         $result=1;
-        //if($results['info']=='0') $result=1;
+        if($results['info']=='0') $result=1;
 
         //更新状态
-        //$tr_sql="update  'BBIN_logs' set Billno='$billno',Result='$result',Checked='$result' where id='$ouid2'";
-        // $user_id=Utils::GetField($username,'id');
-        // return response()->json(['success'=>$user_id, 'test'=> $username]);
 
         BBINLogs::where('id', $ouid2)->update(['Billno' => $billno,
         'Result' => $result, 'Checked' => $result,]);
@@ -222,11 +211,6 @@ class TransferController extends Controller {
                 $Order_Code='CK'.date("YmdHis",time()+12*3600).mt_rand(1000,9999);
                 $previousAmount=Utils::GetField($username,'Money');
                 $currentAmount=$previousAmount+$money;
-                $sql = "insert into web_sys800_data set Checked=1,Gold='$money',previousAmount='$previousAmount
-                ',currentAmount='$currentAmount',AddDate='$adddate',Type='S',Type2=3,UserName='$username
-                ',Agents='$agents',World='$world',Corprator='$corprator',Super='$super
-                ',Admin='$admin',CurType='RMB',Date='$date',Name='$name',User='$username
-                ',Bank_Account='$bank_account',Music=1,Order_Code='$Order_Code'";
                 $data = [
                     "Checked" => 1,
                     "Gold" => $money,
@@ -258,11 +242,14 @@ class TransferController extends Controller {
                 }
 
                 $assets=Utils::GetField($username,'Money');
+                $bbin_money = Utils::GetField($username,'BBIN_Money');
                 $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
-                $mysql="update web_member_data set Money=Money+$money where Username='$username'";
-                $q1 = User::where('Username', $username)->update(['Money' => $assets+$money]);
-                if($q1){
+                $q1 = User::where('Username', $username)->update([
+                    'Money' => $assets+$money,
+                    "BBIN_Money" => $bbin_money - $money
+                ]);
+                if ($q1) {
                     $balance=Utils::GetField($username,'Money');
                     $datetime=date("Y-m-d H:i:s",time()+12*3600);
 
@@ -300,14 +287,11 @@ class TransferController extends Controller {
         $alias = $user->Alias;
         $money = intval($request["money"]);
         $tp=str_replace("AG","",$request->type);
-        if(!is_numeric($money) || intval($money)<=0 || ($tp<>'IN' and $tp<>'OUT')){
-            die(".");
-        }
-        //限制额度 开始
         $money2=0;
         if($tp=='IN') $money2=$money;  //转入加上转入额度
 
         $AG_Limit=intval($sysConfig['AG_Limit']);
+
         if($sysConfig['AG_Repair']==1 or $sysConfig['AG']==0 or $user['AG']==0){
             return response()->json(['success'=>false, 'message'=> '真人平台维护中，请稍候再试......']);
         }
@@ -315,8 +299,6 @@ class TransferController extends Controller {
         $date=date("Y-m-d");
         $row2  = DB::select("select sum(Gold) as IN_Money from ag_logs where Type='IN' and left(DateTime,10)='$date'");
         $IN_Money=intval($row2[0]->IN_Money);
-
-        //"select sum(Gold) as OUT_Money from BBIN_logs where Type='OUT' and left(DateTime,10)='$date'";
         $row2  = DB::select("select sum(Gold) as OUT_Money from ag_logs where Type='OUT' and left(DateTime,10)='$date'");
         $OUT_Money=intval($row2[0]->OUT_Money);
         if(($IN_Money+$money2-$OUT_Money)>$AG_Limit){
@@ -345,17 +327,11 @@ class TransferController extends Controller {
             $ag_username=strtoupper($ag_username);
             $ag_password=strtolower($AGUtils->getpassword(10));
 
-            // $result= $AGUtils->Addmember($ag_username,$ag_password,1);
-            // if($result['info']=='0'){
-            if(true){
+            $result= $AGUtils->Addmember($ag_username,$ag_password,1);
+
+            if($result['info']=='0'){
                 $update = User::where('UserName', $username)->update(['AG_User' => $ag_username,
                 'AG_Pass' => $ag_password]);
-                if($update){
-
-                }else{
-                    die('.');
-                };// or die($msql);
-                //echo("<script>alert('恭喜您，真人账号激活成功！');</script>");
             }else{
                 return response()->json(['success'=>false, 'message'=> '网络异常，请与在线客服联系！']);
             }
@@ -367,7 +343,8 @@ class TransferController extends Controller {
                 $assets= Utils::GetField($username,'Money');
                 $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
-                $result = DB::update("update web_member_data set Money=Money-$money where Username='$username'");
+
+                $result = DB::update("update web_member_data set Money=Money-$money, AG_Money=AG_Money+$money where Username='$username'");
 
                 if($result){
                     $balance = Utils::GetField($username,'Money');
@@ -426,21 +403,17 @@ class TransferController extends Controller {
                         $ouid=$result->id;
                     }else{
                         return response()->json(['success'=>false, 'message'=> 'moneyLogData insert bug']);
-                        //die($money_log_sql);
                     }
                 }
             }
         }
 
         if($tp=="OUT"){  //转出
-            $money2= 500;//$AGUtils->getMoney($ag_username, $ag_password); //获取真人余额
+            $money2= $AGUtils->getMoney($ag_username, $ag_password); //获取真人余额
             if($money>$money2){
                 return response()->json(['success'=>false, 'message'=> '转账金额不能大于真人账号余额!']);
             }
         }
-
-        //转换前添加记录
-        //$tr_sql="insert into 'BBIN_logs' set Username='$username',Type='$tp',Gold='$money',Billno='0',DateTime='".date("Y-m-d H:i:s",time())."',Result='0',Checked='0'";
 
         $agLogData = [
             "Username" => $username,
@@ -451,25 +424,27 @@ class TransferController extends Controller {
             "Result" => '0',
             "Checked" => '0',
         ];
+
         $agLog = new AGLogs();
+
         $result = $agLog->create($agLogData);
+
         if ($result){
             $ouid2=$result->id;
-        }else{
-
         }
+
         //转换操作
-        //$results= $AGUtils->Deposit($ag_username,$ag_password,$money,$tp);
-        $billno='test';//$results['billno'];
+        $results= $AGUtils->Deposit($ag_username,$ag_password,$money,$tp);
+        $billno=$results['billno'];
         $result=1;
-        //if($results['info']=='0') $result=1;
+        if($results['info']=='0') $result=1;
+
         //更新状态
-        //$tr_sql="update  'BBIN_logs' set Billno='$billno',Result='$result',Checked='$result' where id='$ouid2'";
 
         AGLogs::where('id', $ouid2)->update(['Billno' => $billno,
         'Result' => $result, 'Checked' => $result]);
 
-        if($result==1){
+        if ($result==1) {
             if($tp=='IN'){
                 MoneyLog::where('id', $ouid)->update(['about' => '转入AG真人平台<br>billno:'.$billno]);
             }
@@ -509,11 +484,14 @@ class TransferController extends Controller {
                     return response()->json(['success'=>false, 'message'=>"操作失败!!!"]);
                 }
 
-                $assets=Utils::GetField($username,'Money');
+                $assets = Utils::GetField($username,'Money');
+                $ag_money = Utils::GetField($username,'AG_Money');
                 $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
-                $mysql="update web_member_data set Money=Money+$money where Username='$username'";
-                $q1 = User::where('Username', $username)->update(['Money' => $assets+$money]);
+                $q1 = User::where('Username', $username)->update([
+                    'Money' => $assets+$money,
+                    'AG_Money' => $ag_money - $money
+                ]);
                 if($q1){
                     $balance=Utils::GetField($username,'Money');
                     $datetime=date("Y-m-d H:i:s",time()+12*3600);
@@ -554,25 +532,25 @@ class TransferController extends Controller {
         $money = intval($request["money"]);
         $tp=str_replace("OG","",$request->type);
         if(!is_numeric($money) || intval($money)<=0 || ($tp<>'IN' and $tp<>'OUT')){
-            die(".");
+
         }
         //限制额度 开始
         $money2=0;
         if($tp=='IN') $money2=$money;  //转入加上转入额度
 
         $OG_Limit=intval($sysConfig['OG_Limit']);
-        if($sysConfig['OG_Repair']==1 or $sysConfig['OG']==0 or $user['OG']==0){
-            return response()->json(['success'=>false, 'message'=> '真人平台维护中，请稍候再试......']);
-        }
 
         $date=date("Y-m-d");
+
         $row2  = DB::select("select sum(Gold) as IN_Money from og_logs where Type='IN' and left(DateTime,10)='$date'");
+
         $IN_Money=intval($row2[0]->IN_Money);
 
-        //"select sum(Gold) as OUT_Money from BBIN_logs where Type='OUT' and left(DateTime,10)='$date'";
         $row2  = DB::select("select sum(Gold) as OUT_Money from og_logs where Type='OUT' and left(DateTime,10)='$date'");
+
         $OUT_Money=intval($row2[0]->OUT_Money);
-        if(($IN_Money+$money2-$OUT_Money)>$OG_Limit){
+
+        if(($IN_Money + $money2 - $OUT_Money) > $OG_Limit){
             return response()->json(['success'=>false, 'message'=> '额度转换维护中，请联系客服人员']);
         }
 
@@ -588,25 +566,20 @@ class TransferController extends Controller {
         $phone=$user['Phone'];
         $name=$user['Alias'];
 
-        if($og_username==null or $og_username==""){
+        if ($og_username==null || $og_username=="") {
             $og_username=$username.'_'.$OGUtils->getpassword_OG(3);
             $og_username=strtoupper($og_username);
-            $result=1;//$OGUtils->Add_OG_Member($og_username);
+            $result=$OGUtils->Add_OG_Member($og_username);
             sleep(1);
-            //$OGUtils->OG_Limit($og_username,$OG_Limit1,$OG_Limit2);  //修改限红
-            if($result==1){
-                $result = User::where('UserName', $username)->update(['OG_User'=>$og_username]);
-                $msql="update web_member_data set OG_User='$og_username' where UserName='$username'";
-                if($result){
-
-                }else{
-                    die($msql);
-                }
-                //echo("<script>alert('恭喜您，真人账号激活成功！');</script>");
-            }else{
-                return response()->json(['success'=>false, 'message'=> '网络异常，请与在线客服联系！！']);
+            $OGUtils->OG_Limit($og_username,$OG_Limit1,$OG_Limit2);
+            if($result==1) {
+                User::where("UserName", $username)->update(["OG_User" => $og_username]);
+            } else {
+                $response["message"] = '网络异常，请与在线客服联系！';
+                return response()->json($response, $response['status']);
             }
         }
+
         if($tp=="IN"){  //转入
             if($money>$user['Money']){  //检查金额
                 return response()->json(['success'=>false, 'message'=> '转账金额不能大于会员余额!']);
@@ -614,7 +587,7 @@ class TransferController extends Controller {
                 $assets= Utils::GetField($username,'Money');
                 $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
-                $result = DB::update("update web_member_data set Money=Money-$money where Username='$username'");
+                $result = DB::update("update web_member_data set Money=Money-$money, OG_Money=OG_Money+$money where Username='$username'");
 
                 if($result){
                     $balance = Utils::GetField($username,'Money');
@@ -673,23 +646,19 @@ class TransferController extends Controller {
                         $ouid=$result->id;
                     }else{
                         return response()->json(['success'=>false, 'message'=> 'moneyLogData insert bug']);
-                        //die($money_log_sql);
                     }
                 }
             }
         }
 
         if($tp=="OUT"){  //转出
-            $money2= 500;//$OGUtils->OG_Money($og_username); //获取真人余额
+            $money2= $OGUtils->OG_Money($og_username); //获取真人余额
             if($money>$money2){
                 return response()->json(['success'=>false, 'message'=> '转账金额不能大于真人账号余额!']);
             }
         }
 
-        //转换前添加记录
-        //$tr_sql="insert into 'BBIN_logs' set Username='$username',Type='$tp',Gold='$money',Billno='0',DateTime='".date("Y-m-d H:i:s",time())."',Result='0',Checked='0'";
-
-        $agLogData = [
+        $ogLogData = [
             "Username" => $username,
             "Type" => $tp,
             "Gold" => $money,
@@ -698,22 +667,21 @@ class TransferController extends Controller {
             "Result" => '0',
             "Checked" => '0',
         ];
-        $agLog = new OGLogs();
-        $result = $agLog->create($agLogData);
+
+        $ogLog = new OGLogs();
+
+        $result = $ogLog->create($ogLogData);
         if ($result){
             $ouid2=$result->id;
         }else{
 
         }
         //转换操作
-        //$results= $OGUtils->OG_Deposit($og_username,'',$money,$tp);
-        $billno='test';//$results['billno'];
-        $result=1;
-        //if($results['info']=='0') $result=1;
-        //$result=intval($results['result']);
+        $results= $OGUtils->OG_Deposit($og_username,'',$money,$tp);
+        $billno=$results['billno'];
+        $result=intval($results['result']);
 
         //更新状态
-        //$tr_sql="update  'og_logs' set Billno='$billno',Result='$result',Checked='$result' where id='$ouid2'";
 
         OGLogs::where('id', $ouid2)->update(['Billno' => $billno,
         'Result' => $result, 'Checked' => $result]);
@@ -759,10 +727,16 @@ class TransferController extends Controller {
                 }
 
                 $assets=Utils::GetField($username,'Money');
+                $og_money = Utils::GetField($username,'OG_Money');
                 $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
-                $q1 = User::where('Username', $username)->update(['Money' => $assets+$money]);
-                if($q1){
+                $q1 = User::where('Username', $username)->update([
+                    'Money' => $assets + $money,
+                    'OG_Money' => $og_money - $money,
+                ]);
+
+                if ($q1 == 1) {
+
                     $balance=Utils::GetField($username,'Money');
                     $datetime=date("Y-m-d H:i:s",time()+12*3600);
 
@@ -816,7 +790,6 @@ class TransferController extends Controller {
         $row2  = DB::select("select sum(Gold) as IN_Money from MG_logs where Type='IN' and left(DateTime,10)='$date'");
         $IN_Money=intval($row2[0]->IN_Money);
 
-        //"select sum(Gold) as OUT_Money from BBIN_logs where Type='OUT' and left(DateTime,10)='$date'";
         $row2  = DB::select("select sum(Gold) as OUT_Money from MG_logs where Type='OUT' and left(DateTime,10)='$date'");
         $OUT_Money=intval($row2[0]->OUT_Money);
         if(($IN_Money+$money2-$OUT_Money)>$MG_Limit){
@@ -845,17 +818,10 @@ class TransferController extends Controller {
             $MG_username='h07'.$WebCode.$MG_username;
             $MG_username=strtolower($MG_username);
             $MG_password=strtolower($MGUtils->getpassword_MG(10));
-            // $result= $MGUtils->Addmember_MG($MG_username,$MG_password,1);
-            // if($result['info']=='0'){
-            if(true){
+            $result= $MGUtils->Addmember_MG($MG_username,$MG_password,1);
+            if($result['info']=='0'){
                 $update = User::where('UserName', $username)->update(['MG_User' => $MG_username,
                 'MG_Pass' => $MG_password]);
-                if($update){
-
-                }else{
-                    die('.');
-                };// or die($msql);
-                //echo("<script>alert('恭喜您，真人账号激活成功！');</script>");
             }else{
                 return response()->json(['success'=>false, 'message'=> '网络异常，请与在线客服联系！']);
             }
@@ -867,7 +833,7 @@ class TransferController extends Controller {
                 $assets= Utils::GetField($username,'Money');
                 $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
-                $result = DB::update("update web_member_data set Money=Money-$money where Username='$username'");
+                $result = DB::update("update web_member_data set Money=Money-$money, MG_Money=MG_Money+$money where Username='$username'");
 
                 if($result){
                     $balance = Utils::GetField($username,'Money');
@@ -926,21 +892,17 @@ class TransferController extends Controller {
                         $ouid=$result->id;
                     }else{
                         return response()->json(['success'=>false, 'message'=> 'moneyLogData insert bug']);
-                        //die($money_log_sql);
                     }
                 }
             }
         }
 
         if($tp=="OUT"){  //转出
-            $money2= 500;//$MGUtils->getMoney_MG($MG_username, $MG_password); //获取真人余额
+            $money2= $MGUtils->getMoney_MG($MG_username, $MG_password); //获取真人余额
             if($money>$money2){
                 return response()->json(['success'=>false, 'message'=> '转账金额不能大于真人账号余额!']);
             }
         }
-
-        //转换前添加记录
-        //$tr_sql="insert into 'BBIN_logs' set Username='$username',Type='$tp',Gold='$money',Billno='0',DateTime='".date("Y-m-d H:i:s",time())."',Result='0',Checked='0'";
 
         $mgLogData = [
             "Username" => $username,
@@ -955,17 +917,12 @@ class TransferController extends Controller {
         $result = $mgLog->create($mgLogData);
         if ($result){
             $ouid2=$result->id;
-        }else{
-
         }
-        //转换操作
-        //$results= $MGUtils->Deposit_MG($MG_username,$MG_password,$money,$tp);
-        $billno='test';//$results['billno'];
-        $result=1;
-        //if($results['info']=='0') $result=1;
 
-        //更新状态
-        //$tr_sql="update  'BBIN_logs' set Billno='$billno',Result='$result',Checked='$result' where id='$ouid2'";
+        //转换操作
+        $results= $MGUtils->Deposit_MG($MG_username,$MG_password,$money,$tp);
+        $billno=$results['billno'];
+        if($results['info']=='0') $result=1;
 
         MGLogs::where('id', $ouid2)->update(['Billno' => $billno,
         'Result' => $result, 'Checked' => $result]);
@@ -1010,11 +967,14 @@ class TransferController extends Controller {
                     return response()->json(['success'=>false, 'message'=>"操作失败!!!"]);
                 }
 
-                $assets=Utils::GetField($username,'Money');
+                $assets = Utils::GetField($username,'Money');
+                $mg_money = Utils::GetField($username,'MG_Money');
                 $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
-                $mysql="update web_member_data set Money=Money+$money where Username='$username'";
-                $q1 = User::where('Username', $username)->update(['Money' => $assets+$money]);
+                $q1 = User::where('Username', $username)->update([
+                    'Money' => $assets+$money,
+                    "MG_Money" => $mg_money - $money
+                ]);
                 if($q1){
                     $balance=Utils::GetField($username,'Money');
                     $datetime=date("Y-m-d H:i:s",time()+12*3600);
@@ -1046,6 +1006,7 @@ class TransferController extends Controller {
     }
     // PT handle
     function handlePT(Request $request, User $user, SysConfig $sysConfig ) {
+        $PTUtils = new PTUtils($sysConfig);
         $PT_username = $user->PT_User;
         $PT_password = $user->PT_Pass;
         $username = $user->UserName;
@@ -1068,7 +1029,6 @@ class TransferController extends Controller {
         $row2  = DB::select("select sum(Gold) as IN_Money from PT_logs where Type='IN' and left(DateTime,10)='$date'");
         $IN_Money=intval($row2[0]->IN_Money);
 
-        //"select sum(Gold) as OUT_Money from BBIN_logs where Type='OUT' and left(DateTime,10)='$date'";
         $row2  = DB::select("select sum(Gold) as OUT_Money from PT_logs where Type='OUT' and left(DateTime,10)='$date'");
         $OUT_Money=intval($row2[0]->OUT_Money);
         if(($IN_Money+$money2-$OUT_Money)>$PT_Limit){
@@ -1089,25 +1049,20 @@ class TransferController extends Controller {
 
         if($PT_username==null or $PT_username==""){
             $WebCode =ltrim(trim($sysConfig['AG_User']));
-            // if(!preg_match("/^[A-Za-z0-9]{4,12}$/", $user['UserName'])){
-            //     $PT_username = PTUtils::getpassword_PT(10);
-            // }else{
-            //     $PT_username=trim($user['UserName']).PTUtils::getpassword_PT(1);
-            // }
+            if(!preg_match("/^[A-Za-z0-9]{4,12}$/", $user['UserName'])){
+                $PT_username = $PTUtils->getpassword_PT(10);
+            }else{
+                $PT_username=trim($user['UserName']).$PTUtils->getpassword_PT(1);
+            }
             $PT_username='h07'.$WebCode.$PT_username;
             $PT_username=strtolower($PT_username);
-            $PT_password='test_PT_password';//strtolower(PTUtils::getpassword_PT(10));
-            //$result= PTUtils::Addmember_PT($PT_username,$PT_password,1);
-            //if($result['info']=='0'){
-            if(true){
-                $update = User::where('UserName', $username)->update(['PT_User' => $PT_username,
-                'PT_Pass' => $PT_password]);
-                if($update){
-
-                }else{
-                    die('.');
-                };// or die($msql);
-                //echo("<script>alert('恭喜您，真人账号激活成功！');</script>");
+            $PT_password=strtolower($PTUtils->getpassword_PT(10));
+            $result= $PTUtils->Addmember_PT($PT_username,$PT_password,1);
+            if($result['info']=='0') {
+                $update = User::where('UserName', $username)->update([
+                    'PT_User' => $PT_username,
+                    'PT_Pass' => $PT_password
+                ]);
             }else{
                 return response()->json(['success'=>false, 'message'=> '网络异常，请与在线客服联系！']);
             }
@@ -1119,7 +1074,7 @@ class TransferController extends Controller {
                 $assets= Utils::GetField($username,'Money');
                 $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
-                $result = DB::update("update web_member_data set Money=Money-$money where Username='$username'");
+                $result = DB::update("update web_member_data set Money=Money-$money, TG_Money=TG_Money+$money where Username='$username'");
 
                 if($result){
                     $balance = Utils::GetField($username,'Money');
@@ -1178,21 +1133,17 @@ class TransferController extends Controller {
                         $ouid=$result->id;
                     }else{
                         return response()->json(['success'=>false, 'message'=> 'moneyLogData insert bug']);
-                        //die($money_log_sql);
                     }
                 }
             }
         }
 
         if($tp=="OUT"){  //转出
-            $money2= 5000;//PTUtils::getMoney_PT($PT_username, $PT_password); //获取真人余额
+            $money2 = $PTUtils->getMoney_PT($PT_username, $PT_password); //获取真人余额
             if($money>$money2){
                 return response()->json(['success'=>false, 'message'=> '转账金额不能大于真人账号余额!']);
             }
         }
-
-        //转换前添加记录
-        //$tr_sql="insert into 'BBIN_logs' set Username='$username',Type='$tp',Gold='$money',Billno='0',DateTime='".date("Y-m-d H:i:s",time())."',Result='0',Checked='0'";
 
         $ptLogData = [
             "Username" => $username,
@@ -1203,28 +1154,31 @@ class TransferController extends Controller {
             "Result" => '0',
             "Checked" => '0',
         ];
+
         $ptLog = new PTLogs();
         $result = $ptLog->create($ptLogData);
         if ($result){
             $ouid2=$result->id;
-        }else{
-
         }
-        //转换操作
-        // $results= PTUtils::Deposit_PT($PT_username,$PT_password,$money,$tp);
-        $billno='test';//$results['billno'];
-        // $result=0;
-        // if($results['info']=='0') $result=1;
-        $result=1;
-        //更新状态
-        //$tr_sql="update  'BBIN_logs' set Billno='$billno',Result='$result',Checked='$result' where id='$ouid2'";
 
-        MGLogs::where('id', $ouid2)->update(['Billno' => $billno,
-        'Result' => $result, 'Checked' => $result]);
+        //转换操作
+        $results= $PTUtils->Deposit_PT($PT_username,$PT_password,$money,$tp);
+        $billno=$results['billno'];
+        $result=0;
+        if($results['info']=='0') $result=1;
+
+        //更新状态
+        MGLogs::where('id', $ouid2)->update([
+            'Billno' => $billno,
+            'Result' => $result,
+            'Checked' => $result
+        ]);
 
         if($result==1){
             if($tp=='IN'){
-                MoneyLog::where('id', $ouid)->update(['about' => '转入PT真人平台<br>billno:'.$billno]);
+                MoneyLog::where('id', $ouid)->update([
+                    'about' => '转入PT真人平台<br>billno:'.$billno
+                ]);
             }
             if($tp=='OUT'){
                 $bank_account="PT真人账号转出";
@@ -1263,9 +1217,13 @@ class TransferController extends Controller {
                 }
 
                 $assets=Utils::GetField($username,'Money');
+                $tg_money=Utils::GetField($username,'TG_Money');
                 $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
-                $q1 = User::where('Username', $username)->update(['Money' => $assets+$money]);
+                $q1 = User::where('Username', $username)->update([
+                    'Money' => $assets + $money,
+                    'TG_Money' => $tg_money - $money
+                ]);
                 if($q1){
                     $balance=Utils::GetField($username,'Money');
                     $datetime=date("Y-m-d H:i:s",time()+12*3600);
@@ -1324,7 +1282,7 @@ class TransferController extends Controller {
         $phone=$user['Phone'];
         $name=$user['Alias'];
 
-        if($ky_username==null or $ky_username==""){
+        if($ky_username==null or $ky_username=="") {
             $WebCode =ltrim(trim($sysConfig['AG_User']));
             if(!preg_match("/^[A-Za-z0-9]{4,12}$/", $username)){
                 $ky_username=$WebCode.'_'.$KYUtils->getpassword_KY(10);
@@ -1333,15 +1291,9 @@ class TransferController extends Controller {
             }
             $ky_username=strtoupper($ky_username);
             error_log($ky_username);
-            $result=1;//$KYUtils->Add_KY_member($ky_username);
+            $result=$KYUtils->Add_KY_member($ky_username);
             if(intval($result)==1){
                 $result = User::where('UserName', $username)->update(['KY_User'=>$ky_username]);
-                if($result){
-
-                }else{
-                    die('.');
-                }
-                //echo("<script>alert('恭喜您，真人账号激活成功！');</script>");
             }else{
                 return response()->json(['success'=>false, 'message'=> '网络异常，请与在线客服联系！！']);
             }
@@ -1353,7 +1305,7 @@ class TransferController extends Controller {
                 $assets= Utils::GetField($username,'Money');
                 $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
-                $result = DB::update("update web_member_data set Money=Money-$money where Username='$username'");
+                $result = DB::update("update web_member_data set Money=Money-$money, KY_Money=KY_Money+$money where Username='$username'");
 
                 if($result){
                     $balance = Utils::GetField($username,'Money');
@@ -1412,21 +1364,17 @@ class TransferController extends Controller {
                         $ouid=$result->id;
                     }else{
                         return response()->json(['success'=>false, 'message'=> 'moneyLogData insert bug']);
-                        //die($money_log_sql);
                     }
                 }
             }
         }
 
-        if($tp=="OUT"){  //转出
-            $money2= 500; //$KYUtils->KY_Money2($ky_username); //获取真人余额
+        if ($tp=="OUT") {  //转出
+            $money2= $KYUtils->KY_Money2($ky_username); //获取真人余额
             if($money>$money2){
                 return response()->json(['success'=>false, 'message'=> '转账金额不能大于真人账号余额!']);
             }
         }
-
-        //转换前添加记录
-        //$tr_sql="insert into 'BBIN_logs' set Username='$username',Type='$tp',Gold='$money',Billno='0',DateTime='".date("Y-m-d H:i:s",time())."',Result='0',Checked='0'";
 
         $kyLogData = [
             "Username" => $username,
@@ -1437,18 +1385,19 @@ class TransferController extends Controller {
             "Result" => '0',
             "Checked" => '0',
         ];
+
         $kyLog = new KYLogs();
+
         $result = $kyLog->create($kyLogData);
+
         if ($result){
             $ouid2=$result->id;
-        }else{
-
         }
+
         //转换操作
-        $results= $KYUtils->KY_Deposit($ky_username,'',$money,$tp);
+        $results= $KYUtils->KY_Deposit($ky_username,$money,$tp);
         $billno=$results['billno'];
-        //if($results['info']=='0') $result=1;
-        $result=1;//intval($results['result']);
+        $result=intval($results['result']);
 
         //更新状态
 
@@ -1496,10 +1445,15 @@ class TransferController extends Controller {
                 }
 
                 $assets=Utils::GetField($username,'Money');
+                $ky_money=Utils::GetField($username,'KY_Money');
                 $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
-                $q1 = User::where('Username', $username)->update(['Money' => $assets+$money]);
-                if($q1){
+                $q1 = User::where('Username', $username)->update([
+                    'Money' => $assets+$money,
+                    'KY_Money' => $ky_money - $money
+                ]);
+                if($q1 == 1){
+
                     $balance=Utils::GetField($username,'Money');
                     $datetime=date("Y-m-d H:i:s",time()+12*3600);
 
@@ -1537,10 +1491,6 @@ class TransferController extends Controller {
     public function transferMoney(Request $request) {
         $user = User::where('id',$request->userId)->first();
         $sysConfig = SysConfig::all()->first();
-        // if($cou==0){   oid='$uid'
-        //     echo "<script>alert('登录超时!');window.open('/','_top');</script>";
-        //     exit;
-        // }
         $trtype = $request->type;
         if($trtype=='AGIN' or $trtype=='AGOUT'){
             if($sysConfig['AG_Repair']==1 or $sysConfig['AG']==0 or $user['AG_TR']==0){
@@ -1585,3 +1535,4 @@ class TransferController extends Controller {
         }
     }
 }
+

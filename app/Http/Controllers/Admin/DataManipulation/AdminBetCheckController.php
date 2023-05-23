@@ -59,6 +59,7 @@ class AdminBetCheckController extends Controller
   }
 
   public function getItems(Request $request) {
+    $page = $request['page'];
     $id = $request['id'];
     $type = $request['type'];
 
@@ -72,9 +73,10 @@ class AdminBetCheckController extends Controller
         $rows = $rows->where('Active', $typeIndex)
           ->orWhere('Active', $typeIndex.$typeIndex);
       }
-      $rows = $rows->orderBy('bettime')
-      ->orderBy('linetype')
-      ->orderBy('mtype')->limit(20)->get();
+      $totalCount = $rows->count();
+      $rows = $rows->orderBy('BetTime')
+      ->orderBy('LineType')
+      ->orderBy('Mtype')->offset($page * 20 - 20)->limit(20)->get();
 
       $data = array();
       foreach($rows as $row) {
@@ -148,7 +150,10 @@ class AdminBetCheckController extends Controller
           'cancel' => $row['Cancel'],
         ));
       }
-      return $data;
+      return array(
+        'data' => $data,
+        'totalCount' => $totalCount,
+      );
     } catch (Exception $e) {
       return response()->json($e, 500);
     }
