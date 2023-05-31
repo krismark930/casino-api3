@@ -7,9 +7,10 @@ use App\Utils\MG\des;
 class MGUtils {
 
     var $MG_agent = "H07_NMGE";
-    var $giurl_MG;
-    var $md5key_MG;
-    var $deskey_MG;
+    var $md5key_MG = "KGeEtsGSQ2wT";
+    var $deskey_MG = "Pa27VJ4p";
+    var $giurl_MG="http://gi.bbin-api8.com:81/";
+    var $gciurl_MG="http://gci.bbin-api8.com:81/";
 
     public function __construct($row) {
         $this->MG_agent = $row['KY_Agent'];
@@ -41,7 +42,7 @@ class MGUtils {
         $para="cagent=".$this->MG_agent."/\\\\/loginname=".$username."/\\\\/actype=".$tp."/\\\\/password=".$password."/\\\\/dm=".$dm."/\\\\/sid=".$this->MG_agent.date("ymdhis").rand(1000,9999)."/\\\\/lang=1/\\\\/gameType=".$gameType."/\\\\/oddtype=".$oddtype."/\\\\/cur=CNY";
         $params=$crypt->encrypt($para);
         $key=md5($params.$this->md5key_MG);
-        $url=$this->giurl_MG."forwardGame.do?params=".$params."&key=".$key;
+        $url=$this->gciurl_MG."forwardGame.do?params=".$params."&key=".$key;
         return  $url;
     }
 

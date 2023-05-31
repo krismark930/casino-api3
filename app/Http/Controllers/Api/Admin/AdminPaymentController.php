@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Models\Web\Sys800;
 use App\Utils\Utils;
 use App\Models\Web\MoneyLog;
+use App\Models\WebPaymentData;
 
 class AdminPaymentController extends Controller
 {
@@ -731,6 +732,156 @@ class AdminPaymentController extends Controller
         }
 
         return response()->json($response, $response['status']);
-    }  
+    }
+
+
+    public function getPaymentMethod(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+
+            $rules = [
+                "lv" => "required|string",
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                $errorResponse = validation_error_response($validator->errors()->toArray());
+                return response()->json($errorResponse, $response['status']);
+            }
+
+            $request_data = $request->all();
+
+            $page_no = $request_data["page_no"] ?? 1;
+            $limit = $request_data["limit"] ?? 20;
+            $lv = $request_data["lv"];
+            $pay_type = $request_data["pay_type"] ?? "";
+
+            $role = "";
+
+            switch ($lv){
+                case 'M':
+                    $role='Admin';
+                    break;  
+                case 'A':
+                    $role='Super';
+                    break;
+                case 'B':
+                    $role='Corprator';
+                    break;
+                case 'C':
+                    $role='World';
+                    break;
+                case 'D':
+                    $role='Agents';
+                    break;
+            }
+
+            $name = "admin";
+
+            $user_count = User::where($role, $name)->where("Pay_Type", 1)->count();
+
+            if ($user_count == 0) {
+                $response["message"] = "目前还没有会员，请添加后再操作!!";
+                return response()->json($response, $response['status']);
+            }
+
+            $result = WebPaymentData::query();
+
+            if ($pay_type == "") {
+                $result = $result->where("Type", "<=", 10)->get();
+            } else {
+                $result = $result->where("Type", $pay_type)->get();
+            }
+
+            $response["data"] = $result;
+            $response['message'] = "Payment Method Data fatched successfully!";
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    }
+
+
+    public function addPaymentMethod(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+
+            $rules = [
+                "Address" => "required|string",
+                "Business" => "required|string",
+                "Keys" => "required|string",
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                $errorResponse = validation_error_response($validator->errors()->toArray());
+                return response()->json($errorResponse, $response['status']);
+            }
+
+            $request_data = $request->all();
+
+            $ID = $request_data["ID"] ?? "";
+            $Address = $request_data["Address"];
+            $Business = $request_data["Business"];
+            $Keys = $request_data["Keys"];
+            $TerminalID = $request_data["TerminalID"] ?? "";
+            $FixedGold = $request_data["FixedGold"] ?? "";
+            $VIP = $request_data["VIP"];
+            $WAP = $request_data["WAP"];
+            $Limit1 = $request_data["Limit1"];
+            $Limit2 = $request_data["Limit2"];
+            $Switch = $request_data["Switch"];
+            $Music = $request_data["Music"];
+            $Sort = $request_data["Sort"];
+
+            $new_data = array(
+                "Address" => $Address,
+                "Business" => $Business,
+                "Keys" => $Keys,
+                "TerminalID" => $TerminalID,
+                "FixedGold" => $FixedGold,
+                "VIP" => $VIP,
+                "WAP" => $WAP,
+                "Limit1" => $Limit1,
+                "Limit2" => $Limit2,
+                "Switch" => $Switch,
+                "Music" => $Music,
+                "Sort" => $Sort,
+            );
+
+            if ($ID == "") {
+                $payment_method = new WebPaymentData;
+                $payment_method->create($new_data);
+            } else {
+                WebPaymentData::where("ID", $ID)
+                    ->update($new_data);
+            }
+            
+            $response['message'] = "Payment Method Data saved successfully!";
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    } 
 }
 

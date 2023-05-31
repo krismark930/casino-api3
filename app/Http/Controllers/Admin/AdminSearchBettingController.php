@@ -78,43 +78,41 @@ class AdminSearchBettingController extends Controller
             }
         }
 
-        // if($result_type != "all") {
-        //     switch($result_type) {
-        //         // case "all":
-        //         //     break;
-        //         case "Y":
-        //             $mids = $mids->where('M_Result', '!=', '');
-        //             break;
-        //         case "N":
-        //             $mids = $mids->where('M_Result', '');
-        //             break;
-        //         case "W":
-        //             $mids = $mids->where('M_Result', '>', '0');
-        //             break;
-        //         case "W>=500":
-        //             $mids = $mids->where('M_Result', '>', '0')->where('BetScore', '>=', '500');
-        //             break;
-        //         case ">=100":
-        //             $mids = $mids->where('BetScore', '>=', '100');
-        //             break;
-        //         case ">=500":
-        //             $mids = $mids->where('BetScore', '>=', '500');
-        //             break;
-        //         case ">=1000":
-        //             $mids = $mids->where('BetScore', '>=', '1000');
-        //             break;
-        //         case ">=5000":
-        //             $mids = $mids->where('BetScore', '>=', '5000');
-        //             break;
-        //         case ">=10000":
-        //             $mids = $mids->where('BetScore', '>=', '10000');
-        //             break;
-        //     }
-        // }
+        if($result_type != "all") {
+            switch($result_type) {
+                case "Y":
+                    $mids = $mids->where('M_Result', '!=', '');
+                    break;
+                case "N":
+                    $mids = $mids->where('M_Result', '');
+                    break;
+                case "W":
+                    $mids = $mids->where('M_Result', '>', '0');
+                    break;
+                case "W>=500":
+                    $mids = $mids->where('M_Result', '>', '0')->where('BetScore', '>=', '500');
+                    break;
+                case ">=100":
+                    $mids = $mids->where('BetScore', '>=', '100');
+                    break;
+                case ">=500":
+                    $mids = $mids->where('BetScore', '>=', '500');
+                    break;
+                case ">=1000":
+                    $mids = $mids->where('BetScore', '>=', '1000');
+                    break;
+                case ">=5000":
+                    $mids = $mids->where('BetScore', '>=', '5000');
+                    break;
+                case ">=10000":
+                    $mids = $mids->where('BetScore', '>=', '10000');
+                    break;
+            }
+        }
 
-        // if($type) {
-        //     $mids = $mids->where('Ptype', $type);
-        // }
+        if($type) {
+            $mids = $mids->where('Ptype', $type);
+        }
 
         // if($checkout == '0') {
         //   $mids = $mids->where('M_Result', '');
