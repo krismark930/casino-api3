@@ -7,10 +7,10 @@ use App\Utils\BBIN\des;
 class BBINUtils {
 
     var $BBIN_agent = "H07_BBIN";
-    var $md5key_bbin;
-    var $deskey_bbin;
+    var $md5key_bbin = "KGeEtsGSQ2wT";
+    var $deskey_bbin = "Pa27VJ4p";
     var $giurl_bbin="http://gi.bbin-api8.com:81/";
-    var $gciurl_bbin="http://gi.bbin-api8.com:81/";
+    var $gciurl_bbin="http://gci.bbin-api8.com:81/";
 
     public function __construct($sysConfig) {
     }
@@ -38,7 +38,7 @@ class BBINUtils {
 		$para="cagent=".$this->BBIN_agent."/\\\\/loginname=".$username."/\\\\/actype=".$tp."/\\\\/password=".$password."/\\\\/dm=".$dm."/\\\\/sid=".$this->BBIN_agent.date("ymdhis").rand(1000,9999)."/\\\\/lang=1/\\\\/gameType=".$gameType."/\\\\/oddtype=".$oddtype."/\\\\/cur=CNY";
 		$params=$crypt->encrypt($para);
 		$key=md5($params.$this->md5key_bbin);
-		$url=$this->giurl_bbin."forwardGame.do?params=".$params."&key=".$key;
+		$url=$this->gciurl_bbin."forwardGame.do?params=".$params."&key=".$key;
 		return  $url;
 	}
 

@@ -269,17 +269,7 @@ class FTScoreController extends Controller
                                 "TG_Inball_HR" => $tg_inball_hr,
                                 "Cancel" => 1
                             ]);
-                    } else{
-                        Sport::where("Type", "FT")
-                            ->where("M_Date", $list_date)
-                            ->where("MID", (int)$mid)
-                            ->update([
-                                "MB_Inball" => $mb_inball,
-                                "TG_Inball" => $tg_inball,
-                                "MB_Inball_HR" => $mb_inball_hr,
-                                "TG_Inball_HR" => $tg_inball_hr,
-                                "Cancel" => 1
-                            ]);
+                    } else {
 
                         $match_sports = Sport::where("MID", $mid)->where("M_Date", $list_date)->first();
 

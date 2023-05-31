@@ -600,6 +600,7 @@ class ThirdpartyLotteryResultController extends Controller
             $ball_3 = $tempNum[2];
             $ball_4 = $tempNum[3];
             $ball_5 = $tempNum[4];
+
             $result = LotteryResultCQ::where("qishu", $item["issue"])->first();                
             if (!isset($result)) {
                 $result = new LotteryResultCQ;
@@ -884,7 +885,13 @@ class ThirdpartyLotteryResultController extends Controller
             $ball_3 = $tempNum[2];
             $ball_4 = $tempNum[3];
             $ball_5 = $tempNum[4];
-            $result = LotteryResultTJ::where("qishu", $item["issue"])->first();                
+
+            if (strlen($item["issue"]) == 10) {
+                $item["issue"] = substr($item["issue"],0,8)."0".substr($item["issue"],8,2);
+            }
+
+            $result = LotteryResultTJ::where("qishu", $item["issue"])->first();
+            
             if (!isset($result)) {
                 $result = new LotteryResultTJ;
                 $result->create_time = $current_time;
@@ -924,6 +931,12 @@ class ThirdpartyLotteryResultController extends Controller
         $current_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
 
         foreach($data as $item) {
+
+            $item["issue"] = "20".$item["issue"];
+
+            if (strlen($item["issue"]) == 11) {
+                $item["issue"] = substr($item["issue"],0,8).substr($item["issue"],9,2);
+            }
 
             $tempNum = explode(",", $item['code']);
             $ball_1 = $tempNum[0];
@@ -1153,6 +1166,11 @@ class ThirdpartyLotteryResultController extends Controller
             $ball_6 = $tempNum[5];
             $ball_7 = $tempNum[6];
             $ball_8 = $tempNum[7];
+
+            if (strlen($item["issue"]) == 10) {
+                $item["issue"] = substr($item["issue"],0,8)."0".substr($item["issue"],8,2);
+            }
+
             $result = LotteryResultCQSF::where("qishu", $item["issue"])->first();                
             if (!isset($result)) {
                 $result = new LotteryResultCQSF;
@@ -1250,6 +1268,10 @@ class ThirdpartyLotteryResultController extends Controller
 
         foreach($data as $item) {
 
+            if (strlen($item["issue"]) == 11) {
+                $item["issue"] = substr($item["issue"],0,8).substr($item["issue"],9,2);
+            }
+
             $tempNum = explode(",", $item['code']);
             $ball_1 = $tempNum[0];
             $ball_2 = $tempNum[1];
@@ -1259,6 +1281,7 @@ class ThirdpartyLotteryResultController extends Controller
             $ball_6 = $tempNum[5];
             $ball_7 = $tempNum[6];
             $ball_8 = $tempNum[7];
+            
             $result = LotteryResultGDSF::where("qishu", $item["issue"])->first();                
             if (!isset($result)) {
                 $result = new LotteryResultGDSF;
@@ -1505,6 +1528,8 @@ class ThirdpartyLotteryResultController extends Controller
 
             $orders = Utils::getOrdersByStatus("AZXY10" , $qishu, "0");
 
+            // return $orders;
+
             foreach($orders as $order) {
                 $order = get_object_vars($order);
                 $user_id = $order["user_id"];
@@ -1627,7 +1652,7 @@ class ThirdpartyLotteryResultController extends Controller
                 }
 
                 //开始结算冠、亚军和大小
-                if($order['quick_type']=='冠亚军和' && ($order['number']=='大' || $order['number']=='小')){
+                if($order['quick_type']=='冠亚军和' && ($order['number']=='冠亚大' || $order['number']=='冠亚小')){
                     $zonghe = Bjsc_Auto($hm,2);
                     if($zonghe=='和'){  //和局,退还本金
                         Utils::BalanceToAccount($order,2,'澳洲幸运10');  //is_win值:0未中奖 1中奖 2和局 3赢一半
@@ -1640,7 +1665,7 @@ class ThirdpartyLotteryResultController extends Controller
                     }
                 }
                 //开始结算冠、亚军和单双
-                if($order['quick_type']=='冠亚军和' && ($order['number']=='单' || $order['number']=='双')){
+                if($order['quick_type']=='冠亚军和' && ($order['number']=='冠亚单' || $order['number']=='冠亚双')){
                     $zonghe = Bjsc_Auto($hm,3);
                     if($zonghe=='和'){  //和局,退还本金
                         Utils::BalanceToAccount($order,2,'澳洲幸运10');  //is_win值:0未中奖 1中奖 2和局 3赢一半
@@ -2243,7 +2268,7 @@ class ThirdpartyLotteryResultController extends Controller
                 }
 
                 //开始结算冠、亚军和大小
-                if($rows['quick_type']=='冠亚军和' && ($rows['number']=='大' || $rows['number']=='小')){
+                if($rows['quick_type']=='冠亚军和' && ($rows['number']=='冠亚大' || $rows['number']=='冠亚小')){
                     $zonghe = Bjsc_Auto($hm,2);
                     if($zonghe=='和'){  //和局,退还本金
                         Utils::BalanceToAccount($rows,2,'北京PK拾');  //is_win值:0未中奖 1中奖 2和局 3赢一半
@@ -2256,7 +2281,7 @@ class ThirdpartyLotteryResultController extends Controller
                     }
                 }
                 //开始结算冠、亚军和单双
-                if($rows['quick_type']=='冠亚军和' && ($rows['number']=='单' || $rows['number']=='双')){
+                if($rows['quick_type']=='冠亚军和' && ($rows['number']=='冠亚单' || $rows['number']=='冠亚双')){
                     $zonghe = Bjsc_Auto($hm,3);
                     if($zonghe=='和'){  //和局,退还本金
                         Utils::BalanceToAccount($rows,2,'北京PK拾');  //is_win值:0未中奖 1中奖 2和局 3赢一半
@@ -3685,6 +3710,8 @@ class ThirdpartyLotteryResultController extends Controller
 
             $orders = Utils::getOrdersByStatus("P3" , $qishu, "0");
 
+            // return $orders;
+
             foreach($orders as $rows) {
 
                 $rows = get_object_vars($rows);
@@ -3756,7 +3783,7 @@ class ThirdpartyLotteryResultController extends Controller
                     }
                 }
                 //开始结算前三
-                if($rows['quick_type']=='三连'){
+                if($rows['quick_type']=='3连'){
                     $qiansan=Ssc_Auto_D3($hm,5);
                     if($rows['number']==$qiansan){
                         Utils::BalanceToAccount($rows,1,'排列3');  //is_win值:0未中奖 1中奖 2和局 3赢一半
@@ -3897,7 +3924,7 @@ class ThirdpartyLotteryResultController extends Controller
                     }
                 }
                 //开始结算前三
-                if($rows['quick_type']=='三连'){
+                if($rows['quick_type']=='3连'){
                     $qiansan=Ssc_Auto_D3($hm,5);
                     if($rows['number']==$qiansan){
                         Utils::BalanceToAccount($rows,1,'上海时时乐');  //is_win值:0未中奖 1中奖 2和局 3赢一半
@@ -5072,7 +5099,7 @@ class ThirdpartyLotteryResultController extends Controller
                 }
 
                 //开始结算冠、亚军和大小
-                if($rows['quick_type']=='冠亚军和' && ($rows['number']=='大' || $rows['number']=='小')){
+                if($rows['quick_type']=='冠亚军和' && ($rows['number']=='冠亚大' || $rows['number']=='冠亚小')){
                     $zonghe = Bjsc_Auto($hm,2);
                     if($zonghe=='和'){  //和局,退还本金
                         Utils::BalanceToAccount($rows,2,'幸运飞艇');  //is_win值:0未中奖 1中奖 2和局 3赢一半
@@ -5085,7 +5112,7 @@ class ThirdpartyLotteryResultController extends Controller
                     }
                 }
                 //开始结算冠、亚军和单双
-                if($rows['quick_type']=='冠亚军和' && ($rows['number']=='单' || $rows['number']=='双')){
+                if($rows['quick_type']=='冠亚军和' && ($rows['number']=='冠亚单' || $rows['number']=='冠亚双')){
                     $zonghe = Bjsc_Auto($hm,3);
                     if($zonghe=='和'){  //和局,退还本金
                         Utils::BalanceToAccount($rows,2,'幸运飞艇');  //is_win值:0未中奖 1中奖 2和局 3赢一半

@@ -857,9 +857,9 @@ class BettingController extends Controller
                         $w_m_place_en = 'Other Score';
                         $Sign = "VS.";
                     } else {
-                        $w_m_place='';
-                        $w_m_place_tw='';
-                        $w_m_place_en='';
+                        $w_m_place='波胆';
+                        $w_m_place_tw='波膽';
+                        $w_m_place_en='Correct Score';
                         $M_Place = "";
                         $M_Sign = $rtype;
                         $M_Sign = str_replace("MB", "", $M_Sign);
@@ -1213,8 +1213,8 @@ class BettingController extends Controller
                         $w_m_place_en = 'Other Score';
                         $Sign = "VS.";
                     } else {
-                        $w_m_place='';
-                        $w_m_place_tw='';
+                        $w_m_place='波胆';
+                        $w_m_place_tw='波胆';
                         $w_m_place_en='';
                         $M_Place = "";
                         $M_Sign = $rtype;
@@ -1227,7 +1227,6 @@ class BettingController extends Controller
                     $gwin = ($w_m_rate - 1) * $gold;
                     $ptype = 'VPD';
                     $mtype = $rtype;
-                    $w_m_place = "";
                     $grape = "";
                     break;
             }
@@ -1648,8 +1647,8 @@ class BettingController extends Controller
                         $w_m_place_en='Other Score';
                         $Sign="VS.";
                     }else{
-                        $w_m_place='';
-                        $w_m_place_tw='';
+                        $w_m_place='波胆';
+                        $w_m_place_tw='波胆';
                         $w_m_place_en='';
                         $M_Place="";
                         $M_Sign=$rtype;
@@ -4094,8 +4093,8 @@ class BettingController extends Controller
                         $w_m_place_en = 'Other Score';
                         $Sign = "VS.";
                     } else {
-                        $w_m_place='';
-                        $w_m_place_tw='';
+                        $w_m_place='波胆';
+                        $w_m_place_tw='波胆';
                         $w_m_place_en='';
                         $M_Place = "";
                         $M_Sign = $rtype;
@@ -4455,8 +4454,8 @@ class BettingController extends Controller
                         $w_m_place_en = 'Other Score';
                         $Sign = "VS.";
                     } else {
-                        $w_m_place='';
-                        $w_m_place_tw='';
+                        $w_m_place='波胆';
+                        $w_m_place_tw='波胆';
                         $w_m_place_en='';
                         $M_Place = "";
                         $M_Sign = $rtype;
@@ -4872,7 +4871,7 @@ class BettingController extends Controller
             if ($oddstype == '') $oddstype = 'H';
 
             $grape = "";
-            $ptype= "";
+            $ptype= "PR";
 
             $new_web_report_data = new WebReportData();
 

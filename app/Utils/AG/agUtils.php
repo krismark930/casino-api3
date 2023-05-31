@@ -7,9 +7,10 @@ use App\Utils\AG\des;
 class AGUtils {
 
     var $AG_agent = "H07_AGIN";
-    var $md5key;
-    var $deskey;
-    var $giurl="";
+    var $md5key = "KGeEtsGSQ2wT";
+    var $deskey = "Pa27VJ4p";
+    var $giurl = "http://gi.bbin-api8.com:81/";
+    var $gciurl = "http://gci.bbin-api8.com:81/";
 
     public function __construct($sysConfig) {
     }
@@ -21,6 +22,7 @@ class AGUtils {
         $key=md5($params.$this->md5key);
         $url=$this->giurl."doBusiness.do?params=".$params."&key=".$key;
         $xmlcode=$this->getUrl($url);
+        return $url;
         $result=$this->getResult($xmlcode);
         if($result['info']<>'0'){
             $t=date("Y-m-d H:i:s");
@@ -37,7 +39,7 @@ class AGUtils {
         $para="cagent=".$this->AG_agent."/\\\\/loginname=".$username."/\\\\/actype=".$tp."/\\\\/password=".$password."/\\\\/dm=".$dm."/\\\\/sid=".$this->AG_agent.date("ymdhis").rand(1000,9999)."/\\\\/lang=1/\\\\/gameType=".$gameType."/\\\\/oddtype=".$oddtype."/\\\\/cur=CNY";
         $params=$crypt->encrypt($para);
         $key=md5($params.$this->md5key);
-        $url=$this->giurl."forwardGame.do?params=".$params."&key=".$key;
+        $url=$this->gciurl."forwardGame.do?params=".$params."&key=".$key;
         return  $url;
     }
 

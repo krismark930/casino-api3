@@ -7,9 +7,10 @@ use App\Utils\MG\des;
 class PTUtils {
 
     var $PT_agent = "H07_PT";
-    var $giurl_PT;
-    var $md5key_PT;
-    var $deskey_PT;
+    var $md5key_PT = "KGeEtsGSQ2wT";
+    var $deskey_PT = "Pa27VJ4p";
+    var $giurl_PT="http://gi.bbin-api8.com:81/";
+    var $gciurl_PT="http://gci.bbin-api8.com:81/";
 
     public function __construct($row) {
     }

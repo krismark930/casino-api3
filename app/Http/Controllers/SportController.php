@@ -1622,7 +1622,7 @@ class SportController extends Controller
         // $mDate = date('Y-m-d', time() - $time * 60 * 60);
         $date = date('Y-m-d');
         $mDate = date('Y-m-d');
-        // $mDate = '2023-04-19';
+        // $mDate = '2023-05-27';
         $bc_arr = array('VRC', 'VRH', 'VMN', 'VMC', 'VMH', 'VOUH', 'VOUC', 'VRMH', 'VRMC', 'VRMN', 'VROUH', 'VROUC', 'VRRH', 'VRRC');
         $Score_arr = array();
         $Score_arr[1] = '取消';
@@ -1642,12 +1642,15 @@ class SportController extends Controller
 
         $match_sports = Sport::where("Type", "FT")
             // ->where("M_Date", $mDate)
+            // ->where("MID", 6126111)
             ->where("MB_Inball", "!=", "")
             ->where("MB_Inball", "!=", "-")
             ->where("Score", 0)
             ->orderBy('M_Start', 'asc')
             ->orderBy('MID', 'asc')
             ->get(['MID', 'MB_MID', 'TG_MID', 'MB_Team', 'TG_Team', 'MB_Inball', 'TG_Inball', 'MB_Inball_HR', 'TG_Inball_HR']);
+
+        // return $match_sports;
 
         foreach ($match_sports as $match_sport) {
 
@@ -1772,7 +1775,7 @@ class SportController extends Controller
                     case 153:
                     case 154:
                     case 155:
-                        $graded = Utils::odds_dime($mb_in_score, $tg_in_score, $row['M_Place'], $row['Mtype']);
+                        $graded = Utils::odds_dime_rb($mb_in_score, $tg_in_score, $row['M_Place'], $row['Mtype']);
                         break;
                     case 19:
                     case 119:
@@ -1844,10 +1847,6 @@ class SportController extends Controller
                         $g_res = 0;
                         break;
                 }
-
-                /*$vgold=abs($graded)*$row['BetScore'];
-                $betscore=$row['BetScore'];
-                $turn=abs($graded)*$row['BetScore']*$row['TurnRate']/100;*/
 
                 $betscore = $row['BetScore'];  //投注金额
                 $vgold = $row['VGOLD']; //有效金额
@@ -2247,13 +2246,21 @@ class SportController extends Controller
         $date = date('Y-m-d');
         $mDate = date('Y-m-d');
 
+        // $mDate = "2023-05-27";
+
         $reports = Report::select('ID', 'MID', 'OrderID', 'Active', 'M_Name', 'LineType', 'OpenType', 'ShowType', 'Mtype', 'Gwin', 'VGOLD', 'TurnRate', 'BetType', 'M_Place', 'M_Rate', 'Middle', 'BetScore', 'A_Rate', 'B_Rate', 'C_Rate', 'D_Rate', 'A_Point', 'B_Point', 'C_Point', 'D_Point', 'Pay_Type', 'Checked')
             ->where("Gtype", "FT")
             ->whereIn('Active', [1, 11])
             ->where('LineType', 8)
             ->where('Cancel', 0)
             ->where('Checked', 0)
+
+            // ->where('M_Date', $mDate)
+            // ->where("OrderID", "PM1032646988")
+
             ->get();
+
+        // return $reports;
 
         foreach ($reports as $report) {
             $notgraded = 0;
@@ -2296,7 +2303,7 @@ class SportController extends Controller
                     if ($mtype[$i] == 'MH' or $mtype[$i] == 'MC' or $mtype[$i] == 'MN') {
                         $graded = Utils::win_chk($mb_in, $tg_in, $mtype[$i]);
                     } else if ($mtype[$i] == 'RMH' or $mtype[$i] == 'RMC' or $mtype[$i] == 'RMN') {
-                        $graded = Utils::win_chk_rb($mb_in_v, $tg_in_v, $mtype[$i]);
+                        $graded = Utils::win_chk_rb($mb_in, $tg_in, $mtype[$i]);
                     } else if ($mtype[$i] == 'VMH' or $mtype[$i] == 'VMC' or $mtype[$i] == 'VMN') {
                         $graded = Utils::win_chk_v($mb_in_v, $tg_in_v, $mtype[$i]);
                     } else if ($mtype[$i] == 'OUH' or $mtype[$i] == 'OUC') {
@@ -2372,6 +2379,8 @@ class SportController extends Controller
 
                 }
             }
+
+            // if ((int)$mid[$i] == 6140555) return $graded;
 
             if ($notgraded == 0) {
 
