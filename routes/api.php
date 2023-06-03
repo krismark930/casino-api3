@@ -604,6 +604,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], func
         Route::post('/cash-bulk-save', [AdminPaymentController::class, 'saveBulkCash']);
         Route::post('/payment-method', [AdminPaymentController::class, 'getPaymentMethod']);
         Route::post('/payment-method/add', [AdminPaymentController::class, 'addPaymentMethod']);
+        Route::post('/payment-method/use', [AdminPaymentController::class, 'usePaymentMethod']);
+        Route::post('/payment-method/delete', [AdminPaymentController::class, 'deletePaymentMethod']);
     });
 });
 

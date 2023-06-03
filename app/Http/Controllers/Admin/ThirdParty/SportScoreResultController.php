@@ -77,7 +77,7 @@ class SportScoreResultController extends Controller {
 			} else {
 				$list_date = date('Y-m-d', strtotime('-1 day'));
 			}
-			$list_date = "2023-05-30";
+			// $list_date = "2023-05-31";
 
 			$url = "http://125.252.69.119/app/member/account/result/result.php?game_type=$game_type&list_date=$list_date&uid=$uid&langx=zh-cn";
 
@@ -245,17 +245,7 @@ class SportScoreResultController extends Controller {
 						$HGMC = $spans[1]->innertext;
 					}
 					$isTeam ++;
-				}		
-				
-			}
-
-			foreach($teams as $item) {
-
-				$gid = $item["gid"];
-				$GMH = $item["GMH"];
-				$GMC = $item["GMC"];
-				$HGMH = $item["HGMH"];
-				$HGMC = $item["HGMC"];
+				}
 
                 if ($GMH == Score1 or $GMC == Score1){
                     $GMH = -1;
@@ -503,7 +493,7 @@ class SportScoreResultController extends Controller {
 	                                    "TG_Inball" => $GMC,
 	                                    "MB_Inball_HR" => $HGMH,
 	                                    "TG_Inball_HR" => $HGMC,
-	                                    "Checked" => 1
+	                                    // "Checked" => 1
 	                                ]);
 	                        }else{
 	                            Sport::where("Type", "FT")
@@ -553,7 +543,7 @@ class SportScoreResultController extends Controller {
 	                                ->update([
 	                                    "MB_Inball" => $GMH,
 	                                    "TG_Inball" => $GMC,
-	                                    "Checked" => 1
+	                                    // "Checked" => 1
 	                                ]);
 	                        }else{
 	                            Sport::where("Type", "BK")
@@ -576,7 +566,8 @@ class SportScoreResultController extends Controller {
                     	}
                     }
 
-                }			
+                }
+				
 			}
 
 			$result = array("total_count"=>$count,"results_data"=>$teams);

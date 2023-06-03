@@ -40,9 +40,9 @@ class AdminSearchBettingController extends Controller
         $mids = Report::whereBetween('BetTime',array($start_time, $end_time));
 
         if ($active == 1) {
-            $mids = $mids->where("Gtype", "FT")->orWhere("Ptype", "FT");
+            $mids = $mids->where("Gtype", "FT");
         } else if ($active == 2) {
-            $mids = $mids->where("Gtype", "BK")->orWhere("Ptype", "BK");
+            $mids = $mids->where("Gtype", "BK");
         }
 
         if ($sort == 'Cancel') {
@@ -59,6 +59,7 @@ class AdminSearchBettingController extends Controller
         if ($m_name) {
             $mids = $mids->where('M_Name', 'like', '%' . trim($m_name) . '%');
         }
+
         if ($user['Level']) {
             switch ($user['Level']) {
                 case 'A':
@@ -123,11 +124,13 @@ class AdminSearchBettingController extends Controller
 
         // return $mids;
 
-        // Web Sport Data
-
         foreach ($mids as $row) {
 
             $item = Sport::where('MID', $row['MID'])->first();
+            if ($row["LineType"] == 8) {
+                $mid_array = array_filter(explode(',', $row['MID']));
+                $item = Sport::whereIn('MID', $mid_array)->first();
+            }
             if (!isset($item)) continue;
             if ($item["Type"] == "BK") {
                 // if ($item["Retime"] != "" && $item["Retime"] != "半场") {
