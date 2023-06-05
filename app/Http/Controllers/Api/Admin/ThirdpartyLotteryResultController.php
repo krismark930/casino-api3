@@ -2864,7 +2864,7 @@ class ThirdpartyLotteryResultController extends Controller
                     }
                 }
                 //开始结算前三
-                if($rows['quick_type']=='三连'){
+                if($rows['quick_type']=='3连'){
                     $qiansan=Ssc_Auto_D3($hm,5);
                     if($rows['number']==$qiansan){
                         Utils::BalanceToAccount($rows,1,'福彩3D');  //is_win值:0未中奖 1中奖 2和局 3赢一半

@@ -17,12 +17,13 @@ class AGUtils {
 
     function Addmember($username,$password,$tp=1){
         $crypt = new DES($this->deskey);
-        $para="cagent=".$this->AG_agent."/\\\\/loginname=".$username."/\\\\/method=lg/\\\\/actype=".$tp."/\\\/password=".$password."/\\\\/oddtype=A/\\\\/cur=CNY";
+        $para="cagent=".$this->AG_agent."/\\\\/loginname=".$username."/\\\\/method=lg/\\\\/actype=".$tp."/\\\\/password=".$password."/\\\\/oddtype=A/\\\\/cur=CNY";
         $params=$crypt->encrypt($para);
         $key=md5($params.$this->md5key);
         $url=$this->giurl."doBusiness.do?params=".$params."&key=".$key;
+        // return $url;
         $xmlcode=$this->getUrl($url);
-        return $url;
+        return $xmlcode;
         $result=$this->getResult($xmlcode);
         if($result['info']<>'0'){
             $t=date("Y-m-d H:i:s");
@@ -112,9 +113,9 @@ class AGUtils {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_TIMEOUT,60);  //超时60秒
-        curl_setopt($ch, CURLOPT_USERAGENT, ' WEB_LIB_GI_'.$this->AG_agent);  //设置浏览器类型，含代理号
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        // curl_setopt($ch, CURLOPT_USERAGENT, ' WEB_LIB_GI_'.$this->AG_agent);  //设置浏览器类型，含代理号
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 2);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 2);
         $html = curl_exec($ch);
         return $html;
     }

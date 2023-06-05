@@ -811,7 +811,6 @@ class AdminPaymentController extends Controller
         return response()->json($response, $response['status']);
     }
 
-
     public function addPaymentMethod(Request $request) {
 
         $response = [];
@@ -873,6 +872,82 @@ class AdminPaymentController extends Controller
             }
             
             $response['message'] = "Payment Method Data saved successfully!";
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    } 
+
+    public function usePaymentMethod(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+
+            $rules = [
+                "ID" => "required|numeric",
+                "Switch" => "required|numeric",
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                $errorResponse = validation_error_response($validator->errors()->toArray());
+                return response()->json($errorResponse, $response['status']);
+            }
+
+            $request_data = $request->all();
+
+            $ID = $request_data["ID"];
+            $Switch = $request_data["Switch"];
+
+            WebPaymentData::where("ID", $ID)->update(["Switch" => $Switch]);
+            
+            $response['message'] = "Payment Method Data updated successfully!";
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    }
+
+    public function deletePaymentMethod(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+
+            $rules = [
+                "ID" => "required|numeric",
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                $errorResponse = validation_error_response($validator->errors()->toArray());
+                return response()->json($errorResponse, $response['status']);
+            }
+
+            $request_data = $request->all();
+
+            $ID = $request_data["ID"];
+
+            WebPaymentData::where("ID", $ID)->delete();
+            
+            $response['message'] = "Payment Method Data deleted successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {

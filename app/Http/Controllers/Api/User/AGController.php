@@ -117,6 +117,7 @@ class AGController extends Controller
             }
 
             $request_data = $request->all();
+            $game_type = $request_data["game_type"];
 
             $user = $request->user();
 
@@ -135,7 +136,7 @@ class AGController extends Controller
                 $ag_password=strtoupper($AGUtils->getpassword(10));
                 $result=$AGUtils->Addmember($ag_username,$ag_password,0);
                 $results=$AGUtils->Deposit($ag_username,$ag_password,2000,'IN');
-                $loginUrl=$AGUtils->getGameUrl($ag_username,$ag_password,"A",$_SERVER['HTTP_HOST'],0);
+                $login_url=$AGUtils->getGameUrl($ag_username,$ag_password,"A",$_SERVER['HTTP_HOST'],0);
             } else {
                 $AGUtils = new AGUtils($sysConfig);
                 if ($ag_username==null || $ag_username=="") {
@@ -160,7 +161,7 @@ class AGController extends Controller
                     }
                 }
 
-                $loginUrl=$AGUtils->getGameUrl($ag_username,$ag_password,$tp,$_SERVER['HTTP_HOST'],1,$gameType);              
+                $login_url=$AGUtils->getGameUrl($ag_username,$ag_password,$tp,$_SERVER['HTTP_HOST'],1,$game_type);
             }
 
             $response["data"] = $login_url;
