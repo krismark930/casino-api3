@@ -160,8 +160,6 @@ class BettingController extends Controller
                 $show_type = $match_sports["ShowTypeHR"];
             }
 
-            $show_type = "H";
-
             $bet_time = date('Y-m-d H:i:s', strtotime(' + 1 hours'));
 
             $m_start = strtotime($match_sports['M_Start']);
@@ -614,7 +612,7 @@ class BettingController extends Controller
                     $turn_rate = "FT_Turn_OU_";
                     $rate = get_other_ioratio($odd_f_type, $match_sports["MB_Dime_Rate"], $match_sports["TG_Dime_Rate"], 100);
                     switch ($type) {
-                        case "C":
+                        case "H":
                             $w_m_place = $match_sports["MB_Dime"];
                             $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["MB_Dime"];
@@ -630,7 +628,7 @@ class BettingController extends Controller
                             $turn_url = "";
                             $mtype = 'OUH';
                             break;
-                        case "H":
+                        case "C":
                             $w_m_place = $match_sports["TG_Dime"];
                             $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["TG_Dime"];
@@ -672,7 +670,7 @@ class BettingController extends Controller
                     $turn_rate = "FT_Turn_OU_";
                     $rate = get_other_ioratio($odd_f_type, $match_sports["MB_Dime_Rate_1"], $match_sports["TG_Dime_Rate_1"], 100);
                     switch ($type) {
-                        case "C":
+                        case "H":
                             $w_m_place = $match_sports["MB_Dime_1"];
                             $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["MB_Dime_1"];
@@ -688,7 +686,7 @@ class BettingController extends Controller
                             $turn_url = "";
                             $mtype = 'OUH';
                             break;
-                        case "H":
+                        case "C":
                             $w_m_place = $match_sports["TG_Dime_1"];
                             $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["TG_Dime_1"];
@@ -730,7 +728,7 @@ class BettingController extends Controller
                     $turn_rate = "FT_Turn_OU_";
                     $rate = get_other_ioratio($odd_f_type, $match_sports["MB_Dime_Rate_2"], $match_sports["TG_Dime_Rate_2"], 100);
                     switch ($type) {
-                        case "C":
+                        case "H":
                             $w_m_place = $match_sports["MB_Dime_2"];
                             $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["MB_Dime_2"];
@@ -746,7 +744,7 @@ class BettingController extends Controller
                             $turn_url = "";
                             $mtype = 'OUH';
                             break;
-                        case "H":
+                        case "C":
                             $w_m_place = $match_sports["TG_Dime_2"];
                             $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["TG_Dime_2"];
@@ -788,7 +786,7 @@ class BettingController extends Controller
                     $turn_rate = "FT_Turn_OU_";
                     $rate = get_other_ioratio($odd_f_type, $match_sports["MB_Dime_Rate_3"], $match_sports["TG_Dime_Rate_3"], 100);
                     switch ($type) {
-                        case "C":
+                        case "H":
                             $w_m_place = $match_sports["MB_Dime_3"];
                             $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["MB_Dime_3"];
@@ -804,7 +802,7 @@ class BettingController extends Controller
                             $turn_url = "";
                             $mtype = 'OUH';
                             break;
-                        case "H":
+                        case "C":
                             $w_m_place = $match_sports["TG_Dime_3"];
                             $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["TG_Dime_3"];
@@ -1144,7 +1142,7 @@ class BettingController extends Controller
                     $turn_rate = "FT_Turn_OU_";
                     $rate = get_other_ioratio($odd_f_type, $match_sports["MB_Dime_Rate_H"], $match_sports["TG_Dime_Rate_H"], 100);
                     switch ($type) {
-                        case "C":
+                        case "H":
                             $w_m_place = $match_sports["MB_Dime_H"];
                             $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["MB_Dime_H"];
@@ -1160,7 +1158,7 @@ class BettingController extends Controller
                             $turn_url = "";
                             $mtype = 'VOUH';
                             break;
-                        case "H":
+                        case "C":
                             $w_m_place = $match_sports["TG_Dime_H"];
                             $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["TG_Dime_H"];
@@ -1347,7 +1345,7 @@ class BettingController extends Controller
             $new_web_report_data->TurnRate = $m_turn;
             $new_web_report_data->OpenType = $open;
             $new_web_report_data->OddsType = $oddstype;
-            $new_web_report_data->ShowType = $type;
+            $new_web_report_data->ShowType = $show_type;
             $new_web_report_data->Agents = $agents;
             $new_web_report_data->World = $world;
             $new_web_report_data->Corprator = $corprator;
@@ -1516,10 +1514,10 @@ class BettingController extends Controller
             }
 
 
-            if ($match_sports["MB_Inball"] !== "" && $match_sports["MB_Inball"] !== "-" ) {
-                $response['message'] = 'The schedule has been closed!';
-                return response()->json($response, $response['status']);
-            }
+            // if ($match_sports["MB_Inball"] !== "" && $match_sports["MB_Inball"] !== "-" ) {
+            //     $response['message'] = 'The schedule has been closed!';
+            //     return response()->json($response, $response['status']);
+            // }
 
             $w_tg_team = $match_sports['TG_Team'];
 
@@ -1551,7 +1549,9 @@ class BettingController extends Controller
             // betting time
             $m_date = $match_sports["M_Date"];
             $show_type = $match_sports["ShowTypeRB"];
-            $show_type = "H";
+            if ($line == 19) {
+                $show_type = $match_sports["ShowTypeHRB"];
+            }
 
             $bet_time = date('Y-m-d H:i:s', strtotime(' + 1 hours'));
 
@@ -2948,7 +2948,7 @@ class BettingController extends Controller
             $new_web_report_data->TurnRate = $m_turn ?? 0;
             $new_web_report_data->OpenType = $open ?? "";
             $new_web_report_data->OddsType = $oddstype ?? "";
-            $new_web_report_data->ShowType = $type ?? "";
+            $new_web_report_data->ShowType = $show_type ?? "";
             $new_web_report_data->Agents = $agents ?? "";
             $new_web_report_data->World = $world ?? "";
             $new_web_report_data->Corprator = $corprator ?? "";
@@ -3394,8 +3394,10 @@ class BettingController extends Controller
             // betting time
 
             $m_date = $match_sports["M_Date"];
-            $show_type = $match_sports["ShowTypeRB"];
-            $show_type = "H";
+            $show_type = $match_sports["ShowTypeP"];
+            if ($line == 119 || $line == 112) {
+                $show_type = $match_sports["ShowTypeHP"];
+            }
 
             $bet_time = date('Y-m-d H:i:s', strtotime(' + 1 hours'));
 
@@ -3847,7 +3849,7 @@ class BettingController extends Controller
                     $turn_rate = "FT_Turn_OU_";
                     $rate = get_other_ioratio($odd_f_type, $match_sports["MB_P_Dime_Rate"], $match_sports["TG_P_Dime_Rate"], 100);
                     switch ($type) {
-                        case "C":
+                        case "H":
                             $w_m_place = $match_sports["MB_P_Dime"];
                             $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["MB_P_Dime"];
@@ -3863,7 +3865,7 @@ class BettingController extends Controller
                             $turn_url = "";
                             $mtype = 'OUH';
                             break;
-                        case "H":
+                        case "C":
                             $w_m_place = $match_sports["TG_P_Dime"];
                             $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["TG_P_Dime"];
@@ -3906,7 +3908,7 @@ class BettingController extends Controller
                     $turn_rate = "FT_Turn_OU_";
                     $rate = get_other_ioratio($odd_f_type, $match_sports["MB_P_Dime_Rate_1"], $match_sports["TG_P_Dime_Rate_1"], 100);
                     switch ($type) {
-                        case "C":
+                        case "H":
                             $w_m_place = $match_sports["MB_P_Dime_1"];
                             $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["MB_P_Dime_1"];
@@ -3922,7 +3924,7 @@ class BettingController extends Controller
                             $turn_url = "";
                             $mtype = 'OUH';
                             break;
-                        case "H":
+                        case "C":
                             $w_m_place = $match_sports["TG_P_Dime_1"];
                             $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["TG_P_Dime_1"];
@@ -3965,7 +3967,7 @@ class BettingController extends Controller
                     $turn_rate = "FT_Turn_OU_";
                     $rate = get_other_ioratio($odd_f_type, $match_sports["MB_P_Dime_Rate_2"], $match_sports["TG_P_Dime_Rate_2"], 100);
                     switch ($type) {
-                        case "C":
+                        case "H":
                             $w_m_place = $match_sports["MB_P_Dime_2"];
                             $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["MB_P_Dime_2"];
@@ -3981,7 +3983,7 @@ class BettingController extends Controller
                             $turn_url = "";
                             $mtype = 'OUH';
                             break;
-                        case "H":
+                        case "C":
                             $w_m_place = $match_sports["TG_P_Dime_2"];
                             $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["TG_P_Dime_2"];
@@ -4024,7 +4026,7 @@ class BettingController extends Controller
                     $turn_rate = "FT_Turn_OU_";
                     $rate = get_other_ioratio($odd_f_type, $match_sports["MB_P_Dime_Rate_3"], $match_sports["TG_P_Dime_Rate_3"], 100);
                     switch ($type) {
-                        case "C":
+                        case "H":
                             $w_m_place = $match_sports["MB_P_Dime_3"];
                             $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["MB_P_Dime_3"];
@@ -4040,7 +4042,7 @@ class BettingController extends Controller
                             $turn_url = "";
                             $mtype = 'OUH';
                             break;
-                        case "H":
+                        case "C":
                             $w_m_place = $match_sports["TG_P_Dime_3"];
                             $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["TG_P_Dime_3"];
@@ -4385,7 +4387,7 @@ class BettingController extends Controller
                     $turn_rate = "FT_Turn_OU_";
                     $rate = get_other_ioratio($odd_f_type, $match_sports["MB_P_Dime_Rate_H"], $match_sports["TG_P_Dime_Rate_H"], 100);
                     switch ($type) {
-                        case "C":
+                        case "H":
                             $w_m_place = $match_sports["MB_P_Dime_H"];
                             $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["MB_P_Dime_H"];
@@ -4401,7 +4403,7 @@ class BettingController extends Controller
                             $turn_url = "";
                             $mtype = 'VOUH';
                             break;
-                        case "H":
+                        case "C":
                             $w_m_place = $match_sports["TG_P_Dime_H"];
                             $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["TG_P_Dime_H"];
@@ -4557,7 +4559,7 @@ class BettingController extends Controller
             $new_web_report_data->TurnRate = $m_turn;
             $new_web_report_data->OpenType = $open;
             $new_web_report_data->OddsType = $oddstype;
-            $new_web_report_data->ShowType = $type;
+            $new_web_report_data->ShowType = $show_type;
             $new_web_report_data->Agents = $agents;
             $new_web_report_data->World = $world;
             $new_web_report_data->Corprator = $corprator;
@@ -4670,6 +4672,7 @@ class BettingController extends Controller
             $m_ball = $request_data["m_ball"] ?? "";
             $t_ball = $request_data["t_ball"] ?? "";
             $bet_count= $request_data["bettingCount"] ?? 0;
+            $show_type = $request_data["show_type"] ?? "";
             $gwin = $request_data["g_win"];
             $g_type = $request_data["g_type"];
             $mtype = $request_data["m_type"];
@@ -4903,7 +4906,7 @@ class BettingController extends Controller
             $new_web_report_data->TurnRate = $m_turn;
             $new_web_report_data->OpenType = $open;
             $new_web_report_data->OddsType = $oddstype;
-            $new_web_report_data->ShowType = $type;
+            $new_web_report_data->ShowType = $show_type;
             $new_web_report_data->Agents = $agents;
             $new_web_report_data->World = $world;
             $new_web_report_data->Corprator = $corprator;

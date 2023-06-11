@@ -89,6 +89,12 @@ use App\Http\Controllers\Api\Admin\AdminOddsTJSFController;
 use App\Http\Controllers\Api\Admin\AdminOddsXYFTController;
 use App\Http\Controllers\Api\Admin\HumanManagementController;
 use App\Http\Controllers\Api\Admin\AdminPaymentController;
+use App\Http\Controllers\Api\Admin\AdminBankController;
+use App\Http\Controllers\Api\Admin\AdminSystemController;
+use App\Http\Controllers\Api\Admin\AdminMessageController;
+use App\Http\Controllers\Api\Admin\AdminAccessController;
+use App\Http\Controllers\Api\Admin\AdminUserInfoController;
+use App\Http\Controllers\Api\Admin\AdminOtherGameLogsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -483,6 +489,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], func
     Route::group(['prefix' => 'sys-config'], function ($router) {
         Route::post('/lottery', [AdminSysconfigController::class, 'getLotteryConfig']);
         Route::post('/lottery/update', [AdminSysconfigController::class, 'updateLotteryConfig']);
+        Route::post('/usdt/update', [AdminSysconfigController::class, 'updateUSDTConfig']);
     });
 
     Route::group(['prefix' => 'user-config'], function ($router) {
@@ -606,6 +613,42 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], func
         Route::post('/payment-method/add', [AdminPaymentController::class, 'addPaymentMethod']);
         Route::post('/payment-method/use', [AdminPaymentController::class, 'usePaymentMethod']);
         Route::post('/payment-method/delete', [AdminPaymentController::class, 'deletePaymentMethod']);
+        Route::post('/web-bank-data', [AdminBankController::class, 'getWebBankData']);
+        Route::post('/web-bank-data/add', [AdminBankController::class, 'addWebBankData']);
+        Route::post('/web-bank-data/use', [AdminBankController::class, 'useWebBankData']);
+        Route::post('/web-bank-data/delete', [AdminBankController::class, 'deleteWebBankData']);
+    });
+
+    // system management
+
+    Route::group(['prefix' => 'system'], function ($router) {
+        Route::post('/all', [AdminSystemController::class, 'getSystemAll']);
+        Route::post('/update-url', [AdminSystemController::class, 'updateSystemUrl']);
+        Route::post('/update-turn-service', [AdminSystemController::class, 'updateTurnService']);
+        Route::post('/update-notification', [AdminSystemController::class, 'updateNotification']);
+        Route::post('/notice', [AdminSystemController::class, 'getSystemNotice']);
+        Route::post('/add-notice', [AdminSystemController::class, 'addSystemNotice']);
+        Route::post('/update-notice', [AdminSystemController::class, 'updateSystemNotice']);
+        Route::post('/delete-notice', [AdminSystemController::class, 'deleteSystemNotice']);
+        Route::post('/message', [AdminMessageController::class, 'getWebMessageData']);
+        Route::post('/add-message', [AdminMessageController::class, 'addWebMessageData']);
+        Route::post('/delete-message', [AdminMessageController::class, 'deleteWebMessageData']);
+        Route::post('/access', [AdminAccessController::class, 'getWebSys800Data']);
+        Route::post('/delete-access', [AdminAccessController::class, 'deleteWebSys800Data']);
+        Route::post('/cancel-access', [AdminAccessController::class, 'cancelWebSys800Data']);
+        Route::post('/user-info', [AdminUserInfoController::class, 'getUserInfo']);
+        Route::post('/update-user-info', [AdminUserInfoController::class, 'updateUserInfo']);
+        Route::post('/delete-user-info', [AdminUserInfoController::class, 'deleteUserInfo']);
+        Route::post('/site-news', [AdminUserInfoController::class, 'getContactInfo']);
+        Route::post('/delete-site-news', [AdminUserInfoController::class, 'deleteContactInfo']);
+        Route::post('/ag-logs', [AdminOtherGameLogsController::class, 'getAGLogs']);
+        Route::post('/bbin-logs', [AdminOtherGameLogsController::class, 'getBBINLogs']);
+        Route::post('/mg-logs', [AdminOtherGameLogsController::class, 'getMGLogs']);
+        Route::post('/pt-logs', [AdminOtherGameLogsController::class, 'getPTLogs']);
+        Route::post('/og-logs', [AdminOtherGameLogsController::class, 'getOGLogs']);
+        Route::post('/ky-logs', [AdminOtherGameLogsController::class, 'getKYLogs']);
+        Route::post('/admin-info', [AdminSystemController::class, 'getAdminInfo']);
+        Route::post('/update-admin-info', [AdminSystemController::class, 'updateAdminInfo']);
     });
 });
 

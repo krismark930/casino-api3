@@ -799,7 +799,7 @@ class AdminPaymentController extends Controller
             }
 
             $response["data"] = $result;
-            $response['message'] = "Payment Method Data fatched successfully!";
+            $response['message'] = "Payment Method Data fetched successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
