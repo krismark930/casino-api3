@@ -857,9 +857,9 @@ class BettingController extends Controller
                         $w_m_place_en = 'Other Score';
                         $Sign = "VS.";
                     } else {
-                        $w_m_place='';
-                        $w_m_place_tw='';
-                        $w_m_place_en='';
+                        $w_m_place='波胆';
+                        $w_m_place_tw='波膽';
+                        $w_m_place_en='Correct Score';
                         $M_Place = "";
                         $M_Sign = $rtype;
                         $M_Sign = str_replace("MB", "", $M_Sign);
@@ -1213,8 +1213,8 @@ class BettingController extends Controller
                         $w_m_place_en = 'Other Score';
                         $Sign = "VS.";
                     } else {
-                        $w_m_place='';
-                        $w_m_place_tw='';
+                        $w_m_place='波胆';
+                        $w_m_place_tw='波胆';
                         $w_m_place_en='';
                         $M_Place = "";
                         $M_Sign = $rtype;
@@ -1227,7 +1227,6 @@ class BettingController extends Controller
                     $gwin = ($w_m_rate - 1) * $gold;
                     $ptype = 'VPD';
                     $mtype = $rtype;
-                    $w_m_place = "";
                     $grape = "";
                     break;
             }
@@ -1648,8 +1647,8 @@ class BettingController extends Controller
                         $w_m_place_en='Other Score';
                         $Sign="VS.";
                     }else{
-                        $w_m_place='';
-                        $w_m_place_tw='';
+                        $w_m_place='波胆';
+                        $w_m_place_tw='波胆';
                         $w_m_place_en='';
                         $M_Place="";
                         $M_Sign=$rtype;
@@ -4094,8 +4093,8 @@ class BettingController extends Controller
                         $w_m_place_en = 'Other Score';
                         $Sign = "VS.";
                     } else {
-                        $w_m_place='';
-                        $w_m_place_tw='';
+                        $w_m_place='波胆';
+                        $w_m_place_tw='波胆';
                         $w_m_place_en='';
                         $M_Place = "";
                         $M_Sign = $rtype;
@@ -4455,8 +4454,8 @@ class BettingController extends Controller
                         $w_m_place_en = 'Other Score';
                         $Sign = "VS.";
                     } else {
-                        $w_m_place='';
-                        $w_m_place_tw='';
+                        $w_m_place='波胆';
+                        $w_m_place_tw='波胆';
                         $w_m_place_en='';
                         $M_Place = "";
                         $M_Sign = $rtype;
@@ -4694,6 +4693,16 @@ class BettingController extends Controller
                 return response()->json($response, $response['status']);                
             }
 
+            $gid_array = array_filter(explode(",", $gid));
+
+            foreach($gid_array as $item) {
+                $match_sport = Sport::where("MID", $item)->first();
+                if (!isset($match_sport)) {
+                    $response["message"] = 'Sport Not Found';
+                    return response()->json($response, $response['status']);  
+                }
+            }
+
             // return $user;
 
             $open = $user['OpenType'];
@@ -4804,14 +4813,14 @@ class BettingController extends Controller
                     }
                 } else if ($mtype_array[$i] == 'ROUH' or $mtype_array[$i] == 'ROUC') {
                     $Sign = "VS.";
-                    if ($mtype_array[$i] == 'OUH') {
+                    if ($mtype_array[$i] == 'ROUH') {
                         $w_m_place_array[$i] = "大 ".explode("O", $w_m_place_array[$i])[1];
                     } else{
                         $w_m_place_array[$i] = "小 ".explode("U", $w_m_place_array[$i])[1];
                     }
                 } else if ($mtype_array[$i] == 'VOUH' or $mtype_array[$i] == 'VOUC') {
                     $Sign = "VS.";
-                    if ($mtype_array[$i] == 'OUH') {
+                    if ($mtype_array[$i] == 'VOUH') {
                         $w_m_place_array[$i] = "大 ".explode("O", $w_m_place_array[$i])[1];
                     } else{
                         $w_m_place_array[$i] = "小 ".explode("U", $w_m_place_array[$i])[1];
@@ -4872,7 +4881,7 @@ class BettingController extends Controller
             if ($oddstype == '') $oddstype = 'H';
 
             $grape = "";
-            $ptype= "";
+            $ptype= "PR";
 
             $new_web_report_data = new WebReportData();
 

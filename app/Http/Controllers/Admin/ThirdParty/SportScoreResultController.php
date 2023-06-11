@@ -77,7 +77,7 @@ class SportScoreResultController extends Controller {
 			} else {
 				$list_date = date('Y-m-d', strtotime('-1 day'));
 			}
-			// $list_date = "2023-04-16";
+			// $list_date = "2023-05-31";
 
 			$url = "http://125.252.69.119/app/member/account/result/result.php?game_type=$game_type&list_date=$list_date&uid=$uid&langx=zh-cn";
 
@@ -119,6 +119,7 @@ class SportScoreResultController extends Controller {
 				$class =  $ul->getAttribute("class");
 				if($class == "acc_results_league"){
 					if($isTeam > 1 ){
+						// return $isTeam;
 						$teams[$gid] = array(
 							"gid" => $gid,
 							"team_h" => $team_h,
@@ -170,6 +171,7 @@ class SportScoreResultController extends Controller {
 					}
 					$isTeam ++;
 					$count = $count +1;
+					// return $isTeam;
 				}
 					
 				if($class == "acc_result_tr_other"){
@@ -472,22 +474,14 @@ class SportScoreResultController extends Controller {
 	                                "Cancel" => 1
 	                            ]);
                     	}
-                    } else{
+                    } else {
                     	if ($game_type == "FT") {
-	                        Sport::where("Type", "FT")
-	                            ->where("M_Date", $list_date)
-	                            ->where("MID", (int)$gid)
-	                            ->update([
-	                                "MB_Inball" => $GMH,
-	                                "TG_Inball" => $GMC,
-	                                "MB_Inball_HR" => $HGMH,
-	                                "TG_Inball_HR" => $HGMC,
-	                                "Cancel" => 1
-	                            ]);
 
 	                        $a= $match_sports['MB_Inball'].$match_sports['TG_Inball'].$match_sports['MB_Inball_HR'].$match_sports['TG_Inball_HR'];
 
 	                        $b= trim($GMH).trim($GMC).trim($HGMH).trim($HGMC);
+
+	                        // return strcmp($a, $b);
 
 	                        if($a != $b) {
 	                            Sport::where("Type", "FT")
@@ -499,7 +493,7 @@ class SportScoreResultController extends Controller {
 	                                    "TG_Inball" => $GMC,
 	                                    "MB_Inball_HR" => $HGMH,
 	                                    "TG_Inball_HR" => $HGMC,
-	                                    "Checked" => 1
+	                                    // "Checked" => 1
 	                                ]);
 	                        }else{
 	                            Sport::where("Type", "FT")
@@ -528,7 +522,6 @@ class SportScoreResultController extends Controller {
 	                            ->update([
 	                                "MB_Inball" => $GMH,
 	                                "TG_Inball" => $GMC,
-	                                "Cancel" => 1
 	                            ]);
 
 	                        $a= $match_sports['MB_Inball'].$match_sports['TG_Inball'];
@@ -550,7 +543,7 @@ class SportScoreResultController extends Controller {
 	                                ->update([
 	                                    "MB_Inball" => $GMH,
 	                                    "TG_Inball" => $GMC,
-	                                    "Checked" => 1
+	                                    // "Checked" => 1
 	                                ]);
 	                        }else{
 	                            Sport::where("Type", "BK")
@@ -573,7 +566,7 @@ class SportScoreResultController extends Controller {
                     	}
                     }
 
-                }					
+                }
 				
 			}
 

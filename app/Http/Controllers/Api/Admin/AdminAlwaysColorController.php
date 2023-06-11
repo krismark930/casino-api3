@@ -218,11 +218,11 @@ class AdminAlwaysColorController extends Controller
 
                 $money_result = 0;
                 if($item->is_win=="1"){
-                    $t_sy= $t_sy + $item->win_sub + $item->fs - $item->bet_money_one;
-                    $money_result = $item->win_sub + $item->fs-$item->bet_money_one;
+                    $t_sy= $t_sy + $item->win_sub + $item->fs;
+                    $money_result = $item->win_sub + $item->fs;
                 }elseif($item->is_win=="2"){
                     $t_sy+=$item->bet_money_one;
-                    $money_result = $item->fs;
+                    $money_result = $item->bet_money_one;
                 }elseif($item->is_win=="0"){
                     $t_sy+=$item->fs-$item->bet_money_one;
                     $money_result = $item->fs-$item->bet_money_one;
