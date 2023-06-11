@@ -11,7 +11,7 @@ exports.getFTScore = async (url) => {
 		response = await axios.get(`${url}FT`);
 		if (response.status === 200) {
 			response = await axios.post(`${BACKEND_BASE_URL}${SCORE}${SAVE_FT_THIRDPARTY_SCORE}`, {cryptedData: response.data});
-			// console.log("getFTScore: ", response);
+			console.log("getFTScore: ", response);
 			if (response.status === 200) {
 				console.log("saveFTScore: ", response.data);
 			}
@@ -47,7 +47,7 @@ exports.getOtherFTScore = async (data) => {
 		response = await axios.post(`${BACKEND_BASE_URL}${SCORE}${SAVE_OTHER_SCORE}`, {uid: data.uid, game_type: "FT", date: "Today"});
 		response = await axios.post(`${BACKEND_BASE_URL}${SCORE}${SAVE_OTHER_SCORE}`, {uid: data.uid, game_type: "FT", date: "Yesterday"});
 		if (response.status === 200) {
-			// console.log("saveFTOtherScore: ", response.data);
+			console.log("saveFTOtherScore: ", response.data);
 		}
 		return null;
 	} catch(e) {

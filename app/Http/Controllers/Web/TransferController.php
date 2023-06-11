@@ -3,7 +3,6 @@ namespace App\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Database\DatabaseManager\DD;
 use App\Models\Web\Bank;
 use Auth;
 use Validator;

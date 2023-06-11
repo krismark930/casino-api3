@@ -1,6 +1,22 @@
 const axios = require('axios');
 const { BACKEND_BASE_URL } = require('../api');
 const { LOTTERY_RESULT } = require('../api');
+const { LOTTERY_RESULT_CQSSC } = require('../api');
+const { LOTTERY_RESULT_FFC5 } = require('../api');
+const { LOTTERY_RESULT_TXSSC } = require('../api');
+const { LOTTERY_RESULT_TWSSC } = require('../api');
+const { LOTTERY_RESULT_AZXY5 } = require('../api');
+const { LOTTERY_RESULT_XJSSC } = require('../api');
+const { LOTTERY_RESULT_TJSSC } = require('../api');
+const { LOTTERY_RESULT_GD11 } = require('../api');
+const { LOTTERY_RESULT_AZXY10 } = require('../api');
+const { LOTTERY_RESULT_BJPK } = require('../api');
+const { LOTTERY_RESULT_XYFT } = require('../api');
+const { LOTTERY_RESULT_CQSF } = require('../api');
+const { LOTTERY_RESULT_TJSF } = require('../api');
+const { LOTTERY_RESULT_GDSF } = require('../api');
+const { LOTTERY_RESULT_GXSF } = require('../api');
+const { LOTTERY_RESULT_SHSSL } = require('../api');
 const { LOTTERY_RESULT_TCPL3 } = require('../api');
 const { LOTTERY_RESULT_FC3D } = require('../api');
 const { CHECKOUT_AZXY10 } = require('../api');
@@ -30,6 +46,214 @@ exports.dispatchGetLotteryResult = async (url) => {
 		if (response.status === 200) {
 			response = await axios.post(`${BACKEND_BASE_URL}${LOTTERY_RESULT}`, {cryptedData: response.data});
 			console.log("dispatchGetLotteryResult: ", response.data);
+		}
+	} catch(e) {
+		console.log(e);
+	}
+}
+
+exports.dispatchGetLotteryResultCQSSC = async (url) => {
+	let response;
+	try {
+		response = await axios.get(url);
+		if (response.status === 200) {
+			response = await axios.post(`${BACKEND_BASE_URL}${LOTTERY_RESULT_CQSSC}`, {data: response.data});
+			console.log("dispatchGetLotteryResultCQSSC: ", response.data);
+		}
+	} catch(e) {
+		console.log(e);
+	}
+}
+
+exports.dispatchGetLotteryResultFFC5 = async (url) => {
+	let response;
+	try {
+		response = await axios.get(url);
+		if (response.status === 200) {
+			response = await axios.post(`${BACKEND_BASE_URL}${LOTTERY_RESULT_FFC5}`, {data: response.data});
+			console.log("dispatchGetLotteryResultFFC5: ", response.data);
+		}
+	} catch(e) {
+		console.log(e);
+	}
+}
+
+exports.dispatchGetLotteryResultTXSSC = async (url) => {
+	let response;
+	try {
+		response = await axios.get(url);
+		if (response.status === 200) {
+			response = await axios.post(`${BACKEND_BASE_URL}${LOTTERY_RESULT_TXSSC}`, {data: response.data});
+			console.log("dispatchGetLotteryResultTXSSC: ", response.data);
+		}
+	} catch(e) {
+		console.log(e);
+	}
+}
+
+exports.dispatchGetLotteryResultTWSSC = async (url) => {
+	let response;
+	try {
+		response = await axios.get(url);
+		if (response.status === 200) {
+			response = await axios.post(`${BACKEND_BASE_URL}${LOTTERY_RESULT_TWSSC}`, {data: response.data});
+			console.log("dispatchGetLotteryResultTWSSC: ", response.data);
+		}
+	} catch(e) {
+		console.log(e);
+	}
+}
+
+exports.dispatchGetLotteryResultAZXY5 = async (url) => {
+	let response;
+	try {
+		response = await axios.get(url);
+		if (response.status === 200) {
+			response = await axios.post(`${BACKEND_BASE_URL}${LOTTERY_RESULT_AZXY5}`, {data: response.data});
+			console.log("dispatchGetLotteryResultAZXY5: ", response.data);
+		}
+	} catch(e) {
+		console.log(e);
+	}
+}
+
+exports.dispatchGetLotteryResultXJSSC = async (url) => {
+	let response;
+	try {
+		response = await axios.get(url);
+		if (response.status === 200) {
+			response = await axios.post(`${BACKEND_BASE_URL}${LOTTERY_RESULT_XJSSC}`, {data: response.data});
+			console.log("dispatchGetLotteryResultXJSSC: ", response.data);
+		}
+	} catch(e) {
+		console.log(e);
+	}
+}
+
+exports.dispatchGetLotteryResultTJSSC = async (url) => {
+	let response;
+	try {
+		response = await axios.get(url);
+		if (response.status === 200) {
+			response = await axios.post(`${BACKEND_BASE_URL}${LOTTERY_RESULT_TJSSC}`, {data: response.data});
+			console.log("dispatchGetLotteryResultTJSSC: ", response.data);
+		}
+	} catch(e) {
+		console.log(e);
+	}
+}
+
+exports.dispatchGetLotteryResultGD11 = async (url) => {
+	let response;
+	try {
+		response = await axios.get(url);
+		if (response.status === 200) {
+			response = await axios.post(`${BACKEND_BASE_URL}${LOTTERY_RESULT_GD11}`, {data: response.data});
+			console.log("dispatchGetLotteryResultGD11: ", response.data);
+		}
+	} catch(e) {
+		console.log(e);
+	}
+}
+
+exports.dispatchGetLotteryResultAZXY10 = async (url) => {
+	let response;
+	try {
+		response = await axios.get(url);
+		if (response.status === 200) {
+			response = await axios.post(`${BACKEND_BASE_URL}${LOTTERY_RESULT_AZXY10}`, {data: response.data});
+			console.log("dispatchGetLotteryResultAZXY10: ", response.data);
+		}
+	} catch(e) {
+		console.log(e);
+	}
+}
+
+exports.dispatchGetLotteryResultBJPK = async (url) => {
+	let response;
+	try {
+		response = await axios.get(url);
+		if (response.status === 200) {
+			response = await axios.post(`${BACKEND_BASE_URL}${LOTTERY_RESULT_BJPK}`, {data: response.data});
+			console.log("dispatchGetLotteryResultBJPK: ", response.data);
+		}
+	} catch(e) {
+		console.log(e);
+	}
+}
+
+exports.dispatchGetLotteryResultXYFT = async (url) => {
+	let response;
+	try {
+		response = await axios.get(url);
+		if (response.status === 200) {
+			response = await axios.post(`${BACKEND_BASE_URL}${LOTTERY_RESULT_XYFT}`, {data: response.data});
+			console.log("dispatchGetLotteryResultXYFT: ", response.data);
+		}
+	} catch(e) {
+		console.log(e);
+	}
+}
+
+exports.dispatchGetLotteryResultCQSF = async (url) => {
+	let response;
+	try {
+		response = await axios.get(url);
+		if (response.status === 200) {
+			response = await axios.post(`${BACKEND_BASE_URL}${LOTTERY_RESULT_CQSF}`, {data: response.data});
+			console.log("dispatchGetLotteryResultCQSF: ", response.data);
+		}
+	} catch(e) {
+		console.log(e);
+	}
+}
+
+exports.dispatchGetLotteryResultGDSF = async (url) => {
+	let response;
+	try {
+		response = await axios.get(url);
+		if (response.status === 200) {
+			response = await axios.post(`${BACKEND_BASE_URL}${LOTTERY_RESULT_GDSF}`, {data: response.data});
+			console.log("dispatchGetLotteryResultGDSF: ", response.data);
+		}
+	} catch(e) {
+		console.log(e);
+	}
+}
+
+exports.dispatchGetLotteryResultGXSF = async (url) => {
+	let response;
+	try {
+		response = await axios.get(url);
+		if (response.status === 200) {
+			response = await axios.post(`${BACKEND_BASE_URL}${LOTTERY_RESULT_GXSF}`, {data: response.data});
+			console.log("dispatchGetLotteryResultGXSF: ", response.data);
+		}
+	} catch(e) {
+		console.log(e);
+	}
+}
+
+exports.dispatchGetLotteryResultTJSF = async (url) => {
+	let response;
+	try {
+		response = await axios.get(url);
+		if (response.status === 200) {
+			response = await axios.post(`${BACKEND_BASE_URL}${LOTTERY_RESULT_TJSF}`, {data: response.data});
+			console.log("dispatchGetLotteryResultTJSF: ", response.data);
+		}
+	} catch(e) {
+		console.log(e);
+	}
+}
+
+exports.dispatchGetLotteryResultSHSSL = async (url) => {
+	let response;
+	try {
+		response = await axios.get(url);
+		if (response.status === 200) {
+			response = await axios.post(`${BACKEND_BASE_URL}${LOTTERY_RESULT_SHSSL}`, {data: response.data});
+			console.log("dispatchGetLotteryResultTCPL3: ", response.data);
 		}
 	} catch(e) {
 		console.log(e);
