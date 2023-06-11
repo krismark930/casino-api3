@@ -188,16 +188,16 @@ var thirdPartyAuthData = {
     thirdPartyBaseUrl: "https://www.hga030.com"
 }
 
-const thirdPartyScoreBaseUrl = ['http://zq0666.com','http://www.zq0666.com'];
+const thirdPartyScoreBaseUrl = process.env.thirdPartyScoreBaseUrl;
 const thirdPartyScoreUrl = thirdPartyScoreBaseUrl[0] + '/app/member/score.php?type=';
 
-const thirdPartyLotteryBaseUrl = ['http://ssc.zq0666.com','http://ssc2.zq0666.com'];
+const thirdPartyLotteryBaseUrl = process.env.thirdPartyLotteryBaseUrl;
 const thirdPartyLotteryResultUrl = thirdPartyLotteryBaseUrl[1] + '/result_new.php';
-const thirdPartyOtherLotteryResultUrl = 'http://vip.manycai.com/K25feb33135b773';
+const thirdPartyOtherLotteryResultUrl = process.env.thirdPartyOtherLotteryResultUrl;
 
-const userArray = ["4056hg", "4057hg", "4058hg", "4059hg", "4060hg"];
-const passWord = "wang8899";
-const thirdPartyBaseUrlArray = ["https://hga026.com", "https://hga030.com", "https://hga035.com", "https://www.hga038.com", "https://m588.hga030.com", "https://m739.hga030.com"];
+const userArray = process.env.userArray;
+const passWord = process.env.passWord;
+const thirdPartyBaseUrlArray = process.env.thirdPartyBaseUrlArray;
 
 
 setInterval( async () => {
