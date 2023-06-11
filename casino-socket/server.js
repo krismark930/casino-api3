@@ -87,6 +87,22 @@ var { dispatchUpdateMacaoLotteryHandicap } = require('./controllers/kakithe.cont
 
 // ============================= Lottery Always Color ======================== //
 var { dispatchGetLotteryResult } = require('./controllers/lottery_result.controller');
+var { dispatchGetLotteryResultCQSSC } = require('./controllers/lottery_result.controller');
+var { dispatchGetLotteryResultFFC5 } = require('./controllers/lottery_result.controller');
+var { dispatchGetLotteryResultTXSSC } = require('./controllers/lottery_result.controller');
+var { dispatchGetLotteryResultTWSSC } = require('./controllers/lottery_result.controller');
+var { dispatchGetLotteryResultAZXY5 } = require('./controllers/lottery_result.controller');
+var { dispatchGetLotteryResultXJSSC } = require('./controllers/lottery_result.controller');
+var { dispatchGetLotteryResultTJSSC } = require('./controllers/lottery_result.controller');
+var { dispatchGetLotteryResultGD11 } = require('./controllers/lottery_result.controller');
+var { dispatchGetLotteryResultAZXY10 } = require('./controllers/lottery_result.controller');
+var { dispatchGetLotteryResultBJPK } = require('./controllers/lottery_result.controller');
+var { dispatchGetLotteryResultXYFT } = require('./controllers/lottery_result.controller');
+var { dispatchGetLotteryResultCQSF } = require('./controllers/lottery_result.controller');
+var { dispatchGetLotteryResultGDSF } = require('./controllers/lottery_result.controller');
+var { dispatchGetLotteryResultGXSF } = require('./controllers/lottery_result.controller');
+var { dispatchGetLotteryResultTJSF } = require('./controllers/lottery_result.controller');
+var { dispatchGetLotteryResultSHSSL } = require('./controllers/lottery_result.controller');
 var { dispatchGetLotteryResultTCPL3 } = require('./controllers/lottery_result.controller');
 var { dispatchGetLotteryResultFC3D } = require('./controllers/lottery_result.controller');
 var { dispatchCheckoutAZXY10 } = require('./controllers/lottery_result.controller');
@@ -108,6 +124,11 @@ var { dispatchCheckoutTJSF } = require('./controllers/lottery_result.controller'
 var { dispatchCheckoutTWSSC } = require('./controllers/lottery_result.controller');
 var { dispatchCheckoutTXSSC } = require('./controllers/lottery_result.controller');
 var { dispatchCheckoutXYFT } = require('./controllers/lottery_result.controller');
+
+// other game 
+var { dispatchGetOGToken } = require('./controllers/og_game.controller');
+var { dispatchGetOGTransaction } = require('./controllers/og_game.controller');
+var { dispatchGetKYTransaction } = require('./controllers/og_game.controller');
 
 var obtIterval = 0;
 var correctScoreInterval = 0;
@@ -162,7 +183,7 @@ var bk_total_count = 0;
 // const thirdPartyBaseUrl = "https://www.hga030.com";
 
 var thirdPartyAuthData = {
-    uid: "gjzqzk44m30901985l126991b0",
+    uid: "kyyvx7q5gm30901985l85675b0",
     version: "-3ed5-bug4-0309-95881ae5676be2",
     thirdPartyBaseUrl: "https://www.hga030.com"
 }
@@ -179,12 +200,12 @@ const passWord = "wang8899";
 const thirdPartyBaseUrlArray = ["https://hga026.com", "https://hga030.com", "https://hga035.com", "https://www.hga038.com", "https://m588.hga030.com", "https://m739.hga030.com"];
 
 
-// setInterval( async () => {
-//     await dispatchFT_AUTO_CHECK_SCORE();
-//     await dispatchBK_AUTO_CHECK_SCORE();
-//     await dispatchFT_PARLAY_AUTO_CHECK_SCORE();
-//     await dispatchBK_PARLAY_AUTO_CHECK_SCORE();
-// }, 20000)
+setInterval( async () => {
+    // await dispatchFT_AUTO_CHECK_SCORE();
+    // await dispatchBK_AUTO_CHECK_SCORE();
+    // await dispatchFT_PARLAY_AUTO_CHECK_SCORE();
+    // await dispatchBK_PARLAY_AUTO_CHECK_SCORE();
+}, 20000)
 
 
 // setInterval(async () => {
@@ -379,16 +400,18 @@ const thirdPartyBaseUrlArray = ["https://hga026.com", "https://hga030.com", "htt
 
 //     }
 
+//        io.emit("receivedBKInPlayData", bkInPlayList);
+
 // }, 30000);
 
 
 
-// scoreResultInterval = setInterval( async () => {
-//     // getFTScore(thirdPartyScoreUrl);
-//     getBKScore(thirdPartyScoreUrl);
-//     getOtherFTScore(thirdPartyAuthData);
-//     getOtherBKScore(thirdPartyAuthData);
-// }, 50000);
+scoreResultInterval = setInterval( async () => {
+    // getFTScore(thirdPartyScoreUrl);
+    // getBKScore(thirdPartyScoreUrl);
+    // await getOtherFTScore(thirdPartyAuthData);
+    // getOtherBKScore(thirdPartyAuthData);
+}, 10000);
 
 
 // setInterval(async () => {
@@ -644,85 +667,110 @@ const thirdPartyBaseUrlArray = ["https://hga026.com", "https://hga030.com", "htt
 // }, 60 * 1000);
 
 
-setInterval(async () => {
-    let result = await dispatchGetLotteryStatus();
-    if (result == null) {
-        return;
-    }
-    var now = moment().tz("Asia/Hong_Kong").format("YYYY-MM-DD HH:mm:ss");
-    console.log(now);
-    var close_end = moment(result["zfbdate"]);
-    var close_duration = moment.duration(close_end.diff(now));
-    var close_time_diff = close_duration.valueOf();
-    if (close_time_diff < 0) {
-        console.log("close");
-        await dispatchUpdateLotteryHandicap({id: result["id"], zfb: 0});
-    }
-    console.log(result["zfb"], result["best"], close_time_diff);
-    if (result["zfb"] == 0 && result["best"] && close_time_diff > 0) {
-        console.log("hong kong six mark open:");
-        var open_end = moment(result["zfbdate1"]);
-        var open_duration = moment.duration(open_end.diff(now));
-        var open_time_diff = open_duration.valueOf();
-        console.log(open_time_diff);
-        if (open_time_diff < 0) {
-            await dispatchUpdateLotteryHandicap({id: result["id"], zfb: 1, best: 1});
-        }        
-    }
-}, 60 * 1000);
+// setInterval(async () => {
+//     let result = await dispatchGetLotteryStatus();
+//     if (result == null) {
+//         return;
+//     }
+//     var now = moment().tz("Asia/Hong_Kong").format("YYYY-MM-DD HH:mm:ss");
+//     console.log(now);
+//     var close_end = moment(result["zfbdate"]);
+//     var close_duration = moment.duration(close_end.diff(now));
+//     var close_time_diff = close_duration.valueOf();
+//     if (close_time_diff < 0) {
+//         console.log("close");
+//         await dispatchUpdateLotteryHandicap({id: result["id"], zfb: 0});
+//     }
+//     console.log(result["zfb"], result["best"], close_time_diff);
+//     if (result["zfb"] == 0 && result["best"] && close_time_diff > 0) {
+//         console.log("hong kong six mark open:");
+//         var open_end = moment(result["zfbdate1"]);
+//         var open_duration = moment.duration(open_end.diff(now));
+//         var open_time_diff = open_duration.valueOf();
+//         console.log(open_time_diff);
+//         if (open_time_diff < 0) {
+//             await dispatchUpdateLotteryHandicap({id: result["id"], zfb: 1, best: 1});
+//         }        
+//     }
+// }, 60 * 1000);
 
 
-setInterval(async () => {
-    let result = await dispatchGetMacaoLotteryStatus();
-    if (result == null) {
-        return;
-    }
-    var now = moment().tz("Asia/Hong_Kong").format("YYYY-MM-DD HH:mm:ss");
-    console.log(now);
-    var close_end = moment(result["zfbdate"]);
-    var close_duration = moment.duration(close_end.diff(now));
-    var close_time_diff = close_duration.valueOf();
-    if (close_time_diff < 0) {
-        console.log("close");
-        await dispatchUpdateMacaoLotteryHandicap({id: result["id"], zfb: 0});
-    }
-    console.log(result["zfb"], result["best"], close_time_diff);
-    if (result["zfb"] == 0 && result["best"] && close_time_diff > 0) {
-        console.log("open");
-        var open_end = moment(result["zfbdate1"]);
-        var open_duration = moment.duration(open_end.diff(now));
-        var open_time_diff = open_duration.valueOf();
-        console.log(open_time_diff);
-        if (open_time_diff < 0) {
-            await dispatchUpdateMacaoLotteryHandicap({id: result["id"], zfb: 1, best: 1});
-        }        
-    }
-}, 60 * 1000);
+// setInterval(async () => {
+//     let result = await dispatchGetMacaoLotteryStatus();
+//     if (result == null) {
+//         return;
+//     }
+//     var now = moment().tz("Asia/Hong_Kong").format("YYYY-MM-DD HH:mm:ss");
+//     console.log(now);
+//     var close_end = moment(result["zfbdate"]);
+//     var close_duration = moment.duration(close_end.diff(now));
+//     var close_time_diff = close_duration.valueOf();
+//     if (close_time_diff < 0) {
+//         console.log("close");
+//         await dispatchUpdateMacaoLotteryHandicap({id: result["id"], zfb: 0});
+//     }
+//     console.log(result["zfb"], result["best"], close_time_diff);
+//     if (result["zfb"] == 0 && result["best"] && close_time_diff > 0) {
+//         console.log("open");
+//         var open_end = moment(result["zfbdate1"]);
+//         var open_duration = moment.duration(open_end.diff(now));
+//         var open_time_diff = open_duration.valueOf();
+//         console.log(open_time_diff);
+//         if (open_time_diff < 0) {
+//             await dispatchUpdateMacaoLotteryHandicap({id: result["id"], zfb: 1, best: 1});
+//         }        
+//     }
+// }, 60 * 1000);
 
 setInterval(async () => {
-    await dispatchGetLotteryResult(thirdPartyLotteryResultUrl);
-    await dispatchGetLotteryResultTCPL3(`${thirdPartyOtherLotteryResultUrl}/TCPL3.json`);
-    await dispatchGetLotteryResultFC3D(`${thirdPartyOtherLotteryResultUrl}/FC3D.json`);
-    await dispatchCheckoutAZXY5();
-    await dispatchCheckoutAZXY10();
-    await dispatchCheckoutBJKN();
+    // await dispatchGetLotteryResult(thirdPartyLotteryResultUrl);
+    // await dispatchGetLotteryResultCQSSC(`${thirdPartyOtherLotteryResultUrl}/CQSSC.json`);
+    // await dispatchGetLotteryResultFFC5(`${thirdPartyOtherLotteryResultUrl}/HN300.json`);
+    // await dispatchGetLotteryResultTXSSC(`${thirdPartyOtherLotteryResultUrl}/TXFFC.json`);
+    // await dispatchGetLotteryResultTWSSC(`${thirdPartyOtherLotteryResultUrl}/TW300.json`);
+    // await dispatchGetLotteryResultAZXY5(`${thirdPartyOtherLotteryResultUrl}/AZXY5.json`);
+    // await dispatchGetLotteryResultXJSSC(`${thirdPartyOtherLotteryResultUrl}/XJSSC.json`);
+    // await dispatchGetLotteryResultTJSSC(`${thirdPartyOtherLotteryResultUrl}/TJSSC.json`);
+    // await dispatchGetLotteryResultGD11(`${thirdPartyOtherLotteryResultUrl}/GD11X5.json`);
+    // await dispatchGetLotteryResultAZXY10(`${thirdPartyOtherLotteryResultUrl}/AZXY10.json`);
+    // await dispatchGetLotteryResultBJPK(`${thirdPartyOtherLotteryResultUrl}/BJPK10.json`);
+    // await dispatchGetLotteryResultXYFT(`${thirdPartyOtherLotteryResultUrl}/XYFT.json`);
+    // await dispatchGetLotteryResultCQSF(`${thirdPartyOtherLotteryResultUrl}/CQXYNC.json`);
+    // await dispatchGetLotteryResultGDSF(`${thirdPartyOtherLotteryResultUrl}/GDKL10.json`);
+    // await dispatchGetLotteryResultGXSF(`${thirdPartyOtherLotteryResultUrl}/GXKL10.json`);
+    // await dispatchGetLotteryResultTJSF(`${thirdPartyOtherLotteryResultUrl}/TJKL10.json`);
+    // await dispatchGetLotteryResultSHSSL(`${thirdPartyOtherLotteryResultUrl}/SHSSL.json`);
+    // await dispatchGetLotteryResultTCPL3(`${thirdPartyOtherLotteryResultUrl}/TCPL3.json`);
+    // await dispatchGetLotteryResultFC3D(`${thirdPartyOtherLotteryResultUrl}/FC3D.json`);
+    // await dispatchCheckoutAZXY5();
+    // await dispatchCheckoutAZXY10();
+    // await dispatchCheckoutBJKN();
     await dispatchCheckoutBJPK();
-    await dispatchCheckoutCQ();
-    await dispatchCheckoutCQSF();
-    await dispatchCheckoutD3();
-    await dispatchCheckoutGD11();
-    await dispatchCheckoutGDSF();
-    await dispatchCheckoutGXSF();
-    await dispatchCheckoutFFC5();
-    await dispatchCheckoutJX();
-    await dispatchCheckoutP3();
-    await dispatchCheckoutT3();
-    await dispatchCheckoutTJ();
-    await dispatchCheckoutTJSF();
-    await dispatchCheckoutTWSSC();
-    await dispatchCheckoutTXSSC();
-    await dispatchCheckoutXYFT();
-}, 60 * 1000);
+    // await dispatchCheckoutCQ();
+    // await dispatchCheckoutCQSF();
+    // await dispatchCheckoutD3();
+    // await dispatchCheckoutGD11();
+    // await dispatchCheckoutGDSF();
+    // await dispatchCheckoutGXSF();
+    // await dispatchCheckoutFFC5();
+    // await dispatchCheckoutJX();
+    // await dispatchCheckoutP3();
+    // await dispatchCheckoutT3();
+    // await dispatchCheckoutTJ();
+    // await dispatchCheckoutTJSF();
+    // await dispatchCheckoutTWSSC();
+    // await dispatchCheckoutTXSSC();
+    // await dispatchCheckoutXYFT();
+}, 10 * 1000);
+
+// setInterval(async () => {
+//     await dispatchGetOGToken();
+//     await dispatchGetKYTransaction();
+// }, 30 * 60 * 1000);
+
+// setInterval(async () => {
+//     await dispatchGetOGTransaction();
+// }, 10 * 60 * 1000);
 
 
 var clients = {};
@@ -2634,13 +2682,13 @@ io.on("connection", async function (socket) {
 
             // console.log(newItemList);
 
-            dispatchBK_MAIN_PARLAY(newItemList)
+            await dispatchBK_MAIN_PARLAY(newItemList)
 
             io.emit("receivedBKParlayMessage", newItemList);
 
         } else {
 
-            dispatchBK_MAIN_PARLAY(itemList)
+            await dispatchBK_MAIN_PARLAY(itemList)
 
             io.emit("receivedBKParlayMessage", itemList);
             
@@ -2673,13 +2721,13 @@ io.on("connection", async function (socket) {
 
             if (newItemList.length > 0) {
 
-                dispatchBK_MAIN_PARLAY(newItemList)
+                await dispatchBK_MAIN_PARLAY(newItemList)
 
                 io.emit("receivedBKParlayMessage", newItemList);
 
             } else {
 
-                dispatchBK_MAIN_PARLAY(itemList)
+                await dispatchBK_MAIN_PARLAY(itemList)
 
                 io.emit("receivedBKParlayMessage", itemList);
                 

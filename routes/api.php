@@ -95,6 +95,7 @@ use App\Http\Controllers\Api\Admin\AdminMessageController;
 use App\Http\Controllers\Api\Admin\AdminAccessController;
 use App\Http\Controllers\Api\Admin\AdminUserInfoController;
 use App\Http\Controllers\Api\Admin\AdminOtherGameLogsController;
+use App\Http\Controllers\Api\Admin\UserManagementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -649,6 +650,24 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], func
         Route::post('/ky-logs', [AdminOtherGameLogsController::class, 'getKYLogs']);
         Route::post('/admin-info', [AdminSystemController::class, 'getAdminInfo']);
         Route::post('/update-admin-info', [AdminSystemController::class, 'updateAdminInfo']);
+    });
+
+    // user management
+
+    Route::group(['prefix' => 'user-management'], function ($router) {
+        Route::post('/sub-user', [UserManagementController::class, 'getSubUser']);
+        Route::post('/add-sub-user', [UserManagementController::class, 'addSubUser']);
+        Route::post('/update-sub-user', [UserManagementController::class, 'updateSubUser']);
+        Route::post('/suspend-sub-user', [UserManagementController::class, 'suspendSubUser']);
+        Route::post('/delete-sub-user', [UserManagementController::class, 'deleteSubUser']);
+        Route::post('/permission-sub-user', [UserManagementController::class, 'permissionSubUser']);
+        Route::post('/company', [UserManagementController::class, 'getCompany']);
+        Route::post('/company-info', [UserManagementController::class, 'getCompanyInfoForAdd']);
+        Route::post('/add-company', [UserManagementController::class, 'addCompany']);
+        Route::post('/update-company', [UserManagementController::class, 'updateCompany']);
+        Route::post('/detail-company', [UserManagementController::class, 'detailCompany']);
+        Route::post('/update-money-agency', [UserManagementController::class, 'updateMoneyAgency']);
+        Route::post('/update-member', [UserManagementController::class, 'updateMember']);
     });
 });
 
