@@ -856,8 +856,8 @@ class UserController extends Controller {
                     "UserName" => $credentials['UserName'],
                     "Status" => 0,
                     "LoginIP" => Utils::get_ip(),
-                    "DateTime" => $datetime,
-                    "Contect" => '登录失败(pass:'.$credentials['password'].')',
+                    "LoginTime" => $datetime,
+                    "Context" => '登录失败(pass:'.$credentials['password'].')',
                     "Url" => Utils::get_browser_ip()
                 ];
 
@@ -903,8 +903,8 @@ class UserController extends Controller {
                 "UserName" => $credentials['UserName'],
                 "Status" => 1,
                 "LoginIP" => Utils::get_ip(),
-                "DateTime" => $datetime,
-                "Contect" => '登录成功',
+                "LoginTime" => $datetime,
+                "Cotext" => '登录成功',
                 "Url" => Utils::get_browser_ip()
             ];
 

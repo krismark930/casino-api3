@@ -96,6 +96,7 @@ use App\Http\Controllers\Api\Admin\AdminAccessController;
 use App\Http\Controllers\Api\Admin\AdminUserInfoController;
 use App\Http\Controllers\Api\Admin\AdminOtherGameLogsController;
 use App\Http\Controllers\Api\Admin\UserManagementController;
+use App\Http\Controllers\Api\Admin\AdminStatisticsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -668,6 +669,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], func
         Route::post('/detail-company', [UserManagementController::class, 'detailCompany']);
         Route::post('/update-money-agency', [UserManagementController::class, 'updateMoneyAgency']);
         Route::post('/update-member', [UserManagementController::class, 'updateMember']);
+    });
+
+    // statistics management
+
+    Route::group(['prefix' => 'statistics'], function ($router) {
+        Route::post('/dividend-details', [AdminStatisticsController::class, 'getDividendDetails']);
+        Route::post('/daily-accounts', [AdminStatisticsController::class, 'getDailyAccounts']);
+        Route::post('/system-logs', [AdminStatisticsController::class, 'getSystemLogs']);
+        Route::post('/get-online', [AdminStatisticsController::class, 'getOnlineData']);
     });
 });
 
