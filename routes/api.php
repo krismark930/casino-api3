@@ -42,6 +42,7 @@ use App\Http\Controllers\Api\User\AGController;
 use App\Http\Controllers\Api\User\BBINController;
 use App\Http\Controllers\Api\User\MGController;
 use App\Http\Controllers\Api\User\PTController;
+use App\Http\Controllers\Api\User\HomeController;
 
 // API Admin Controllers
 use App\Http\Controllers\Api\Admin\WebSystemDataController;
@@ -97,6 +98,7 @@ use App\Http\Controllers\Api\Admin\AdminUserInfoController;
 use App\Http\Controllers\Api\Admin\AdminOtherGameLogsController;
 use App\Http\Controllers\Api\Admin\UserManagementController;
 use App\Http\Controllers\Api\Admin\AdminStatisticsController;
+use App\Http\Controllers\Api\Admin\SportReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -261,6 +263,11 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
             Route::post('/pt-url', [PTController::class, 'getPTUrl']);
         });
     });
+
+    Route::group(['prefix' => 'home'], function ($router) {
+        Route::post('/sys-config', [HomeController::class, 'getSysConfig']);
+    });
+
 });
 
 // admin routes
@@ -678,6 +685,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], func
         Route::post('/daily-accounts', [AdminStatisticsController::class, 'getDailyAccounts']);
         Route::post('/system-logs', [AdminStatisticsController::class, 'getSystemLogs']);
         Route::post('/get-online', [AdminStatisticsController::class, 'getOnlineData']);
+    });
+
+    // sport resport management
+
+    Route::group(['prefix' => 'sport-report'], function ($router) {
+        Route::get('/all', [SportReportController::class, 'getSportReport']);
     });
 });
 

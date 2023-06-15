@@ -297,82 +297,6 @@ class BettingController extends Controller
                     }
                     $ptype = 'R';
                     break;
-                    $bet_type = '让球';
-                    $bet_type_tw = "讓球";
-                    $bet_type_en = "Handicap";
-                    $caption = "足球";
-                    $turn_rate = "FT_Turn_R_";
-                    $rate = get_other_ioratio($odd_f_type, $match_sports["MB_LetB_Rate"], $match_sports["TG_LetB_Rate"], 100);
-
-                    switch ($type) {
-
-                        case "H":
-                            $w_m_place = $w_mb_team;
-                            $w_m_place_tw = $w_mb_team_tw;
-                            $w_m_place_en = $w_mb_team_en;
-                            $s_m_place = $s_mb_team;
-                            $w_m_rate = $rate[0];
-                            $turn_url = "";
-                            $mtype = 'RH';
-                            break;
-                        case "C":
-                            $w_m_place = $w_tg_team;
-                            $w_m_place_tw = $w_tg_team_tw;
-                            $w_m_place_en = $w_tg_team_en;
-                            $s_m_place = $s_tg_team;
-                            $w_m_rate = $rate[1];
-                            $turn_url = "";
-                            $mtype = 'RC';
-                            break;
-                    }
-
-                    $Sign = $match_sports['M_LetB'];
-                    $grape = $Sign;
-
-                    if ($show_type == "H") {
-                        $l_team = $s_mb_team;
-                        $r_team = $s_tg_team;
-                        $w_l_team = $w_mb_team;
-                        $w_l_team_tw = $w_mb_team_tw;
-                        $w_l_team_en = $w_mb_team_en;
-                        $w_r_team = $w_tg_team;
-                        $w_r_team_tw = $w_tg_team_tw;
-                        $w_r_team_en = $w_tg_team_en;
-                    } else {
-                        $r_team = $s_mb_team;
-                        $l_team = $s_tg_team;
-                        $w_r_team = $w_mb_team;
-                        $w_r_team_tw = $w_mb_team_tw;
-                        $w_r_team_en = $w_mb_team_en;
-                        $w_l_team = $w_tg_team;
-                        $w_l_team_tw = $w_tg_team_tw;
-                        $w_l_team_en = $w_tg_team_en;
-                    }
-
-                    $s_mb_team = $l_team;
-                    $s_tg_team = $r_team;
-                    $w_mb_team = $w_l_team;
-                    $w_mb_team_tw = $w_l_team_tw;
-                    $w_mb_team_en = $w_l_team_en;
-                    $w_tg_team = $w_r_team;
-                    $w_tg_team_tw = $w_r_team_tw;
-                    $w_tg_team_en = $w_r_team_en;
-
-                    $turn = "FT_Turn_R";
-
-                    if ($odd_f_type === 'H') {
-                        $gwin = ($w_m_rate) * $gold;
-                    } else if ($odd_f_type === 'M' or $odd_f_type === 'I') {
-                        if ($w_m_rate < 0) {
-                            $gwin = $gold;
-                        } else {
-                            $gwin = ($w_m_rate) * $gold;
-                        }
-                    } else if ($odd_f_type === 'E') {
-                        $gwin = ($w_m_rate - 1) * $gold;
-                    }
-                    $ptype = 'R';
-                    break;
                 case 56:
                     $bet_type = '让球';
                     $bet_type_tw = "讓球";
@@ -4781,6 +4705,7 @@ class BettingController extends Controller
             $w_m_rate_array = explode(",", $w_m_rate);
             $m_ball_array = explode(",", $m_ball);
             $t_ball_array = explode(",", $t_ball);
+            $show_type_array = explode(",", $show_type);
 
             $lines = "";
 
@@ -4856,9 +4781,31 @@ class BettingController extends Controller
                     $bottom1_en = "";
                 }
 
-                $inball = $m_ball_array[$i] . ":" . $t_ball_array[$i];
+                $handicap_array = ["VRRH", "VRRC", "VRH", "VRC","RRH", "RRC", "RC", "RH"];
 
-                $lines=$lines.$league_array[$i]."<br>".$m_team_array[$i]."&nbsp;&nbsp;<FONT COLOR=#0000BB><b>".$Sign."</b></FONT>&nbsp;&nbsp;".$t_team_array[$i]."&nbsp;&nbsp;<FONT color=red><b>$inball</b></FONT><br>";
+                if (in_array($mtype[$i], $handicap_array)) {
+
+                    if ($show_type_array[$i] == "H") {
+
+                        $inball = $m_ball_array[$i] . ":" . $t_ball_array[$i];
+
+                        $lines=$lines.$league_array[$i]."<br>".$m_team_array[$i]."&nbsp;&nbsp;<FONT COLOR=#0000BB><b>".$Sign."</b></FONT>&nbsp;&nbsp;".$t_team_array[$i]."&nbsp;&nbsp;<FONT color=red><b>$inball</b></FONT><br>";
+
+                    } else {
+
+                        $inball = $t_ball_array[$i] . ":" . $m_ball_array[$i];
+
+                        $lines=$lines.$league_array[$i]."<br>".$t_team_array[$i]."&nbsp;&nbsp;<FONT COLOR=#0000BB><b>".$Sign."</b></FONT>&nbsp;&nbsp;".$m_team_array[$i]."&nbsp;&nbsp;<FONT color=red><b>$inball</b></FONT><br>";
+
+                    }
+
+                } else {
+
+                    $inball = $m_ball_array[$i] . ":" . $t_ball_array[$i];
+
+                    $lines=$lines.$league_array[$i]."<br>".$m_team_array[$i]."&nbsp;&nbsp;<FONT COLOR=#0000BB><b>".$Sign."</b></FONT>&nbsp;&nbsp;".$t_team_array[$i]."&nbsp;&nbsp;<FONT color=red><b>$inball</b></FONT><br>";
+
+                }
 
                 $lines=$lines."<FONT color=#cc0000>".$w_m_place_array[$i]."</FONT>&nbsp;".$bottom1_cn."@&nbsp;<FONT color=#cc0000><b>".$w_m_rate_array[$i]."</b></FONT>,<br>";
             }

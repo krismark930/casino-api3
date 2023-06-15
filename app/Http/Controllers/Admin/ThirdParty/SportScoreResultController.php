@@ -77,7 +77,7 @@ class SportScoreResultController extends Controller {
 			} else {
 				$list_date = date('Y-m-d', strtotime('-1 day'));
 			}
-			// $list_date = "2023-05-31";
+			// $list_date = "2023-06-11";
 
 			$url = "http://125.252.69.119/app/member/account/result/result.php?game_type=$game_type&list_date=$list_date&uid=$uid&langx=zh-cn";
 
@@ -416,6 +416,7 @@ class SportScoreResultController extends Controller {
 
                     if ($match_sports['MB_Inball'] == "") {
                     	if ($game_type == "FT") {
+                    		// if ($GMH == 97 || $GMH == 76) return $GMH;
 	                        Sport::where("Type", "FT")
 	                            ->where("M_Date", $list_date)
 	                            ->where("MID", (int)$gid)
