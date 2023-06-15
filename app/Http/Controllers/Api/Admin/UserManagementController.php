@@ -379,6 +379,9 @@ class UserManagementController extends Controller
                 $name=$row['SubName'];
             }
             if($name=="admin8888") $name="admin";
+
+            // return $name;
+            
             switch ($lv){
             case 'A':
                 $Title="公司";

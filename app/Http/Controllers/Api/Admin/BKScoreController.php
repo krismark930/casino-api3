@@ -196,779 +196,779 @@ class BKScoreController extends Controller
                 $match_sports = Sport::where("Type", "BK")->where("MID", (int)$mid)->where("M_Date", $list_date)->first();
 
 
-                if (isset($match_sports)) {
-
-                    if ($match_sports['MB_Inball'] == "") {
-                        Sport::where("Type", "BK")
-                            // ->where("GetScore", 1)
-                            ->where("M_Date", $list_date)
-                            ->where("MID", (int)$mid)
-                            ->update([
-                                "MB_Inball_HR" => $mb_inball_hr,
-                                "TG_Inball_HR" => $tg_inball_hr,
-                            ]);
-                        Sport::where("Type", "BK")
-                            // ->where("GetScore", 1)
-                            ->where("M_Date", $list_date)
-                            ->where("ECID", (int)$match_sports["ECID"])
-                            ->where('MB_Team', 'like', "%上半场%")
-                            ->update([
-                                "MB_Inball" => $mb_inball_hr,
-                                "TG_Inball" => $tg_inball_hr,
-                            ]);
-                        Sport::where("Type", "BK")
-                            // ->where("GetScore", 1)
-                            ->where("M_Date", $list_date)
-                            ->where("ECID", (int)$match_sports["ECID"])
-                            ->where('MB_Team', 'like', "%下半场%")
-                            ->update([
-                                "MB_Inball" => $mb_inball_xb,
-                                "TG_Inball" => $tg_inball_xb,
-                            ]);
-                        Sport::where("Type", "BK")
-                            // ->where("GetScore", 1)
-                            ->where("M_Date", $list_date)
-                            ->where("ECID", (int)$match_sports["ECID"])
-                            ->where('MB_Team', 'like', "%第一节%")
-                            ->update([
-                                "MB_Inball" => $mb_inball1,
-                                "TG_Inball" => $tg_inball1,
-                            ]);
-                        Sport::where("Type", "BK")
-                            // ->where("GetScore", 1)
-                            ->where("M_Date", $list_date)
-                            ->where("ECID", (int)$match_sports["ECID"])
-                            ->where('MB_Team', 'like', "%第二节%")
-                            ->update([
-                                "MB_Inball" => $mb_inball2,
-                                "TG_Inball" => $tg_inball2,
-                            ]);
-                        Sport::where("Type", "BK")
-                            // ->where("GetScore", 1)
-                            ->where("M_Date", $list_date)
-                            ->where("ECID", (int)$match_sports["ECID"])
-                            ->where('MB_Team', 'like', "%第三节%")
-                            ->update([
-                                "MB_Inball" => $mb_inball3,
-                                "TG_Inball" => $tg_inball3,
-                            ]);
-                        Sport::where("Type", "BK")
-                            // ->where("GetScore", 1)
-                            ->where("M_Date", $list_date)
-                            ->where("ECID", (int)$match_sports["ECID"])
-                            ->where('MB_Team', 'like', "%第四节%")
-                            ->update([
-                                "MB_Inball" => $mb_inball4,
-                                "TG_Inball" => $tg_inball4,
-                            ]);
-                        Sport::where("Type", "BK")
-                            // ->where("GetScore", 1)
-                            ->where("M_Date", $list_date)
-                            ->where("ECID", (int)$match_sports["ECID"])
-                            ->where('MB_Team', 'like', "%加时%")
-                            ->update([
-                                "MB_Inball" => $mb_inball_js,
-                                "TG_Inball" => $tg_inball_js,
-                            ]);
-                    } elseif( $mb_inball < 0 || $tg_inball < 0 ) {
-                        Sport::where("Type", "BK")
-                            // ->where("GetScore", 1)
-                            ->where("M_Date", $list_date)
-                            ->where("MID", (int)$mid)
-                            ->update([
-                                "MB_Inball_HR" => $mb_inball_hr,
-                                "TG_Inball_HR" => $tg_inball_hr,
-                                "Cancel" => 1
-                            ]);
-                        Sport::where("Type", "BK")
-                            // ->where("GetScore", 1)
-                            ->where("M_Date", $list_date)
-                            ->where("ECID", (int)$match_sports["ECID"])
-                            ->where('MB_Team', 'like', "%上半场%")
-                            ->update([
-                                "MB_Inball" => $mb_inball_hr,
-                                "TG_Inball" => $tg_inball_hr,
-                                "Cancel" => 1
-                            ]);
-                        Sport::where("Type", "BK")
-                            // ->where("GetScore", 1)
-                            ->where("M_Date", $list_date)
-                            ->where("ECID", (int)$match_sports["ECID"])
-                            ->where('MB_Team', 'like', "%下半场%")
-                            ->update([
-                                "MB_Inball" => $mb_inball_xb,
-                                "TG_Inball" => $tg_inball_xb,
-                                "Cancel" => 1
-                            ]);
-                        Sport::where("Type", "BK")
-                            // ->where("GetScore", 1)
-                            ->where("M_Date", $list_date)
-                            ->where("ECID", (int)$match_sports["ECID"])
-                            ->where('MB_Team', 'like', "%第一节%")
-                            ->update([
-                                "MB_Inball" => $mb_inball1,
-                                "TG_Inball" => $tg_inball1,
-                                "Cancel" => 1
-                            ]);
-                        Sport::where("Type", "BK")
-                            // ->where("GetScore", 1)
-                            ->where("M_Date", $list_date)
-                            ->where("ECID", (int)$match_sports["ECID"])
-                            ->where('MB_Team', 'like', "%第二节%")
-                            ->update([
-                                "MB_Inball" => $mb_inball2,
-                                "TG_Inball" => $tg_inball2,
-                                "Cancel" => 1
-                            ]);
-                        Sport::where("Type", "BK")
-                            // ->where("GetScore", 1)
-                            ->where("M_Date", $list_date)
-                            ->where("ECID", (int)$match_sports["ECID"])
-                            ->where('MB_Team', 'like', "%第三节%")
-                            ->update([
-                                "MB_Inball" => $mb_inball3,
-                                "TG_Inball" => $tg_inball3,
-                                "Cancel" => 1
-                            ]);
-                        Sport::where("Type", "BK")
-                            // ->where("GetScore", 1)
-                            ->where("M_Date", $list_date)
-                            ->where("ECID", (int)$match_sports["ECID"])
-                            ->where('MB_Team', 'like', "%第四节%")
-                            ->update([
-                                "MB_Inball" => $mb_inball4,
-                                "TG_Inball" => $tg_inball4,
-                                "Cancel" => 1
-                            ]);
-                        Sport::where("Type", "BK")
-                            // ->where("GetScore", 1)
-                            ->where("M_Date", $list_date)
-                            ->where("ECID", (int)$match_sports["ECID"])
-                            ->where('MB_Team', 'like', "%加时%")
-                            ->update([
-                                "MB_Inball" => $mb_inball_js,
-                                "TG_Inball" => $tg_inball_js,
-                                "Cancel" => 1
-                            ]);
-                    } else{
-
-                        $a= $match_sports['MB_Inball'].$match_sports['TG_Inball'];
-                        $b= trim($mb_inball).trim($tg_inball);
-
-                        if($a != $b) {
-                            Sport::where("Type", "BK")
-                                ->where("GetScore", 1)
-                                ->where("M_Date", $list_date)
-                                ->where("MID", (int)$mid)
-                                ->update([
-                                    "MB_Inball_HR" => $mb_inball_hr,
-                                    "TG_Inball_HR" => $tg_inball_hr,
-                                    "Checked" => 1
-                                ]);
-                            Sport::where("Type", "BK")
-                                ->where("GetScore", 1)
-                                ->where("M_Date", $list_date)
-                                ->where("ECID", (int)$match_sports["ECID"])
-                                ->where('MB_Team', 'like', "%上半场%")
-                                ->update([
-                                    "MB_Inball" => $mb_inball_hr,
-                                    "TG_Inball" => $tg_inball_hr,
-                                    "Checked" => 1
-                                ]);
-                            Sport::where("Type", "BK")
-                                ->where("GetScore", 1)
-                                ->where("M_Date", $list_date)
-                                ->where("ECID", (int)$match_sports["ECID"])
-                                ->where('MB_Team', 'like', "%下半场%")
-                                ->update([
-                                    "MB_Inball" => $mb_inball_xb,
-                                    "TG_Inball" => $tg_inball_xb,
-                                    "Checked" => 1
-                                ]);
-                            Sport::where("Type", "BK")
-                                ->where("GetScore", 1)
-                                ->where("M_Date", $list_date)
-                                ->where("ECID", (int)$match_sports["ECID"])
-                                ->where('MB_Team', 'like', "%第一节%")
-                                ->update([
-                                    "MB_Inball" => $mb_inball1,
-                                    "TG_Inball" => $tg_inball1,
-                                    "Checked" => 1
-                                ]);
-                            Sport::where("Type", "BK")
-                                ->where("GetScore", 1)
-                                ->where("M_Date", $list_date)
-                                ->where("ECID", (int)$match_sports["ECID"])
-                                ->where('MB_Team', 'like', "%第二节%")
-                                ->update([
-                                    "MB_Inball" => $mb_inball2,
-                                    "TG_Inball" => $tg_inball2,
-                                    "Checked" => 1
-                                ]);
-                            Sport::where("Type", "BK")
-                                ->where("GetScore", 1)
-                                ->where("M_Date", $list_date)
-                                ->where("ECID", (int)$match_sports["ECID"])
-                                ->where('MB_Team', 'like', "%第三节%")
-                                ->update([
-                                    "MB_Inball" => $mb_inball3,
-                                    "TG_Inball" => $tg_inball3,
-                                    "Checked" => 1
-                                ]);
-                            Sport::where("Type", "BK")
-                                ->where("GetScore", 1)
-                                ->where("M_Date", $list_date)
-                                ->where("ECID", (int)$match_sports["ECID"])
-                                ->where('MB_Team', 'like', "%第四节%")
-                                ->update([
-                                    "MB_Inball" => $mb_inball4,
-                                    "TG_Inball" => $tg_inball4,
-                                    "Checked" => 1
-                                ]);
-                            Sport::where("Type", "BK")
-                                ->where("GetScore", 1)
-                                ->where("M_Date", $list_date)
-                                ->where("ECID", (int)$match_sports["ECID"])
-                                ->where('MB_Team', 'like', "%加时%")
-                                ->update([
-                                    "MB_Inball" => $mb_inball_js,
-                                    "TG_Inball" => $tg_inball_js,
-                                    "Checked" => 1
-                                ]);
-                        } else {
-                            Sport::where("Type", "BK")
-                                ->where("GetScore", 1)
-                                ->where("M_Date", $list_date)
-                                ->where("MID", (int)$mid)
-                                ->update([
-                                    "MB_Inball_HR" => $mb_inball_hr,
-                                    "TG_Inball_HR" => $tg_inball_hr,
-                                ]);
-                            Sport::where("Type", "BK")
-                                ->where("GetScore", 1)
-                                ->where("M_Date", $list_date)
-                                ->where("ECID", (int)$match_sports["ECID"])
-                                ->where('MB_Team', 'like', "%上半场%")
-                                ->update([
-                                    "MB_Inball" => $mb_inball_hr,
-                                    "TG_Inball" => $tg_inball_hr,
-                                ]);
-                            Sport::where("Type", "BK")
-                                ->where("GetScore", 1)
-                                ->where("M_Date", $list_date)
-                                ->where("ECID", (int)$match_sports["ECID"])
-                                ->where('MB_Team', 'like', "%下半场%")
-                                ->update([
-                                    "MB_Inball" => $mb_inball_xb,
-                                    "TG_Inball" => $tg_inball_xb,
-                                ]);
-                            Sport::where("Type", "BK")
-                                ->where("GetScore", 1)
-                                ->where("M_Date", $list_date)
-                                ->where("ECID", (int)$match_sports["ECID"])
-                                ->where('MB_Team', 'like', "%第一节%")
-                                ->update([
-                                    "MB_Inball" => $mb_inball1,
-                                    "TG_Inball" => $tg_inball1,
-                                ]);
-                            Sport::where("Type", "BK")
-                                ->where("GetScore", 1)
-                                ->where("M_Date", $list_date)
-                                ->where("ECID", (int)$match_sports["ECID"])
-                                ->where('MB_Team', 'like', "%第二节%")
-                                ->update([
-                                    "MB_Inball" => $mb_inball2,
-                                    "TG_Inball" => $tg_inball2,
-                                ]);
-                            Sport::where("Type", "BK")
-                                ->where("GetScore", 1)
-                                ->where("M_Date", $list_date)
-                                ->where("ECID", (int)$match_sports["ECID"])
-                                ->where('MB_Team', 'like', "%第三节%")
-                                ->update([
-                                    "MB_Inball" => $mb_inball3,
-                                    "TG_Inball" => $tg_inball3,
-                                ]);
-                            Sport::where("Type", "BK")
-                                ->where("GetScore", 1)
-                                ->where("M_Date", $list_date)
-                                ->where("ECID", (int)$match_sports["ECID"])
-                                ->where('MB_Team', 'like', "%第四节%")
-                                ->update([
-                                    "MB_Inball" => $mb_inball4,
-                                    "TG_Inball" => $tg_inball4,
-                                ]);
-                            Sport::where("Type", "BK")
-                                ->where("GetScore", 1)
-                                ->where("M_Date", $list_date)
-                                ->where("ECID", (int)$match_sports["ECID"])
-                                ->where('MB_Team', 'like', "%加时%")
-                                ->update([
-                                    "MB_Inball" => $mb_inball_js,
-                                    "TG_Inball" => $tg_inball_js,
-                                ]);
-                        }
-                    }
-
-                    //第一节
-                    if ($mb_inball1 > 0 && $tg_inball1 > 0){
-
-                        $mb_mid1 = $mb_mid + 300000;
-                        $tg_mid1 = $tg_mid + 300000;
-
-                        $sport = Sport::where('M_Date', $list_date)
-                            ->where('Type', 'BK')
-                            ->where('MB_MID', $mb_mid1)
-                            ->where('TG_MID', $tg_mid1)
-                            ->first();
-
-                        if (isset($sport)) {
-
-                            $mid = $sport['MID'];
-
-                            if ($match_sports['MB_Inball'] == "") {
-                                Sport::where("Type", "BK")
-                                    // ->where("GetScore", 1)
-                                    ->where("M_Date", $list_date)
-                                    ->where("MID", (int)$mid)
-                                    ->update([
-                                        "MB_Inball" => $mb_inball1,
-                                        "TG_Inball" => $tg_inball1,
-                                        "MB_Inball_HR" => $mb_inball1,
-                                        "TG_Inball_HR" => $tg_inball1
-                                    ]);
-                            } elseif( $mb_inball1 < 0 || $tg_inball1 < 0 ) {
-                                Sport::where("Type", "BK")
-                                    // ->where("GetScore", 1)
-                                    ->where("M_Date", $list_date)
-                                    ->where("MID", (int)$mid)
-                                    ->update([
-                                        "MB_Inball" => $mb_inball1,
-                                        "TG_Inball" => $tg_inball1,
-                                        "MB_Inball_HR" => $mb_inball1,
-                                        "TG_Inball_HR" => $tg_inball1,
-                                        "Cancel" => 1
-                                    ]);
-                            } else{
-
-                                $a = $sport['MB_Inball'].$sport['TG_Inball'];
-                                $b = trim($mb_inball1).trim($tg_inball1);
-
-                                if($a != $b) {
-                                    Sport::where("Type", "BK")
-                                        ->where("GetScore", 1)
-                                        ->where("M_Date", $list_date)
-                                        ->where("MID", (int)$mid)
-                                        ->update([
-                                            "MB_Inball" => $mb_inball1,
-                                            "TG_Inball" => $tg_inball1,
-                                            "MB_Inball_HR" => $mb_inball1,
-                                            "TG_Inball_HR" => $tg_inball1,
-                                            "Checked" => 1
-                                        ]);
-                                }else{
-                                    Sport::where("Type", "BK")
-                                        ->where("GetScore", 1)
-                                        ->where("M_Date", $list_date)
-                                        ->where("MID", (int)$mid)
-                                        ->update([
-                                            "MB_Inball" => $mb_inball1,
-                                            "TG_Inball" => $tg_inball1,
-                                            "MB_Inball_HR" => $mb_inball1,
-                                            "TG_Inball_HR" => $tg_inball1
-                                        ]);
-                                }
-                            }
-
-                        }
-                    }
-
-                    //第二节
-                    if ($mb_inball2 > 0 && $tg_inball2 > 0){
-
-                        $mb_mid2 = $mb_mid + 400000;
-                        $tg_mid2 = $tg_mid + 400000;
-
-                        $sport = Sport::where('M_Date', $list_date)
-                            ->where('Type', 'BK')
-                            ->where('MB_MID', $mb_mid2)
-                            ->where('TG_MID', $tg_mid2)
-                            ->first();
-
-                        if (isset($sport)) {
-
-                            $mid = $sport['MID'];
-
-                            if ($match_sports['MB_Inball'] == "") {
-
-                                Sport::where("Type", "BK")
-                                    // ->where("GetScore", 1)
-                                    ->where("M_Date", $list_date)
-                                    ->where("MID", (int)$mid)
-                                    ->update([
-                                        "MB_Inball" => $mb_inball2,
-                                        "TG_Inball" => $tg_inball2,
-                                        "MB_Inball_HR" => $mb_inball2,
-                                        "TG_Inball_HR" => $tg_inball2
-                                    ]);
-
-                            } elseif( $mb_inball2 < 0 || $tg_inball2 < 0 ) {
-
-                                Sport::where("Type", "BK")
-                                    // ->where("GetScore", 1)
-                                    ->where("M_Date", $list_date)
-                                    ->where("MID", (int)$mid)
-                                    ->update([
-                                        "MB_Inball" => $mb_inball2,
-                                        "TG_Inball" => $tg_inball2,
-                                        "MB_Inball_HR" => $mb_inball2,
-                                        "TG_Inball_HR" => $tg_inball2,
-                                        "Cancel" => 1
-                                    ]);
-
-                            } else{
-
-                                $a = $sport['MB_Inball'].$sport['TG_Inball'];
-                                $b = trim($mb_inball2).trim($tg_inball2);
-
-                                if($a != $b) {
-                                    Sport::where("Type", "BK")
-                                        ->where("GetScore", 1)
-                                        ->where("M_Date", $list_date)
-                                        ->where("MID", (int)$mid)
-                                        ->update([
-                                            "MB_Inball" => $mb_inball2,
-                                            "TG_Inball" => $tg_inball2,
-                                            "MB_Inball_HR" => $mb_inball2,
-                                            "TG_Inball_HR" => $tg_inball2,
-                                            "Checked" => 1
-                                        ]);
-                                }else{
-                                    Sport::where("Type", "BK")
-                                        ->where("GetScore", 1)
-                                        ->where("M_Date", $list_date)
-                                        ->where("MID", (int)$mid)
-                                        ->update([
-                                            "MB_Inball" => $mb_inball2,
-                                            "TG_Inball" => $tg_inball2,
-                                            "MB_Inball_HR" => $mb_inball2,
-                                            "TG_Inball_HR" => $tg_inball2
-                                        ]);
-                                }
-                            }
-
-                        }
-                    }
-
-                    //第3节
-                    if ($mb_inball3 > 0 && $tg_inball3 > 0){
-
-                        $mb_mid3 = $mb_mid + 500000;
-                        $tg_mid3 = $tg_mid + 500000;
-
-                        $sport = Sport::where('M_Date', $list_date)
-                            ->where('Type', 'BK')
-                            ->where('MB_MID', $mb_mid3)
-                            ->where('TG_MID', $tg_mid3)
-                            ->first();
-
-                        if (isset($sport)) {
-
-                            $mid = $sport['MID'];
-
-                            if ($match_sports['MB_Inball'] == "") {
-
-                                Sport::where("Type", "BK")
-                                    // ->where("GetScore", 1)
-                                    ->where("M_Date", $list_date)
-                                    ->where("MID", (int)$mid)
-                                    ->update([
-                                        "MB_Inball" => $mb_inball3,
-                                        "TG_Inball" => $tg_inball3,
-                                        "MB_Inball_HR" => $mb_inball3,
-                                        "TG_Inball_HR" => $tg_inball3
-                                    ]);
-
-                            } elseif( $mb_inball3 < 0 || $tg_inball3 < 0 ) {
-
-                                Sport::where("Type", "BK")
-                                    // ->where("GetScore", 1)
-                                    ->where("M_Date", $list_date)
-                                    ->where("MID", (int)$mid)
-                                    ->update([
-                                        "MB_Inball" => $mb_inball3,
-                                        "TG_Inball" => $tg_inball3,
-                                        "MB_Inball_HR" => $mb_inball3,
-                                        "TG_Inball_HR" => $tg_inball3,
-                                        "Cancel" => 1
-                                    ]);
-
-                            } else{
-
-                                $a = $sport['MB_Inball'].$sport['TG_Inball'];
-                                $b = trim($mb_inball3).trim($tg_inball3);
-
-                                if($a != $b) {
-                                    Sport::where("Type", "BK")
-                                        ->where("GetScore", 1)
-                                        ->where("M_Date", $list_date)
-                                        ->where("MID", (int)$mid)
-                                        ->update([
-                                            "MB_Inball" => $mb_inball3,
-                                            "TG_Inball" => $tg_inball3,
-                                            "MB_Inball_HR" => $mb_inball3,
-                                            "TG_Inball_HR" => $tg_inball3,
-                                            "Checked" => 1
-                                        ]);
-                                }else{
-                                    Sport::where("Type", "BK")
-                                        ->where("GetScore", 1)
-                                        ->where("M_Date", $list_date)
-                                        ->where("MID", (int)$mid)
-                                        ->update([
-                                            "MB_Inball" => $mb_inball3,
-                                            "TG_Inball" => $tg_inball3,
-                                            "MB_Inball_HR" => $mb_inball3,
-                                            "TG_Inball_HR" => $tg_inball3
-                                        ]);
-                                }
-                            }
-
-                        }
-                    }
-
-                    //第4节
-                    if ($mb_inball4 > 0 && $tg_inball4 > 0){
-
-                        $mb_mid4 = $mb_mid + 600000;
-                        $tg_mid4 = $tg_mid + 600000;
-
-                        $sport = Sport::where('M_Date', $list_date)
-                            ->where('Type', 'BK')
-                            ->where('MB_MID', $mb_mid4)
-                            ->where('TG_MID', $tg_mid4)
-                            ->first();
-
-                        if (isset($sport)) {
-
-                            $mid = $sport['MID'];
-
-                            if ($match_sports['MB_Inball'] == "") {
-
-                                Sport::where("Type", "BK")
-                                    // ->where("GetScore", 1)
-                                    ->where("M_Date", $list_date)
-                                    ->where("MID", (int)$mid)
-                                    ->update([
-                                        "MB_Inball" => $mb_inball4,
-                                        "TG_Inball" => $tg_inball4,
-                                        "MB_Inball_HR" => $mb_inball4,
-                                        "TG_Inball_HR" => $tg_inball4
-                                    ]);
-
-                            } elseif( $mb_inball4 < 0 || $tg_inball4 < 0 ) {
-
-                                Sport::where("Type", "BK")
-                                    // ->where("GetScore", 1)
-                                    ->where("M_Date", $list_date)
-                                    ->where("MID", (int)$mid)
-                                    ->update([
-                                        "MB_Inball" => $mb_inball4,
-                                        "TG_Inball" => $tg_inball4,
-                                        "MB_Inball_HR" => $mb_inball4,
-                                        "TG_Inball_HR" => $tg_inball4,
-                                        "Cancel" => 1
-                                    ]);
-
-                            } else{
-
-                                $a = $sport['MB_Inball'].$sport['TG_Inball'];
-                                $b = trim($mb_inball4).trim($tg_inball4);
-
-                                if($a != $b) {
-                                    Sport::where("Type", "BK")
-                                        ->where("GetScore", 1)
-                                        ->where("M_Date", $list_date)
-                                        ->where("MID", (int)$mid)
-                                        ->update([
-                                            "MB_Inball" => $mb_inball4,
-                                            "TG_Inball" => $tg_inball4,
-                                            "MB_Inball_HR" => $mb_inball4,
-                                            "TG_Inball_HR" => $tg_inball4,
-                                            "Checked" => 1
-                                        ]);
-                                }else{
-                                    Sport::where("Type", "BK")
-                                        ->where("GetScore", 1)
-                                        ->where("M_Date", $list_date)
-                                        ->where("MID", (int)$mid)
-                                        ->update([
-                                            "MB_Inball" => $mb_inball4,
-                                            "TG_Inball" => $tg_inball4,
-                                            "MB_Inball_HR" => $mb_inball4,
-                                            "TG_Inball_HR" => $tg_inball4
-                                        ]);
-                                }
-                            }
-
-                        }
-                    }
-
-                    //上半场
-                    if ($mb_inball_hr > 0 && $tg_inball_hr > 0){
-
-                        $mb_mid5 = $mb_mid + 800000;
-                        $tg_mid5 = $tg_mid + 800000;
-
-                        $sport = Sport::where('M_Date', $list_date)
-                            ->where('Type', 'BK')
-                            ->where('MB_MID', $mb_mid5)
-                            ->where('TG_MID', $tg_mid5)
-                            ->first();
-
-                        if (isset($sport)) {
-
-                            $mid = $sport['MID'];
-
-                            if ($match_sports['MB_Inball'] == "") {
-
-                                Sport::where("Type", "BK")
-                                    // ->where("GetScore", 1)
-                                    ->where("M_Date", $list_date)
-                                    ->where("MID", (int)$mid)
-                                    ->update([
-                                        "MB_Inball" => $mb_inball_hr,
-                                        "TG_Inball" => $tg_inball_hr,
-                                        "MB_Inball_HR" => $mb_inball_hr,
-                                        "TG_Inball_HR" => $tg_inball_hr
-                                    ]);
-
-                            } elseif( $mb_inball_hr < 0 || $tg_inball_hr < 0 ) {
-
-                                Sport::where("Type", "BK")
-                                    // ->where("GetScore", 1)
-                                    ->where("M_Date", $list_date)
-                                    ->where("MID", (int)$mid)
-                                    ->update([
-                                        "MB_Inball" => $mb_inball_hr,
-                                        "TG_Inball" => $tg_inball_hr,
-                                        "MB_Inball_HR" => $mb_inball_hr,
-                                        "TG_Inball_HR" => $tg_inball_hr,
-                                        "Cancel" => 1
-                                    ]);
-
-                            } else{
-
-                                $a = $sport['MB_Inball'].$sport['TG_Inball'];
-                                $b = trim($mb_inball_hr).trim($tg_inball_hr);
-
-                                if($a != $b) {
-                                    Sport::where("Type", "BK")
-                                        ->where("GetScore", 1)
-                                        ->where("M_Date", $list_date)
-                                        ->where("MID", (int)$mid)
-                                        ->update([
-                                            "MB_Inball" => $mb_inball_hr,
-                                            "TG_Inball" => $tg_inball_hr,
-                                            "MB_Inball_HR" => $mb_inball_hr,
-                                            "TG_Inball_HR" => $tg_inball_hr,
-                                            "Checked" => 1
-                                        ]);
-                                }else{
-                                    Sport::where("Type", "BK")
-                                        ->where("GetScore", 1)
-                                        ->where("M_Date", $list_date)
-                                        ->where("MID", (int)$mid)
-                                        ->update([
-                                            "MB_Inball" => $mb_inball_hr,
-                                            "TG_Inball" => $tg_inball_hr,
-                                            "MB_Inball_HR" => $mb_inball_hr,
-                                            "TG_Inball_HR" => $tg_inball_hr
-                                        ]);
-                                }
-                            }
-
-                        }
-                    }
-
-                    //下半场
-                    if ($mb_inball_xb > 0 && $tg_inball_xb > 0){
-
-                        $mb_mid6 = $mb_mid + 900000;
-                        $tg_mid6 = $tg_mid + 900000;
-
-                        $sport = Sport::where('M_Date', $list_date)
-                            ->where('Type', 'BK')
-                            ->where('MB_MID', $mb_mid6)
-                            ->where('TG_MID', $tg_mid6)
-                            ->first();
-
-                        if (isset($sport)) {
-
-                            $mid = $sport['MID'];
-
-                            if ($match_sports['MB_Inball'] == "") {
-
-                                Sport::where("Type", "BK")
-                                    // ->where("GetScore", 1)
-                                    ->where("M_Date", $list_date)
-                                    ->where("MID", (int)$mid)
-                                    ->update([
-                                        "MB_Inball" => $mb_inball_xb,
-                                        "TG_Inball" => $tg_inball_xb,
-                                        "MB_Inball_HR" => $mb_inball_xb,
-                                        "TG_Inball_HR" => $tg_inball_xb
-                                    ]);
-
-                            } elseif( $mb_inball_xb < 0 || $tg_inball_xb < 0 ) {
-
-                                Sport::where("Type", "BK")
-                                    // ->where("GetScore", 1)
-                                    ->where("M_Date", $list_date)
-                                    ->where("MID", (int)$mid)
-                                    ->update([
-                                        "MB_Inball" => $mb_inball_xb,
-                                        "TG_Inball" => $tg_inball_xb,
-                                        "MB_Inball_HR" => $mb_inball_xb,
-                                        "TG_Inball_HR" => $tg_inball_xb,
-                                        "Cancel" => 1
-                                    ]);
-
-                            } else{
-
-                                $a = $sport['MB_Inball'].$sport['TG_Inball'];
-                                $b = trim($mb_inball_xb).trim($tg_inball_xb);
-
-                                if($a != $b) {
-                                    Sport::where("Type", "BK")
-                                        ->where("GetScore", 1)
-                                        ->where("M_Date", $list_date)
-                                        ->where("MID", (int)$mid)
-                                        ->update([
-                                            "MB_Inball" => $mb_inball_xb,
-                                            "TG_Inball" => $tg_inball_xb,
-                                            "MB_Inball_HR" => $mb_inball_xb,
-                                            "TG_Inball_HR" => $tg_inball_xb,
-                                            "Checked" => 1
-                                        ]);
-                                }else{
-                                    Sport::where("Type", "BK")
-                                        ->where("GetScore", 1)
-                                        ->where("M_Date", $list_date)
-                                        ->where("MID", (int)$mid)
-                                        ->update([
-                                            "MB_Inball" => $mb_inball_xb,
-                                            "TG_Inball" => $tg_inball_xb,
-                                            "MB_Inball_HR" => $mb_inball_xb,
-                                            "TG_Inball_HR" => $tg_inball_xb
-                                        ]);
-                                }
-                            }
-
-                        }
-                    }
-
-                }
+                // if (isset($match_sports)) {
+
+                //     if ($match_sports['MB_Inball'] == "") {
+                //         Sport::where("Type", "BK")
+                //             // ->where("GetScore", 1)
+                //             ->where("M_Date", $list_date)
+                //             ->where("MID", (int)$mid)
+                //             ->update([
+                //                 "MB_Inball_HR" => $mb_inball_hr,
+                //                 "TG_Inball_HR" => $tg_inball_hr,
+                //             ]);
+                //         Sport::where("Type", "BK")
+                //             // ->where("GetScore", 1)
+                //             ->where("M_Date", $list_date)
+                //             ->where("ECID", (int)$match_sports["ECID"])
+                //             ->where('MB_Team', 'like', "%上半场%")
+                //             ->update([
+                //                 "MB_Inball" => $mb_inball_hr,
+                //                 "TG_Inball" => $tg_inball_hr,
+                //             ]);
+                //         Sport::where("Type", "BK")
+                //             // ->where("GetScore", 1)
+                //             ->where("M_Date", $list_date)
+                //             ->where("ECID", (int)$match_sports["ECID"])
+                //             ->where('MB_Team', 'like', "%下半场%")
+                //             ->update([
+                //                 "MB_Inball" => $mb_inball_xb,
+                //                 "TG_Inball" => $tg_inball_xb,
+                //             ]);
+                //         Sport::where("Type", "BK")
+                //             // ->where("GetScore", 1)
+                //             ->where("M_Date", $list_date)
+                //             ->where("ECID", (int)$match_sports["ECID"])
+                //             ->where('MB_Team', 'like', "%第一节%")
+                //             ->update([
+                //                 "MB_Inball" => $mb_inball1,
+                //                 "TG_Inball" => $tg_inball1,
+                //             ]);
+                //         Sport::where("Type", "BK")
+                //             // ->where("GetScore", 1)
+                //             ->where("M_Date", $list_date)
+                //             ->where("ECID", (int)$match_sports["ECID"])
+                //             ->where('MB_Team', 'like', "%第二节%")
+                //             ->update([
+                //                 "MB_Inball" => $mb_inball2,
+                //                 "TG_Inball" => $tg_inball2,
+                //             ]);
+                //         Sport::where("Type", "BK")
+                //             // ->where("GetScore", 1)
+                //             ->where("M_Date", $list_date)
+                //             ->where("ECID", (int)$match_sports["ECID"])
+                //             ->where('MB_Team', 'like', "%第三节%")
+                //             ->update([
+                //                 "MB_Inball" => $mb_inball3,
+                //                 "TG_Inball" => $tg_inball3,
+                //             ]);
+                //         Sport::where("Type", "BK")
+                //             // ->where("GetScore", 1)
+                //             ->where("M_Date", $list_date)
+                //             ->where("ECID", (int)$match_sports["ECID"])
+                //             ->where('MB_Team', 'like', "%第四节%")
+                //             ->update([
+                //                 "MB_Inball" => $mb_inball4,
+                //                 "TG_Inball" => $tg_inball4,
+                //             ]);
+                //         Sport::where("Type", "BK")
+                //             // ->where("GetScore", 1)
+                //             ->where("M_Date", $list_date)
+                //             ->where("ECID", (int)$match_sports["ECID"])
+                //             ->where('MB_Team', 'like', "%加时%")
+                //             ->update([
+                //                 "MB_Inball" => $mb_inball_js,
+                //                 "TG_Inball" => $tg_inball_js,
+                //             ]);
+                //     } elseif( $mb_inball < 0 || $tg_inball < 0 ) {
+                //         Sport::where("Type", "BK")
+                //             // ->where("GetScore", 1)
+                //             ->where("M_Date", $list_date)
+                //             ->where("MID", (int)$mid)
+                //             ->update([
+                //                 "MB_Inball_HR" => $mb_inball_hr,
+                //                 "TG_Inball_HR" => $tg_inball_hr,
+                //                 "Cancel" => 1
+                //             ]);
+                //         Sport::where("Type", "BK")
+                //             // ->where("GetScore", 1)
+                //             ->where("M_Date", $list_date)
+                //             ->where("ECID", (int)$match_sports["ECID"])
+                //             ->where('MB_Team', 'like', "%上半场%")
+                //             ->update([
+                //                 "MB_Inball" => $mb_inball_hr,
+                //                 "TG_Inball" => $tg_inball_hr,
+                //                 "Cancel" => 1
+                //             ]);
+                //         Sport::where("Type", "BK")
+                //             // ->where("GetScore", 1)
+                //             ->where("M_Date", $list_date)
+                //             ->where("ECID", (int)$match_sports["ECID"])
+                //             ->where('MB_Team', 'like', "%下半场%")
+                //             ->update([
+                //                 "MB_Inball" => $mb_inball_xb,
+                //                 "TG_Inball" => $tg_inball_xb,
+                //                 "Cancel" => 1
+                //             ]);
+                //         Sport::where("Type", "BK")
+                //             // ->where("GetScore", 1)
+                //             ->where("M_Date", $list_date)
+                //             ->where("ECID", (int)$match_sports["ECID"])
+                //             ->where('MB_Team', 'like', "%第一节%")
+                //             ->update([
+                //                 "MB_Inball" => $mb_inball1,
+                //                 "TG_Inball" => $tg_inball1,
+                //                 "Cancel" => 1
+                //             ]);
+                //         Sport::where("Type", "BK")
+                //             // ->where("GetScore", 1)
+                //             ->where("M_Date", $list_date)
+                //             ->where("ECID", (int)$match_sports["ECID"])
+                //             ->where('MB_Team', 'like', "%第二节%")
+                //             ->update([
+                //                 "MB_Inball" => $mb_inball2,
+                //                 "TG_Inball" => $tg_inball2,
+                //                 "Cancel" => 1
+                //             ]);
+                //         Sport::where("Type", "BK")
+                //             // ->where("GetScore", 1)
+                //             ->where("M_Date", $list_date)
+                //             ->where("ECID", (int)$match_sports["ECID"])
+                //             ->where('MB_Team', 'like', "%第三节%")
+                //             ->update([
+                //                 "MB_Inball" => $mb_inball3,
+                //                 "TG_Inball" => $tg_inball3,
+                //                 "Cancel" => 1
+                //             ]);
+                //         Sport::where("Type", "BK")
+                //             // ->where("GetScore", 1)
+                //             ->where("M_Date", $list_date)
+                //             ->where("ECID", (int)$match_sports["ECID"])
+                //             ->where('MB_Team', 'like', "%第四节%")
+                //             ->update([
+                //                 "MB_Inball" => $mb_inball4,
+                //                 "TG_Inball" => $tg_inball4,
+                //                 "Cancel" => 1
+                //             ]);
+                //         Sport::where("Type", "BK")
+                //             // ->where("GetScore", 1)
+                //             ->where("M_Date", $list_date)
+                //             ->where("ECID", (int)$match_sports["ECID"])
+                //             ->where('MB_Team', 'like', "%加时%")
+                //             ->update([
+                //                 "MB_Inball" => $mb_inball_js,
+                //                 "TG_Inball" => $tg_inball_js,
+                //                 "Cancel" => 1
+                //             ]);
+                //     } else{
+
+                //         $a= $match_sports['MB_Inball'].$match_sports['TG_Inball'];
+                //         $b= trim($mb_inball).trim($tg_inball);
+
+                //         if($a != $b) {
+                //             Sport::where("Type", "BK")
+                //                 ->where("GetScore", 1)
+                //                 ->where("M_Date", $list_date)
+                //                 ->where("MID", (int)$mid)
+                //                 ->update([
+                //                     "MB_Inball_HR" => $mb_inball_hr,
+                //                     "TG_Inball_HR" => $tg_inball_hr,
+                //                     "Checked" => 1
+                //                 ]);
+                //             Sport::where("Type", "BK")
+                //                 ->where("GetScore", 1)
+                //                 ->where("M_Date", $list_date)
+                //                 ->where("ECID", (int)$match_sports["ECID"])
+                //                 ->where('MB_Team', 'like', "%上半场%")
+                //                 ->update([
+                //                     "MB_Inball" => $mb_inball_hr,
+                //                     "TG_Inball" => $tg_inball_hr,
+                //                     "Checked" => 1
+                //                 ]);
+                //             Sport::where("Type", "BK")
+                //                 ->where("GetScore", 1)
+                //                 ->where("M_Date", $list_date)
+                //                 ->where("ECID", (int)$match_sports["ECID"])
+                //                 ->where('MB_Team', 'like', "%下半场%")
+                //                 ->update([
+                //                     "MB_Inball" => $mb_inball_xb,
+                //                     "TG_Inball" => $tg_inball_xb,
+                //                     "Checked" => 1
+                //                 ]);
+                //             Sport::where("Type", "BK")
+                //                 ->where("GetScore", 1)
+                //                 ->where("M_Date", $list_date)
+                //                 ->where("ECID", (int)$match_sports["ECID"])
+                //                 ->where('MB_Team', 'like', "%第一节%")
+                //                 ->update([
+                //                     "MB_Inball" => $mb_inball1,
+                //                     "TG_Inball" => $tg_inball1,
+                //                     "Checked" => 1
+                //                 ]);
+                //             Sport::where("Type", "BK")
+                //                 ->where("GetScore", 1)
+                //                 ->where("M_Date", $list_date)
+                //                 ->where("ECID", (int)$match_sports["ECID"])
+                //                 ->where('MB_Team', 'like', "%第二节%")
+                //                 ->update([
+                //                     "MB_Inball" => $mb_inball2,
+                //                     "TG_Inball" => $tg_inball2,
+                //                     "Checked" => 1
+                //                 ]);
+                //             Sport::where("Type", "BK")
+                //                 ->where("GetScore", 1)
+                //                 ->where("M_Date", $list_date)
+                //                 ->where("ECID", (int)$match_sports["ECID"])
+                //                 ->where('MB_Team', 'like', "%第三节%")
+                //                 ->update([
+                //                     "MB_Inball" => $mb_inball3,
+                //                     "TG_Inball" => $tg_inball3,
+                //                     "Checked" => 1
+                //                 ]);
+                //             Sport::where("Type", "BK")
+                //                 ->where("GetScore", 1)
+                //                 ->where("M_Date", $list_date)
+                //                 ->where("ECID", (int)$match_sports["ECID"])
+                //                 ->where('MB_Team', 'like', "%第四节%")
+                //                 ->update([
+                //                     "MB_Inball" => $mb_inball4,
+                //                     "TG_Inball" => $tg_inball4,
+                //                     "Checked" => 1
+                //                 ]);
+                //             Sport::where("Type", "BK")
+                //                 ->where("GetScore", 1)
+                //                 ->where("M_Date", $list_date)
+                //                 ->where("ECID", (int)$match_sports["ECID"])
+                //                 ->where('MB_Team', 'like', "%加时%")
+                //                 ->update([
+                //                     "MB_Inball" => $mb_inball_js,
+                //                     "TG_Inball" => $tg_inball_js,
+                //                     "Checked" => 1
+                //                 ]);
+                //         } else {
+                //             Sport::where("Type", "BK")
+                //                 ->where("GetScore", 1)
+                //                 ->where("M_Date", $list_date)
+                //                 ->where("MID", (int)$mid)
+                //                 ->update([
+                //                     "MB_Inball_HR" => $mb_inball_hr,
+                //                     "TG_Inball_HR" => $tg_inball_hr,
+                //                 ]);
+                //             Sport::where("Type", "BK")
+                //                 ->where("GetScore", 1)
+                //                 ->where("M_Date", $list_date)
+                //                 ->where("ECID", (int)$match_sports["ECID"])
+                //                 ->where('MB_Team', 'like', "%上半场%")
+                //                 ->update([
+                //                     "MB_Inball" => $mb_inball_hr,
+                //                     "TG_Inball" => $tg_inball_hr,
+                //                 ]);
+                //             Sport::where("Type", "BK")
+                //                 ->where("GetScore", 1)
+                //                 ->where("M_Date", $list_date)
+                //                 ->where("ECID", (int)$match_sports["ECID"])
+                //                 ->where('MB_Team', 'like', "%下半场%")
+                //                 ->update([
+                //                     "MB_Inball" => $mb_inball_xb,
+                //                     "TG_Inball" => $tg_inball_xb,
+                //                 ]);
+                //             Sport::where("Type", "BK")
+                //                 ->where("GetScore", 1)
+                //                 ->where("M_Date", $list_date)
+                //                 ->where("ECID", (int)$match_sports["ECID"])
+                //                 ->where('MB_Team', 'like', "%第一节%")
+                //                 ->update([
+                //                     "MB_Inball" => $mb_inball1,
+                //                     "TG_Inball" => $tg_inball1,
+                //                 ]);
+                //             Sport::where("Type", "BK")
+                //                 ->where("GetScore", 1)
+                //                 ->where("M_Date", $list_date)
+                //                 ->where("ECID", (int)$match_sports["ECID"])
+                //                 ->where('MB_Team', 'like', "%第二节%")
+                //                 ->update([
+                //                     "MB_Inball" => $mb_inball2,
+                //                     "TG_Inball" => $tg_inball2,
+                //                 ]);
+                //             Sport::where("Type", "BK")
+                //                 ->where("GetScore", 1)
+                //                 ->where("M_Date", $list_date)
+                //                 ->where("ECID", (int)$match_sports["ECID"])
+                //                 ->where('MB_Team', 'like', "%第三节%")
+                //                 ->update([
+                //                     "MB_Inball" => $mb_inball3,
+                //                     "TG_Inball" => $tg_inball3,
+                //                 ]);
+                //             Sport::where("Type", "BK")
+                //                 ->where("GetScore", 1)
+                //                 ->where("M_Date", $list_date)
+                //                 ->where("ECID", (int)$match_sports["ECID"])
+                //                 ->where('MB_Team', 'like', "%第四节%")
+                //                 ->update([
+                //                     "MB_Inball" => $mb_inball4,
+                //                     "TG_Inball" => $tg_inball4,
+                //                 ]);
+                //             Sport::where("Type", "BK")
+                //                 ->where("GetScore", 1)
+                //                 ->where("M_Date", $list_date)
+                //                 ->where("ECID", (int)$match_sports["ECID"])
+                //                 ->where('MB_Team', 'like', "%加时%")
+                //                 ->update([
+                //                     "MB_Inball" => $mb_inball_js,
+                //                     "TG_Inball" => $tg_inball_js,
+                //                 ]);
+                //         }
+                //     }
+
+                //     //第一节
+                //     if ($mb_inball1 > 0 && $tg_inball1 > 0){
+
+                //         $mb_mid1 = $mb_mid + 300000;
+                //         $tg_mid1 = $tg_mid + 300000;
+
+                //         $sport = Sport::where('M_Date', $list_date)
+                //             ->where('Type', 'BK')
+                //             ->where('MB_MID', $mb_mid1)
+                //             ->where('TG_MID', $tg_mid1)
+                //             ->first();
+
+                //         if (isset($sport)) {
+
+                //             $mid = $sport['MID'];
+
+                //             if ($match_sports['MB_Inball'] == "") {
+                //                 Sport::where("Type", "BK")
+                //                     // ->where("GetScore", 1)
+                //                     ->where("M_Date", $list_date)
+                //                     ->where("MID", (int)$mid)
+                //                     ->update([
+                //                         "MB_Inball" => $mb_inball1,
+                //                         "TG_Inball" => $tg_inball1,
+                //                         "MB_Inball_HR" => $mb_inball1,
+                //                         "TG_Inball_HR" => $tg_inball1
+                //                     ]);
+                //             } elseif( $mb_inball1 < 0 || $tg_inball1 < 0 ) {
+                //                 Sport::where("Type", "BK")
+                //                     // ->where("GetScore", 1)
+                //                     ->where("M_Date", $list_date)
+                //                     ->where("MID", (int)$mid)
+                //                     ->update([
+                //                         "MB_Inball" => $mb_inball1,
+                //                         "TG_Inball" => $tg_inball1,
+                //                         "MB_Inball_HR" => $mb_inball1,
+                //                         "TG_Inball_HR" => $tg_inball1,
+                //                         "Cancel" => 1
+                //                     ]);
+                //             } else{
+
+                //                 $a = $sport['MB_Inball'].$sport['TG_Inball'];
+                //                 $b = trim($mb_inball1).trim($tg_inball1);
+
+                //                 if($a != $b) {
+                //                     Sport::where("Type", "BK")
+                //                         ->where("GetScore", 1)
+                //                         ->where("M_Date", $list_date)
+                //                         ->where("MID", (int)$mid)
+                //                         ->update([
+                //                             "MB_Inball" => $mb_inball1,
+                //                             "TG_Inball" => $tg_inball1,
+                //                             "MB_Inball_HR" => $mb_inball1,
+                //                             "TG_Inball_HR" => $tg_inball1,
+                //                             "Checked" => 1
+                //                         ]);
+                //                 }else{
+                //                     Sport::where("Type", "BK")
+                //                         ->where("GetScore", 1)
+                //                         ->where("M_Date", $list_date)
+                //                         ->where("MID", (int)$mid)
+                //                         ->update([
+                //                             "MB_Inball" => $mb_inball1,
+                //                             "TG_Inball" => $tg_inball1,
+                //                             "MB_Inball_HR" => $mb_inball1,
+                //                             "TG_Inball_HR" => $tg_inball1
+                //                         ]);
+                //                 }
+                //             }
+
+                //         }
+                //     }
+
+                //     //第二节
+                //     if ($mb_inball2 > 0 && $tg_inball2 > 0){
+
+                //         $mb_mid2 = $mb_mid + 400000;
+                //         $tg_mid2 = $tg_mid + 400000;
+
+                //         $sport = Sport::where('M_Date', $list_date)
+                //             ->where('Type', 'BK')
+                //             ->where('MB_MID', $mb_mid2)
+                //             ->where('TG_MID', $tg_mid2)
+                //             ->first();
+
+                //         if (isset($sport)) {
+
+                //             $mid = $sport['MID'];
+
+                //             if ($match_sports['MB_Inball'] == "") {
+
+                //                 Sport::where("Type", "BK")
+                //                     // ->where("GetScore", 1)
+                //                     ->where("M_Date", $list_date)
+                //                     ->where("MID", (int)$mid)
+                //                     ->update([
+                //                         "MB_Inball" => $mb_inball2,
+                //                         "TG_Inball" => $tg_inball2,
+                //                         "MB_Inball_HR" => $mb_inball2,
+                //                         "TG_Inball_HR" => $tg_inball2
+                //                     ]);
+
+                //             } elseif( $mb_inball2 < 0 || $tg_inball2 < 0 ) {
+
+                //                 Sport::where("Type", "BK")
+                //                     // ->where("GetScore", 1)
+                //                     ->where("M_Date", $list_date)
+                //                     ->where("MID", (int)$mid)
+                //                     ->update([
+                //                         "MB_Inball" => $mb_inball2,
+                //                         "TG_Inball" => $tg_inball2,
+                //                         "MB_Inball_HR" => $mb_inball2,
+                //                         "TG_Inball_HR" => $tg_inball2,
+                //                         "Cancel" => 1
+                //                     ]);
+
+                //             } else{
+
+                //                 $a = $sport['MB_Inball'].$sport['TG_Inball'];
+                //                 $b = trim($mb_inball2).trim($tg_inball2);
+
+                //                 if($a != $b) {
+                //                     Sport::where("Type", "BK")
+                //                         ->where("GetScore", 1)
+                //                         ->where("M_Date", $list_date)
+                //                         ->where("MID", (int)$mid)
+                //                         ->update([
+                //                             "MB_Inball" => $mb_inball2,
+                //                             "TG_Inball" => $tg_inball2,
+                //                             "MB_Inball_HR" => $mb_inball2,
+                //                             "TG_Inball_HR" => $tg_inball2,
+                //                             "Checked" => 1
+                //                         ]);
+                //                 }else{
+                //                     Sport::where("Type", "BK")
+                //                         ->where("GetScore", 1)
+                //                         ->where("M_Date", $list_date)
+                //                         ->where("MID", (int)$mid)
+                //                         ->update([
+                //                             "MB_Inball" => $mb_inball2,
+                //                             "TG_Inball" => $tg_inball2,
+                //                             "MB_Inball_HR" => $mb_inball2,
+                //                             "TG_Inball_HR" => $tg_inball2
+                //                         ]);
+                //                 }
+                //             }
+
+                //         }
+                //     }
+
+                //     //第3节
+                //     if ($mb_inball3 > 0 && $tg_inball3 > 0){
+
+                //         $mb_mid3 = $mb_mid + 500000;
+                //         $tg_mid3 = $tg_mid + 500000;
+
+                //         $sport = Sport::where('M_Date', $list_date)
+                //             ->where('Type', 'BK')
+                //             ->where('MB_MID', $mb_mid3)
+                //             ->where('TG_MID', $tg_mid3)
+                //             ->first();
+
+                //         if (isset($sport)) {
+
+                //             $mid = $sport['MID'];
+
+                //             if ($match_sports['MB_Inball'] == "") {
+
+                //                 Sport::where("Type", "BK")
+                //                     // ->where("GetScore", 1)
+                //                     ->where("M_Date", $list_date)
+                //                     ->where("MID", (int)$mid)
+                //                     ->update([
+                //                         "MB_Inball" => $mb_inball3,
+                //                         "TG_Inball" => $tg_inball3,
+                //                         "MB_Inball_HR" => $mb_inball3,
+                //                         "TG_Inball_HR" => $tg_inball3
+                //                     ]);
+
+                //             } elseif( $mb_inball3 < 0 || $tg_inball3 < 0 ) {
+
+                //                 Sport::where("Type", "BK")
+                //                     // ->where("GetScore", 1)
+                //                     ->where("M_Date", $list_date)
+                //                     ->where("MID", (int)$mid)
+                //                     ->update([
+                //                         "MB_Inball" => $mb_inball3,
+                //                         "TG_Inball" => $tg_inball3,
+                //                         "MB_Inball_HR" => $mb_inball3,
+                //                         "TG_Inball_HR" => $tg_inball3,
+                //                         "Cancel" => 1
+                //                     ]);
+
+                //             } else{
+
+                //                 $a = $sport['MB_Inball'].$sport['TG_Inball'];
+                //                 $b = trim($mb_inball3).trim($tg_inball3);
+
+                //                 if($a != $b) {
+                //                     Sport::where("Type", "BK")
+                //                         ->where("GetScore", 1)
+                //                         ->where("M_Date", $list_date)
+                //                         ->where("MID", (int)$mid)
+                //                         ->update([
+                //                             "MB_Inball" => $mb_inball3,
+                //                             "TG_Inball" => $tg_inball3,
+                //                             "MB_Inball_HR" => $mb_inball3,
+                //                             "TG_Inball_HR" => $tg_inball3,
+                //                             "Checked" => 1
+                //                         ]);
+                //                 }else{
+                //                     Sport::where("Type", "BK")
+                //                         ->where("GetScore", 1)
+                //                         ->where("M_Date", $list_date)
+                //                         ->where("MID", (int)$mid)
+                //                         ->update([
+                //                             "MB_Inball" => $mb_inball3,
+                //                             "TG_Inball" => $tg_inball3,
+                //                             "MB_Inball_HR" => $mb_inball3,
+                //                             "TG_Inball_HR" => $tg_inball3
+                //                         ]);
+                //                 }
+                //             }
+
+                //         }
+                //     }
+
+                //     //第4节
+                //     if ($mb_inball4 > 0 && $tg_inball4 > 0){
+
+                //         $mb_mid4 = $mb_mid + 600000;
+                //         $tg_mid4 = $tg_mid + 600000;
+
+                //         $sport = Sport::where('M_Date', $list_date)
+                //             ->where('Type', 'BK')
+                //             ->where('MB_MID', $mb_mid4)
+                //             ->where('TG_MID', $tg_mid4)
+                //             ->first();
+
+                //         if (isset($sport)) {
+
+                //             $mid = $sport['MID'];
+
+                //             if ($match_sports['MB_Inball'] == "") {
+
+                //                 Sport::where("Type", "BK")
+                //                     // ->where("GetScore", 1)
+                //                     ->where("M_Date", $list_date)
+                //                     ->where("MID", (int)$mid)
+                //                     ->update([
+                //                         "MB_Inball" => $mb_inball4,
+                //                         "TG_Inball" => $tg_inball4,
+                //                         "MB_Inball_HR" => $mb_inball4,
+                //                         "TG_Inball_HR" => $tg_inball4
+                //                     ]);
+
+                //             } elseif( $mb_inball4 < 0 || $tg_inball4 < 0 ) {
+
+                //                 Sport::where("Type", "BK")
+                //                     // ->where("GetScore", 1)
+                //                     ->where("M_Date", $list_date)
+                //                     ->where("MID", (int)$mid)
+                //                     ->update([
+                //                         "MB_Inball" => $mb_inball4,
+                //                         "TG_Inball" => $tg_inball4,
+                //                         "MB_Inball_HR" => $mb_inball4,
+                //                         "TG_Inball_HR" => $tg_inball4,
+                //                         "Cancel" => 1
+                //                     ]);
+
+                //             } else{
+
+                //                 $a = $sport['MB_Inball'].$sport['TG_Inball'];
+                //                 $b = trim($mb_inball4).trim($tg_inball4);
+
+                //                 if($a != $b) {
+                //                     Sport::where("Type", "BK")
+                //                         ->where("GetScore", 1)
+                //                         ->where("M_Date", $list_date)
+                //                         ->where("MID", (int)$mid)
+                //                         ->update([
+                //                             "MB_Inball" => $mb_inball4,
+                //                             "TG_Inball" => $tg_inball4,
+                //                             "MB_Inball_HR" => $mb_inball4,
+                //                             "TG_Inball_HR" => $tg_inball4,
+                //                             "Checked" => 1
+                //                         ]);
+                //                 }else{
+                //                     Sport::where("Type", "BK")
+                //                         ->where("GetScore", 1)
+                //                         ->where("M_Date", $list_date)
+                //                         ->where("MID", (int)$mid)
+                //                         ->update([
+                //                             "MB_Inball" => $mb_inball4,
+                //                             "TG_Inball" => $tg_inball4,
+                //                             "MB_Inball_HR" => $mb_inball4,
+                //                             "TG_Inball_HR" => $tg_inball4
+                //                         ]);
+                //                 }
+                //             }
+
+                //         }
+                //     }
+
+                //     //上半场
+                //     if ($mb_inball_hr > 0 && $tg_inball_hr > 0){
+
+                //         $mb_mid5 = $mb_mid + 800000;
+                //         $tg_mid5 = $tg_mid + 800000;
+
+                //         $sport = Sport::where('M_Date', $list_date)
+                //             ->where('Type', 'BK')
+                //             ->where('MB_MID', $mb_mid5)
+                //             ->where('TG_MID', $tg_mid5)
+                //             ->first();
+
+                //         if (isset($sport)) {
+
+                //             $mid = $sport['MID'];
+
+                //             if ($match_sports['MB_Inball'] == "") {
+
+                //                 Sport::where("Type", "BK")
+                //                     // ->where("GetScore", 1)
+                //                     ->where("M_Date", $list_date)
+                //                     ->where("MID", (int)$mid)
+                //                     ->update([
+                //                         "MB_Inball" => $mb_inball_hr,
+                //                         "TG_Inball" => $tg_inball_hr,
+                //                         "MB_Inball_HR" => $mb_inball_hr,
+                //                         "TG_Inball_HR" => $tg_inball_hr
+                //                     ]);
+
+                //             } elseif( $mb_inball_hr < 0 || $tg_inball_hr < 0 ) {
+
+                //                 Sport::where("Type", "BK")
+                //                     // ->where("GetScore", 1)
+                //                     ->where("M_Date", $list_date)
+                //                     ->where("MID", (int)$mid)
+                //                     ->update([
+                //                         "MB_Inball" => $mb_inball_hr,
+                //                         "TG_Inball" => $tg_inball_hr,
+                //                         "MB_Inball_HR" => $mb_inball_hr,
+                //                         "TG_Inball_HR" => $tg_inball_hr,
+                //                         "Cancel" => 1
+                //                     ]);
+
+                //             } else{
+
+                //                 $a = $sport['MB_Inball'].$sport['TG_Inball'];
+                //                 $b = trim($mb_inball_hr).trim($tg_inball_hr);
+
+                //                 if($a != $b) {
+                //                     Sport::where("Type", "BK")
+                //                         ->where("GetScore", 1)
+                //                         ->where("M_Date", $list_date)
+                //                         ->where("MID", (int)$mid)
+                //                         ->update([
+                //                             "MB_Inball" => $mb_inball_hr,
+                //                             "TG_Inball" => $tg_inball_hr,
+                //                             "MB_Inball_HR" => $mb_inball_hr,
+                //                             "TG_Inball_HR" => $tg_inball_hr,
+                //                             "Checked" => 1
+                //                         ]);
+                //                 }else{
+                //                     Sport::where("Type", "BK")
+                //                         ->where("GetScore", 1)
+                //                         ->where("M_Date", $list_date)
+                //                         ->where("MID", (int)$mid)
+                //                         ->update([
+                //                             "MB_Inball" => $mb_inball_hr,
+                //                             "TG_Inball" => $tg_inball_hr,
+                //                             "MB_Inball_HR" => $mb_inball_hr,
+                //                             "TG_Inball_HR" => $tg_inball_hr
+                //                         ]);
+                //                 }
+                //             }
+
+                //         }
+                //     }
+
+                //     //下半场
+                //     if ($mb_inball_xb > 0 && $tg_inball_xb > 0){
+
+                //         $mb_mid6 = $mb_mid + 900000;
+                //         $tg_mid6 = $tg_mid + 900000;
+
+                //         $sport = Sport::where('M_Date', $list_date)
+                //             ->where('Type', 'BK')
+                //             ->where('MB_MID', $mb_mid6)
+                //             ->where('TG_MID', $tg_mid6)
+                //             ->first();
+
+                //         if (isset($sport)) {
+
+                //             $mid = $sport['MID'];
+
+                //             if ($match_sports['MB_Inball'] == "") {
+
+                //                 Sport::where("Type", "BK")
+                //                     // ->where("GetScore", 1)
+                //                     ->where("M_Date", $list_date)
+                //                     ->where("MID", (int)$mid)
+                //                     ->update([
+                //                         "MB_Inball" => $mb_inball_xb,
+                //                         "TG_Inball" => $tg_inball_xb,
+                //                         "MB_Inball_HR" => $mb_inball_xb,
+                //                         "TG_Inball_HR" => $tg_inball_xb
+                //                     ]);
+
+                //             } elseif( $mb_inball_xb < 0 || $tg_inball_xb < 0 ) {
+
+                //                 Sport::where("Type", "BK")
+                //                     // ->where("GetScore", 1)
+                //                     ->where("M_Date", $list_date)
+                //                     ->where("MID", (int)$mid)
+                //                     ->update([
+                //                         "MB_Inball" => $mb_inball_xb,
+                //                         "TG_Inball" => $tg_inball_xb,
+                //                         "MB_Inball_HR" => $mb_inball_xb,
+                //                         "TG_Inball_HR" => $tg_inball_xb,
+                //                         "Cancel" => 1
+                //                     ]);
+
+                //             } else{
+
+                //                 $a = $sport['MB_Inball'].$sport['TG_Inball'];
+                //                 $b = trim($mb_inball_xb).trim($tg_inball_xb);
+
+                //                 if($a != $b) {
+                //                     Sport::where("Type", "BK")
+                //                         ->where("GetScore", 1)
+                //                         ->where("M_Date", $list_date)
+                //                         ->where("MID", (int)$mid)
+                //                         ->update([
+                //                             "MB_Inball" => $mb_inball_xb,
+                //                             "TG_Inball" => $tg_inball_xb,
+                //                             "MB_Inball_HR" => $mb_inball_xb,
+                //                             "TG_Inball_HR" => $tg_inball_xb,
+                //                             "Checked" => 1
+                //                         ]);
+                //                 }else{
+                //                     Sport::where("Type", "BK")
+                //                         ->where("GetScore", 1)
+                //                         ->where("M_Date", $list_date)
+                //                         ->where("MID", (int)$mid)
+                //                         ->update([
+                //                             "MB_Inball" => $mb_inball_xb,
+                //                             "TG_Inball" => $tg_inball_xb,
+                //                             "MB_Inball_HR" => $mb_inball_xb,
+                //                             "TG_Inball_HR" => $tg_inball_xb
+                //                         ]);
+                //                 }
+                //             }
+
+                //         }
+                //     }
+
+                // }
             }
         }
 
