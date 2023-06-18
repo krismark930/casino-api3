@@ -416,7 +416,6 @@ class SportScoreResultController extends Controller {
 
                     if ($match_sports['MB_Inball'] == "") {
                     	if ($game_type == "FT") {
-                    		// if ($GMH == 97 || $GMH == 76) return $GMH;
 	                        Sport::where("Type", "FT")
 	                            ->where("M_Date", $list_date)
 	                            ->where("MID", (int)$gid)
@@ -425,7 +424,17 @@ class SportScoreResultController extends Controller {
 	                                "TG_Inball" => $GMC,
 	                                "MB_Inball_HR" => $HGMH,
 	                                "TG_Inball_HR" => $HGMC
-	                            ]);                    		
+	                            ]);
+
+	                            if ($GMH > 10) {
+
+						            $t=date("Y-m-d H:i:s");
+						            $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/ft_1_".date("Ymd").".txt";
+						            $f=fopen($tmpfile,'a');
+						            fwrite($f,$t."\r\n$GMH\r\n$GMC\r\n$gid\r\n");
+						            fclose($f);
+
+	                            }
                     	} else {
                     		Sport::where("Type", "BK")
 	                            ->where("M_Date", $list_date)
@@ -507,6 +516,16 @@ class SportScoreResultController extends Controller {
 	                                    "MB_Inball_HR" => $HGMH,
 	                                    "TG_Inball_HR" => $HGMC
 	                                ]);
+	                        }
+
+	                        if ($GMH > 10) {
+
+					            $t=date("Y-m-d H:i:s");
+					            $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/ft_2_".date("Ymd").".txt";
+					            $f=fopen($tmpfile,'a');
+					            fwrite($f,$t."\r\n$GMH\r\n$GMC\r\n$gid\r\n");
+					            fclose($f);
+	                        	
 	                        }
 
                     	} else {

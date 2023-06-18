@@ -43,6 +43,7 @@ use App\Http\Controllers\Api\User\BBINController;
 use App\Http\Controllers\Api\User\MGController;
 use App\Http\Controllers\Api\User\PTController;
 use App\Http\Controllers\Api\User\HomeController;
+use App\Http\Controllers\Api\User\MessageController;
 
 // API Admin Controllers
 use App\Http\Controllers\Api\Admin\WebSystemDataController;
@@ -266,6 +267,12 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
 
     Route::group(['prefix' => 'home'], function ($router) {
         Route::post('/sys-config', [HomeController::class, 'getSysConfig']);
+    });
+
+    Route::group(['prefix' => 'message', 'middleware' => 'auth:api'], function ($router) {
+        Route::post('/system-sms-all', [MessageController::class, 'getSystemSMS']);
+        Route::post('/get-system-sms', [MessageController::class, 'getSystemSMSItemByID']);
+        Route::post('/delete-system-sms', [MessageController::class, 'deleteSystemSMSItemByID']);
     });
 
 });

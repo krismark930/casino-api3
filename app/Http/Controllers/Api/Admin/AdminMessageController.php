@@ -47,6 +47,7 @@ class AdminMessageController extends Controller
             $total_count = $result->count();
 
             $result = $result->offset(($page_no - 1) * $limit)
+                    ->orderBy("ID", "desc")
                     ->take($limit)->get();
 
             $response["total_count"] = $total_count;
@@ -89,7 +90,7 @@ class AdminMessageController extends Controller
             $Subject=$request_data['Subject'];
             $UserName=$request_data['UserName'] ?? "";
 
-            if ($UserName != "") {
+            // if ($UserName != "") {
                 $new_data = array(
                     "UserName" => $UserName,
                     "Subject" => $Subject,
@@ -99,20 +100,20 @@ class AdminMessageController extends Controller
                 );
                 $data = new WebMessageData;
                 $data->create($new_data);
-            } else {
-                $result = WebMessageData::all();
-                foreach($result as $item) {
-                    $new_data = array(
-                        "UserName" => $item["UserName"],
-                        "Subject" => $Subject,
-                        "Message" => $Message,
-                        "Date" => Carbon::now("Asia/Hong_Kong")->format("Y-m-d"),
-                        "Time" => Carbon::now("Asia/Hong_Kong")->format("Y-m-d H:i:s"),
-                    );
-                    $data = new WebMessageData;
-                    $data->create($new_data);                    
-                }
-            }
+            // } else {
+            //     $result = WebMessageData::all();
+            //     foreach($result as $item) {
+            //         $new_data = array(
+            //             "UserName" => $item["UserName"],
+            //             "Subject" => $Subject,
+            //             "Message" => $Message,
+            //             "Date" => Carbon::now("Asia/Hong_Kong")->format("Y-m-d"),
+            //             "Time" => Carbon::now("Asia/Hong_Kong")->format("Y-m-d H:i:s"),
+            //         );
+            //         $data = new WebMessageData;
+            //         $data->create($new_data);                    
+            //     }
+            // }
 
             $response['message'] = "Web Message Data added successfully!";
             $response['success'] = TRUE;

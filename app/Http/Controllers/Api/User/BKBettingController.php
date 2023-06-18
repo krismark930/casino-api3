@@ -1059,6 +1059,10 @@ class BKBettingController extends Controller
 
                     $rate = get_other_ioratio($odd_f_type, $MB_LetB_Rate, $TG_LetB_Rate, 100);
 
+                    // $rate = [$MB_LetB_Rate, $TG_LetB_Rate];
+
+                    // return $rate;
+
                     if ($rate[0] - $r_num > 1.5 || $rate[1] - $r_num > 1.5){
                         $response['message'] = 'Schedule is closed!';
                         return response()->json($response, $response['status']);
@@ -1372,6 +1376,8 @@ class BKBettingController extends Controller
             $lines_en=$lines_en."<FONT color=#cc0000>$w_m_place_en</FONT>&nbsp;@&nbsp;<FONT color=#cc0000><b>".$w_m_rate."</b></FONT>";
 
             $m_turn = $user['M_turn'] + 0;
+
+            // return $w_m_rate;
 
             if ($w_m_rate == '' or $gwin <= 0 or $gwin == '') {
                 $response['message'] = 'The schedule has been closed!';
