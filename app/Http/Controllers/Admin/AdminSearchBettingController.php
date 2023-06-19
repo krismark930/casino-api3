@@ -550,9 +550,9 @@ class AdminSearchBettingController extends Controller
             if ($res['LineType'] == 8) {
                 return response()->json('暂时不支持串关结算!', 400);
             }
-            if ($res['M_Result'] != '' || $res['Checked'] == 1 || $res['Cancel'] == 1) {
-                return response()->json('注单状态不正确!', 400);
-            }
+            // if ($res['M_Result'] != '' || $res['Checked'] == 1 || $res['Cancel'] == 1) {
+            //     return response()->json('注单状态不正确!', 400);
+            // }
             $arr_m = array('MH', 'MC', 'MN', 'VMH', 'VMC', 'VMN', 'RMH', 'RMC', 'RMN', 'VRMH', 'VRMC', 'VRMN');
             $arr_line = array(1, 11, 21, 31, 16, 4, 5, 6, 7);
             $OrderID = $res['OrderID'];

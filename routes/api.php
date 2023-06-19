@@ -42,6 +42,8 @@ use App\Http\Controllers\Api\User\AGController;
 use App\Http\Controllers\Api\User\BBINController;
 use App\Http\Controllers\Api\User\MGController;
 use App\Http\Controllers\Api\User\PTController;
+use App\Http\Controllers\Api\User\HomeController;
+use App\Http\Controllers\Api\User\MessageController;
 
 // API Admin Controllers
 use App\Http\Controllers\Api\Admin\WebSystemDataController;
@@ -89,6 +91,15 @@ use App\Http\Controllers\Api\Admin\AdminOddsTJSFController;
 use App\Http\Controllers\Api\Admin\AdminOddsXYFTController;
 use App\Http\Controllers\Api\Admin\HumanManagementController;
 use App\Http\Controllers\Api\Admin\AdminPaymentController;
+use App\Http\Controllers\Api\Admin\AdminBankController;
+use App\Http\Controllers\Api\Admin\AdminSystemController;
+use App\Http\Controllers\Api\Admin\AdminMessageController;
+use App\Http\Controllers\Api\Admin\AdminAccessController;
+use App\Http\Controllers\Api\Admin\AdminUserInfoController;
+use App\Http\Controllers\Api\Admin\AdminOtherGameLogsController;
+use App\Http\Controllers\Api\Admin\UserManagementController;
+use App\Http\Controllers\Api\Admin\AdminStatisticsController;
+use App\Http\Controllers\Api\Admin\SportReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -253,6 +264,17 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
             Route::post('/pt-url', [PTController::class, 'getPTUrl']);
         });
     });
+
+    Route::group(['prefix' => 'home'], function ($router) {
+        Route::post('/sys-config', [HomeController::class, 'getSysConfig']);
+    });
+
+    Route::group(['prefix' => 'message', 'middleware' => 'auth:api'], function ($router) {
+        Route::post('/system-sms-all', [MessageController::class, 'getSystemSMS']);
+        Route::post('/get-system-sms', [MessageController::class, 'getSystemSMSItemByID']);
+        Route::post('/delete-system-sms', [MessageController::class, 'deleteSystemSMSItemByID']);
+    });
+
 });
 
 // admin routes
@@ -483,6 +505,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], func
     Route::group(['prefix' => 'sys-config'], function ($router) {
         Route::post('/lottery', [AdminSysconfigController::class, 'getLotteryConfig']);
         Route::post('/lottery/update', [AdminSysconfigController::class, 'updateLotteryConfig']);
+        Route::post('/usdt/update', [AdminSysconfigController::class, 'updateUSDTConfig']);
     });
 
     Route::group(['prefix' => 'user-config'], function ($router) {
@@ -606,6 +629,75 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], func
         Route::post('/payment-method/add', [AdminPaymentController::class, 'addPaymentMethod']);
         Route::post('/payment-method/use', [AdminPaymentController::class, 'usePaymentMethod']);
         Route::post('/payment-method/delete', [AdminPaymentController::class, 'deletePaymentMethod']);
+        Route::post('/web-bank-data', [AdminBankController::class, 'getWebBankData']);
+        Route::post('/web-bank-data/add', [AdminBankController::class, 'addWebBankData']);
+        Route::post('/web-bank-data/use', [AdminBankController::class, 'useWebBankData']);
+        Route::post('/web-bank-data/delete', [AdminBankController::class, 'deleteWebBankData']);
+    });
+
+    // system management
+
+    Route::group(['prefix' => 'system'], function ($router) {
+        Route::post('/all', [AdminSystemController::class, 'getSystemAll']);
+        Route::post('/update-url', [AdminSystemController::class, 'updateSystemUrl']);
+        Route::post('/update-turn-service', [AdminSystemController::class, 'updateTurnService']);
+        Route::post('/update-notification', [AdminSystemController::class, 'updateNotification']);
+        Route::post('/notice', [AdminSystemController::class, 'getSystemNotice']);
+        Route::post('/add-notice', [AdminSystemController::class, 'addSystemNotice']);
+        Route::post('/update-notice', [AdminSystemController::class, 'updateSystemNotice']);
+        Route::post('/delete-notice', [AdminSystemController::class, 'deleteSystemNotice']);
+        Route::post('/message', [AdminMessageController::class, 'getWebMessageData']);
+        Route::post('/add-message', [AdminMessageController::class, 'addWebMessageData']);
+        Route::post('/delete-message', [AdminMessageController::class, 'deleteWebMessageData']);
+        Route::post('/access', [AdminAccessController::class, 'getWebSys800Data']);
+        Route::post('/delete-access', [AdminAccessController::class, 'deleteWebSys800Data']);
+        Route::post('/cancel-access', [AdminAccessController::class, 'cancelWebSys800Data']);
+        Route::post('/user-info', [AdminUserInfoController::class, 'getUserInfo']);
+        Route::post('/update-user-info', [AdminUserInfoController::class, 'updateUserInfo']);
+        Route::post('/delete-user-info', [AdminUserInfoController::class, 'deleteUserInfo']);
+        Route::post('/site-news', [AdminUserInfoController::class, 'getContactInfo']);
+        Route::post('/delete-site-news', [AdminUserInfoController::class, 'deleteContactInfo']);
+        Route::post('/ag-logs', [AdminOtherGameLogsController::class, 'getAGLogs']);
+        Route::post('/bbin-logs', [AdminOtherGameLogsController::class, 'getBBINLogs']);
+        Route::post('/mg-logs', [AdminOtherGameLogsController::class, 'getMGLogs']);
+        Route::post('/pt-logs', [AdminOtherGameLogsController::class, 'getPTLogs']);
+        Route::post('/og-logs', [AdminOtherGameLogsController::class, 'getOGLogs']);
+        Route::post('/ky-logs', [AdminOtherGameLogsController::class, 'getKYLogs']);
+        Route::post('/admin-info', [AdminSystemController::class, 'getAdminInfo']);
+        Route::post('/update-admin-info', [AdminSystemController::class, 'updateAdminInfo']);
+    });
+
+    // user management
+
+    Route::group(['prefix' => 'user-management'], function ($router) {
+        Route::post('/sub-user', [UserManagementController::class, 'getSubUser']);
+        Route::post('/add-sub-user', [UserManagementController::class, 'addSubUser']);
+        Route::post('/update-sub-user', [UserManagementController::class, 'updateSubUser']);
+        Route::post('/suspend-sub-user', [UserManagementController::class, 'suspendSubUser']);
+        Route::post('/delete-sub-user', [UserManagementController::class, 'deleteSubUser']);
+        Route::post('/permission-sub-user', [UserManagementController::class, 'permissionSubUser']);
+        Route::post('/company', [UserManagementController::class, 'getCompany']);
+        Route::post('/company-info', [UserManagementController::class, 'getCompanyInfoForAdd']);
+        Route::post('/add-company', [UserManagementController::class, 'addCompany']);
+        Route::post('/update-company', [UserManagementController::class, 'updateCompany']);
+        Route::post('/detail-company', [UserManagementController::class, 'detailCompany']);
+        Route::post('/update-money-agency', [UserManagementController::class, 'updateMoneyAgency']);
+        Route::post('/update-member', [UserManagementController::class, 'updateMember']);
+    });
+
+    // statistics management
+
+    Route::group(['prefix' => 'statistics'], function ($router) {
+        Route::post('/dividend-details', [AdminStatisticsController::class, 'getDividendDetails']);
+        Route::post('/daily-accounts', [AdminStatisticsController::class, 'getDailyAccounts']);
+        Route::post('/system-logs', [AdminStatisticsController::class, 'getSystemLogs']);
+        Route::post('/get-online', [AdminStatisticsController::class, 'getOnlineData']);
+    });
+
+    // sport resport management
+
+    Route::group(['prefix' => 'sport-report'], function ($router) {
+        Route::get('/all', [SportReportController::class, 'getSportReport']);
     });
 });
 

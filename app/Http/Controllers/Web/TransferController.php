@@ -3,7 +3,6 @@ namespace App\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Database\DatabaseManager\DD;
 use App\Models\Web\Bank;
 use Auth;
 use Validator;
@@ -194,7 +193,7 @@ class TransferController extends Controller {
         //转换操作
         $results= $BBINUtils->Deposit_BBIN($BBIN_username,$BBIN_password,$money,$tp);
         $billno=$results['billno'];
-        $result=1;
+        $result=0;
         if($results['info']=='0') $result=1;
 
         //更新状态
@@ -436,7 +435,7 @@ class TransferController extends Controller {
         //转换操作
         $results= $AGUtils->Deposit($ag_username,$ag_password,$money,$tp);
         $billno=$results['billno'];
-        $result=1;
+        $result=0;
         if($results['info']=='0') $result=1;
 
         //更新状态
@@ -922,6 +921,7 @@ class TransferController extends Controller {
         //转换操作
         $results= $MGUtils->Deposit_MG($MG_username,$MG_password,$money,$tp);
         $billno=$results['billno'];
+        $result = 0;
         if($results['info']=='0') $result=1;
 
         MGLogs::where('id', $ouid2)->update(['Billno' => $billno,

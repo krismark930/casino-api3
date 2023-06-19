@@ -105,6 +105,11 @@ class MatchSportController extends Controller
                 "S_7UP" => $request_data['S_7UP'] ?? 0,
                 "T_Show" => $request_data['T_Show'] ?? 0,
                 "F_Show" => $request_data['F_Show'] ?? 0,
+                "RB_Show" => 0,
+                "MB_Inball" => "",
+                "TG_Inball" => "",
+                "MB_Inball_HR" => "",
+                "TG_Inball_HR" => "",
             ];
             $sport = Sport::where("MID", $request_data['MID'])->first();
             if (isset($sport)) {
@@ -214,6 +219,10 @@ class MatchSportController extends Controller
                 "TG_Dime_RB_3" => $request_data['TG_Dime_RB_3'] ?? "",
                 "MB_Dime_Rate_RB_3" => $request_data['MB_Dime_Rate_RB_3'] ?? 0,
                 "TG_Dime_Rate_RB_3" => $request_data['TG_Dime_Rate_RB_3'] ?? 0,
+                "MB_Inball" => "",
+                "TG_Inball" => "",
+                "MB_Inball_HR" => "",
+                "TG_Inball_HR" => "",
             ];
             $sport = Sport::where("MID", $request_data['MID'])->first();
             if (isset($sport)) {
@@ -309,6 +318,10 @@ class MatchSportController extends Controller
                 "TG_P_Dime_3" => $request_data['TG_P_Dime_3'] ?? "",
                 "MB_P_Dime_Rate_3" => $request_data['MB_P_Dime_Rate_3'] ?? 0,
                 "TG_P_Dime_Rate_3" => $request_data['TG_P_Dime_Rate_3'] ?? 0,
+                "MB_Inball" => "",
+                "TG_Inball" => "",
+                "MB_Inball_HR" => "",
+                "TG_Inball_HR" => "",
             ];
             $sport = Sport::where("MID", $request_data['MID'])->first();
             if (isset($sport)) {
@@ -396,6 +409,10 @@ class MatchSportController extends Controller
                 "PD_Show" => 1,                
                 "UP5H" => $request_data['UP5H'] ?? 0,
                 "HPD_Show" => 1,
+                "MB_Inball" => "",
+                "TG_Inball" => "",
+                "MB_Inball_HR" => "",
+                "TG_Inball_HR" => "",
             ];
             $sport = Sport::where("MID", $request_data['MID'])->first();
             if (isset($sport)) {
@@ -464,7 +481,11 @@ class MatchSportController extends Controller
                 "MB_Ball" => $request_data["MB_Ball"] ?? 0,
                 "TG_Ball" => $request_data["TG_Ball"] ?? 0,
                 "S_Show" => $request_data["S_Show"] ?? 0,
-                "isSub" => $request_data["isSub"] ?? 0
+                "isSub" => $request_data["isSub"] ?? 0,
+                "MB_Inball" => "",
+                "TG_Inball" => "",
+                "MB_Inball_HR" => "",
+                "TG_Inball_HR" => "",
             ];
 
             $sport = Sport::where("MID", $request_data['MID'])->first();
@@ -542,6 +563,10 @@ class MatchSportController extends Controller
                 "MB_Dime_Rate_H" => $request_data["MB_Dime_Rate_H"] ?? 0,
                 "TG_Dime_Rate_H" => $request_data["TG_Dime_Rate_H"] ?? 0,
                 "S_Show" => $request_data["S_Show"] ?? 0,
+                "MB_Inball" => "",
+                "TG_Inball" => "",
+                "MB_Inball_HR" => "",
+                "TG_Inball_HR" => "",
             ];
             $sport = Sport::where("MID", $request_data['MID'])->first();
 

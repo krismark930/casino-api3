@@ -729,18 +729,46 @@ class SportController extends Controller
 
                 $half_score_array = [7, 11, 12, 13, 14, 15, 19, 20, 31, 111, 112, 113, 115, 119, 120, 131];
 
+                $half_handicap_array = [19, 119];
+
+                $handicap_array = [9,50,51,52,109,150,151,152];
+
                 if (in_array((int)$report["LineType"], $half_score_array)) {
-                    $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$mb_inball_hr
-                        .":".$tg_inball_hr.")</b></FONT>";
+                    if (in_array((int)$report["LineType"], $half_handicap_array)) {
+                        if ($report["ShowType"] == "H") {
+                            $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$mb_inball_hr.":".$tg_inball_hr.")</b></FONT>";                            
+                        } else {
+                            $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$tg_inball_hr.":".$mb_inball_hr.")</b></FONT>"; 
+                        }
+                    } else {
+                        $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$mb_inball_hr.":".$tg_inball_hr.")</b></FONT>";
+                    }
                 } else {
-                    $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$mb_inball
-                        .":".$tg_inball.")</b></FONT>";
+                    if (in_array((int)$report["LineType"], $handicap_array)) {
+                        if ($report["ShowType"] == "H") {
+                            $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$mb_inball.":".$tg_inball.")</b></FONT>";                           
+                        } else {
+                            $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$tg_inball.":".$mb_inball.")</b></FONT>"; 
+                        }
+                    } else {
+                        $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$mb_inball.":".$tg_inball.")</b></FONT>";
+                    }
                 }
 
             } else {
 
-                $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$mb_inball
-                        .":".$tg_inball.")</b></FONT>";
+                $handicap_array = [2,102,9,109];
+                if (in_array((int)$report["LineType"], $handicap_array)) {
+                    if ($report["ShowType"] == "H") {
+                        $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$mb_inball.":".$tg_inball.")</b></FONT>";                           
+                    } else {
+                        $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$tg_inball.":".$mb_inball.")</b></FONT>"; 
+                    }
+                } else {
+                    $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$mb_inball.":".$tg_inball.")</b></FONT>";
+                }
+                
+                    // $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$mb_inball.":".$tg_inball.")</b></FONT>";
             }
 
             Report::where("ID", $report["ID"])->update(["Middle" => $report["Middle"]]);
@@ -870,36 +898,12 @@ class SportController extends Controller
                         $graded = Utils::odds_eo($mb_in_score, $tg_in_score, $row['Mtype']);
                         break;
                     case 105:
-                        // $score = explode('<FONT color=red><b>', $row['Middle']);
-                        // $msg = explode("</b></FONT><br>", $score[1]);
-                        // $bcd = explode(":", $msg[0]);
-                        // $m_in = $bcd[0];
-                        // $t_in = $bcd[1];
-                        // if ($row['ShowType'] == 'H') {
-                        //     $mbinscore1 = $mb_in_score - $m_in;
-                        //     $tginscore1 = $tg_in_score - $t_in;
-                        // } else {
-                        //     $mbinscore1 = $mb_in_score - $t_in;
-                        //     $tginscore1 = $tg_in_score - $m_in;
-                        // }
                         $graded = Utils::odds_eo($mb_in_score, $tg_in_score, $row['Mtype']);
                         break;
                     case 15:
                         $graded = Utils::odds_eo($mb_in_score_v, $tg_in_score_v, $row['Mtype']);
                         break;
-                    case 115:                        
-                        // $score=explode('<FONT color=red><b>',$row['Middle']);
-                        // $msg=explode("</b></FONT><br>",$score[1]);
-                        // $bcd=explode(":",$msg[0]);
-                        // $m_in=$bcd[0];
-                        // $t_in=$bcd[1];
-                        // if ($row['ShowType']=='H'){
-                        //     $mbinscore1=$mb_in_score_v-$m_in;
-                        //     $tginscore1=$tg_in_score_v-$t_in;
-                        // }else{
-                        //     $mbinscore1=$mb_in_score_v-$t_in;
-                        //     $tginscore1=$tg_in_score_v-$m_in;
-                        // }
+                    case 115:
                         $graded = Utils::odds_eo($mb_in_score_v, $tg_in_score_v, $row['Mtype']);
                         break;
                     case 6:
@@ -930,21 +934,6 @@ class SportController extends Controller
                         }
                         $graded = Utils::odds_letb_rb($mbinscore1, $tginscore1, $row['ShowType'], $row['M_Place'], $row['Mtype']);
                         break;
-                    // case 109:
-                    //     $score = explode('<FONT color=red><b>', $row['Middle']);
-                    //     $msg = explode("</b></FONT><br>", $score[1]);
-                    //     $bcd = explode(":", $msg[0]);
-                    //     $m_in = $bcd[0];
-                    //     $t_in = $bcd[1];
-                    //     if ($row['ShowType'] == 'H') {
-                    //         $mbinscore1 = $mb_in_score_v - $m_in;
-                    //         $tginscore1 = $tg_in_score_v - $t_in;
-                    //     } else {
-                    //         $mbinscore1 = $mb_in_score_v - $t_in;
-                    //         $tginscore1 = $tg_in_score_v - $m_in;
-                    //     }
-                    //     $graded = Utils::odds_letb_vrb($mbinscore1, $tginscore1, $row['ShowType'], $row['M_Place'], $row['Mtype']);
-                    //     break;
                     case 10:
                     case 110:
                     case 53:
@@ -1707,36 +1696,12 @@ class SportController extends Controller
                         $graded = Utils::odds_eo($mb_in_score, $tg_in_score, $row['Mtype']);
                         break;
                     case 105:
-                        // $score = explode('<FONT color=red><b>', $row['Middle']);
-                        // $msg = explode("</b></FONT><br>", $score[1]);
-                        // $bcd = explode(":", $msg[0]);
-                        // $m_in = $bcd[0];
-                        // $t_in = $bcd[1];
-                        // if ($row['ShowType'] == 'H') {
-                        //     $mbinscore1 = $mb_in_score - $m_in;
-                        //     $tginscore1 = $tg_in_score - $t_in;
-                        // } else {
-                        //     $mbinscore1 = $mb_in_score - $t_in;
-                        //     $tginscore1 = $tg_in_score - $m_in;
-                        // }
                         $graded = Utils::odds_eo($mb_in_score, $tg_in_score, $row['Mtype']);
                         break;
                     case 15:
                         $graded = Utils::odds_eo($mb_in_score_v, $tg_in_score_v, $row['Mtype']);
                         break;
-                    case 115:                        
-                        // $score=explode('<FONT color=red><b>',$row['Middle']);
-                        // $msg=explode("</b></FONT><br>",$score[1]);
-                        // $bcd=explode(":",$msg[0]);
-                        // $m_in=$bcd[0];
-                        // $t_in=$bcd[1];
-                        // if ($row['ShowType']=='H'){
-                        //     $mbinscore1=$mb_in_score_v-$m_in;
-                        //     $tginscore1=$tg_in_score_v-$t_in;
-                        // }else{
-                        //     $mbinscore1=$mb_in_score_v-$t_in;
-                        //     $tginscore1=$tg_in_score_v-$m_in;
-                        // }
+                    case 115: 
                         $graded = Utils::odds_eo($mb_in_score_v, $tg_in_score_v, $row['Mtype']);
                         break;
                     case 6:
@@ -1758,13 +1723,13 @@ class SportController extends Controller
                         $bcd = explode(":", $msg[0]);
                         $m_in = $bcd[0];
                         $t_in = $bcd[1];
-                        // if ($row['ShowType'] == 'H') {
+                        if ($row['ShowType'] == 'H') {
                             $mbinscore1 = $mb_in_score - $m_in;
                             $tginscore1 = $tg_in_score - $t_in;
-                        // } else {
-                        //     $mbinscore1 = $mb_in_score - $t_in;
-                        //     $tginscore1 = $tg_in_score - $m_in;
-                        // }
+                        } else {
+                            $mbinscore1 = $mb_in_score - $t_in;
+                            $tginscore1 = $tg_in_score - $m_in;
+                        }
                         $graded = Utils::odds_letb_rb($mbinscore1, $tginscore1, $row['ShowType'], $row['M_Place'], $row['Mtype']);
                         break;
                     case 10:
@@ -1784,13 +1749,13 @@ class SportController extends Controller
                         $bcd=explode(":",$msg[0]);
                         $m_in=$bcd[0];
                         $t_in=$bcd[1];
-                        // if ($row['ShowType']=='H'){
+                        if ($row['ShowType']=='H'){
                             $mbinscore1=$mb_in_score_v-$m_in;
                             $tginscore1=$tg_in_score_v-$t_in;
-                        // }else{
-                        //     $mbinscore1=$mb_in_score_v-$t_in;
-                        //     $tginscore1=$tg_in_score_v-$m_in;
-                        // }
+                        }else{
+                            $mbinscore1=$mb_in_score_v-$t_in;
+                            $tginscore1=$tg_in_score_v-$m_in;
+                        }
                         $graded = Utils::odds_letb_vrb($mbinscore1,$tginscore1,$row['ShowType'],$row['M_Place'],$row['Mtype']);
                         break;  
                     case 20:
@@ -1942,13 +1907,30 @@ class SportController extends Controller
 
                         $half_score_array = [7, 11, 12, 13, 14, 15, 19, 20, 31, 111, 112, 113, 115, 119, 120, 131];
 
-                        if (in_array((int)$row["LineType"], $half_score_array)) {
-                            $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$mb_in_score_v
-                                .":".$tg_in_score_v.")</b></FONT>";
-                        } else {
+                        $half_handicap_array = [19, 119];
 
-                            $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$mb_in_score
-                                .":".$tg_in_score.")</b></FONT>";
+                        $handicap_array = [9,50,51,52,109,150,151,152];
+
+                        if (in_array((int)$row["LineType"], $half_score_array)) {
+                            if (in_array((int)$row["LineType"], $half_handicap_array)) {
+                                if ($row["ShowType"] == "H") {
+                                    $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$mb_in_score_v.":".$tg_in_score_v.")</b></FONT>";                            
+                                } else {
+                                    $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$tg_in_score_v.":".$mb_in_score_v.")</b></FONT>"; 
+                                }
+                            } else {
+                                $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$mb_in_score_v.":".$tg_in_score_v.")</b></FONT>";
+                            }
+                        } else {
+                            if (in_array((int)$row["LineType"], $handicap_array)) {
+                                if ($row["ShowType"] == "H") {
+                                    $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$mb_in_score.":".$tg_in_score.")</b></FONT>";                           
+                                } else {
+                                    $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$tg_in_score.":".$mb_in_score.")</b></FONT>"; 
+                                }
+                            } else {
+                                $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$mb_in_score.":".$tg_in_score.")</b></FONT>";
+                            }
                         }
 
                         $currentAmount = Utils::GetField($user, 'Money');
@@ -2191,8 +2173,18 @@ class SportController extends Controller
                     }
                     if ($q1 == 1 || $cash == 0) {
 
-                        $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$mb_in_score
-                                .":".$tg_in_score.")</b></FONT>";
+                        $handicap_array = [2,102,9,109];
+                        if (in_array((int)$row["LineType"], $handicap_array)) {
+                            if ($row["ShowType"] == "H") {
+                                $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$mb_in_score.":".$tg_in_score.")</b></FONT>";                           
+                            } else {
+                                $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$tg_in_score.":".$mb_in_score.")</b></FONT>"; 
+                            }
+                        } else {
+                            $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$mb_in_score.":".$tg_in_score.")</b></FONT>";
+                        }
+                        
+                        // $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$mb_in_score.":".$tg_in_score.")</b></FONT>";
 
                         $currentAmount = Utils::GetField($user, 'Money');
                         $Order_Code = $row['OrderID'];
@@ -2320,8 +2312,13 @@ class SportController extends Controller
                         $bcd = explode(":", $msg[0]);
                         $m_in = $bcd[0];
                         $t_in = $bcd[1];
-                        $mb_in_1 = $mb_in - $m_in;
-                        $tg_in_1 = $tg_in - $t_in;
+                        if ($show[$i] == "H") {
+                            $mb_in_1 = $mb_in - $m_in;
+                            $tg_in_1 = $tg_in - $t_in;
+                        } else {
+                            $mb_in_1 = $mb_in - $t_in;
+                            $tg_in_1 = $tg_in - $m_in;
+                        }
                         $graded = Utils::odds_letb_rb($mb_in_1, $tg_in_1, $show[$i], $letb[$i], $mtype[$i]);
                     } else if ($mtype[$i] == 'VRRH' or $mtype[$i] == 'VRRC') {
                         $score = explode('<FONT color=red><b>', $middle_array[$i]);
@@ -2329,8 +2326,13 @@ class SportController extends Controller
                         $bcd = explode(":", $msg[0]);
                         $m_in = $bcd[0];
                         $t_in = $bcd[1];
-                        $mb_in_v_1 = $mb_in_v - $m_in;
-                        $tg_in_v_1 = $tg_in_v - $t_in;
+                        if ($show[$i] == "H") {
+                            $mb_in_v_1 = $mb_in_v - $m_in;
+                            $tg_in_v_1 = $tg_in_v - $t_in;
+                        } else {
+                            $mb_in_v_1 = $mb_in_v - $t_in;
+                            $tg_in_v_1 = $tg_in_v - $m_in;
+                        }
                         $graded = Utils::odds_letb_v($mb_in_v_1, $tg_in_v_1, $show[$i], $letb[$i], $mtype[$i]);
                     } else if ($mtype[$i] == 'VRH' or $mtype[$i] == 'VRC') {
                         $graded = Utils::odds_letb_v($mb_in_v, $tg_in_v, $show[$i], $letb[$i], $mtype[$i]);
@@ -2365,17 +2367,49 @@ class SportController extends Controller
                         break;
                 }
 
-                $half_score_array = ["VMH", "VMC", "VMN", "VOUH", "VOUC", "VRH", "VRC"];
+                $half_score_array = ["VMH", "VMC", "VMN", "VOUH", "VOUC", "VRH", "VRC", "VRRH", "VRRC"];
+
+                $half_handicap_array = ["VRRH", "VRRC", "VRH", "VRC"];
+
+                $handicap_array = ["RRH", "RRC", "RC", "RH"];
 
                 if (in_array($mtype[$i], $half_score_array)) {
 
-                    $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$mb_in_v
-                        .":".$tg_in_v.")</b></FONT>";
+                    if (in_array($mtype[$i], $half_handicap_array)) {
+
+                        if ($show[i] == "H") {
+
+                            $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$mb_in_v.":".$tg_in_v.")</b></FONT>";
+
+                        } else {
+
+                            $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$tg_in_v.":".$mb_in_v.")</b></FONT>";
+
+                        }
+                    } else {
+
+                        $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$mb_in_v.":".$tg_in_v.")</b></FONT>";
+                    }
 
                 } else {
 
-                    $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$mb_in
-                        .":".$tg_in.")</b></FONT>";
+                    if (in_array($mtype[$i], $handicap_array)) {
+
+                        if ($show[i] == "H") {
+
+                            $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$mb_in.":".$tg_in.")</b></FONT>";
+
+                        } else {
+
+                            $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$tg_in.":".$mb_in.")</b></FONT>";
+
+                        }
+
+                    } else {
+
+                        $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$mb_in.":".$tg_in.")</b></FONT>";
+
+                    }
 
                 }
             }
@@ -2533,8 +2567,27 @@ class SportController extends Controller
                 $mb_in_v = $match_sport['MB_Inball_HR'];
                 $tg_in_v = $match_sport['TG_Inball_HR'];
 
-                $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$mb_in
-                        .":".$tg_in.")</b></FONT>";
+                $handicap_array = ["RRH", "RRC", "RH", "RC"];
+
+                if (in_array($mtype[$i], $handicap_array)) {
+
+                    if ($show[i] == "H") {
+
+                        $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$mb_in.":".$tg_in.")</b></FONT>";
+
+                    } else {
+
+                        $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$tg_in.":".$mb_in.")</b></FONT>";
+
+                    }
+
+                } else {
+
+                    $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$mb_in.":".$tg_in.")</b></FONT>";
+
+                }
+
+                    // $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$mb_in.":".$tg_in.")</b></FONT>";
 
                 if ($mb_in == '' || $mb_in == '-' || $tg_in == '' || $tg_in == '-') {
                     $graded = "99";

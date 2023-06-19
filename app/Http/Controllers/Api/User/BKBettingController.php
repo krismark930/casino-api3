@@ -349,7 +349,7 @@ class BKBettingController extends Controller
 
                     switch ($type) {
 
-                        case "C":
+                        case "H":
 
                             $w_m_place = $match_sports["MB_Dime_RB"];
 
@@ -386,7 +386,7 @@ class BKBettingController extends Controller
 
                             break;
 
-                        case "H":
+                        case "C":
 
                             $w_m_place = $match_sports["TG_Dime_RB"];
 
@@ -1059,6 +1059,10 @@ class BKBettingController extends Controller
 
                     $rate = get_other_ioratio($odd_f_type, $MB_LetB_Rate, $TG_LetB_Rate, 100);
 
+                    // $rate = [$MB_LetB_Rate, $TG_LetB_Rate];
+
+                    // return $rate;
+
                     if ($rate[0] - $r_num > 1.5 || $rate[1] - $r_num > 1.5){
                         $response['message'] = 'Schedule is closed!';
                         return response()->json($response, $response['status']);
@@ -1208,7 +1212,7 @@ class BKBettingController extends Controller
 
                     switch ($type) {
 
-                        case "C":
+                        case "H":
 
                             $w_m_place = $match_sports["MB_Dime"];
 
@@ -1245,7 +1249,7 @@ class BKBettingController extends Controller
 
                             break;
 
-                        case "H":
+                        case "C":
 
                             $w_m_place = $match_sports["TG_Dime"];
 
@@ -1372,6 +1376,8 @@ class BKBettingController extends Controller
             $lines_en=$lines_en."<FONT color=#cc0000>$w_m_place_en</FONT>&nbsp;@&nbsp;<FONT color=#cc0000><b>".$w_m_rate."</b></FONT>";
 
             $m_turn = $user['M_turn'] + 0;
+
+            // return $w_m_rate;
 
             if ($w_m_rate == '' or $gwin <= 0 or $gwin == '') {
                 $response['message'] = 'The schedule has been closed!';
@@ -2053,7 +2059,7 @@ class BKBettingController extends Controller
                     $turn_rate = "FT_Turn_OU_";
                     $rate = get_other_ioratio($odd_f_type, $match_sports["MB_P_Dime_Rate"], $match_sports["TG_P_Dime_Rate"], 100);
                     switch ($type) {
-                        case "C":
+                        case "H":
                             $w_m_place = $match_sports["MB_P_Dime"];
                             $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["MB_P_Dime"];
@@ -2069,7 +2075,7 @@ class BKBettingController extends Controller
                             $turn_url = "";
                             $mtype = 'OUH';
                             break;
-                        case "H":
+                        case "C":
                             $w_m_place = $match_sports["TG_P_Dime"];
                             $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
                             $w_m_place_tw = $match_sports["TG_P_Dime"];

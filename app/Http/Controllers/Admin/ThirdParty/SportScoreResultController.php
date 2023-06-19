@@ -77,7 +77,7 @@ class SportScoreResultController extends Controller {
 			} else {
 				$list_date = date('Y-m-d', strtotime('-1 day'));
 			}
-			// $list_date = "2023-05-31";
+			// $list_date = "2023-06-11";
 
 			$url = "http://125.252.69.119/app/member/account/result/result.php?game_type=$game_type&list_date=$list_date&uid=$uid&langx=zh-cn";
 
@@ -424,7 +424,17 @@ class SportScoreResultController extends Controller {
 	                                "TG_Inball" => $GMC,
 	                                "MB_Inball_HR" => $HGMH,
 	                                "TG_Inball_HR" => $HGMC
-	                            ]);                    		
+	                            ]);
+
+	                            if ($GMH > 10) {
+
+						            $t=date("Y-m-d H:i:s");
+						            $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/ft_1_".date("Ymd").".txt";
+						            $f=fopen($tmpfile,'a');
+						            fwrite($f,$t."\r\n$GMH\r\n$GMC\r\n$gid\r\n");
+						            fclose($f);
+
+	                            }
                     	} else {
                     		Sport::where("Type", "BK")
 	                            ->where("M_Date", $list_date)
@@ -506,6 +516,16 @@ class SportScoreResultController extends Controller {
 	                                    "MB_Inball_HR" => $HGMH,
 	                                    "TG_Inball_HR" => $HGMC
 	                                ]);
+	                        }
+
+	                        if ($GMH > 10) {
+
+					            $t=date("Y-m-d H:i:s");
+					            $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/ft_2_".date("Ymd").".txt";
+					            $f=fopen($tmpfile,'a');
+					            fwrite($f,$t."\r\n$GMH\r\n$GMC\r\n$gid\r\n");
+					            fclose($f);
+	                        	
 	                        }
 
                     	} else {

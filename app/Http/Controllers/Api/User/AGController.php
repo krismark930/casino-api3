@@ -149,7 +149,18 @@ class AGController extends Controller
                     $ag_username=strtoupper($ag_username);
                     $ag_password=strtoupper($AGUtils->getpassword(10));
                     $result=$AGUtils->Addmember($ag_username,$ag_password,1);
-                    return $result;
+
+                    // temp data
+
+                    // User::where("UserName", $username)->update([
+                    //     "AG_User" => $ag_username,
+                    //     "AG_Pass" => $ag_password,
+                    // ]);
+
+                    // return $result;
+
+                    // temp data end
+                    
                     if ($result['info']=='0'){
                         User::where("UserName", $username)->update([
                             "AG_User" => $ag_username,

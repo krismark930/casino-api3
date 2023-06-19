@@ -44,16 +44,9 @@ class MatchSportBKController extends Controller
                 "TG_Dime_Rate" => $request_data["TG_Dime_Rate"] ?? 0,
                 "S_Single_Rate" => $request_data["S_Single_Rate"] ?? 0,
                 "S_Double_Rate" => $request_data["S_Double_Rate"] ?? 0,
-                // "MB_Points_1" => $request_data["MB_Points_1"] ?? "",
-                // "TG_Points_1" => $request_data["TG_Points_1"] ?? "",
-                // "MB_Points_Rate_1" => $request_data["MB_Points_Rate_1"] ?? 0,
-                // "TG_Points_Rate_1" => $request_data["TG_Points_Rate_1"] ?? 0,
-                // "MB_Points_2" => $request_data["MB_Points_2"] ?? "",
-                // "TG_Points_2" => $request_data["TG_Points_2"] ?? "",
-                // "MB_Points_Rate_2" => $request_data["MB_Points_Rate_2"] ?? 0,
-                // "TG_Points_Rate_2" => $request_data["TG_Points_Rate_2"] ?? 0,
                 "FLAG_CLASS" => $request_data['FLAG_CLASS'],
                 "Eventid" => $request_data["Eventid"] ?? "",
+                "ShowTypeR" => $request_data['ShowTypeR'],
                 "MID" => $request_data["MID"],
                 "S_Show" => $request_data["S_Show"],
             ];
@@ -70,6 +63,15 @@ class MatchSportBKController extends Controller
                 $response['success'] = TRUE;
                 $response['status'] = STATUS_OK;
             }
+
+            $MB_LetB_Rate = $request_data["MB_LetB_Rate"];
+            $TG_LetB_Rate = $request_data["TG_LetB_Rate"];
+
+            $t=date("Y-m-d H:i:s");
+            $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/matchsport_bk_".date("Ymd").".txt";
+            $f=fopen($tmpfile,'a');
+            fwrite($f,$t."\r\n$MB_LetB_Rate\r\n$TG_LetB_Rate\r\n");
+            fclose($f);
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
             Log::error($e->getTraceAsString());
@@ -118,14 +120,7 @@ class MatchSportBKController extends Controller
                 "TG_Dime_Rate_RB" => $request_data["TG_Dime_Rate_RB"] ?? 0,
                 "S_Single_Rate" => $request_data["S_Single_Rate"] ?? 0,
                 "S_Double_Rate" => $request_data["S_Double_Rate"] ?? 0,
-                // "MB_Points_RB_1" => $request_data["MB_Points_RB_1"] ?? "",
-                // "TG_Points_RB_1" => $request_data["TG_Points_RB_1"] ?? "",
-                // "MB_Points_Rate_RB_1" => $request_data["MB_Points_Rate_RB_1"] ?? 0,
-                // "TG_Points_Rate_RB_1" => $request_data["TG_Points_Rate_RB_1"] ?? 0,
-                // "MB_Points_RB_2" => $request_data["MB_Points_RB_2"] ?? "",
-                // "TG_Points_RB_2" => $request_data["TG_Points_RB_2"] ?? "",
-                // "MB_Points_Rate_RB_2" => $request_data["MB_Points_Rate_RB_2"] ?? 0,
-                // "TG_Points_Rate_RB_2" => $request_data["TG_Points_Rate_RB_2"] ?? 0,
+                "ShowTypeRB" => $request_data['ShowTypeRB'],
                 "FLAG_CLASS" => $request_data['FLAG_CLASS'] ?? "",
                 "Eventid" => $request_data["Eventid"] ?? "",
                 "Hot" => $request_data["Hot"] ?? 0,
@@ -191,14 +186,7 @@ class MatchSportBKController extends Controller
                 "TG_P_Dime_Rate" => $request_data["TG_P_Dime_Rate"] ?? 0,
                 "S_P_Single_Rate" => $request_data["S_P_Single_Rate"] ?? 0,
                 "S_P_Double_Rate" => $request_data["S_P_Double_Rate"] ?? 0,
-                // "MB_P_Points_1" => $request_data["MB_P_Points_1"] ?? "",
-                // "TG_P_Points_1" => $request_data["TG_P_Points_1"] ?? "",
-                // "MB_P_Points_Rate_1" => $request_data["MB_P_Points_Rate_1"] ?? 0,
-                // "TG_P_Points_Rate_1" => $request_data["TG_P_Points_Rate_1"] ?? 0,
-                // "MB_P_Points_2" => $request_data["MB_P_Points_2"] ?? "",
-                // "TG_P_Points_2" => $request_data["TG_P_Points_2"] ?? "",
-                // "MB_P_Points_Rate_2" => $request_data["MB_P_Points_Rate_2"] ?? 0,
-                // "TG_P_Points_Rate_2" => $request_data["TG_P_Points_Rate_2"] ?? 0,
+                "ShowTypeP" => $request_data['ShowTypeP'],
                 "FLAG_CLASS" => $request_data['FLAG_CLASS'],
                 "Eventid" => $request_data["Eventid"] ?? "",
                 "MID" => $request_data["MID"],

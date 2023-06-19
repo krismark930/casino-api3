@@ -9,5 +9,21 @@ class WebSystemData extends Model
 {
     use HasFactory;
 
+    protected $fillable = [        
+        "Level",
+        "UserName",
+        "LoginName",
+        "passWord",
+        "Passwd",
+        "Alias",
+        "Status",
+        "Competence",
+        "SubUser",
+        "SubName",
+        "AddDate",
+    ];
+
     protected $table = 'web_system_data';
+
+    public $timestamps = false;
 }

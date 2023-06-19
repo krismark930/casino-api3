@@ -21,9 +21,9 @@ class AGUtils {
         $params=$crypt->encrypt($para);
         $key=md5($params.$this->md5key);
         $url=$this->giurl."doBusiness.do?params=".$params."&key=".$key;
-        // return $url;
+        return $url;
         $xmlcode=$this->getUrl($url);
-        return $xmlcode;
+        // return $xmlcode;
         $result=$this->getResult($xmlcode);
         if($result['info']<>'0'){
             $t=date("Y-m-d H:i:s");
@@ -156,6 +156,10 @@ class AGUtils {
             break;
       }
       return $content;
+    }
+
+    function getKey() {
+        
     }
 
     function getpassword($len=10)
