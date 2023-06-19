@@ -5,7 +5,7 @@ var convert = require('xml-js');
 var moment = require('moment');
 
 exports.getUID_VER = async (userName, passWord, thirdPartyBaseUrl) => {
-	console.log(userName, passWord, thirdPartyBaseUrl);
+	console.log("11111111111111111111", userName, passWord, thirdPartyBaseUrl);
 	try {
 		let thirdPartyUrl = "";
 		let version = "-3ed5-bug4-0309-95881ae5676be2";
@@ -28,7 +28,7 @@ exports.getUID_VER = async (userName, passWord, thirdPartyBaseUrl) => {
 		}
 		return uid;
 	} catch(e) {
-		console.log(e)
+		// console.log(e)
 	}
 }
 
