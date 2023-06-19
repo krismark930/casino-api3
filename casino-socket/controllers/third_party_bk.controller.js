@@ -125,6 +125,7 @@ exports.getBK_MORE_TODAY = async (thirdPartyAuthData, data) => {
 
 						FLAG_CLASS: data['flag_class'] == null ? "" : data['flag_class'],
 						Eventid: item['eventid'] == null ? "" : item['eventid'],
+						ShowTypeR: item["strong"] == "" ? "H" : item['strong'],
 					};
 					itemList.push(tempData);					
 				}
@@ -246,6 +247,7 @@ exports.getBK_MORE_PARLAY = async (thirdPartyAuthData, data) => {
 
 						FLAG_CLASS: data['flag_class'] == null ? "" : data['flag_class'],
 						Eventid: item['eventid'] == null ? "" : item['eventid'],
+						ShowTypeP: item['strong'],
 					};
 					itemList.push(tempData);					
 				}
@@ -365,6 +367,7 @@ exports.getBK_MORE_INPLAY = async (thirdPartyAuthData, data) => {
 						Hot: item['hot'] == 'Y'? 1 : 0,
 						Play: 1,
 						RB_Show: 1,
+						ShowTypeRB: item["strong"] == "" ? "H" : item['strong'],
 					};
 					itemList.push(tempData);					
 				}
@@ -481,6 +484,7 @@ exports.getBK_MAIN_FAVORITE = async (thirdPartyAuthData, data) => {
 						Eventid: item['game']['EVENTID'] == null ? "" : item['game']['EVENTID'],
 						MID: item['game']['GID'],
 						RB_Show: 1,
+						ShowTypeRB: item["strong"],
 					};
 					itemList.push(data);						
 				} else {
@@ -521,6 +525,7 @@ exports.getBK_MAIN_FAVORITE = async (thirdPartyAuthData, data) => {
 						Eventid: item['game']['EVENTID'] == null ? "" : item['game']['EVENTID'],
 						MID: item['game']['GID'],
 						S_Show: 1,
+						ShowTypeR: item["strong"],
 					};
 					itemList.push(data);						
 				}
@@ -775,6 +780,7 @@ exports.getBK_MAIN_INPLAY = async (thirdPartyAuthData) => {
 					Hot: item['game']['HOT'] == 'Y'? 1 : 0,
 					Play: item['game']['PLAY'] == 'Y'? 1 : 0,
 					MID: item['game']['GID'],
+					ShowTypeRB: item['game']['STRONG'] == "" ? "H" : item['game']['STRONG'],
 					RB_Show: 1,
 				};
 				itemList.push(data);
@@ -1002,6 +1008,7 @@ exports.getBK_MAIN_TODAY = async (thirdPartyAuthData, data) => {
 
 					FLAG_CLASS: item['game']['FLAG_CLASS'],
 					Eventid: item['game']['EVENTID'] == null ? "" : item['game']['EVENTID'],
+					ShowTypeR: item['game']['STRONG'] == "" ? "H" : item['game']['STRONG'],
 					MID: item['game']['GID'],
 					S_Show: 1,
 				};
@@ -1116,6 +1123,7 @@ exports.getBK_MAIN_EARLY = async (thirdPartyAuthData, data) => {
 					Eventid: item['game']['EVENTID'] == null ? "" : item['game']['EVENTID'],
 					MID: item['game']['GID'],
 					S_Show: 1,
+					ShowTypeR: item["strong"],
 				};
 				itemList.push(data);
 			}));
@@ -1231,6 +1239,7 @@ exports.getBK_MAIN_PARLAY = async (thirdPartyAuthData, data) => {
 					// TG_P_Points_Rate_2: item['game']['IOR_OUCU'] == null ? 0 : item['game']['IOR_OUCU'],
 					FLAG_CLASS: item['game']['FLAG_CLASS'],
 					Eventid: item['game']['EVENTID'] == null ? "" : item['game']['EVENTID'],
+					ShowTypeP: item['game']['STRONG'] == "" ? "H" : item['game']['STRONG'],
 					P3_Show: 1,
 				};
 				itemList.push(data);
@@ -1247,9 +1256,9 @@ exports.dispatchBK_MAIN_TODAY = (itemList) => {
 	itemList.map(async item => {	
 		try {
 			response = await axios.post(`${BACKEND_BASE_URL}${MATCH_SPORTS}${SAVE_BK_DEFAULT_TODAY}`, item);
-			// console.log("response==============================", response.data);
+			console.log("response==============================", response.data);
 		} catch(err) {
-			// console.log("err===================", err);
+			console.log("err===================", err);
 		}
 	})
 }

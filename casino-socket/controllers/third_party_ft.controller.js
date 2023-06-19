@@ -788,7 +788,7 @@ exports.getFT_LEAGUE_TODAY = async (thirdPartyAuthData) => {
 		let version = thirdPartyAuthData["version"];
 		let uID = thirdPartyAuthData["uid"];
 
-		console.log(thirdPartyAuthData);
+		// console.log(thirdPartyAuthData);
 
 		thirdPartyUrl = `${thirdPartyBaseUrl}/transform.php?ver=${version}`;
 

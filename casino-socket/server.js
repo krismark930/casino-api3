@@ -178,599 +178,594 @@ var total_count = 0;
 var ft_total_count = 0;
 var bk_total_count = 0;
 
-// const userName = process.env.USER_NAME;
-// const passWord = process.env.USER_KEY;
-// const thirdPartyBaseUrl = "https://www.hga030.com";
-
 var thirdPartyAuthData = {
-    uid: "kyyvx7q5gm30901985l85675b0",
+    uid: "h1p0tko4vm30901985l247423b0",
     version: "-3ed5-bug4-0309-95881ae5676be2",
     thirdPartyBaseUrl: "https://www.hga030.com"
 }
 
-const thirdPartyScoreBaseUrl = process.env.thirdPartyScoreBaseUrl;
+const thirdPartyScoreBaseUrl = JSON.parse(process.env.thirdPartyScoreBaseUrl);
 const thirdPartyScoreUrl = thirdPartyScoreBaseUrl[0] + '/app/member/score.php?type=';
 
-const thirdPartyLotteryBaseUrl = process.env.thirdPartyLotteryBaseUrl;
+const thirdPartyLotteryBaseUrl = JSON.parse(process.env.thirdPartyLotteryBaseUrl);
 const thirdPartyLotteryResultUrl = thirdPartyLotteryBaseUrl[1] + '/result_new.php';
 const thirdPartyOtherLotteryResultUrl = process.env.thirdPartyOtherLotteryResultUrl;
 
-const userArray = process.env.userArray;
+const userArray = JSON.parse(process.env.userArray);
 const passWord = process.env.passWord;
-const thirdPartyBaseUrlArray = process.env.thirdPartyBaseUrlArray;
-
+const thirdPartyBaseUrlArray = JSON.parse(process.env.thirdPartyBaseUrlArray);
 
 setInterval( async () => {
-    // await dispatchFT_AUTO_CHECK_SCORE();
-    // await dispatchBK_AUTO_CHECK_SCORE();
-    // await dispatchFT_PARLAY_AUTO_CHECK_SCORE();
-    // await dispatchBK_PARLAY_AUTO_CHECK_SCORE();
-}, 20000)
+    await dispatchFT_AUTO_CHECK_SCORE();
+    await dispatchBK_AUTO_CHECK_SCORE();
+    await dispatchFT_PARLAY_AUTO_CHECK_SCORE();
+    await dispatchBK_PARLAY_AUTO_CHECK_SCORE();
+}, 30000)
 
 
-// setInterval(async () => {
-//     let result = await getFT_LEAGUE_TODAY(thirdPartyAuthData);
-//     if (result["msg"] == "doubleLogin" || result["code"] == "error") {
-//         let userName = userArray[Math.floor(Math.random() * 5)];
-//         let thirdPartyBaseUrl = thirdPartyBaseUrlArray[Math.floor(Math.random() * 6)];
-//         let uid = await getUID_VER(userName, passWord, thirdPartyBaseUrl);
-//         console.log("uid================", uid);
-//         if (uid != "" && uid != undefined) {
-//             thirdPartyAuthData["uid"] = uid;
-//             thirdPartyAuthData["thirdPartyBaseUrl"] = thirdPartyBaseUrl;
-//         }
-//     }
-// }, 10000);
+setInterval(async () => {
+    let result = await getFT_LEAGUE_TODAY(thirdPartyAuthData);
+    if (result["msg"] == "doubleLogin" || result["code"] == "error") {
+        let userName = userArray[Math.floor(Math.random() * 5)];
+        let thirdPartyBaseUrl = thirdPartyBaseUrlArray[Math.floor(Math.random() * 6)];
+        let uid = await getUID_VER(userName, passWord, thirdPartyBaseUrl);
+        console.log("uid================", uid);
+        if (uid != "" && uid != undefined) {
+            thirdPartyAuthData["uid"] = uid;
+            thirdPartyAuthData["thirdPartyBaseUrl"] = thirdPartyBaseUrl;
+        }
+    }
+}, 10000);
 
 
-// setTimeout(async () => {
-//     let userName = userArray[Math.floor(Math.random() * 5)];
-//     let thirdPartyBaseUrl = thirdPartyBaseUrlArray[Math.floor(Math.random() * 6)];
-//     let uid = await getUID_VER(userName, passWord, thirdPartyBaseUrl);
-//     console.log("uid================", uid);
-//     if (uid != "" && uid != undefined) {
-//         thirdPartyAuthData["uid"] = uid;
-//         thirdPartyAuthData["thirdPartyBaseUrl"] = thirdPartyBaseUrl;
-//     }
-// }, 1000);
+setTimeout(async () => {
+    let userName = userArray[Math.floor(Math.random() * 5)];
+    let thirdPartyBaseUrl = thirdPartyBaseUrlArray[Math.floor(Math.random() * 6)];
+    let uid = await getUID_VER(userName, passWord, thirdPartyBaseUrl);
+    console.log("uid================", uid);
+    if (uid != "" && uid != undefined) {
+        thirdPartyAuthData["uid"] = uid;
+        thirdPartyAuthData["thirdPartyBaseUrl"] = thirdPartyBaseUrl;
+    }
+}, 1000);
 
 
 
-// ftInPlayInterval = setInterval(async () => {
-//     ftInPlayList = await getFT_FU_R_INPLAY(thirdPartyAuthData);
-//     // console.log(ftInPlayList);
-//     if (ftInPlayList && ftInPlayList.length > 0) {
-//         ft_inplay_count = ftInPlayList.length;
-//         await Promise.all(ftInPlayList.map(async item => {
+ftInPlayInterval = setInterval(async () => {
+    ftInPlayList = await getFT_FU_R_INPLAY(thirdPartyAuthData);
+    // console.log(ftInPlayList);
+    if (ftInPlayList && ftInPlayList.length > 0) {
+        ft_inplay_count = ftInPlayList.length;
+        await Promise.all(ftInPlayList.map(async item => {
 
-//             if (item["HDP_OU"] === 1) {
+            if (item["HDP_OU"] === 1) {
 
-//                 let response = await getFT_HDP_OU_INPLAY(thirdPartyAuthData, {id: item["MID"], ecid: item["ECID"]});
-//                 // console.log("HDP_OU Result: ", response)
+                let response = await getFT_HDP_OU_INPLAY(thirdPartyAuthData, {id: item["MID"], ecid: item["ECID"]});
+                // console.log("HDP_OU Result: ", response)
 
-//                 if (response != undefined && response != null) {
+                if (response != undefined && response != null) {
 
-//                     item["M_LetB_RB_1"] = response["M_LetB_RB_1"] == undefined ? "" : response["M_LetB_RB_1"];
-//                     item["MB_LetB_Rate_RB_1"] = response["MB_LetB_Rate_RB_1"] == undefined ? 0 : response["MB_LetB_Rate_RB_1"];
-//                     item["TG_LetB_Rate_RB_1"] = response["TG_LetB_Rate_RB_1"] == undefined ? 0 : response["TG_LetB_Rate_RB_1"];
-//                     item["MB_Dime_RB_1"] = response["MB_Dime_RB_1"] == undefined ? "" : response["MB_Dime_RB_1"];
-//                     item["TG_Dime_RB_1"] = response["TG_Dime_RB_1"] == undefined ? "" : response["TG_Dime_RB_1"];
-//                     item["MB_Dime_Rate_RB_1"] = response["MB_Dime_Rate_RB_1"] == undefined ? 0 : response["MB_Dime_Rate_RB_1"];
-//                     item["TG_Dime_Rate_RB_1"] = response["TG_Dime_Rate_RB_1"] == undefined ? 0 : response["TG_Dime_Rate_RB_1"];
-//                     item["M_LetB_RB_2"] = response["M_LetB_RB_2"] == undefined ? "" : response["M_LetB_RB_2"];
-//                     item["MB_LetB_Rate_RB_2"] = response["MB_LetB_Rate_RB_2"] == undefined ? 0 : response["MB_LetB_Rate_RB_2"];
-//                     item["TG_LetB_Rate_RB_2"] = response["TG_LetB_Rate_RB_2"] == undefined ? 0 : response["TG_LetB_Rate_RB_2"];
-//                     item["MB_Dime_RB_2"] = response["MB_Dime_RB_2"] == undefined ? "" : response["MB_Dime_RB_2"];
-//                     item["TG_Dime_RB_2"] = response["TG_Dime_RB_2"] == undefined ? "" : response["TG_Dime_RB_2"];
-//                     item["MB_Dime_Rate_RB_2"] = response["MB_Dime_Rate_RB_2"] == undefined ? 0 : response["MB_Dime_Rate_RB_2"];
-//                     item["TG_Dime_Rate_RB_2"] = response["TG_Dime_Rate_RB_2"] == undefined ? 0 : response["TG_Dime_Rate_RB_2"];
-//                     item["M_LetB_RB_3"] = response["M_LetB_RB_3"] == undefined ? "" : response["M_LetB_RB_3"];
-//                     item["MB_LetB_Rate_RB_3"] = response["MB_LetB_Rate_RB_3"] == undefined ? 0 : response["MB_LetB_Rate_RB_3"];
-//                     item["TG_LetB_Rate_RB_3"] = response["TG_LetB_Rate_RB_3"] == undefined ? 0 : response["TG_LetB_Rate_RB_3"];
-//                     item["MB_Dime_RB_3"] = response["MB_Dime_RB_3"] == undefined ? "" : response["MB_Dime_RB_3"];
-//                     item["TG_Dime_RB_3"] = response["TG_Dime_RB_3"] == undefined ? "" : response["TG_Dime_RB_3"];
-//                     item["MB_Dime_Rate_RB_3"] = response["MB_Dime_Rate_RB_3"] == undefined ? 0 : response["MB_Dime_Rate_RB_3"];
-//                     item["TG_Dime_Rate_RB_3"] = response["TG_Dime_Rate_RB_3"] == undefined ? 0 : response["TG_Dime_Rate_RB_3"];
+                    item["M_LetB_RB_1"] = response["M_LetB_RB_1"] == undefined ? "" : response["M_LetB_RB_1"];
+                    item["MB_LetB_Rate_RB_1"] = response["MB_LetB_Rate_RB_1"] == undefined ? 0 : response["MB_LetB_Rate_RB_1"];
+                    item["TG_LetB_Rate_RB_1"] = response["TG_LetB_Rate_RB_1"] == undefined ? 0 : response["TG_LetB_Rate_RB_1"];
+                    item["MB_Dime_RB_1"] = response["MB_Dime_RB_1"] == undefined ? "" : response["MB_Dime_RB_1"];
+                    item["TG_Dime_RB_1"] = response["TG_Dime_RB_1"] == undefined ? "" : response["TG_Dime_RB_1"];
+                    item["MB_Dime_Rate_RB_1"] = response["MB_Dime_Rate_RB_1"] == undefined ? 0 : response["MB_Dime_Rate_RB_1"];
+                    item["TG_Dime_Rate_RB_1"] = response["TG_Dime_Rate_RB_1"] == undefined ? 0 : response["TG_Dime_Rate_RB_1"];
+                    item["M_LetB_RB_2"] = response["M_LetB_RB_2"] == undefined ? "" : response["M_LetB_RB_2"];
+                    item["MB_LetB_Rate_RB_2"] = response["MB_LetB_Rate_RB_2"] == undefined ? 0 : response["MB_LetB_Rate_RB_2"];
+                    item["TG_LetB_Rate_RB_2"] = response["TG_LetB_Rate_RB_2"] == undefined ? 0 : response["TG_LetB_Rate_RB_2"];
+                    item["MB_Dime_RB_2"] = response["MB_Dime_RB_2"] == undefined ? "" : response["MB_Dime_RB_2"];
+                    item["TG_Dime_RB_2"] = response["TG_Dime_RB_2"] == undefined ? "" : response["TG_Dime_RB_2"];
+                    item["MB_Dime_Rate_RB_2"] = response["MB_Dime_Rate_RB_2"] == undefined ? 0 : response["MB_Dime_Rate_RB_2"];
+                    item["TG_Dime_Rate_RB_2"] = response["TG_Dime_Rate_RB_2"] == undefined ? 0 : response["TG_Dime_Rate_RB_2"];
+                    item["M_LetB_RB_3"] = response["M_LetB_RB_3"] == undefined ? "" : response["M_LetB_RB_3"];
+                    item["MB_LetB_Rate_RB_3"] = response["MB_LetB_Rate_RB_3"] == undefined ? 0 : response["MB_LetB_Rate_RB_3"];
+                    item["TG_LetB_Rate_RB_3"] = response["TG_LetB_Rate_RB_3"] == undefined ? 0 : response["TG_LetB_Rate_RB_3"];
+                    item["MB_Dime_RB_3"] = response["MB_Dime_RB_3"] == undefined ? "" : response["MB_Dime_RB_3"];
+                    item["TG_Dime_RB_3"] = response["TG_Dime_RB_3"] == undefined ? "" : response["TG_Dime_RB_3"];
+                    item["MB_Dime_Rate_RB_3"] = response["MB_Dime_Rate_RB_3"] == undefined ? 0 : response["MB_Dime_Rate_RB_3"];
+                    item["TG_Dime_Rate_RB_3"] = response["TG_Dime_Rate_RB_3"] == undefined ? 0 : response["TG_Dime_Rate_RB_3"];
 
-//                 } else {
+                } else {
 
-//                     item["M_LetB_RB_1"] = "";
-//                     item["MB_LetB_Rate_RB_1"] = 0;
-//                     item["TG_LetB_Rate_RB_1"] = 0;
-//                     item["MB_Dime_RB_1"] = "";
-//                     item["TG_Dime_RB_1"] = "";
-//                     item["MB_Dime_Rate_RB_1"] = 0;
-//                     item["TG_Dime_Rate_RB_1"] = 0;
-//                     item["M_LetB_RB_2"] = "";
-//                     item["MB_LetB_Rate_RB_2"] = 0;
-//                     item["TG_LetB_Rate_RB_2"] = 0;
-//                     item["MB_Dime_RB_2"] = "";
-//                     item["TG_Dime_RB_2"] = "";
-//                     item["MB_Dime_Rate_RB_2"] = 0;
-//                     item["TG_Dime_Rate_RB_2"] = 0;
-//                     item["M_LetB_RB_3"] = "";
-//                     item["MB_LetB_Rate_RB_3"] = 0;
-//                     item["TG_LetB_Rate_RB_3"] = 0;
-//                     item["MB_Dime_RB_3"] = "";
-//                     item["TG_Dime_RB_3"] = "";
-//                     item["MB_Dime_Rate_RB_3"] = 0;
-//                     item["TG_Dime_Rate_RB_3"] = 0;
+                    item["M_LetB_RB_1"] = "";
+                    item["MB_LetB_Rate_RB_1"] = 0;
+                    item["TG_LetB_Rate_RB_1"] = 0;
+                    item["MB_Dime_RB_1"] = "";
+                    item["TG_Dime_RB_1"] = "";
+                    item["MB_Dime_Rate_RB_1"] = 0;
+                    item["TG_Dime_Rate_RB_1"] = 0;
+                    item["M_LetB_RB_2"] = "";
+                    item["MB_LetB_Rate_RB_2"] = 0;
+                    item["TG_LetB_Rate_RB_2"] = 0;
+                    item["MB_Dime_RB_2"] = "";
+                    item["TG_Dime_RB_2"] = "";
+                    item["MB_Dime_Rate_RB_2"] = 0;
+                    item["TG_Dime_Rate_RB_2"] = 0;
+                    item["M_LetB_RB_3"] = "";
+                    item["MB_LetB_Rate_RB_3"] = 0;
+                    item["TG_LetB_Rate_RB_3"] = 0;
+                    item["MB_Dime_RB_3"] = "";
+                    item["TG_Dime_RB_3"] = "";
+                    item["MB_Dime_Rate_RB_3"] = 0;
+                    item["TG_Dime_Rate_RB_3"] = 0;
 
-//                 }
+                }
 
                 
-//             }
+            }
 
 
-//             if (item["CORNER"] === 1) {
+            if (item["CORNER"] === 1) {
 
-//                 let response = await getFT_CORNER_INPLAY(thirdPartyAuthData, {ecid: item["ECID"]});
+                let response = await getFT_CORNER_INPLAY(thirdPartyAuthData, {ecid: item["ECID"]});
 
-//                 // console.log(response);
+                // console.log(response);
 
-//                 if (response != undefined) {
+                if (response != undefined) {
 
-//                     await dispatchFT_CORNER_INPLAY(response);
+                    await dispatchFT_CORNER_INPLAY(response);
 
-//                     item["CN_MID"] = response["MID"] == undefined ? "" : response["MID"];
-//                     item["MB_Dime_RB_CN"] = response["MB_Dime_RB"] == undefined ? "" : response["MB_Dime_RB"];
-//                     item["TG_Dime_RB_CN"] = response["TG_Dime_RB"] == undefined ? "" : response["TG_Dime_RB"];
-//                     item["MB_Dime_Rate_RB_CN"] = response["MB_Dime_Rate_RB"] == undefined ? 0 : response["MB_Dime_Rate_RB"];
-//                     item["TG_Dime_Rate_RB_CN"] = response["TG_Dime_Rate_RB"] == undefined ? 0 : response["TG_Dime_Rate_RB"];
-//                     item["MB_Dime_RB_H_CN"] = response["MB_Dime_RB_H"] == undefined ? "" : response["MB_Dime_RB_H"];
-//                     item["TG_Dime_RB_H_CN"] = response["TG_Dime_RB_H"] == undefined ? "" : response["TG_Dime_RB_H"];
-//                     item["MB_Dime_Rate_RB_H_CN"] = response["MB_Dime_Rate_RB_H"] == undefined ? 0 : response["MB_Dime_Rate_RB_H"];
-//                     item["TG_Dime_Rate_RB_H_CN"] = response["TG_Dime_Rate_RB_H"] == undefined ? 0 : response["TG_Dime_Rate_RB_H"];
-//                     item["S_Single_Rate_CN"] = response["S_Single_Rate"] == undefined ? 0 : response["S_Single_Rate"];
-//                     item["S_Double_Rate_CN"] = response["S_Double_Rate"] == undefined ? 0 : response["S_Double_Rate"];
-//                     item["S_Single_Rate_H_CN"] = response["S_Single_Rate_H"] == undefined ? 0 : response["S_Single_Rate_H"];
-//                     item["S_Double_Rate_H_CN"] = response["S_Double_Rate_H"] == undefined ? 0 : response["S_Double_Rate_H"];
-//                     item["MB_Ball_CN"] = response["MB_Ball"] == undefined ? 0 : response["MB_Ball"];
-//                     item["TG_Ball_CN"] = response["TG_Ball"] == undefined ? 0 : response["TG_Ball"];
+                    item["CN_MID"] = response["MID"] == undefined ? "" : response["MID"];
+                    item["MB_Dime_RB_CN"] = response["MB_Dime_RB"] == undefined ? "" : response["MB_Dime_RB"];
+                    item["TG_Dime_RB_CN"] = response["TG_Dime_RB"] == undefined ? "" : response["TG_Dime_RB"];
+                    item["MB_Dime_Rate_RB_CN"] = response["MB_Dime_Rate_RB"] == undefined ? 0 : response["MB_Dime_Rate_RB"];
+                    item["TG_Dime_Rate_RB_CN"] = response["TG_Dime_Rate_RB"] == undefined ? 0 : response["TG_Dime_Rate_RB"];
+                    item["MB_Dime_RB_H_CN"] = response["MB_Dime_RB_H"] == undefined ? "" : response["MB_Dime_RB_H"];
+                    item["TG_Dime_RB_H_CN"] = response["TG_Dime_RB_H"] == undefined ? "" : response["TG_Dime_RB_H"];
+                    item["MB_Dime_Rate_RB_H_CN"] = response["MB_Dime_Rate_RB_H"] == undefined ? 0 : response["MB_Dime_Rate_RB_H"];
+                    item["TG_Dime_Rate_RB_H_CN"] = response["TG_Dime_Rate_RB_H"] == undefined ? 0 : response["TG_Dime_Rate_RB_H"];
+                    item["S_Single_Rate_CN"] = response["S_Single_Rate"] == undefined ? 0 : response["S_Single_Rate"];
+                    item["S_Double_Rate_CN"] = response["S_Double_Rate"] == undefined ? 0 : response["S_Double_Rate"];
+                    item["S_Single_Rate_H_CN"] = response["S_Single_Rate_H"] == undefined ? 0 : response["S_Single_Rate_H"];
+                    item["S_Double_Rate_H_CN"] = response["S_Double_Rate_H"] == undefined ? 0 : response["S_Double_Rate_H"];
+                    item["MB_Ball_CN"] = response["MB_Ball"] == undefined ? 0 : response["MB_Ball"];
+                    item["TG_Ball_CN"] = response["TG_Ball"] == undefined ? 0 : response["TG_Ball"];
 
-//                 } else {
+                } else {
 
-//                     item["CN_MID"] = response["MID"];
-//                     item["MB_Dime_RB_CN"] = "";
-//                     item["TG_Dime_RB_CN"] = "";
-//                     item["MB_Dime_Rate_RB_CN"] = 0;
-//                     item["TG_Dime_Rate_RB_CN"] = 0;
-//                     item["MB_Dime_RB_H_CN"] = "";
-//                     item["TG_Dime_RB_H_CN"] = "";
-//                     item["MB_Dime_Rate_RB_H_CN"] = 0;
-//                     item["TG_Dime_Rate_RB_H_CN"] = 0;
-//                     item["S_Single_Rate_CN"] = 0;
-//                     item["S_Double_Rate_CN"] = 0;
-//                     item["S_Single_Rate_H_CN"] = 0;
-//                     item["S_Double_Rate_H_CN"] = 0;
-//                     item["MB_Ball_CN"] = 0;
-//                     item["TG_Ball_CN"] = 0
+                    item["CN_MID"] = response["MID"];
+                    item["MB_Dime_RB_CN"] = "";
+                    item["TG_Dime_RB_CN"] = "";
+                    item["MB_Dime_Rate_RB_CN"] = 0;
+                    item["TG_Dime_Rate_RB_CN"] = 0;
+                    item["MB_Dime_RB_H_CN"] = "";
+                    item["TG_Dime_RB_H_CN"] = "";
+                    item["MB_Dime_Rate_RB_H_CN"] = 0;
+                    item["TG_Dime_Rate_RB_H_CN"] = 0;
+                    item["S_Single_Rate_CN"] = 0;
+                    item["S_Double_Rate_CN"] = 0;
+                    item["S_Single_Rate_H_CN"] = 0;
+                    item["S_Double_Rate_H_CN"] = 0;
+                    item["MB_Ball_CN"] = 0;
+                    item["TG_Ball_CN"] = 0
 
-//                 }
-//             }
+                }
+            }
 
-//         }));
+        }));
 
-//         await dispatchFT_FU_R_INPLAY(ftInPlayList);
+        await dispatchFT_FU_R_INPLAY(ftInPlayList);
 
-//     }
+    }
 
-//     io.emit("receivedFTInPlayData", ftInPlayList);
+    io.emit("receivedFTInPlayData", ftInPlayList);
 
-// }, 30000);
+}, 30000);
 
 
 
-// bkInplayInterval = setInterval(async () => {
+bkInplayInterval = setInterval(async () => {
 
-//     bkInPlayList = await getBK_MAIN_INPLAY(thirdPartyAuthData);
+    bkInPlayList = await getBK_MAIN_INPLAY(thirdPartyAuthData);
 
-//     // console.log(bkInPlayList);
+    // console.log(bkInPlayList);
 
-//     if (bkInPlayList && bkInPlayList.length > 0) {
+    if (bkInPlayList && bkInPlayList.length > 0) {
 
-//         await Promise.all(bkInPlayList.map(async item => {
+        await Promise.all(bkInPlayList.map(async item => {
 
-//             if (item["LID"] !== "" && item["MID"] !== "") {
+            if (item["LID"] !== "" && item["MID"] !== "") {
 
-//                 let moreData = await getBK_MORE_INPLAY(thirdPartyAuthData, {lid: item["LID"], gid: item["MID"], showtype: "live", flag_class: item["FLAG_CLASS"]});
+                let moreData = await getBK_MORE_INPLAY(thirdPartyAuthData, {lid: item["LID"], gid: item["MID"], showtype: "live", flag_class: item["FLAG_CLASS"]});
 
-//                 // console.log(moreData);
+                // console.log(moreData);
 
-//                 moreData.map(moreItem => {
-//                     if (item["MID"] === moreItem["MID"]) {
-//                         item["S_Single_Rate"] = moreItem["S_Single_Rate"];
-//                         item["S_Double_Rate"] = moreItem["S_Double_Rate"];
-//                     }
-//                 })
+                moreData.map(moreItem => {
+                    if (item["MID"] === moreItem["MID"]) {
+                        item["S_Single_Rate"] = moreItem["S_Single_Rate"];
+                        item["S_Double_Rate"] = moreItem["S_Double_Rate"];
+                    }
+                })
 
-//                 // if (moreData != undefined && moreData.length > 0) {
+                // if (moreData != undefined && moreData.length > 0) {
 
-//                 //     bkInPlayList = [...bkInPlayList, ...moreData];
+                //     bkInPlayList = [...bkInPlayList, ...moreData];
 
-//                 // }
+                // }
 
-//             }
+            }
 
-//         }));
+        }));
 
-//         bk_inplay_count = bkInPlayList.length;
+        bk_inplay_count = bkInPlayList.length;
 
-//         await dispatchBK_MAIN_INPLAY(bkInPlayList) 
+        await dispatchBK_MAIN_INPLAY(bkInPlayList) 
 
-//     }
+    }
 
-//        io.emit("receivedBKInPlayData", bkInPlayList);
+       io.emit("receivedBKInPlayData", bkInPlayList);
 
-// }, 30000);
+}, 30000);
 
 
 
 scoreResultInterval = setInterval( async () => {
-    // getFTScore(thirdPartyScoreUrl);
-    // getBKScore(thirdPartyScoreUrl);
-    // await getOtherFTScore(thirdPartyAuthData);
-    // getOtherBKScore(thirdPartyAuthData);
-}, 10000);
+    // await getFTScore(thirdPartyScoreUrl);
+    await getBKScore(thirdPartyScoreUrl);
+    await getOtherFTScore(thirdPartyAuthData);
+    await getOtherBKScore(thirdPartyAuthData);
+}, 50000);
 
 
-// setInterval(async () => {
+setInterval(async () => {
 
-//     ft_today_count = 0;
-//     ft_inplay_count = 0;
-//     ft_early_count = 0;
-//     ft_champion_count = 0;
-//     ft_popular_count = 0;
-//     bk_today_count = 0;
-//     bk_inplay_count = 0;
-//     bk_early_count = 0;
-//     bk_champion_count = 0;
-//     bk_popular_count = 0;
-//     total_today_count = 0;
-//     total_inplay_count = 0;
-//     total_early_count = 0;
-//     total_champion_count = 0;
-//     total_popular_count = 0;
-//     total_count = 0;
-//     ft_total_count = 0;
-//     bk_total_count = 0;
+    ft_today_count = 0;
+    ft_inplay_count = 0;
+    ft_early_count = 0;
+    ft_champion_count = 0;
+    ft_popular_count = 0;
+    bk_today_count = 0;
+    bk_inplay_count = 0;
+    bk_early_count = 0;
+    bk_champion_count = 0;
+    bk_popular_count = 0;
+    total_today_count = 0;
+    total_inplay_count = 0;
+    total_early_count = 0;
+    total_champion_count = 0;
+    total_popular_count = 0;
+    total_count = 0;
+    ft_total_count = 0;
+    bk_total_count = 0;
 
-//     let ftTodayLeagueResult = await getFT_LEAGUE_TODAY(thirdPartyAuthData);
+    let ftTodayLeagueResult = await getFT_LEAGUE_TODAY(thirdPartyAuthData);
 
-//     if (ftTodayLeagueResult["coupons"] != undefined) {
+    if (ftTodayLeagueResult["coupons"] != undefined) {
 
-//         if (Array.isArray(ftTodayLeagueResult["coupons"]["coupon"])) {
-//             ftTodayLeagueResult["coupons"]["coupon"].map(item => {
-//                 ft_popular_count += (item.lid + "").split(",").length
-//                 ft_today_count += (item.lid + "").split(",").length
-//             })
-//         } else {
-//             ft_popular_count += (ftTodayLeagueResult["coupons"]["coupon"]["lid"] + "").split(",").length
-//             ft_today_count += (ftTodayLeagueResult["coupons"]["coupon"]["lid"] + "").split(",").length
-//         }
+        if (Array.isArray(ftTodayLeagueResult["coupons"]["coupon"])) {
+            ftTodayLeagueResult["coupons"]["coupon"].map(item => {
+                ft_popular_count += (item.lid + "").split(",").length
+                ft_today_count += (item.lid + "").split(",").length
+            })
+        } else {
+            ft_popular_count += (ftTodayLeagueResult["coupons"]["coupon"]["lid"] + "").split(",").length
+            ft_today_count += (ftTodayLeagueResult["coupons"]["coupon"]["lid"] + "").split(",").length
+        }
 
-//     }
+    }
 
-//     if (ftTodayLeagueResult["classifier"] !=undefined) {
+    if (ftTodayLeagueResult["classifier"] !=undefined) {
 
-//         if (Array.isArray(ftTodayLeagueResult["classifier"]["region"])) {
-//             ftTodayLeagueResult["classifier"]["region"].map(regionItem => {
-//                 if (Array.isArray(regionItem.league)) {
-//                     regionItem.league.map(item => {
-//                         ft_today_count += (item.id + "").split(",").length
-//                     })
-//                 } else {
-//                     regionItem["league"].id = regionItem["league"].id + "";
-//                     let leagueItem = regionItem["league"];
-//                     ft_today_count += (leagueItem.id + "").split(",").length
-//                 }
-//             })
-//         } else {
-//             let regionItem = ftTodayLeagueResult["classifier"]["region"];
-//             if (Array.isArray(regionItem.league)) {
-//                 regionItem.league.map(item => {
-//                     item.id = item.id + "";
-//                     ft_today_count += (item.id + "").split(",").length
-//                 })
-//             } else {
-//                 regionItem["league"].id = regionItem["league"].id + "";
-//                 let leagueItem = regionItem["league"];
-//                 ft_today_count += (leagueItem.id + "").split(",").length
-//             }
-//         }
+        if (Array.isArray(ftTodayLeagueResult["classifier"]["region"])) {
+            ftTodayLeagueResult["classifier"]["region"].map(regionItem => {
+                if (Array.isArray(regionItem.league)) {
+                    regionItem.league.map(item => {
+                        ft_today_count += (item.id + "").split(",").length
+                    })
+                } else {
+                    regionItem["league"].id = regionItem["league"].id + "";
+                    let leagueItem = regionItem["league"];
+                    ft_today_count += (leagueItem.id + "").split(",").length
+                }
+            })
+        } else {
+            let regionItem = ftTodayLeagueResult["classifier"]["region"];
+            if (Array.isArray(regionItem.league)) {
+                regionItem.league.map(item => {
+                    item.id = item.id + "";
+                    ft_today_count += (item.id + "").split(",").length
+                })
+            } else {
+                regionItem["league"].id = regionItem["league"].id + "";
+                let leagueItem = regionItem["league"];
+                ft_today_count += (leagueItem.id + "").split(",").length
+            }
+        }
         
-//     }
+    }
 
-//     let bkTodayLeagueResult = await getBK_LEAGUE_TODAY(thirdPartyAuthData);
+    let bkTodayLeagueResult = await getBK_LEAGUE_TODAY(thirdPartyAuthData);
 
-//     // console.log("bkTodayLeagueResult: ", bkTodayLeagueResult);
+    // console.log("bkTodayLeagueResult: ", bkTodayLeagueResult);
 
-//     if (bkTodayLeagueResult["coupons"] != undefined) {
+    if (bkTodayLeagueResult["coupons"] != undefined) {
 
-//         if (Array.isArray(bkTodayLeagueResult["coupons"]["coupon"])) {
-//             bkTodayLeagueResult["coupons"]["coupon"].map(item => {
-//                 bk_popular_count += (item.lid + "").split(",").length
-//                 bk_today_count += (item.lid + "").split(",").length
-//             })
-//         } else {
-//             bk_popular_count += (bkTodayLeagueResult["coupons"]["coupon"]["lid"] + "").split(",").length
-//             bk_today_count += (bkTodayLeagueResult["coupons"]["coupon"]["lid"] + "").split(",").length
-//         }
+        if (Array.isArray(bkTodayLeagueResult["coupons"]["coupon"])) {
+            bkTodayLeagueResult["coupons"]["coupon"].map(item => {
+                bk_popular_count += (item.lid + "").split(",").length
+                bk_today_count += (item.lid + "").split(",").length
+            })
+        } else {
+            bk_popular_count += (bkTodayLeagueResult["coupons"]["coupon"]["lid"] + "").split(",").length
+            bk_today_count += (bkTodayLeagueResult["coupons"]["coupon"]["lid"] + "").split(",").length
+        }
 
-//         // console.log(bk_popular_count, bk_today_count);
+        // console.log(bk_popular_count, bk_today_count);
 
-//     }
+    }
 
-//     if (bkTodayLeagueResult["classifier"] !=undefined) {
+    if (bkTodayLeagueResult["classifier"] !=undefined) {
 
-//         if (Array.isArray(bkTodayLeagueResult["classifier"]["region"])) {
-//             bkTodayLeagueResult["classifier"]["region"].map(regionItem => {
-//                 if (Array.isArray(regionItem.league)) {
-//                     regionItem.league.map(item => {
-//                         bk_today_count += (item.id + "").split(",").length
-//                     })
-//                 } else {
-//                     let leagueItem = regionItem["league"];
-//                     bk_today_count += (leagueItem.id + "").split(",").length
-//                 }
-//             })
-//         } else {
-//             let regionItem = bkTodayLeagueResult["classifier"]["region"]
-//             if (Array.isArray(regionItem.league)) {
-//                 regionItem.league.map(item => {
-//                     bk_today_count += (item.id + "").split(",").length
-//                 })
-//             } else {
-//                 let leagueItem = regionItem["league"];
-//                 bk_today_count += (leagueItem.id + "").split(",").length
-//             }
-//         }
+        if (Array.isArray(bkTodayLeagueResult["classifier"]["region"])) {
+            bkTodayLeagueResult["classifier"]["region"].map(regionItem => {
+                if (Array.isArray(regionItem.league)) {
+                    regionItem.league.map(item => {
+                        bk_today_count += (item.id + "").split(",").length
+                    })
+                } else {
+                    let leagueItem = regionItem["league"];
+                    bk_today_count += (leagueItem.id + "").split(",").length
+                }
+            })
+        } else {
+            let regionItem = bkTodayLeagueResult["classifier"]["region"]
+            if (Array.isArray(regionItem.league)) {
+                regionItem.league.map(item => {
+                    bk_today_count += (item.id + "").split(",").length
+                })
+            } else {
+                let leagueItem = regionItem["league"];
+                bk_today_count += (leagueItem.id + "").split(",").length
+            }
+        }
 
-//     }
+    }
 
-//     let ftEarlyLeagueResult = await getFT_LEAGUE_EARLY(thirdPartyAuthData);
+    let ftEarlyLeagueResult = await getFT_LEAGUE_EARLY(thirdPartyAuthData);
 
-//     if (Array.isArray(ftEarlyLeagueResult["coupons"]["coupon"])) {
-//         ftEarlyLeagueResult["coupons"]["coupon"].map(item => {
-//             ft_popular_count += (item.lid + "").split(",").length
-//             ft_early_count += (item.lid + "").split(",").length
-//         })
-//     } else {
-//         ft_popular_count += (ftEarlyLeagueResult["coupons"]["coupon"]["lid"] + "").split(",").length
-//         ft_early_count += (ftEarlyLeagueResult["coupons"]["coupon"]["lid"] + "").split(",").length
-//     }
+    if (Array.isArray(ftEarlyLeagueResult["coupons"]["coupon"])) {
+        ftEarlyLeagueResult["coupons"]["coupon"].map(item => {
+            ft_popular_count += (item.lid + "").split(",").length
+            ft_early_count += (item.lid + "").split(",").length
+        })
+    } else {
+        ft_popular_count += (ftEarlyLeagueResult["coupons"]["coupon"]["lid"] + "").split(",").length
+        ft_early_count += (ftEarlyLeagueResult["coupons"]["coupon"]["lid"] + "").split(",").length
+    }
 
-//     if (Array.isArray(ftEarlyLeagueResult["classifier"]["region"])) {
-//         ftEarlyLeagueResult["classifier"]["region"].map(regionItem => {
-//             if (Array.isArray(regionItem.league)) {
-//                 regionItem.league.map(item => {
-//                     ft_early_count += (item.id + "").split(",").length
-//                 })
-//             } else {
-//                 let leagueItem = regionItem["league"];
-//                 ft_early_count += (leagueItem.id + "").split(",").length
-//             }
-//         })
-//     } else {
-//         let regionItem = ftEarlyLeagueResult["classifier"]["region"]
-//         if (Array.isArray(regionItem.league)) {
-//             regionItem.league.map(item => {
-//                 ft_early_count += (item.id + "").split(",").length
-//             })
-//         } else {
-//                 let leagueItem = regionItem["league"];
-//             ft_early_count += (leagueItem.id + "").split(",").length
-//         }
-//     }
-
-
-//     let bkEarlyLeagueResult = await getBK_LEAGUE_EARLY(thirdPartyAuthData);
-
-//     if (bkEarlyLeagueResult["coupons"] != undefined) {
-
-//         if (Array.isArray(bkEarlyLeagueResult["coupons"]["coupon"])) {
-//             bkEarlyLeagueResult["coupons"]["coupon"].map(item => {
-//                 bk_popular_count += (item.lid + "").split(",").length
-//                 bk_early_count += (item.lid + "").split(",").length
-//             })
-//         } else {
-//             bk_popular_count += (bkEarlyLeagueResult["coupons"]["coupon"]["lid"] + "").split(",").length
-//             bk_early_count += (bkEarlyLeagueResult["coupons"]["coupon"]["lid"] + "").split(",").length
-//         }
-
-//     }
-
-//     if (bkEarlyLeagueResult["classifier"] != undefined) {
-
-//         if (Array.isArray(bkEarlyLeagueResult["classifier"]["region"])) {
-//             bkEarlyLeagueResult["classifier"]["region"].map(regionItem => {
-//                 if (Array.isArray(regionItem.league)) {
-//                     regionItem.league.map(item => {
-//                         bk_early_count += (item.id + "").split(",").length
-//                     })
-//                 } else {
-//                     let leagueItem = regionItem["league"];
-//                     bk_early_count += (leagueItem.id + "").split(",").length
-//                 }
-//             })
-//         } else {
-//             let regionItem = bkEarlyLeagueResult["classifier"]["region"]
-//             if (Array.isArray(regionItem.league)) {
-//                 regionItem.league.map(item => {
-//                     bk_early_count += (item.id + "").split(",").length
-//                 })
-//             } else {
-//                     let leagueItem = regionItem["league"];
-//                 bk_early_count += (leagueItem.id + "").split(",").length
-//             }
-//         }
-
-//     }
-
-//     let ftChampionLeagueResult = await getFT_LEAGUE_CHAMPION(thirdPartyAuthData);
-
-//     if (Array.isArray(ftChampionLeagueResult["classifier"]["region"])) {
-//         ftChampionLeagueResult["classifier"]["region"].map(regionItem => {
-//             if (Array.isArray(regionItem.league)) {
-//                 regionItem.league.map(item => {
-//                     ft_champion_count += (item.id + "").split(",").length
-//                 })
-//             } else {
-//                 let leagueItem = regionItem["league"];
-//                 ft_champion_count += (leagueItem.id + "").split(",").length
-//             }
-//         })
-//     } else {
-//         let regionItem = ftChampionLeagueResult["classifier"]["region"]
-//         if (Array.isArray(regionItem.league)) {
-//             regionItem.league.map(item => {
-//                 ft_champion_count += (item.id + "").split(",").length
-//             })
-//         } else {
-//                 let leagueItem = regionItem["league"];
-//             ft_champion_count += (leagueItem.id + "").split(",").length
-//         }
-//     }
-
-//     let bkChampionLeagueResult = await getBK_LEAGUE_CHAMPION(thirdPartyAuthData);
-
-//     if (bkChampionLeagueResult["classifier"] != undefined) {
-
-//         if (Array.isArray(bkChampionLeagueResult["classifier"]["region"])) {
-//             bkChampionLeagueResult["classifier"]["region"].map(regionItem => {
-//                 if (Array.isArray(regionItem.league)) {
-//                     regionItem.league.map(item => {
-//                         bk_champion_count += (item.id + "").split(",").length
-//                     })
-//                 } else {
-//                     let leagueItem = regionItem["league"];
-//                     bk_champion_count += (leagueItem.id + "").split(",").length
-//                 }
-//             })
-//         } else {
-//             let regionItem = bkChampionLeagueResult["classifier"]["region"]
-//             if (Array.isArray(regionItem.league)) {
-//                 regionItem.league.map(item => {
-//                     bk_champion_count += (item.id + "").split(",").length
-//                 })
-//             } else {
-//                     let leagueItem = regionItem["league"];
-//                 bk_champion_count += (leagueItem.id + "").split(",").length
-//             }
-//         }
-
-//     }
-
-//     ft_total_count = ft_today_count + ft_early_count + ft_champion_count;
-//     bk_total_count = bk_today_count + bk_early_count + bk_champion_count;
-
-// }, 60 * 1000);
+    if (Array.isArray(ftEarlyLeagueResult["classifier"]["region"])) {
+        ftEarlyLeagueResult["classifier"]["region"].map(regionItem => {
+            if (Array.isArray(regionItem.league)) {
+                regionItem.league.map(item => {
+                    ft_early_count += (item.id + "").split(",").length
+                })
+            } else {
+                let leagueItem = regionItem["league"];
+                ft_early_count += (leagueItem.id + "").split(",").length
+            }
+        })
+    } else {
+        let regionItem = ftEarlyLeagueResult["classifier"]["region"]
+        if (Array.isArray(regionItem.league)) {
+            regionItem.league.map(item => {
+                ft_early_count += (item.id + "").split(",").length
+            })
+        } else {
+                let leagueItem = regionItem["league"];
+            ft_early_count += (leagueItem.id + "").split(",").length
+        }
+    }
 
 
-// setInterval(async () => {
-//     let result = await dispatchGetLotteryStatus();
-//     if (result == null) {
-//         return;
-//     }
-//     var now = moment().tz("Asia/Hong_Kong").format("YYYY-MM-DD HH:mm:ss");
-//     console.log(now);
-//     var close_end = moment(result["zfbdate"]);
-//     var close_duration = moment.duration(close_end.diff(now));
-//     var close_time_diff = close_duration.valueOf();
-//     if (close_time_diff < 0) {
-//         console.log("close");
-//         await dispatchUpdateLotteryHandicap({id: result["id"], zfb: 0});
-//     }
-//     console.log(result["zfb"], result["best"], close_time_diff);
-//     if (result["zfb"] == 0 && result["best"] && close_time_diff > 0) {
-//         console.log("hong kong six mark open:");
-//         var open_end = moment(result["zfbdate1"]);
-//         var open_duration = moment.duration(open_end.diff(now));
-//         var open_time_diff = open_duration.valueOf();
-//         console.log(open_time_diff);
-//         if (open_time_diff < 0) {
-//             await dispatchUpdateLotteryHandicap({id: result["id"], zfb: 1, best: 1});
-//         }        
-//     }
-// }, 60 * 1000);
+    let bkEarlyLeagueResult = await getBK_LEAGUE_EARLY(thirdPartyAuthData);
+
+    if (bkEarlyLeagueResult["coupons"] != undefined) {
+
+        if (Array.isArray(bkEarlyLeagueResult["coupons"]["coupon"])) {
+            bkEarlyLeagueResult["coupons"]["coupon"].map(item => {
+                bk_popular_count += (item.lid + "").split(",").length
+                bk_early_count += (item.lid + "").split(",").length
+            })
+        } else {
+            bk_popular_count += (bkEarlyLeagueResult["coupons"]["coupon"]["lid"] + "").split(",").length
+            bk_early_count += (bkEarlyLeagueResult["coupons"]["coupon"]["lid"] + "").split(",").length
+        }
+
+    }
+
+    if (bkEarlyLeagueResult["classifier"] != undefined) {
+
+        if (Array.isArray(bkEarlyLeagueResult["classifier"]["region"])) {
+            bkEarlyLeagueResult["classifier"]["region"].map(regionItem => {
+                if (Array.isArray(regionItem.league)) {
+                    regionItem.league.map(item => {
+                        bk_early_count += (item.id + "").split(",").length
+                    })
+                } else {
+                    let leagueItem = regionItem["league"];
+                    bk_early_count += (leagueItem.id + "").split(",").length
+                }
+            })
+        } else {
+            let regionItem = bkEarlyLeagueResult["classifier"]["region"]
+            if (Array.isArray(regionItem.league)) {
+                regionItem.league.map(item => {
+                    bk_early_count += (item.id + "").split(",").length
+                })
+            } else {
+                    let leagueItem = regionItem["league"];
+                bk_early_count += (leagueItem.id + "").split(",").length
+            }
+        }
+
+    }
+
+    let ftChampionLeagueResult = await getFT_LEAGUE_CHAMPION(thirdPartyAuthData);
+
+    if (Array.isArray(ftChampionLeagueResult["classifier"]["region"])) {
+        ftChampionLeagueResult["classifier"]["region"].map(regionItem => {
+            if (Array.isArray(regionItem.league)) {
+                regionItem.league.map(item => {
+                    ft_champion_count += (item.id + "").split(",").length
+                })
+            } else {
+                let leagueItem = regionItem["league"];
+                ft_champion_count += (leagueItem.id + "").split(",").length
+            }
+        })
+    } else {
+        let regionItem = ftChampionLeagueResult["classifier"]["region"]
+        if (Array.isArray(regionItem.league)) {
+            regionItem.league.map(item => {
+                ft_champion_count += (item.id + "").split(",").length
+            })
+        } else {
+                let leagueItem = regionItem["league"];
+            ft_champion_count += (leagueItem.id + "").split(",").length
+        }
+    }
+
+    let bkChampionLeagueResult = await getBK_LEAGUE_CHAMPION(thirdPartyAuthData);
+
+    if (bkChampionLeagueResult["classifier"] != undefined) {
+
+        if (Array.isArray(bkChampionLeagueResult["classifier"]["region"])) {
+            bkChampionLeagueResult["classifier"]["region"].map(regionItem => {
+                if (Array.isArray(regionItem.league)) {
+                    regionItem.league.map(item => {
+                        bk_champion_count += (item.id + "").split(",").length
+                    })
+                } else {
+                    let leagueItem = regionItem["league"];
+                    bk_champion_count += (leagueItem.id + "").split(",").length
+                }
+            })
+        } else {
+            let regionItem = bkChampionLeagueResult["classifier"]["region"]
+            if (Array.isArray(regionItem.league)) {
+                regionItem.league.map(item => {
+                    bk_champion_count += (item.id + "").split(",").length
+                })
+            } else {
+                    let leagueItem = regionItem["league"];
+                bk_champion_count += (leagueItem.id + "").split(",").length
+            }
+        }
+
+    }
+
+    ft_total_count = ft_today_count + ft_early_count + ft_champion_count;
+    bk_total_count = bk_today_count + bk_early_count + bk_champion_count;
+
+}, 60 * 1000);
 
 
-// setInterval(async () => {
-//     let result = await dispatchGetMacaoLotteryStatus();
-//     if (result == null) {
-//         return;
-//     }
-//     var now = moment().tz("Asia/Hong_Kong").format("YYYY-MM-DD HH:mm:ss");
-//     console.log(now);
-//     var close_end = moment(result["zfbdate"]);
-//     var close_duration = moment.duration(close_end.diff(now));
-//     var close_time_diff = close_duration.valueOf();
-//     if (close_time_diff < 0) {
-//         console.log("close");
-//         await dispatchUpdateMacaoLotteryHandicap({id: result["id"], zfb: 0});
-//     }
-//     console.log(result["zfb"], result["best"], close_time_diff);
-//     if (result["zfb"] == 0 && result["best"] && close_time_diff > 0) {
-//         console.log("open");
-//         var open_end = moment(result["zfbdate1"]);
-//         var open_duration = moment.duration(open_end.diff(now));
-//         var open_time_diff = open_duration.valueOf();
-//         console.log(open_time_diff);
-//         if (open_time_diff < 0) {
-//             await dispatchUpdateMacaoLotteryHandicap({id: result["id"], zfb: 1, best: 1});
-//         }        
-//     }
-// }, 60 * 1000);
+setInterval(async () => {
+    let result = await dispatchGetLotteryStatus();
+    if (result == null) {
+        return;
+    }
+    var now = moment().tz("Asia/Hong_Kong").format("YYYY-MM-DD HH:mm:ss");
+    console.log(now);
+    var close_end = moment(result["zfbdate"]);
+    var close_duration = moment.duration(close_end.diff(now));
+    var close_time_diff = close_duration.valueOf();
+    if (close_time_diff < 0) {
+        console.log("close");
+        await dispatchUpdateLotteryHandicap({id: result["id"], zfb: 0});
+    }
+    console.log(result["zfb"], result["best"], close_time_diff);
+    if (result["zfb"] == 0 && result["best"] && close_time_diff > 0) {
+        console.log("hong kong six mark open:");
+        var open_end = moment(result["zfbdate1"]);
+        var open_duration = moment.duration(open_end.diff(now));
+        var open_time_diff = open_duration.valueOf();
+        console.log(open_time_diff);
+        if (open_time_diff < 0) {
+            await dispatchUpdateLotteryHandicap({id: result["id"], zfb: 1, best: 1});
+        }        
+    }
+}, 60 * 1000);
+
+
+setInterval(async () => {
+    let result = await dispatchGetMacaoLotteryStatus();
+    if (result == null) {
+        return;
+    }
+    var now = moment().tz("Asia/Hong_Kong").format("YYYY-MM-DD HH:mm:ss");
+    console.log(now);
+    var close_end = moment(result["zfbdate"]);
+    var close_duration = moment.duration(close_end.diff(now));
+    var close_time_diff = close_duration.valueOf();
+    if (close_time_diff < 0) {
+        console.log("close");
+        await dispatchUpdateMacaoLotteryHandicap({id: result["id"], zfb: 0});
+    }
+    console.log(result["zfb"], result["best"], close_time_diff);
+    if (result["zfb"] == 0 && result["best"] && close_time_diff > 0) {
+        console.log("open");
+        var open_end = moment(result["zfbdate1"]);
+        var open_duration = moment.duration(open_end.diff(now));
+        var open_time_diff = open_duration.valueOf();
+        console.log(open_time_diff);
+        if (open_time_diff < 0) {
+            await dispatchUpdateMacaoLotteryHandicap({id: result["id"], zfb: 1, best: 1});
+        }        
+    }
+}, 60 * 1000);
 
 setInterval(async () => {
     // await dispatchGetLotteryResult(thirdPartyLotteryResultUrl);
-    // await dispatchGetLotteryResultCQSSC(`${thirdPartyOtherLotteryResultUrl}/CQSSC.json`);
-    // await dispatchGetLotteryResultFFC5(`${thirdPartyOtherLotteryResultUrl}/HN300.json`);
-    // await dispatchGetLotteryResultTXSSC(`${thirdPartyOtherLotteryResultUrl}/TXFFC.json`);
-    // await dispatchGetLotteryResultTWSSC(`${thirdPartyOtherLotteryResultUrl}/TW300.json`);
-    // await dispatchGetLotteryResultAZXY5(`${thirdPartyOtherLotteryResultUrl}/AZXY5.json`);
-    // await dispatchGetLotteryResultXJSSC(`${thirdPartyOtherLotteryResultUrl}/XJSSC.json`);
-    // await dispatchGetLotteryResultTJSSC(`${thirdPartyOtherLotteryResultUrl}/TJSSC.json`);
-    // await dispatchGetLotteryResultGD11(`${thirdPartyOtherLotteryResultUrl}/GD11X5.json`);
-    // await dispatchGetLotteryResultAZXY10(`${thirdPartyOtherLotteryResultUrl}/AZXY10.json`);
-    // await dispatchGetLotteryResultBJPK(`${thirdPartyOtherLotteryResultUrl}/BJPK10.json`);
-    // await dispatchGetLotteryResultXYFT(`${thirdPartyOtherLotteryResultUrl}/XYFT.json`);
-    // await dispatchGetLotteryResultCQSF(`${thirdPartyOtherLotteryResultUrl}/CQXYNC.json`);
-    // await dispatchGetLotteryResultGDSF(`${thirdPartyOtherLotteryResultUrl}/GDKL10.json`);
-    // await dispatchGetLotteryResultGXSF(`${thirdPartyOtherLotteryResultUrl}/GXKL10.json`);
-    // await dispatchGetLotteryResultTJSF(`${thirdPartyOtherLotteryResultUrl}/TJKL10.json`);
-    // await dispatchGetLotteryResultSHSSL(`${thirdPartyOtherLotteryResultUrl}/SHSSL.json`);
-    // await dispatchGetLotteryResultTCPL3(`${thirdPartyOtherLotteryResultUrl}/TCPL3.json`);
-    // await dispatchGetLotteryResultFC3D(`${thirdPartyOtherLotteryResultUrl}/FC3D.json`);
-    // await dispatchCheckoutAZXY5();
-    // await dispatchCheckoutAZXY10();
-    // await dispatchCheckoutBJKN();
+    await dispatchGetLotteryResultCQSSC(`${thirdPartyOtherLotteryResultUrl}/CQSSC.json`);
+    await dispatchGetLotteryResultFFC5(`${thirdPartyOtherLotteryResultUrl}/HN300.json`);
+    await dispatchGetLotteryResultTXSSC(`${thirdPartyOtherLotteryResultUrl}/TXFFC.json`);
+    await dispatchGetLotteryResultTWSSC(`${thirdPartyOtherLotteryResultUrl}/TW300.json`);
+    await dispatchGetLotteryResultAZXY5(`${thirdPartyOtherLotteryResultUrl}/AZXY5.json`);
+    await dispatchGetLotteryResultXJSSC(`${thirdPartyOtherLotteryResultUrl}/XJSSC.json`);
+    await dispatchGetLotteryResultTJSSC(`${thirdPartyOtherLotteryResultUrl}/TJSSC.json`);
+    await dispatchGetLotteryResultGD11(`${thirdPartyOtherLotteryResultUrl}/GD11X5.json`);
+    await dispatchGetLotteryResultAZXY10(`${thirdPartyOtherLotteryResultUrl}/AZXY10.json`);
+    await dispatchGetLotteryResultBJPK(`${thirdPartyOtherLotteryResultUrl}/BJPK10.json`);
+    await dispatchGetLotteryResultXYFT(`${thirdPartyOtherLotteryResultUrl}/XYFT.json`);
+    await dispatchGetLotteryResultCQSF(`${thirdPartyOtherLotteryResultUrl}/CQXYNC.json`);
+    await dispatchGetLotteryResultGDSF(`${thirdPartyOtherLotteryResultUrl}/GDKL10.json`);
+    await dispatchGetLotteryResultGXSF(`${thirdPartyOtherLotteryResultUrl}/GXKL10.json`);
+    await dispatchGetLotteryResultTJSF(`${thirdPartyOtherLotteryResultUrl}/TJKL10.json`);
+    await dispatchGetLotteryResultSHSSL(`${thirdPartyOtherLotteryResultUrl}/SHSSL.json`);
+    await dispatchGetLotteryResultTCPL3(`${thirdPartyOtherLotteryResultUrl}/TCPL3.json`);
+    await dispatchGetLotteryResultFC3D(`${thirdPartyOtherLotteryResultUrl}/FC3D.json`);
+    await dispatchCheckoutAZXY5();
+    await dispatchCheckoutAZXY10();
+    await dispatchCheckoutBJKN();
     await dispatchCheckoutBJPK();
-    // await dispatchCheckoutCQ();
-    // await dispatchCheckoutCQSF();
-    // await dispatchCheckoutD3();
-    // await dispatchCheckoutGD11();
-    // await dispatchCheckoutGDSF();
-    // await dispatchCheckoutGXSF();
-    // await dispatchCheckoutFFC5();
-    // await dispatchCheckoutJX();
-    // await dispatchCheckoutP3();
-    // await dispatchCheckoutT3();
-    // await dispatchCheckoutTJ();
-    // await dispatchCheckoutTJSF();
-    // await dispatchCheckoutTWSSC();
-    // await dispatchCheckoutTXSSC();
-    // await dispatchCheckoutXYFT();
-}, 10 * 1000);
+    await dispatchCheckoutCQ();
+    await dispatchCheckoutCQSF();
+    await dispatchCheckoutD3();
+    await dispatchCheckoutGD11();
+    await dispatchCheckoutGDSF();
+    await dispatchCheckoutGXSF();
+    await dispatchCheckoutFFC5();
+    await dispatchCheckoutJX();
+    await dispatchCheckoutP3();
+    await dispatchCheckoutT3();
+    await dispatchCheckoutTJ();
+    await dispatchCheckoutTJSF();
+    await dispatchCheckoutTWSSC();
+    await dispatchCheckoutTXSSC();
+    await dispatchCheckoutXYFT();
+}, 30 * 1000);
 
-// setInterval(async () => {
-//     await dispatchGetOGToken();
-//     await dispatchGetKYTransaction();
-// }, 30 * 60 * 1000);
+setInterval(async () => {
+    await dispatchGetOGToken();
+    await dispatchGetKYTransaction();
+}, 30 * 60 * 1000);
 
-// setInterval(async () => {
-//     await dispatchGetOGTransaction();
-// }, 10 * 60 * 1000);
+setInterval(async () => {
+    await dispatchGetOGTransaction();
+}, 10 * 60 * 1000);
 
 
 var clients = {};
@@ -2485,13 +2480,15 @@ io.on("connection", async function (socket) {
 
         if (newItemList.length > 0) {
 
-            // console.log(newItemList);
+            console.log(newItemList);
 
             dispatchBK_MAIN_TODAY(newItemList)
 
             io.emit("receivedBKTodayMessage", newItemList);
 
         } else {
+
+            console.log(itemList);
 
             dispatchBK_MAIN_TODAY(itemList)
 
@@ -2570,16 +2567,16 @@ io.on("connection", async function (socket) {
 
     socket.on("sendBKEarlyMessage", async (data) => {
         let itemList = await getBK_MAIN_EARLY(thirdPartyAuthData, data);
-        io.emit("receivedBKEarlyMessage", itemList);
         if (itemList && itemList.length > 0) {
-            dispatchBK_MAIN_TODAY(itemList)            
+            await dispatchBK_MAIN_TODAY(itemList)
         }
+        io.emit("receivedBKEarlyMessage", itemList);
         bkEarlyInterval = setInterval(async () => {
             let itemList = await getBK_MAIN_EARLY(thirdPartyAuthData, data);
-            io.emit("receivedBKEarlyMessage", itemList);
             if (itemList && itemList.length > 0) {
-                dispatchBK_MAIN_TODAY(itemList)            
+                await dispatchBK_MAIN_TODAY(itemList)            
             }
+            io.emit("receivedBKEarlyMessage", itemList);
         }, 300000);
     })
 
