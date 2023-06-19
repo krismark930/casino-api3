@@ -280,7 +280,11 @@ class Sport extends Model
         "S_7UP",
         "T_Show",
         "F_Show",
-        "HPD_Show"
+        "HPD_Show",
+        "MB_Inball",
+        "TG_Inball",
+        "MB_Inball_HR",
+        "TG_Inball_HR",
     ];
 
     protected $table = 'match_sports';

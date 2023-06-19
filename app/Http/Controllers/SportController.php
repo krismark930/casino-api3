@@ -767,6 +767,8 @@ class SportController extends Controller
                 } else {
                     $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$mb_inball.":".$tg_inball.")</b></FONT>";
                 }
+                
+                    // $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$mb_inball.":".$tg_inball.")</b></FONT>";
             }
 
             Report::where("ID", $report["ID"])->update(["Middle" => $report["Middle"]]);
@@ -2181,6 +2183,8 @@ class SportController extends Controller
                         } else {
                             $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$mb_in_score.":".$tg_in_score.")</b></FONT>";
                         }
+                        
+                        // $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$mb_in_score.":".$tg_in_score.")</b></FONT>";
 
                         $currentAmount = Utils::GetField($user, 'Money');
                         $Order_Code = $row['OrderID'];
@@ -2582,6 +2586,8 @@ class SportController extends Controller
                     $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$mb_in.":".$tg_in.")</b></FONT>";
 
                 }
+
+                    // $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$mb_in.":".$tg_in.")</b></FONT>";
 
                 if ($mb_in == '' || $mb_in == '-' || $tg_in == '' || $tg_in == '-') {
                     $graded = "99";
