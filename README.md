@@ -46,3 +46,13 @@ php artisan migrate:rollback --path=/database/migrations/fileName.php
     
     - npm i
     - node(nodemon) server.js
+
+
+## 比分
+
+https://www.nowscore.com/index.html
+
+
+## 测试账号
+sniper
+123456
