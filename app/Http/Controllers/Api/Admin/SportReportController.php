@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\Sport;
+use App\Models\WebReportData;
+use App\Models\User;
+use App\Utils\Utils;
 
 class SportReportController extends Controller
 {
@@ -545,7 +548,7 @@ class SportReportController extends Controller
 
                 $sql="select CurType,A_Point,B_Point,C_Point,D_Point,$user as name,sum(vgold) as vgold,count(*) as coun,sum(BetScore) as BetScore,sum(M_Result) as M_Result,sum(A_Result) as A_Result,sum(B_Result) as B_Result,sum(C_Result) as C_Result,sum(D_Result) as D_Result,sum(T_Result) as T_Result,sum(VGOLD) as VGOLD from web_report_data where  ".$m_result.$wtype.$Active.$pay_type.$name.$cancel." M_Date>='$date_start' and M_Date<='$date_end'";
 
-                $mysql=$sql." and Pay_Type=0 group by $user order by ID asc";
+                $mysql=$sql." and Pay_Type=1 group by $user order by ID asc";
                 $result = DB::select($mysql);
 
                 $c_betscore = 0;
@@ -608,6 +611,124 @@ class SportReportController extends Controller
             $response["data"] = $result;
             $response["total_data"] = $total_data;
             $response['message'] = 'Sport Report Top Data fetched successfully';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    }
+
+    public function startSportRebate(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+
+            $rules = [
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                $errorResponse = validation_error_response($validator->errors()->toArray());
+                return response()->json($errorResponse, $response['status']);
+            }
+
+            $_REQUEST = $request->all();
+            $logined_user = $request->user();
+            $username=$logined_user['UserName'];
+            $loginname = $logined_user["UserName"];
+
+            $StartDate=$_REQUEST["start_date"] ?? date("Y-m-d");
+            $OverDate=$_REQUEST["end_date"] ?? date("Y-m-d");
+            $BadName = $_REQUEST["bad_name"] ?? "";
+            if($StartDate==$OverDate){
+                $Date_Memo=$StartDate;
+            }else{
+                $Date_Memo=$StartDate."至".$OverDate;
+            }
+            $BadNames = array();
+            if ($BadName != "") {
+                $BadName=str_replace('，',',',$BadName);
+                $BadNames=explode(",",$BadName);                
+            }
+
+            // return $BadNames;
+
+            if (count($BadNames) == 0) {
+
+                $result = WebReportData::where("isFs", 0)->where("TurnRate", 0)->where("Cancel", 0)->where("Checked", 1)
+                    ->whereBetween("M_Date", [$StartDate, $OverDate])->select(DB::raw("distinct(M_Name)"))->get();
+
+            } else {
+
+                $result = WebReportData::where("isFs", 0)->where("TurnRate", 0)->where("Cancel", 0)->where("Checked", 1)
+                    ->whereBetween("M_Date", [$StartDate, $OverDate])->whereNotIn("M_Name", $BadNames)->select(DB::raw("distinct(M_Name)"))->get();
+
+            }
+
+            // return $result;
+
+            foreach($result as $row) {
+                $UserName = $row["M_Name"];
+                $result1 = WebReportData::where("M_Name", $row["M_Name"])->where("isFs", 0)->where("TurnRate", 0)->where("Cancel", 0)->where("Checked", 1)
+                    ->select(DB::raw("sum(VGOLD) as VGOLD"))->first();
+                $VGOLD = $result1->VGOLD;
+                $user = User::where("UserName", $row["M_Name"])->first();
+                $fanshui=$user['fanshui'];
+                $agents=$user['Agents'];
+                $world=$user['World'];
+                $corprator=$user['Corprator'];
+                $super=$user['Super'];
+                $admin=$user['Admin'];
+                $Money=$user['Money'];
+                $money_ts=round($VGOLD*$fanshui/100,2);
+
+                WebReportData::where("M_Name", $row["M_Name"])->where("isFs", 0)->where("TurnRate", 0)->where("Cancel", 0)->where("Checked", 1)
+                    ->whereBetween("M_Date", [$StartDate, $OverDate])->update([
+                        "isFs" => 1,
+                    ]);
+
+                if ($money_ts > 0) {
+
+                    $Order_Code='CK'.date("YmdHis",time()+12*3600).mt_rand(1000,9999);
+                    $adddate=date("Y-m-d");
+                    $date=date("Y-m-d H:i:s");
+                    $previousAmount=$Money;
+                    $currentAmount=$previousAmount+$money_ts;
+
+                    $sql = "insert into web_sys800_data set Checked=1,Payway='W',Gold='$money_ts',previousAmount='$previousAmount',currentAmount='$currentAmount',AddDate='$adddate',Type='S',UserName='$UserName',Agents='$agents',World='$world',Corprator='$corprator',Super='$super',Admin='$admin',CurType='RMB',Date='$date',Name='$username',User='$username',Bank_Account='体育返水',Order_Code='$Order_Code',Music=1;";
+
+                    DB::select($sql);
+
+                    $q1 = User::where("UserName", $row["M_Name"])->increment('Money', (int)$money_ts);
+
+                    if($q1==1){
+                        $user_id=Utils::GetField($UserName,'ID');
+                        $balance=Utils::GetField($UserName,'Money');
+                        $datetime=date("Y-m-d H:i:s",time()+12*3600);
+                        $money_log_sql="insert into money_log set user_id='$user_id',order_num='$Order_Code',about='".$loginname."体育返水<br>有效金额:$VGOLD<br>返水金额:$money_ts',update_time='$datetime',type='".$Date_Memo."体育返水',order_value='$money_ts',assets=$previousAmount,balance=$balance";
+                        DB::select($money_log_sql);
+                    }
+
+                }
+
+            }
+
+            $loginfo='执行体育一键退水';
+            $ip_addr = Utils::get_ip();
+            $browser_ip = Utils::get_browser_ip();
+            $mysql="insert into web_mem_log_data(UserName,Loginip,LoginTime,ConText,Url) values('$loginname','$ip_addr',now(),'$loginfo','".$browser_ip."')";
+            DB::select($mysql);
+
+            $response['message'] = 'Sport Rebate finished successfully';
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
 
