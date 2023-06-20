@@ -77,7 +77,7 @@ class SportScoreResultController extends Controller {
 			} else {
 				$list_date = date('Y-m-d', strtotime('-1 day'));
 			}
-			// $list_date = "2023-06-11";
+			// $list_date = "2023-06-18";
 
 			$url = "http://125.252.69.119/app/member/account/result/result.php?game_type=$game_type&list_date=$list_date&uid=$uid&langx=zh-cn";
 
