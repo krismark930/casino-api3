@@ -2834,13 +2834,20 @@ class BettingController extends Controller
 
             $m_turn = $user['M_turn'] + 0;
 
-            $a_point = "";
-
-            $b_point = "";
-
-            $c_point = "";
-
-            $d_point = "";
+            $agent = WebAgent::where("UserName", $agents)->first();
+            if (isset($agent)) {
+                $d_rate = $agent['D_turn'] + 0;
+                $a_point = $agent['A_Point'] + 0;
+                $b_point = $agent['B_Point'] + 0;
+                $c_point = $agent['C_Point'] + 0;
+                $d_point = $agent['D_Point'] + 0;
+            } else {
+                $d_rate = 0;
+                $a_point = 0;
+                $b_point = 0;
+                $c_point = 0;
+                $d_point = 0;
+            }
 
             $max_id = WebReportData::where('BetTime', '<', $bet_time)->max('ID');
             $num = rand(10, 50);
@@ -2886,7 +2893,7 @@ class BettingController extends Controller
             $new_web_report_data->B_Point = $b_point ?? 0;
             $new_web_report_data->C_Point = $c_point ?? 0;
             $new_web_report_data->D_Point = $d_point ?? 0;
-            // $new_web_report_data->BetIP = $ip_addr;
+            $new_web_report_data->BetIP = $ip_addr;
             $new_web_report_data->Ptype = $ptype ?? "";
             $new_web_report_data->Gtype = 'FT';
             $new_web_report_data->CurType = $w_current ?? "";
@@ -3082,18 +3089,24 @@ class BettingController extends Controller
             
             $lines_en=$match_crown['M_League_en']."&nbsp;-&nbsp;".$match_crown['M_Item_en']."<br>".$w_mb_team_en."&nbsp;&nbsp;@&nbsp;<FONT color=#CC0000><b>".$s_m_rate."</b></FONT>";
 
-            // $ip_addr = get_ip();
-            $ip_addr = "";
+            $ip_addr = Utils::get_ip();
 
             $m_turn = $user['M_turn'] + 0;
 
-            $a_point = "";
-
-            $b_point = "";
-
-            $c_point = "";
-
-            $d_point = "";
+            $agent = WebAgent::where("UserName", $agents)->first();
+            if (isset($agent)) {
+                $d_rate = $agent['D_turn'] + 0;
+                $a_point = $agent['A_Point'] + 0;
+                $b_point = $agent['B_Point'] + 0;
+                $c_point = $agent['C_Point'] + 0;
+                $d_point = $agent['D_Point'] + 0;
+            } else {
+                $d_rate = 0;
+                $a_point = 0;
+                $b_point = 0;
+                $c_point = 0;
+                $d_point = 0;
+            }
 
             $max_id = WebReportData::where('BetTime', '<', $bet_time)->max('ID');
             $num = rand(10, 50);
@@ -4445,13 +4458,20 @@ class BettingController extends Controller
 
             $m_turn = $user['M_turn'] + 0;
 
-            $a_point = "";
-
-            $b_point = "";
-
-            $c_point = "";
-
-            $d_point = "";
+            $agent = WebAgent::where("UserName", $agents)->first();
+            if (isset($agent)) {
+                $d_rate = $agent['D_turn'] + 0;
+                $a_point = $agent['A_Point'] + 0;
+                $b_point = $agent['B_Point'] + 0;
+                $c_point = $agent['C_Point'] + 0;
+                $d_point = $agent['D_Point'] + 0;
+            } else {
+                $d_rate = 0;
+                $a_point = 0;
+                $b_point = 0;
+                $c_point = 0;
+                $d_point = 0;
+            }
 
             $max_id = WebReportData::where('BetTime', '<', $bet_time)->max('ID');
             $num = rand(10, 50);
@@ -4812,13 +4832,20 @@ class BettingController extends Controller
 
             $m_turn = $user['M_turn'] + 0;
 
-            $a_point = "";
-
-            $b_point = "";
-
-            $c_point = "";
-
-            $d_point = "";
+            $agent = WebAgent::where("UserName", $agents)->first();
+            if (isset($agent)) {
+                $d_rate = $agent['D_turn'] + 0;
+                $a_point = $agent['A_Point'] + 0;
+                $b_point = $agent['B_Point'] + 0;
+                $c_point = $agent['C_Point'] + 0;
+                $d_point = $agent['D_Point'] + 0;
+            } else {
+                $d_rate = 0;
+                $a_point = 0;
+                $b_point = 0;
+                $c_point = 0;
+                $d_point = 0;
+            }
 
             $max_id = WebReportData::where('BetTime', '<', $bet_time)->max('ID');
             $num = rand(10, 50);
@@ -4867,7 +4894,7 @@ class BettingController extends Controller
             $new_web_report_data->B_Point = $b_point;
             $new_web_report_data->C_Point = $c_point;
             $new_web_report_data->D_Point = $d_point;
-            // $new_web_report_data->BetIP = $ip_addr;
+            $new_web_report_data->BetIP = $ip_addr;
             $new_web_report_data->Ptype = $ptype;
             $new_web_report_data->Gtype = $g_type;
             $new_web_report_data->CurType = $w_current;

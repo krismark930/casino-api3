@@ -160,7 +160,6 @@ class BKBettingController extends Controller
 
             $m_date = $match_sports["M_Date"];
             $show_type = $match_sports["ShowTypeRB"];
-            $show_type = "H";
 
             $bet_time = date('Y-m-d H:i:s', strtotime(' + 1 hours'));
 
@@ -770,13 +769,20 @@ class BKBettingController extends Controller
 
             $m_turn = $user['M_turn'] + 0;
 
-            $a_point = "";
-
-            $b_point = "";
-
-            $c_point = "";
-
-            $d_point = "";
+            $agent = WebAgent::where("UserName", $agents)->first();
+            if (isset($agent)) {
+                $d_rate = $agent['D_turn'] + 0;
+                $a_point = $agent['A_Point'] + 0;
+                $b_point = $agent['B_Point'] + 0;
+                $c_point = $agent['C_Point'] + 0;
+                $d_point = $agent['D_Point'] + 0;
+            } else {
+                $d_rate = 0;
+                $a_point = 0;
+                $b_point = 0;
+                $c_point = 0;
+                $d_point = 0;
+            }
 
             if ($w_m_rate == '' or $gwin <= 0 or $gwin == '') {
                 $response['message'] = 'The schedule has been closed!';
@@ -815,7 +821,7 @@ class BKBettingController extends Controller
             $new_web_report_data->TurnRate = $m_turn;
             $new_web_report_data->OpenType = $open;
             $new_web_report_data->OddsType = $oddstype;
-            $new_web_report_data->ShowType = $type;
+            $new_web_report_data->ShowType = $show_type;
             $new_web_report_data->Agents = $agents;
             $new_web_report_data->World = $world;
             $new_web_report_data->Corprator = $corprator;
@@ -1018,8 +1024,7 @@ class BKBettingController extends Controller
 
             $m_date = $match_sports["M_Date"];
 
-            $show_type = $match_sports["ShowTypeRB"];
-            $show_type = "H";
+            $show_type = $match_sports["ShowTypeR"];
 
             $bet_time = date('Y-m-d H:i:s', strtotime(' + 1 hours'));
 
@@ -1386,13 +1391,20 @@ class BKBettingController extends Controller
 
             $ip_addr = Utils::get_ip();
 
-            $a_point = "";
-
-            $b_point = "";
-
-            $c_point = "";
-
-            $d_point = "";
+            $agent = WebAgent::where("UserName", $agents)->first();
+            if (isset($agent)) {
+                $d_rate = $agent['D_turn'] + 0;
+                $a_point = $agent['A_Point'] + 0;
+                $b_point = $agent['B_Point'] + 0;
+                $c_point = $agent['C_Point'] + 0;
+                $d_point = $agent['D_Point'] + 0;
+            } else {
+                $d_rate = 0;
+                $a_point = 0;
+                $b_point = 0;
+                $c_point = 0;
+                $d_point = 0;
+            }
 
             $max_id = WebReportData::where('BetTime', '<', $bet_time)->max('ID');
             $num = rand(10, 50);
@@ -1424,7 +1436,7 @@ class BKBettingController extends Controller
             $new_web_report_data->TurnRate = $m_turn;
             $new_web_report_data->OpenType = $open;
             $new_web_report_data->OddsType = $oddstype;
-            $new_web_report_data->ShowType = $type;
+            $new_web_report_data->ShowType = $show_type;
             $new_web_report_data->Agents = $agents;
             $new_web_report_data->World = $world;
             $new_web_report_data->Corprator = $corprator;
@@ -1640,14 +1652,20 @@ class BKBettingController extends Controller
 
             $m_turn = $user['M_turn'] + 0;
 
-            $a_point = "";
-
-            $b_point = "";
-
-            $c_point = "";
-
-            $d_point = "";
-
+            $agent = WebAgent::where("UserName", $agents)->first();
+            if (isset($agent)) {
+                $d_rate = $agent['D_turn'] + 0;
+                $a_point = $agent['A_Point'] + 0;
+                $b_point = $agent['B_Point'] + 0;
+                $c_point = $agent['C_Point'] + 0;
+                $d_point = $agent['D_Point'] + 0;
+            } else {
+                $d_rate = 0;
+                $a_point = 0;
+                $b_point = 0;
+                $c_point = 0;
+                $d_point = 0;
+            }
             $max_id = WebReportData::where('BetTime', '<', $bet_time)->max('ID');
             $num = rand(10, 50);
             $id = $max_id + $num;
@@ -1879,8 +1897,7 @@ class BKBettingController extends Controller
             // betting time
 
             $m_date = $match_sports["M_Date"];
-            $show_type = $match_sports["ShowTypeRB"];
-            $show_type = "H";
+            $show_type = $match_sports["ShowTypeP"];
 
             $bet_time = date('Y-m-d H:i:s', strtotime(' + 1 hours'));
 
@@ -2184,13 +2201,20 @@ class BKBettingController extends Controller
 
             $ip_addr = Utils::get_ip();
 
-            $a_point = "";
-
-            $b_point = "";
-
-            $c_point = "";
-
-            $d_point = "";
+            $agent = WebAgent::where("UserName", $agents)->first();
+            if (isset($agent)) {
+                $d_rate = $agent['D_turn'] + 0;
+                $a_point = $agent['A_Point'] + 0;
+                $b_point = $agent['B_Point'] + 0;
+                $c_point = $agent['C_Point'] + 0;
+                $d_point = $agent['D_Point'] + 0;
+            } else {
+                $d_rate = 0;
+                $a_point = 0;
+                $b_point = 0;
+                $c_point = 0;
+                $d_point = 0;
+            }
 
             $max_id = WebReportData::where('BetTime', '<', $bet_time)->max('ID');
             $num = rand(10, 50);
@@ -2222,7 +2246,7 @@ class BKBettingController extends Controller
             $new_web_report_data->TurnRate = $m_turn;
             $new_web_report_data->OpenType = $open;
             $new_web_report_data->OddsType = $oddstype;
-            $new_web_report_data->ShowType = $type;
+            $new_web_report_data->ShowType = $show_type;
             $new_web_report_data->Agents = $agents;
             $new_web_report_data->World = $world;
             $new_web_report_data->Corprator = $corprator;
