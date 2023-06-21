@@ -699,6 +699,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], func
     Route::group(['prefix' => 'sport-report'], function ($router) {
         Route::get('/all', [SportReportController::class, 'getSportReport']);
         Route::post('/top', [SportReportController::class, 'getSportReportTop']);
+        Route::post('/rebate', [SportReportController::class, 'startSportRebate']);
     });
 });
 

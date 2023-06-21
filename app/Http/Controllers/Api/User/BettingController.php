@@ -2834,6 +2834,8 @@ class BettingController extends Controller
 
             $m_turn = $user['M_turn'] + 0;
 
+            $ip_addr = Utils::get_ip();
+
             $agent = WebAgent::where("UserName", $agents)->first();
             if (isset($agent)) {
                 $d_rate = $agent['D_turn'] + 0;
