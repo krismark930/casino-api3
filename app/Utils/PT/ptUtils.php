@@ -10,17 +10,18 @@ class PTUtils {
     var $md5key_PT = "KGeEtsGSQ2wT";
     var $deskey_PT = "Pa27VJ4p";
     var $giurl_PT="http://gi.bbin-api8.com:81/";
-    var $gciurl_PT="http://gci.bbin-api8.com:81/";
+    var $gciurl_PT="https://gci.bbin-api8.com/";
 
     public function __construct($row) {
     }
 
     function Addmember_PT($username,$password,$tp=1){
         $crypt = new DES($this->deskey_PT);
-        $para="cagent=".$this->PT_agent."/\\\\/loginname=".$username."/\\\\/method=lg/\\\\/actype=".$tp."/\\\/password=".$password."/\\\\/oddtype=A/\\\\/cur=CNY";
+        $para="cagent=".$this->PT_agent."/\\\\/loginname=".$username."/\\\\/method=lg/\\\\/actype=".$tp."/\\\\/password=".$password."/\\\\/oddtype=A/\\\\/cur=CNY";
         $params=$crypt->encrypt($para);
         $key=md5($params.$this->md5key_PT);
         $url=$this->giurl_PT."doBusiness.do?params=".$params."&key=".$key;
+        // return $url;
         $xmlcode=$this->getUrl_PT($url);
         $result=$this->getResult_PT($xmlcode);
         if($result['info']<>'0'){
@@ -38,7 +39,7 @@ class PTUtils {
         $para="cagent=".$this->PT_agent."/\\\\/loginname=".$username."/\\\\/actype=".$tp."/\\\\/password=".$password."/\\\\/dm=".$dm."/\\\\/sid=".$this->PT_agent.date("ymdhis").rand(1000,9999)."/\\\\/lang=1/\\\\/gameType=".$gameType."/\\\\/oddtype=".$oddtype."/\\\\/cur=CNY";
         $params=$crypt->encrypt($para);
         $key=md5($params.$this->md5key_PT);
-        $url=$gciurl_PT."forwardGame.do?params=".$params."&key=".$key;
+        $url=$this->gciurl_PT."forwardGame.do?params=".$params."&key=".$key;
         return  $url;
     }
 
@@ -81,7 +82,7 @@ class PTUtils {
             $key=md5($params.$this->md5key_PT);
             $url=$this->giurl_PT."doBusiness.do?params=".$params."&key=".$key;
             unset($xmlcode);
-            $xmlcode=getUrl_PT($url);
+            $xmlcode=$this->getUrl_PT($url);
 
             $t=date("Y-m-d H:i:s");
             $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/PT_".date("Ymd").".txt";
@@ -90,7 +91,7 @@ class PTUtils {
             fclose($f);
 
             unset($result);
-            $result=getResult_PT($xmlcode);
+            $result=$this->getResult_PT($xmlcode);
         }
         $result['billno']=$billno;
         return $result;
@@ -111,8 +112,8 @@ class PTUtils {
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_TIMEOUT,60);  //超时60秒
         curl_setopt($ch, CURLOPT_USERAGENT, ' WEB_LIB_GI_'.$this->PT_agent);  //设置浏览器类型，含代理号
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 2);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 2);
         $html = curl_exec($ch);
         return $html;
     }

@@ -130,6 +130,8 @@ class UserManagementController extends Controller
                     "AddDate" => $AddDate,
                 );
 
+                // return $new_data;
+
                 $result = new WebSystemData;
                 $result->create($new_data);
             }

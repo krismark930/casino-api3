@@ -85,6 +85,7 @@ class OGUtils {
         $url= $this->ApiUrl.'/game-providers/30/games/ogplus/key?username='.$username;  //获取游戏key
         $htmlcode= $this->getUrl_OG($url,15,$header);
         $json_data=json_decode($htmlcode,true);
+        // return $this->OG_Token;
         if($json_data['status']<>'success'){
             $t=date("Y-m-d H:i:s");
             $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/og_".date("Ymd").".txt";

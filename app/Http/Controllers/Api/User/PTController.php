@@ -115,6 +115,7 @@ class PTController extends Controller
             }
 
             $request_data = $request->all();
+            $game_type = $request_data["game_type"];
 
             $user = $request->user();
 
@@ -140,6 +141,7 @@ class PTController extends Controller
                 $PT_username=strtoupper($PT_username);
                 $PT_password=strtoupper($PTUtils->getpassword_PT(10));
                 $result=$PTUtils->Addmember_PT($PT_username,$PT_password,1);
+
                 if ($result['info']=='0'){
                     User::where("UserName", $username)->update([
                         "PT_User" => $PT_username,
@@ -151,9 +153,9 @@ class PTController extends Controller
                 }
             }
 
-            $loginUrl=$PTUtils->getGameUrl_PT($PT_username,$PT_password,$tp,$_SERVER['HTTP_HOST'],1,$gameType);
+            $loginUrl=$PTUtils->getGameUrl_PT($PT_username,$PT_password,$tp,$_SERVER['HTTP_HOST'],1,$game_type);
 
-            $response["data"] = $login_url;
+            $response["data"] = $loginUrl;
             $response['message'] = "PT Game URL fetched successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;

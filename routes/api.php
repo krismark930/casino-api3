@@ -44,6 +44,7 @@ use App\Http\Controllers\Api\User\MGController;
 use App\Http\Controllers\Api\User\PTController;
 use App\Http\Controllers\Api\User\HomeController;
 use App\Http\Controllers\Api\User\MessageController;
+use App\Http\Controllers\Api\User\LotteryConfigController;
 
 // API Admin Controllers
 use App\Http\Controllers\Api\Admin\WebSystemDataController;
@@ -273,6 +274,10 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
         Route::post('/system-sms-all', [MessageController::class, 'getSystemSMS']);
         Route::post('/get-system-sms', [MessageController::class, 'getSystemSMSItemByID']);
         Route::post('/delete-system-sms', [MessageController::class, 'deleteSystemSMSItemByID']);
+    });
+
+    Route::group(['prefix' => 'lottery-config', 'middleware' => 'auth:api'], function ($router) {
+        Route::post('/item', [LotteryConfigController::class, 'getLotteryUserConfig']);
     });
 
 });
@@ -619,6 +624,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], func
     // payment management
 
     Route::group(['prefix' => 'payment'], function ($router) {
+        Route::post('/user', [AdminPaymentController::class, 'getUser']);
         Route::post('/cash-system', [AdminPaymentController::class, 'getCashSystem']);
         Route::post('/cash-review', [AdminPaymentController::class, 'reviewCash']);
         Route::post('/cash-cancel', [AdminPaymentController::class, 'rejectCash']);
@@ -692,6 +698,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], func
         Route::post('/daily-accounts', [AdminStatisticsController::class, 'getDailyAccounts']);
         Route::post('/system-logs', [AdminStatisticsController::class, 'getSystemLogs']);
         Route::post('/get-online', [AdminStatisticsController::class, 'getOnlineData']);
+        Route::post('/update-real-person', [AdminStatisticsController::class, 'updateRealPerson']);
+        Route::post('/update-sysconfig', [AdminStatisticsController::class, 'updateSysConfig']);
     });
 
     // sport resport management

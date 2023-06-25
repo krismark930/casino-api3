@@ -10,7 +10,8 @@ class AGUtils {
     var $md5key = "KGeEtsGSQ2wT";
     var $deskey = "Pa27VJ4p";
     var $giurl = "http://gi.bbin-api8.com:81/";
-    var $gciurl = "http://gci.bbin-api8.com:81/";
+    var $gciurl = "https://gci.bbin-api8.com/";
+    var $orderUrl = "http://h9zs07.gdcapi.com:3333/";
 
     public function __construct($sysConfig) {
     }
@@ -21,7 +22,7 @@ class AGUtils {
         $params=$crypt->encrypt($para);
         $key=md5($params.$this->md5key);
         $url=$this->giurl."doBusiness.do?params=".$params."&key=".$key;
-        return $url;
+        // return $url;
         $xmlcode=$this->getUrl($url);
         // return $xmlcode;
         $result=$this->getResult($xmlcode);
@@ -35,7 +36,7 @@ class AGUtils {
         return $result;
     }
 
-    function getGameUrl($username,$password,$oddtype="A",$dm="www.pj6678.com",$tp=1,$gameType=1){
+    function getGameUrl($username,$password,$oddtype="A",$dm="www.bbin-api.com",$tp=1,$gameType=1){
         $crypt = new DES($this->deskey);
         $para="cagent=".$this->AG_agent."/\\\\/loginname=".$username."/\\\\/actype=".$tp."/\\\\/password=".$password."/\\\\/dm=".$dm."/\\\\/sid=".$this->AG_agent.date("ymdhis").rand(1000,9999)."/\\\\/lang=1/\\\\/gameType=".$gameType."/\\\\/oddtype=".$oddtype."/\\\\/cur=CNY";
         $params=$crypt->encrypt($para);
@@ -113,7 +114,7 @@ class AGUtils {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_TIMEOUT,60);  //超时60秒
-        // curl_setopt($ch, CURLOPT_USERAGENT, ' WEB_LIB_GI_'.$this->AG_agent);  //设置浏览器类型，含代理号
+        curl_setopt($ch, CURLOPT_USERAGENT, ' WEB_LIB_GI_'.$this->AG_agent);  //设置浏览器类型，含代理号
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 2);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 2);
         $html = curl_exec($ch);
@@ -158,8 +159,12 @@ class AGUtils {
       return $content;
     }
 
-    function getKey() {
-        
+    function getOrder($user_name, $start_date, $end_date, $game_type, $order="username", $by="DESC", $page=1, $per_page=100) {
+        $key = md5($this->AG_agent."+".$user_name."+".$start_date."+".$end_date."+".$game_type."+".$order."+".$by."+".$page."+".$per_page."+"."plain codes");
+        $url = $this->orderUrl."getorders.xml?cagent=".$this->AG_agent."&startdate=".$start_date."&enddate=".$end_date."&key=".$key;
+        $xmlcode=$this->getUrl($url);
+        $result=$array = json_decode(json_encode(simplexml_load_string($xmlcode)), true);
+        return $result;
     }
 
     function getpassword($len=10)

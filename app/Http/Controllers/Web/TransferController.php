@@ -52,10 +52,10 @@ class TransferController extends Controller {
 
         $date=date("Y-m-d");
 
-        $row2  = DB::select("select sum(Gold) as IN_Money from BBIN_logs where Type='IN' and left(DateTime,10)='$date'");
+        $row2  = DB::select("select sum(Gold) as IN_Money from bbin_logs where Type='IN' and left(DateTime,10)='$date'");
         $IN_Money=intval($row2[0]->IN_Money);
 
-        $row2  = DB::select("select sum(Gold) as OUT_Money from BBIN_logs where Type='OUT' and left(DateTime,10)='$date'");
+        $row2  = DB::select("select sum(Gold) as OUT_Money from bbin_logs where Type='OUT' and left(DateTime,10)='$date'");
         $OUT_Money=intval($row2[0]->OUT_Money);
         if(($IN_Money+$money2-$OUT_Money)>$BBIN_Limit){
             return response()->json(['success'=>false, 'message'=> '额度转换维护中，请联系客服人员']);
@@ -786,10 +786,10 @@ class TransferController extends Controller {
         }
 
         $date=date("Y-m-d");
-        $row2  = DB::select("select sum(Gold) as IN_Money from MG_logs where Type='IN' and left(DateTime,10)='$date'");
+        $row2  = DB::select("select sum(Gold) as IN_Money from mg_logs where Type='IN' and left(DateTime,10)='$date'");
         $IN_Money=intval($row2[0]->IN_Money);
 
-        $row2  = DB::select("select sum(Gold) as OUT_Money from MG_logs where Type='OUT' and left(DateTime,10)='$date'");
+        $row2  = DB::select("select sum(Gold) as OUT_Money from mg_logs where Type='OUT' and left(DateTime,10)='$date'");
         $OUT_Money=intval($row2[0]->OUT_Money);
         if(($IN_Money+$money2-$OUT_Money)>$MG_Limit){
             return response()->json(['success'=>false, 'message'=> '额度转换维护中，请联系客服人员']);
@@ -1026,10 +1026,10 @@ class TransferController extends Controller {
         }
 
         $date=date("Y-m-d");
-        $row2  = DB::select("select sum(Gold) as IN_Money from PT_logs where Type='IN' and left(DateTime,10)='$date'");
+        $row2  = DB::select("select sum(Gold) as IN_Money from pt_logs where Type='IN' and left(DateTime,10)='$date'");
         $IN_Money=intval($row2[0]->IN_Money);
 
-        $row2  = DB::select("select sum(Gold) as OUT_Money from PT_logs where Type='OUT' and left(DateTime,10)='$date'");
+        $row2  = DB::select("select sum(Gold) as OUT_Money from pt_logs where Type='OUT' and left(DateTime,10)='$date'");
         $OUT_Money=intval($row2[0]->OUT_Money);
         if(($IN_Money+$money2-$OUT_Money)>$PT_Limit){
             return response()->json(['success'=>false, 'message'=> '额度转换维护中，请联系客服人员']);
@@ -1074,7 +1074,7 @@ class TransferController extends Controller {
                 $assets= Utils::GetField($username,'Money');
                 $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
-                $result = DB::update("update web_member_data set Money=Money-$money, TG_Money=TG_Money+$money where Username='$username'");
+                $result = DB::update("update web_member_data set Money=Money-$money, PT_Money=PT_Money+$money where Username='$username'");
 
                 if($result){
                     $balance = Utils::GetField($username,'Money');
@@ -1217,12 +1217,12 @@ class TransferController extends Controller {
                 }
 
                 $assets=Utils::GetField($username,'Money');
-                $tg_money=Utils::GetField($username,'TG_Money');
+                $pt_money=Utils::GetField($username,'PT_Money');
                 $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
                 $q1 = User::where('Username', $username)->update([
                     'Money' => $assets + $money,
-                    'TG_Money' => $tg_money - $money
+                    'PT_Money' => $pt_money - $money
                 ]);
                 if($q1){
                     $balance=Utils::GetField($username,'Money');

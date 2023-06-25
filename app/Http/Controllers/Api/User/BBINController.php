@@ -115,6 +115,7 @@ class BBINController extends Controller
             }
 
             $request_data = $request->all();
+            $game_type = $request_data["game_type"];
 
             $user = $request->user();
 
@@ -137,9 +138,10 @@ class BBINController extends Controller
                     $BBIN_username=trim($user['UserName']).$BBINUtils->getpassword_bbin(1);
                 }
                 $BBIN_username='h07'.$WebCode.$BBIN_username;
-                $BBIN_username=strtoupper($BBIN_username);
-                $BBIN_password=strtoupper($BBINUtils->getpassword_bbin(10));
+                $BBIN_username=strtolower($BBIN_username);
+                $BBIN_password=strtolower($BBINUtils->getpassword_bbin(10));
                 $result=$BBINUtils->Addmember_BBIN($BBIN_username,$BBIN_password,1);
+                // return $result;
                 if ($result['info']=='0'){
                     User::where("UserName", $username)->update([
                         "BBIN_User" => $BBIN_username,
@@ -151,7 +153,7 @@ class BBINController extends Controller
                 }
             }
 
-            $loginUrl=$BBINUtils->getGameUrl_BBIN($BBIN_username,$BBIN_password,$tp,$_SERVER['HTTP_HOST'],1,$gameType);
+            $login_url=$BBINUtils->getGameUrl_BBIN($BBIN_username,$BBIN_password,$tp,$_SERVER['HTTP_HOST'],1,$game_type);
 
             $response["data"] = $login_url;
             $response['message'] = "BBIN Game URL fetched successfully!";

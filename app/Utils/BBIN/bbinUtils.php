@@ -10,17 +10,18 @@ class BBINUtils {
     var $md5key_bbin = "KGeEtsGSQ2wT";
     var $deskey_bbin = "Pa27VJ4p";
     var $giurl_bbin="http://gi.bbin-api8.com:81/";
-    var $gciurl_bbin="http://gci.bbin-api8.com:81/";
+    var $gciurl_bbin="https://gci.bbin-api8.com/";
 
     public function __construct($sysConfig) {
     }
 
 	function Addmember_BBIN($username,$password,$tp=1){
 		$crypt = new DES($this->deskey_bbin);
-		$para="cagent=".$this->BBIN_agent."/\\\\/loginname=".$username."/\\\\/method=lg/\\\\/actype=".$tp."/\\\/password=".$password."/\\\\/oddtype=A/\\\\/cur=CNY";
+		$para="cagent=".$this->BBIN_agent."/\\\\/loginname=".$username."/\\\\/method=lg/\\\\/actype=".$tp."/\\\\/password=".$password."/\\\\/oddtype=A/\\\\/cur=CNY";
 		$params=$crypt->encrypt($para);
 		$key=md5($params.$this->md5key_bbin);
 		$url=$this->giurl_bbin."doBusiness.do?params=".$params."&key=".$key;
+		// return $url;
 		$xmlcode= $this->getUrl_BBIN($url);
 		$result=$this->getResult_BBIN($xmlcode);
 		if($result['info']<>'0'){
@@ -112,8 +113,8 @@ class BBINUtils {
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_TIMEOUT,60);  //超时60秒
 		curl_setopt($ch, CURLOPT_USERAGENT, ' WEB_LIB_GI_'.$this->BBIN_agent);  //设置浏览器类型，含代理号
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 2);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 2);
 		$html = curl_exec($ch);
 		return $html;
 	}
