@@ -958,5 +958,43 @@ class AdminPaymentController extends Controller
 
         return response()->json($response, $response['status']);
     } 
+
+    public function getUser(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+
+            $rules = [
+                "name" => "required|string",
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                $errorResponse = validation_error_response($validator->errors()->toArray());
+                return response()->json($errorResponse, $response['status']);
+            }
+
+            $request_data = $request->all();
+
+            $name = $request_data["name"];
+
+            $result = User::where("UserName", $name)->first(["Alias", "Money"]);
+            
+            $response["data"] = $result;
+            $response['message'] = "User Data fetched successfully!";
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    } 
 }
 

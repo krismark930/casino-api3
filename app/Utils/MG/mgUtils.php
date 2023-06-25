@@ -10,21 +10,19 @@ class MGUtils {
     var $md5key_MG = "KGeEtsGSQ2wT";
     var $deskey_MG = "Pa27VJ4p";
     var $giurl_MG="http://gi.bbin-api8.com:81/";
-    var $gciurl_MG="http://gci.bbin-api8.com:81/";
+    var $gciurl_MG="https://gci.bbin-api8.com/";
 
     public function __construct($row) {
-        $this->MG_agent = $row['KY_Agent'];
-        $this->md5key_MG = $row['KY_md5key'];
-        $this->deskey_MG = $row['KY_aeskey'];
     }
 
     function Addmember_MG($username,$password,$tp=1){
         $crypt = new DES($this->deskey_MG);
-        $para="cagent=".$this->MG_agent."/\\\\/loginname=".$username."/\\\\/method=lg/\\\\/actype=".$tp."/\\\/password=".$password."/\\\\/oddtype=A/\\\\/cur=CNY";
+        $para="cagent=".$this->MG_agent."/\\\\/loginname=".$username."/\\\\/method=lg/\\\\/actype=".$tp."/\\\\/password=".$password."/\\\\/oddtype=A/\\\\/cur=CNY";
         //echo $para;exit;
         $params=$crypt->encrypt($para);
         $key=md5($params.$this->md5key_MG);
         $url=$this->giurl_MG."doBusiness.do?params=".$params."&key=".$key;
+        // return $url;
         $xmlcode=$this->getUrl_MG($url);
         $result=$this->getResult_MG($xmlcode);
         if($result['info']<>'0'){

@@ -236,6 +236,8 @@ class AdminLotteryuserconfigController extends Controller
             $lottery_user_config["p3_max_bet"] = $item["p3_max_bet"];
             $lottery_user_config["cqsf_max_bet"] = $item["cqsf_max_bet"];
 
+            // return $lottery_user_config;
+
             $lottery_user_config->save();
 
             $response['message'] = "Lottery User Config Data updated successfully!";

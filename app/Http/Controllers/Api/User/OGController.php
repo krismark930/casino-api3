@@ -185,7 +185,7 @@ class OGController extends Controller
                         return response()->json($response, $response['status']);
                     }
                 }
-                $login_url = $OGUtils->OG_GameUrl($og_username);                
+                $login_url = $OGUtils->OG_GameUrl($og_username);
             }
 
             $response["data"] = $login_url;

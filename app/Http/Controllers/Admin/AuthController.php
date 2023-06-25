@@ -82,14 +82,18 @@ class AuthController extends Controller {
         }
 
         $user = User::where('username', $request->username)->first();
+
         if ($user) {
+            if ($user["Status"] != 0) {
+                return response()->json(['success'=>false, 'message'=>'账户被暂停！']);
+            }
             if (Hash::check($request->password, $user->password)) {                
                 $sql="update web_system_data set Level='$level',Oid='$uid',LoginDate='$date',LoginTime=now(),OnlineTime=now(),Online='1',Url='".$browser_ip."',LoginIP='$ip_addr' where username='".$username."'";
                 DB::select($sql);
                 $mysql="insert into web_mem_log_data(UserName,LoginIP,LoginTime,ConText,Url,Level)values('$username','$ip_addr',now(),'$loginfo','".$browser_ip."','$lv')";
                 DB::select($mysql);
                 $token = $user->createToken('adminToken')->accessToken;
-                return $this->respondWithToken($token, 'Login successfully.', auth()->guard('admin')->user());
+                return $this->respondWithToken($token, 'Login successfully.', $user);
             } else {
                 return response()->json(['success'=>false, 'message'=>'Password mismatch']);
             }
