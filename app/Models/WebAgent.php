@@ -9,7 +9,7 @@ class WebAgent extends Model
 {
     use HasFactory;
 
-    $protected $fillable = [
+    protected $fillable = [
         "FT_Turn_RE_A",
     ];
 
