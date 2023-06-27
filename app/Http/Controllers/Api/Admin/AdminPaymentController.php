@@ -604,6 +604,12 @@ class AdminPaymentController extends Controller
 
             }
 
+            $ip_addr = Utils::get_ip();
+            $browser_ip = Utils::get_browser_ip();
+            $loginfo='执行批量充值';
+            $mysql="insert into web_mem_log_data(UserName,Logintime,ConText,Loginip,Url) values('$loginname',now(),'$loginfo','$ip_addr','".$browser_ip."')";
+            DB::select($mysql);
+
             $response['message'] = "Cash Data saved successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;

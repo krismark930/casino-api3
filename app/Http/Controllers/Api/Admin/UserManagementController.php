@@ -43,6 +43,8 @@ class UserManagementController extends Controller
             $sort = $request_data["sort"] ?? "";
             $orderby = $request_data["orderby"] ?? "";
 
+            $loginname = $user["UserName"];
+
             $web_system_data = WebSystemData::find(1);
 
             $admin_url=array_filter(explode(";",$web_system_data['Admin_Url']));
@@ -73,6 +75,13 @@ class UserManagementController extends Controller
             Log::error($e->getTraceAsString());
             $response['status'] = STATUS_GENERAL_ERROR;
         }
+
+            $ip_addr = Utils::get_ip();
+            $browser_ip = Utils::get_browser_ip();
+            $loginfo='查看子帐号';
+            $mysql="insert into web_mem_log_data(UserName,Logintime,ConText,Loginip,Url) values('$loginname',now(),'$loginfo','$ip_addr','".$browser_ip."')";
+            DB::select($mysql);
+
 
         return response()->json($response, $response['status']);
     }
@@ -106,6 +115,8 @@ class UserManagementController extends Controller
             $AddDate = Carbon::now("Asia/Hong_Kong")->format("Y-m-d H:i:s");
             $competence='0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,';
 
+            $loginname = $user["UserName"];
+
             $row = WebSystemData::find(1);
 
             $web_system_data = WebSystemData::where("UserName", $UserName)->first();
@@ -135,6 +146,11 @@ class UserManagementController extends Controller
                 $result = new WebSystemData;
                 $result->create($new_data);
             }
+
+            $ip_addr = Utils::get_ip();
+            $browser_ip = Utils::get_browser_ip();
+            $loginfo='添加子账户权限';
+            $mysql="insert into web_mem_log_data(UserName,Logintime,ConText,Loginip,Url) values('$loginname',now(),'$loginfo','$ip_addr','".$browser_ip."')";
 
             $response['message'] = "Sub User Data added successfully!";
             $response['success'] = TRUE;
@@ -301,10 +317,17 @@ class UserManagementController extends Controller
             $Style = $request_data["Style"];
             $id = $request_data["id"];
 
+            $loginname = $user["UserName"];
+
             $web_system_data = WebSystemData::where("id", $id)->update([
                 "Competence" => $Competence,
                 "Style" => $Style
             ]);
+
+            $ip_addr = Utils::get_ip();
+            $browser_ip = Utils::get_browser_ip();
+            $loginfo='查看子帐号权限';
+            $mysql="insert into web_mem_log_data(UserName,Logintime,ConText,Loginip,Url) values('$loginname',now(),'$loginfo','$ip_addr','".$browser_ip."')";
 
             $response['message'] = "Sub User Data permissioned successfully!";
             $response['success'] = TRUE;
@@ -2763,7 +2786,7 @@ class UserManagementController extends Controller
             $id=$_REQUEST["id"];
             $user=$_REQUEST["UserName"];
             //$gold=$_REQUEST["maxcredit"];//总信用额度
-            $pasd=$_REQUEST["Password"];//密码
+            $pasd=$_REQUEST["password"];//密码
             $Address=$_REQUEST["Address"] ?? "";//取款密码
             $Bank_Account=$_REQUEST["Bank_Account"] ?? "";//银行账号
             $Bank_Address=$_REQUEST["Bank_Address"] ?? "";//开户地址

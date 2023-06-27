@@ -35,6 +35,8 @@ class SystemParametersController extends Controller
     public function get_urls(Request $request)
     {
         $config = Config::selectRaw('*')->first();
+            DB::select($mysql);
+
         return $this->respondData(['pcurl' => $config['PCURL'], 'wapurl' => $config['WAPURL']]);
     }
     /* Set Reg_Status, AG_Repair, OG_Repair, BBIN_Repair, MG_Repair, PT_Repair, KY_Repair */

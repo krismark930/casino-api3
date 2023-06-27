@@ -36,6 +36,10 @@ class SportReportController extends Controller
 
             $request_data = $request->all();
 
+            $user = $request->user();
+
+            $loginname = $user["UserName"];
+
             $Rep_readme0='赛事尚有{}场未输入完毕';
             $Rep_readme1='赛事结果已输入完毕';
             $Rep_readme2='没有赛事';
@@ -82,6 +86,12 @@ class SportReportController extends Controller
             }
 
             $data = array("ft_caption" => $ft_caption, "ft_caption1" => $ft_caption1, "bk_caption" => $bk_caption, "bk_caption1" => $bk_caption1);
+
+            $ip_addr = Utils::get_ip();
+            $browser_ip = Utils::get_browser_ip();
+            $loginfo='滚球注单投注明细';
+            $mysql="insert into web_mem_log_data(UserName,Logintime,ConText,Loginip,Url) values('$loginname',now(),'$loginfo','$ip_addr','".$browser_ip."')";
+            DB::select($mysql);
 
             $response["data"] = $data;
             $response['message'] = 'Sport Report Data fetched successfully';
