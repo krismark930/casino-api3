@@ -9,5 +9,9 @@ class WebAgent extends Model
 {
     use HasFactory;
 
+    $protected $fillable = [
+        "FT_Turn_RE_A",
+    ];
+
     protected $table = 'web_agents_data';
 }

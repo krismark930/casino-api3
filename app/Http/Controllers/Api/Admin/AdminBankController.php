@@ -121,6 +121,8 @@ class AdminBankController extends Controller
             $bankno = $request_data["bankno"];
             $bankaddress = $request_data["bankaddress"];
             $vip = $request_data["vip"] ?? "";
+            $min_amount = $request_data["min_amount"] ?? "";
+            $max_amount = $request_data["max_amount"] ?? "";
 
             $new_data = array(
                 "bankname" => $bankname,
@@ -128,6 +130,8 @@ class AdminBankController extends Controller
                 "bankno" => $bankno,
                 "bankaddress" => $bankaddress,
                 "vip" => $vip,
+                "min_amount" => $min_amount,
+                "max_amount" => $max_amount,
             );
 
             if ($ID == "") {

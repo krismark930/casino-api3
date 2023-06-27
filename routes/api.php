@@ -828,7 +828,7 @@ Route::group(['prefix' => 'third-party'], function ($router){
     Route::group(['prefix' => 'other-game'], function ($router) {
         Route::post('/og-token', [OGController::class, 'getOGToken']);
         Route::post('/og-transaction', [OGController::class, 'getOGTransaction']);
-        Route::post('/ag-transaction', [AGController::class, 'getAGTransaction']);
+        Route::get('/ag-transaction', [AGController::class, 'getAGTransaction']);
         Route::post('/yoplay-transaction', [AGController::class, 'getYoplayTransaction']);
         Route::post('/bbin-transaction', [BBINController::class, 'getBBINTransaction']);
         Route::post('/mg-transaction', [MGController::class, 'getMGTransaction']);

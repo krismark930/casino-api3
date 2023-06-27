@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Dz2;
@@ -13,6 +14,7 @@ use App\Models\Web\SysConfig;
 use App\Models\User;
 use App\Models\WebReportZr;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 function GetUrl($url, $ip=null, $timeout=20) {
     $ch = curl_init();
@@ -79,7 +81,12 @@ class PTController extends Controller
                 ->get();
 
             foreach($result as $item) {
-                $item["ZH_Logo_File"] = "http://pic.pj6678.com/".$item["ZH_Logo_File"];
+                // return is_file(storage_path("app/public/upload/zr_images/").$item["ZH_Logo_File"]);
+                if (!is_file(storage_path("app/public/upload/zr_images/").$item["ZH_Logo_File"])) {
+                    $item["ZH_Logo_File"] = "http://pic.pj6678.com/".$item["ZH_Logo_File"];
+                } else {
+                    $item["ZH_Logo_File"] = env('APP_URL').Storage::url("upload/zr_images/").$item["ZH_Logo_File"];
+                }
             }
 
             $response["data"] = $result;

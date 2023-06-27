@@ -14,6 +14,11 @@ class AuthController extends Controller {
 
     /* Login action. */
     public function login(Request $request) {
+
+            $ip_addr = Utils::get_ip();
+            $browser_ip = Utils::get_browser_ip();
+            $loginfo='查询公告';
+            $mysql="insert into web_mem_log_data(UserName,Logintime,ConText,Loginip,Url) values('$loginname',now(),'$loginfo','$ip_addr','".$browser_ip."')";
         
         $validator = Validator::make($request->all(), [
             'username' => 'required|string|max:255',

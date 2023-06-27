@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Dz2;
@@ -186,202 +187,104 @@ class AGController extends Controller
         try {
 
             $sysConfig = SysConfig::all()->first();
-            
-            // $agentCode = $sysConfig['AG_User'];
-
-            // $key = '';
-
-            // $url = '';
-
-            // if ($agentCode < "M1" || $agentCode == "R9") {
-            //     $url="http://ag.pj6678.com/ag_data.php?agentCod=$agentCode&key=";
-            // } else {
-            //     $url="http://888.bbin-api8.com/ag_data.php?agentCod=$agentCode&key=";
-            // }
 
             $AGUtils = new AGUtils($sysConfig);
 
-            $user_array = User::query()->get(["AG_User"]);
+            $plan_code = "82492F975FCCF4FD695DECF898E76322";
 
-            foreach($user_array as $row) {
-                if ($row["AG_User"] == null || $row["AG_User"] == "") continue;
-                $end_date = Carbon::now()->setTimezone('GMT+4')->format("Y-m-d H:i:s");
-                $start_date = Carbon::now()->setTimezone('GMT+4')->subMinutes(10)->format("Y-m-d H:i:s");
+            $end_date = Carbon::now()->setTimezone('GMT+4')->format("Y-m-d H:i:s");
 
-                $result = Dz2::where("Open", 1)
-                    ->where(function($query) {
-                        $query->where("PlatformType", "AG")
-                            ->orWhere("PlatformType", "XIN");
-                    })
-                    ->get(["GameType"]);
+            $start_date = Carbon::now()->setTimezone('GMT+4')->subMinutes(10)->format("Y-m-d H:i:s");
 
-                array_push($result, "GameType" => 1);
-                array_push($result, "GameType" => 2);
-                array_push($result, "GameType" => 4);
+            $real_game_type = array(
+                "BAC",
+                "CBAC",
+                "LINK",
+                "DT",
+                "SHB",
+                "ROU",
+                "LBAC",
+                "SBAC",
+                "NN",
+                "BJ",
+                "ZJH",
+                "BF",
+                "SG",
+            );
 
-                foreach($result as $item) {
+            foreach($real_game_type as $game_type) {
 
-                    if ($item["GameType"] == "" || $item["GameType"] == null) continue;
+                $orders = $AGUtils->getRealOrder($plan_code, $start_date, $end_date, $game_type);
 
-                    $orders = $AGUtils->getOrder($row["AG_User"], $start_date, $end_date, $item["GameType"]);
+                return $orders;
 
-                    foreach($orders as $order) {
-                        $billNo = $order[0]["result"][1]["row"]["billNo"];
-                        $playerName = $order[0]["result"][1]["row"]["playName"];
-                        $Type = "";
-                        $GameType = $order[0]["result"][1]["row"]["gameType"];
-                        $gameCode = $order[0]["result"][1]["row"]["gameCode"];
-                        $netAmount = $order[0]["result"][1]["row"]["netAmount"];
-                        $betTime = $order[0]["result"][1]["row"]["betTime"];
-                        $betAmount = $order[0]["result"][1]["row"]["betAmount"];
-                        $validBetAmount = $order[0]["result"][1]["row"]["validBetAmount"];
-                        $playType = $order[0]["result"][1]["row"]["playType"];
-                        $tableCode = $order[0]["result"][1]["row"]["tableCode"];
-                        $loginIP = $order[0]["result"][1]["row"]["betIP"];
-                        $recalcuTime = $order[0]["result"][1]["row"]["recalcuTime"];
-                        $platformType = $order[0]["result"][1]["row"]["platformType"];
-                        $round = $order[0]["result"][1]["row"]["round"];
-                        $VendorId = 0;
-                        $result = $order[0]["result"][1]["row"]["result"];
-                        $gameType=addslashes($GameType);
-                        $gameCode=addslashes($gameCode);
+                foreach($orders as $order) {
 
-                        $web_report_zr = WebReportZr::where("billNo", $billNo)
-                            ->where("platformType", $platformType)->first();
+                    $billNo = $order[0]["result"][1]["row"]["billNo"];
+                    $playerName = $order[0]["result"][1]["row"]["playName"];
+                    $Type = "";
+                    $GameType = $order[0]["result"][1]["row"]["gameType"];
+                    $gameCode = $order[0]["result"][1]["row"]["gameCode"];
+                    $netAmount = $order[0]["result"][1]["row"]["netAmount"];
+                    $betTime = $order[0]["result"][1]["row"]["betTime"];
+                    $betAmount = $order[0]["result"][1]["row"]["betAmount"];
+                    $validBetAmount = $order[0]["result"][1]["row"]["validBetAmount"];
+                    $playType = $order[0]["result"][1]["row"]["playType"];
+                    $tableCode = $order[0]["result"][1]["row"]["tableCode"];
+                    $loginIP = $order[0]["result"][1]["row"]["betIP"];
+                    $recalcuTime = $order[0]["result"][1]["row"]["recalcuTime"];
+                    $platformType = $order[0]["result"][1]["row"]["platformType"];
+                    $round = $order[0]["result"][1]["row"]["round"];
+                    $VendorId = 0;
+                    $result = $order[0]["result"][1]["row"]["result"];
+                    $gameType=addslashes($GameType);
+                    $gameCode=addslashes($gameCode);
 
-                        $new_data = array (
-                            "billNo" => $billNo,
-                            "UserName" => $UserName,
-                            "playerName" => $playerName,
-                            "Type" => $Type,
-                            "gameType" => $gameType,
-                            "gameCode" => $gameCode,
-                            "netAmount" => $netAmount,
-                            "betTime" => $betTime,
-                            "betAmount" => $betAmount,
-                            "validBetAmount" => $validBetAmount,
-                            "playType" => $playType,
-                            "tableCode" => $tableCode,
-                            "loginIP" => $loginIP,
-                            "recalcuTime" => $recalcuTime,
-                            "round" => $round,
-                            "platformType" => $platformType,
-                            "VendorId" => $VendorId,
-                            "Checked" => 1,
-                        );
+                    $web_report_zr = WebReportZr::where("billNo", $billNo)
+                        ->where("platformType", $platformType)->first();
 
-                        if (isset($web_report_zr)) {
-                            $web_report_zr = new WebReportZr;
-                            $web_report_zr->create($new_data);
-                        } else {
-                            WebReportZr::where("billNo", $billNo)
-                                ->where("platformType", $platformType)
-                                ->update($new_data);
-                        }
-                    
-                        $AGUtils = new AGUtils($sysConfig);
+                    $new_data = array (
+                        "billNo" => $billNo,
+                        "UserName" => $UserName,
+                        "playerName" => $playerName,
+                        "Type" => $Type,
+                        "gameType" => $gameType,
+                        "gameCode" => $gameCode,
+                        "netAmount" => $netAmount,
+                        "betTime" => $betTime,
+                        "betAmount" => $betAmount,
+                        "validBetAmount" => $validBetAmount,
+                        "playType" => $playType,
+                        "tableCode" => $tableCode,
+                        "loginIP" => $loginIP,
+                        "recalcuTime" => $recalcuTime,
+                        "round" => $round,
+                        "platformType" => $platformType,
+                        "VendorId" => $VendorId,
+                        "Checked" => 1,
+                    );
 
-                        $user = User::where("UserName", $UserName)->first();                
-
-                        $balance= $AGUtils->getMoney($user["AG_User"], $user["AG_Pass"]);
-
-                        User::where("UserName", $UserName)->update([
-                            "AG_Money" => $balance,
-                        ]);
+                    if (isset($web_report_zr)) {
+                        $web_report_zr = new WebReportZr;
+                        $web_report_zr->create($new_data);
+                    } else {
+                        WebReportZr::where("billNo", $billNo)
+                            ->where("platformType", $platformType)
+                            ->update($new_data);
                     }
+                
+                    $AGUtils = new AGUtils($sysConfig);
+
+                    $user = User::where("UserName", $UserName)->first();                
+
+                    $balance= $AGUtils->getMoney($user["AG_User"], $user["AG_Pass"]);
+
+                    User::where("UserName", $UserName)->update([
+                        "AG_Money" => $balance,
+                    ]);
                 }
+
             }
-
-            // $web_report_zr = WebReportZr::where("platformType", 'AGIN')
-            //     ->orWhere("platformType", "XIN")
-            //     ->select(DB::raw("max(VendorId) as VendorId"))
-            //     ->first();
-
-            // if (isset($web_report_zr)) {
-            //     $url = $url."&VendorId=".$web_report_zr->VendorId;
-            // }
-
-            // $htmlcode = GetUrl($url);
-            // $htmlcode=ltrim(trim($htmlcode));
-            // $data=explode("\r\n",$htmlcode);
-            // $allcount=0;
-            // $UserName_arr=array();
-
-            // foreach($data as $item) {
-            //     $zr_data=json_decode($item);
-            //     if(count($zr_data) <= 0) continue;
-            //     $billNo = $zr_data->billNo;
-            //     $playerName=$zr_data->playerName;
-            //     $Type=$zr_data->Type;
-            //     $GameType=$zr_data->GameType;
-            //     $gameCode=$zr_data->gameCode;
-            //     $netAmount=$zr_data->netAmount;
-            //     $betTime=$zr_data->betTime;
-            //     $betAmount=$zr_data->betAmount;
-            //     $validBetAmount=$zr_data->validBetAmount;
-            //     $playType=$zr_data->playType;
-            //     $tableCode=$zr_data->tableCode;
-            //     $loginIP=$zr_data->loginIP;
-            //     $recalcuTime=$zr_data->recalcuTime;
-            //     $platformType=$zr_data->platformType;
-            //     $round=$zr_data->round;
-            //     $VendorId=$zr_data->VendorId;
-            //     $result=$zr_data->result;
-            //     $UserName = "";
-            //     if($UserName_arr[$playerName] == '') {
-            //         $user = User::where("AG_User", $playerName)->first();
-            //         $UserName=$user['UserName'];
-            //         $UserName_arr[$playerName]=$UserName;
-            //     }else{
-            //         $UserName=$UserName_arr[$playerName];
-            //     }
-
-            //     $gameType=addslashes($GameType);
-            //     $gameCode=addslashes($gameCode);
-            //     $web_report_zr = WebReportZr::where("billNo", $billNo)
-            //         ->where("platformType", $platformType)->first();
-
-            //     $new_data = array (
-            //         "billNo" => $billNo,
-            //         "UserName" => $UserName,
-            //         "playerName" => $playerName,
-            //         "Type" => $Type,
-            //         "gameType" => $gameType,
-            //         "gameCode" => $gameCode,
-            //         "netAmount" => $netAmount,
-            //         "betTime" => $betTime,
-            //         "betAmount" => $betAmount,
-            //         "validBetAmount" => $validBetAmount,
-            //         "playType" => $playType,
-            //         "tableCode" => $tableCode,
-            //         "loginIP" => $loginIP,
-            //         "recalcuTime" => $recalcuTime,
-            //         "round" => $round,
-            //         "platformType" => $platformType,
-            //         "VendorId" => $VendorId,
-            //         "Checked" => 1,
-            //     );
-
-            //     if (isset($web_report_zr)) {
-            //         $web_report_zr = new WebReportZr;
-            //         $web_report_zr->create($new_data);
-            //     } else {
-            //         WebReportZr::where("billNo", $billNo)
-            //             ->where("platformType", $platformType)
-            //             ->update($new_data);
-            //     }
-            
-            //     $AGUtils = new AGUtils($sysConfig);
-
-            //     $user = User::where("UserName", $UserName)->first();                
-
-            //     $balance= $AGUtils->getMoney($user["AG_User"], $user["AG_Pass"]);
-
-            //     User::where("UserName", $UserName)->update([
-            //         "AG_Money" => $balance,
-            //     ]);
-
-            // }
 
             $response['message'] = "AG Game Transaction saved successfully!";
             $response['success'] = TRUE;
@@ -404,103 +307,145 @@ class AGController extends Controller
         try {
 
             $sysConfig = SysConfig::all()->first();
-            $agentCode = $sysConfig['AG_User'];
-            $key = '';
-            $url = '';
 
-            if ($agentCode < "M1" || $agentCode == "R9") {
-                $url="http://ag.pj6678.com/yoplay_data.php?agentCod=$agentCode&key=";
-            } else {
-                $url="http://888.bbin-api8.com/yoplay_data.php?agentCod=$agentCode&key=";
-            }
+            $AGUtils = new AGUtils($sysConfig);
 
-            $web_report_zr = WebReportZr::where("platformType", 'YOPLAY')
-                ->select(DB::raw("max(VendorId) as VendorId"))
-                ->first();
+            $plan_code = "82492F975FCCF4FD695DECF898E76322";
 
-            if (isset($web_report_zr)) {
-                $url = $url."&VendorId=".$web_report_zr->VendorId;
-            }
+            $end_date = Carbon::now()->setTimezone('GMT+4')->format("Y-m-d H:i:s");
 
-            $htmlcode = GetUrl($url);
-            $htmlcode=ltrim(trim($htmlcode));
-            $data=explode("\r\n",$htmlcode);
-            $allcount=0;
-            $UserName_arr=array();
+            $start_date = Carbon::now()->setTimezone('GMT+4')->subMinutes(10)->format("Y-m-d H:i:s");
 
-            foreach($data as $item) {
-                $zr_data=json_decode($item);
-                if(count($zr_data) <= 0) continue;
-                $billNo = $zr_data->billNo;
-                $playerName=$zr_data->playerName;
-                $Type=$zr_data->Type;
-                $GameType=$zr_data->GameType;
-                $gameCode=$zr_data->gameCode;
-                $netAmount=$zr_data->netAmount;
-                $betTime=$zr_data->betTime;
-                $betAmount=$zr_data->betAmount;
-                $validBetAmount=$zr_data->validBetAmount;
-                $playType=$zr_data->playType;
-                $tableCode=$zr_data->tableCode;
-                $loginIP=$zr_data->loginIP;
-                $recalcuTime=$zr_data->recalcuTime;
-                $platformType=$zr_data->platformType;
-                $round=$zr_data->round;
-                $VendorId=$zr_data->VendorId;
-                $result=$zr_data->result;
-                $UserName = "";
-                if($UserName_arr[$playerName] == '') {
-                    $user = User::where("AG_User", $playerName)->first();
-                    $UserName=$user['UserName'];
-                    $UserName_arr[$playerName]=$UserName;
-                }else{
-                    $UserName=$UserName_arr[$playerName];
+            $yo_play_game_type = array(
+                "YFP",
+                "YDZ",
+                "YBIR",
+                "YMFD",
+                "YFD",
+                "YBEN",
+                "YHR",
+                "YMFR",
+                "YGS",
+                "YFR",
+                "YMBN",
+                "YGFS",
+                "YJFS",
+                "YMBI",
+                "YMBA",
+                "YMBZ",
+                "YMAC",
+                "YMJW",
+                "YMJH",
+                "YMBF",
+                "YMSG",
+                "YMJJ",
+                "YJTW",
+                "YMD2",
+                "YJBZ",
+                "YMSL",
+                "YMDD",
+                "YMKM",
+                "YMDL",
+                "YMPL",
+                "YMBJ",
+                "YMLD",
+                "YMGG",
+                "YMFW",
+                "YMBS",
+                "YMEF",
+                "YMLS",
+                "YMPP",
+                "YJBI",
+                "YMRA",
+                "YJFD",
+                "YMFP",
+                "YMPR",
+                "YM2K",
+            );
+
+            $users = User::query()->get(["AG_User"]);
+
+            foreach($yo_play_game_type as $game_type) {
+
+                foreach($orders as $order) {
+
+                    foreach($users as $user) {
+
+                        $AG_User = $user["AG_User"];
+
+                        $agent= "";
+
+                        $billno = "";
+
+                        $orders = $AGUtils->getYoplayOrder($plan_code, $agent, $AG_User, $start_date, $end_date, $game_type, $billno);
+
+                        return $orders;
+
+                    }
+
+                    $billNo = $order[0]["result"][1]["row"]["billNo"];
+                    $playerName = $order[0]["result"][1]["row"]["playName"];
+                    $Type = "";
+                    $GameType = $order[0]["result"][1]["row"]["gameType"];
+                    $gameCode = $order[0]["result"][1]["row"]["gameCode"];
+                    $netAmount = $order[0]["result"][1]["row"]["netAmount"];
+                    $betTime = $order[0]["result"][1]["row"]["betTime"];
+                    $betAmount = $order[0]["result"][1]["row"]["betAmount"];
+                    $validBetAmount = $order[0]["result"][1]["row"]["validBetAmount"];
+                    $playType = $order[0]["result"][1]["row"]["playType"];
+                    $tableCode = $order[0]["result"][1]["row"]["tableCode"];
+                    $loginIP = $order[0]["result"][1]["row"]["betIP"];
+                    $recalcuTime = $order[0]["result"][1]["row"]["recalcuTime"];
+                    $platformType = $order[0]["result"][1]["row"]["platformType"];
+                    $round = $order[0]["result"][1]["row"]["round"];
+                    $VendorId = 0;
+                    $result = $order[0]["result"][1]["row"]["result"];
+                    $gameType=addslashes($GameType);
+                    $gameCode=addslashes($gameCode);
+
+                    $web_report_zr = WebReportZr::where("billNo", $billNo)
+                        ->where("platformType", $platformType)->first();
+
+                    $new_data = array (
+                        "billNo" => $billNo,
+                        "UserName" => $UserName,
+                        "playerName" => $playerName,
+                        "Type" => $Type,
+                        "gameType" => $gameType,
+                        "gameCode" => $gameCode,
+                        "netAmount" => $netAmount,
+                        "betTime" => $betTime,
+                        "betAmount" => $betAmount,
+                        "validBetAmount" => $validBetAmount,
+                        "playType" => $playType,
+                        "tableCode" => $tableCode,
+                        "loginIP" => $loginIP,
+                        "recalcuTime" => $recalcuTime,
+                        "round" => $round,
+                        "platformType" => $platformType,
+                        "VendorId" => $VendorId,
+                        "Checked" => 1,
+                    );
+
+                    if (isset($web_report_zr)) {
+                        $web_report_zr = new WebReportZr;
+                        $web_report_zr->create($new_data);
+                    } else {
+                        WebReportZr::where("billNo", $billNo)
+                            ->where("platformType", $platformType)
+                            ->update($new_data);
+                    }
+                
+                    $AGUtils = new AGUtils($sysConfig);
+
+                    $user = User::where("UserName", $UserName)->first();                
+
+                    $balance= $AGUtils->getMoney($user["AG_User"], $user["AG_Pass"]);
+
+                    User::where("UserName", $UserName)->update([
+                        "AG_Money" => $balance,
+                    ]);
                 }
-
-                $gameType=addslashes($GameType);
-                $gameCode=addslashes($gameCode);
-                $web_report_zr = WebReportZr::where("billNo", $billNo)
-                    ->where("platformType", $platformType)->first();
-
-                $new_data = array (
-                    "billNo" => $billNo,
-                    "UserName" => $UserName,
-                    "playerName" => $playerName,
-                    "Type" => $Type,
-                    "gameType" => $gameType,
-                    "gameCode" => $gameCode,
-                    "netAmount" => $netAmount,
-                    "betTime" => $betTime,
-                    "betAmount" => $betAmount,
-                    "validBetAmount" => $validBetAmount,
-                    "playType" => $playType,
-                    "tableCode" => $tableCode,
-                    "loginIP" => $loginIP,
-                    "recalcuTime" => $recalcuTime,
-                    "round" => $round,
-                    "platformType" => $platformType,
-                    "VendorId" => $VendorId,
-                    "Checked" => 1,
-                );
-
-                if (isset($web_report_zr)) {
-                    $web_report_zr = new WebReportZr;
-                    $web_report_zr->create($new_data);
-                } else {
-                    WebReportZr::where("billNo", $billNo)
-                        ->where("platformType", $platformType)
-                        ->update($new_data);
-                }
-            
-                $AGUtils = new AGUtils($sysConfig);
-
-                $user = User::where("UserName", $UserName)->first();                
-
-                $balance= $AGUtils->getMoney($user["AG_User"], $user["AG_Pass"]);
-
-                User::where("UserName", $UserName)->update([
-                    "AG_Money" => $balance,
-                ]);
 
             }
 
