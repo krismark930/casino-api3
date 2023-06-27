@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Dz2;
@@ -115,6 +116,7 @@ class MGController extends Controller
             }
 
             $request_data = $request->all();
+            $game_type = $request_data["game_type"];
 
             $user = $request->user();
 
@@ -144,6 +146,7 @@ class MGController extends Controller
                 $MG_username=strtoupper($MG_username);
                 $MG_password=strtoupper($MGUtils->getpassword_MG(10));
                 $result=$MGUtils->Addmember_MG($MG_username,$MG_password,1);
+                // return $result;
                 if ($result['info']=='0'){
                     User::where("UserName", $username)->update([
                         "MG_User" => $MG_username,
@@ -155,7 +158,7 @@ class MGController extends Controller
                 }
             }
 
-            $loginUrl=$MGUtils->getGameUrl_MG($MG_username,$MG_password,$tp,$_SERVER['HTTP_HOST'],1,$gameType);  
+            $login_url=$MGUtils->getGameUrl_MG($MG_username,$MG_password,$tp,$_SERVER['HTTP_HOST'],1,$game_type);  
 
             $response["data"] = $login_url;
             $response['message'] = "MG Game URL fetched successfully!";

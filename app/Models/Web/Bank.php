@@ -12,6 +12,8 @@ class Bank extends Model {
         "bankno",
         "bankaddress",
         "vip",
+        "min_amount",
+        "max_amount",
     ];
 
     protected $table = 'web_bank_data';

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Dz2;
@@ -13,6 +14,7 @@ use App\Models\Web\SysConfig;
 use App\Models\User;
 use App\Models\WebReportZr;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 function GetUrl($url, $ip=null, $timeout=20) {
     $ch = curl_init();
@@ -79,7 +81,12 @@ class PTController extends Controller
                 ->get();
 
             foreach($result as $item) {
-                $item["ZH_Logo_File"] = "http://pic.pj6678.com/".$item["ZH_Logo_File"];
+                // return is_file(storage_path("app/public/upload/zr_images/").$item["ZH_Logo_File"]);
+                if (!is_file(storage_path("app/public/upload/zr_images/").$item["ZH_Logo_File"])) {
+                    $item["ZH_Logo_File"] = "http://pic.pj6678.com/".$item["ZH_Logo_File"];
+                } else {
+                    $item["ZH_Logo_File"] = env('APP_URL').Storage::url("upload/zr_images/").$item["ZH_Logo_File"];
+                }
             }
 
             $response["data"] = $result;
@@ -115,6 +122,7 @@ class PTController extends Controller
             }
 
             $request_data = $request->all();
+            $game_type = $request_data["game_type"];
 
             $user = $request->user();
 
@@ -140,6 +148,7 @@ class PTController extends Controller
                 $PT_username=strtoupper($PT_username);
                 $PT_password=strtoupper($PTUtils->getpassword_PT(10));
                 $result=$PTUtils->Addmember_PT($PT_username,$PT_password,1);
+
                 if ($result['info']=='0'){
                     User::where("UserName", $username)->update([
                         "PT_User" => $PT_username,
@@ -151,9 +160,9 @@ class PTController extends Controller
                 }
             }
 
-            $loginUrl=$PTUtils->getGameUrl_PT($PT_username,$PT_password,$tp,$_SERVER['HTTP_HOST'],1,$gameType);
+            $loginUrl=$PTUtils->getGameUrl_PT($PT_username,$PT_password,$tp,$_SERVER['HTTP_HOST'],1,$game_type);
 
-            $response["data"] = $login_url;
+            $response["data"] = $loginUrl;
             $response['message'] = "PT Game URL fetched successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;

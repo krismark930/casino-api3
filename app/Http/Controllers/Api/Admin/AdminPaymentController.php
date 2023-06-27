@@ -604,6 +604,12 @@ class AdminPaymentController extends Controller
 
             }
 
+            $ip_addr = Utils::get_ip();
+            $browser_ip = Utils::get_browser_ip();
+            $loginfo='执行批量充值';
+            $mysql="insert into web_mem_log_data(UserName,Logintime,ConText,Loginip,Url) values('$loginname',now(),'$loginfo','$ip_addr','".$browser_ip."')";
+            DB::select($mysql);
+
             $response['message'] = "Cash Data saved successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
@@ -948,6 +954,44 @@ class AdminPaymentController extends Controller
             WebPaymentData::where("ID", $ID)->delete();
             
             $response['message'] = "Payment Method Data deleted successfully!";
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    } 
+
+    public function getUser(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+
+            $rules = [
+                "name" => "required|string",
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                $errorResponse = validation_error_response($validator->errors()->toArray());
+                return response()->json($errorResponse, $response['status']);
+            }
+
+            $request_data = $request->all();
+
+            $name = $request_data["name"];
+
+            $result = User::where("UserName", $name)->first(["Alias", "Money"]);
+            
+            $response["data"] = $result;
+            $response['message'] = "User Data fetched successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {

@@ -13,7 +13,7 @@ class WebSystemData extends Model
         "Level",
         "UserName",
         "LoginName",
-        "passWord",
+        "password",
         "Passwd",
         "Alias",
         "Status",

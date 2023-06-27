@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use App\Models\SysConfig;
+use App\Models\User;
 
 class AdminStatisticsController extends Controller
 {
@@ -432,11 +434,133 @@ class AdminStatisticsController extends Controller
                 $n_sql='';
             }
 
-            $sql="select * from $data where Online=1 and Oid!='logout' and UserName<>'guest' $n_sql order by id desc";
+            // $sql="select * from $data where Online=1 and Oid!='logout' and UserName<>'guest' $n_sql order by id desc";
+            $sql="select * from $data where UserName<>'guest' $n_sql order by id desc";
             $result=DB::select($sql);
 
             $response["data"] = $result;
             $response['message'] = "Oline Data fetched successfully!";
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    }
+
+    public function updateSysConfig(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {   
+
+            $rules = [];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                $errorResponse = validation_error_response($validator->errors()->toArray());
+                return response()->json($errorResponse, $response['status']);
+            }
+
+            $request_data = $request->all();
+
+            $AG = $request_data["AG"];
+            $BBIN = $request_data["BBIN"];
+            $OG = $request_data["OG"];
+            $MG = $request_data["MG"];
+            $PT = $request_data["PT"];
+            $KY = $request_data["KY"];
+
+            SysConfig::where("id", 1)->update([
+                "AG" => $AG,
+                "BBIN" => $BBIN,
+                "OG" => $OG,
+                "MG" => $MG,
+                "PT" => $PT,
+                "KY" => $KY,
+            ]);
+
+            $response['message'] = "SysConfig Data updated successfully!";
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    }
+
+    public function updateRealPerson(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {   
+
+            $rules = [];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                $errorResponse = validation_error_response($validator->errors()->toArray());
+                return response()->json($errorResponse, $response['status']);
+            }
+
+            $request_data = $request->all();
+
+            $id = $request_data["id"];
+            $AG_TR = $request_data["AG_TR"];
+            $BBIN_TR = $request_data["BBIN_TR"];
+            $OG_TR = $request_data["OG_TR"];
+            $MG_TR = $request_data["MG_TR"];
+            $PT_TR = $request_data["PT_TR"];
+            $KY_TR = $request_data["KY_TR"];
+            $AG_User = $request_data["AG_User"];
+            $AG_Pass = $request_data["AG_Pass"];
+            $AG_Type = $request_data["AG_Type"];
+            $BBIN_User = $request_data["BBIN_User"];
+            $BBIN_Pass = $request_data["BBIN_Pass"];
+            $MG_User = $request_data["MG_User"];
+            $MG_Pass = $request_data["MG_Pass"];
+            $PT_User = $request_data["PT_User"];
+            $PT_Pass = $request_data["PT_Pass"];
+            $OG_User = $request_data["OG_User"];
+            $OG_Limit1 = $request_data["OG_Limit1"];
+            $OG_Limit2 = $request_data["OG_Limit2"];
+            $KY_User = $request_data["KY_User"];
+
+            User::where("id", $id)->update([
+                "AG_TR" => $AG_TR,
+                "BBIN_TR" => $BBIN_TR,
+                "OG_TR" => $OG_TR,
+                "MG_TR" => $MG_TR,
+                "PT_TR" => $PT_TR,
+                "KY_TR" => $KY_TR,
+                "AG_User" => $AG_User,
+                "AG_Pass" => $AG_Pass,
+                "AG_Type" => $AG_Type,
+                "BBIN_User" => $BBIN_User,
+                "BBIN_Pass" => $BBIN_Pass,
+                "MG_User" => $MG_User,
+                "MG_Pass" => $MG_Pass,
+                "PT_User" => $PT_User,
+                "PT_Pass" => $PT_Pass,
+                "OG_User" => $OG_User,
+                "OG_Limit1" => $OG_Limit1,
+                "OG_Limit2" => $OG_Limit2,
+                "KY_User" => $KY_User,
+            ]);
+
+            $response['message'] = "Member Data updated successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {

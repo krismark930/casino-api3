@@ -62,7 +62,7 @@ exports.getOtherBKScore = async (data) => {
 		response = await axios.post(`${BACKEND_BASE_URL}${SCORE}${SAVE_OTHER_SCORE}`, {uid: data.uid, game_type: "BK", date: "Today"});
 		response = await axios.post(`${BACKEND_BASE_URL}${SCORE}${SAVE_OTHER_SCORE}`, {uid: data.uid, game_type: "BK", date: "Yesterday"});
 		if (response.status === 200) {
-			// console.log("saveBKOtherScore: ", response.data);
+			console.log("saveBKOtherScore: ", response.data);
 		}
 		return null;
 	} catch(e) {
