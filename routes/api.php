@@ -689,6 +689,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], func
         Route::post('/detail-company', [UserManagementController::class, 'detailCompany']);
         Route::post('/update-money-agency', [UserManagementController::class, 'updateMoneyAgency']);
         Route::post('/update-member', [UserManagementController::class, 'updateMember']);
+        Route::post('/update-agency', [UserManagementController::class, 'updateAgency']);
     });
 
     // statistics management

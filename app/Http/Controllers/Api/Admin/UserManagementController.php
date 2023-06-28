@@ -753,12 +753,17 @@ class UserManagementController extends Controller
 
             $AddDate=date('Y-m-d H:i:s');//新增日期
             $username=$_REQUEST['UserName'];//帐号
-            $password=Hash::make($_REQUEST['PassWord']);//密码
+            if ($lv == "MEM") {
+                $password=Hash::make($_REQUEST['password']);//密码
+            } else {
+                $password=Hash::make($_REQUEST['PassWord']);//密码
+            }
             $maxcredit=$_REQUEST['maxcredit'];//总信用额度
             $wager=$_REQUEST['wager'];// 即时注单
             $CurType=$_REQUEST['CurType'] ?? "";//币别
             $alias=$_REQUEST['Alias'];//名称
             $usedate=$_REQUEST['usedate'] ?? "";
+            $address=$_REQUEST['address'] ?? "";
 
 
             $row = WebSystemData::find(1);
@@ -818,12 +823,16 @@ class UserManagementController extends Controller
             }
 
             if ($lv == "MEM") {
-                if($web=='web_agents_data'){
-                    $row_1 = $logined_user;
-                }else{
-                    $agent='ddm999';
+
+                $agent='ddm999';
+
+                // if($web=='web_agents_data') {
+                //     $row_1 = $logined_user;
+                // }else{
                     $row_1 = WebAgent::where("UserName", $agent)->first();
-                }
+                // }
+
+                // return $row_1['Admin'];
 
             } else {
 
@@ -1649,8 +1658,6 @@ class UserManagementController extends Controller
                     $response["message"] = "您输入的帐号 $username 已经有人使用了，请回上一页重新输入";
                     return response()->json($response, $response['status']);
                 }
-
-                $address = "";
                 $phone = "";
                 $a = 1;
                 $status = 0;
@@ -1673,7 +1680,7 @@ class UserManagementController extends Controller
                 $sql.="CurType='RMB',";
                 $sql.="Pay_Type='1',";
                 $sql.="Opentype='C',";
-                $sql.="agents='".$agent."',";
+                $sql.="Agents='".$agent."',";
                 $sql.="World='".$world."',";
                 $sql.="Corprator='".$corprator."',";
                 $sql.="Super='".$super."',";
@@ -2556,6 +2563,67 @@ class UserManagementController extends Controller
             }
 
             $response['message'] = "Company Data updated successfully!";
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    }
+
+    public function updateAgency(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+
+            $rules = [
+                "lv" => "required|string",
+                "UserName" => "required|string",
+                "agent" => "required|string",
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                $errorResponse = validation_error_response($validator->errors()->toArray());
+                return response()->json($errorResponse, $response['status']);
+            }
+
+            $logined_user = $request->user();
+
+            $request_data = $request->all();
+
+            $lv = $request_data["lv"];
+            $username = $request_data["UserName"];
+            $agent = $request_data["agent"];
+
+            $row = WebAgent::where("UserName", $agent)->first();
+
+            if (!isset($row)) {
+
+                $response["message"] = "请输入正确的代理商账号!!";
+
+                return response()->json($response, $response['status']);
+
+            }
+
+            $world=$row['World'];
+            $corprator=$row['Corprator'];
+            $super=$row['Super'];
+            $admin=$row['Admin'];
+
+            $mysql="update web_member_data set agents='$agent',World='$world',Corprator='$corprator',Super='$super',Admin='$admin' where UserName='$username'";
+            DB::select($mysql);
+            $rsql="update web_report_data set agents='$agent',World='$world',Corprator='$corprator',Super='$super',Admin='$admin' where M_Name='$username'";
+            DB::select($mysql);
+
+            $response['message'] = "Agent Data moved successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
