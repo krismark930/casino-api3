@@ -15,6 +15,7 @@ use App\Models\Web\Sys800;
 use App\Utils\Utils;
 use App\Models\Web\MoneyLog;
 use App\Models\WebPaymentData;
+use App\Models\Web\WebMemLogData;
 
 class AdminPaymentController extends Controller
 {
@@ -301,6 +302,11 @@ class AdminPaymentController extends Controller
 
             }
 
+            $user = User::where("UserName", $username)->first(["Money"]);
+
+            $currentAmount = $user["Money"];
+
+            $response["data"] = $currentAmount;
             $response['message'] = "Cash Data reviewed successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
@@ -418,6 +424,11 @@ class AdminPaymentController extends Controller
 
             }
 
+            $user = User::where("UserName", $username)->first(["Money"]);
+
+            $currentAmount = $user["Money"];
+
+            $response["data"] = $currentAmount;
             $response['message'] = "Cash Data rejected successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
@@ -498,6 +509,8 @@ class AdminPaymentController extends Controller
 
             $login_user = $request->user();
 
+            $loginname = $login_user["UserName"];
+
             $current_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
 
             $user = User::where("UserName", $name)->first();
@@ -537,34 +550,34 @@ class AdminPaymentController extends Controller
                     "CurType" => "RMB",
                     "Name" => $alias,
                     "User" => $login_user["UserName"],
-                    "Checked" => 1,
-                    "Date" => $current_time,
+                    // "Checked" => 1,
+                    // "Date" => $current_time,
                     "Order_Code" => $Order_Code,
                     "Notes" => $memo,
                 );
 
                 $sys_800->create($data);
             
-                $q1 = User::where("UserName", $username)
-                    ->update([
-                        'Money' => (int)$balance,
-                        'Credit' => (int)$balance,
-                    ]);
+                // $q1 = User::where("UserName", $username)
+                //     ->update([
+                //         'Money' => (int)$balance,
+                //         'Credit' => (int)$balance,
+                //     ]);
 
-                if ($q1 == 1) {
+                // if ($q1 == 1) {
 
-                    $new_log = new MoneyLog;
-                    $new_log->user_id = $user_id;
-                    $new_log->order_num = $Order_Code;
-                    $new_log->about = $user["UserName"]."后台扣款";
-                    $new_log->update_time = $current_time;
-                    $new_log->type = "扣款";
-                    $new_log->order_value = $gold;
-                    $new_log->assets = $assets;
-                    $new_log->balance = $balance;
-                    $new_log->save();
+                //     $new_log = new MoneyLog;
+                //     $new_log->user_id = $user_id;
+                //     $new_log->order_num = $Order_Code;
+                //     $new_log->about = $user["UserName"]."后台扣款";
+                //     $new_log->update_time = $current_time;
+                //     $new_log->type = "扣款";
+                //     $new_log->order_value = $gold;
+                //     $new_log->assets = $assets;
+                //     $new_log->balance = $balance;
+                //     $new_log->save();
 
-                }
+                // }
 
             } else {
 
@@ -595,7 +608,7 @@ class AdminPaymentController extends Controller
                     "CurType" => "RMB",
                     "Name" => $alias,
                     "User" => $login_user["UserName"],
-                    "Date" => $current_time,
+                    // "Date" => $current_time,
                     "Order_Code" => $Order_Code,
                     "Notes" => $memo,
                 );
@@ -604,12 +617,47 @@ class AdminPaymentController extends Controller
 
             }
 
+            $level = $login_user["Level"];
+
+            $lv = "M";
+
+            switch ($level){
+                case 'M':
+                    $lv='管理员';
+                    break;
+                case 'A':
+                    $lv='公司';
+                    break;
+                case 'B':
+                    $lv='股东';
+                    break;
+                case 'C':
+                    $lv='总代理';
+                    break;
+                case 'D':
+                    $lv='代理商';
+                    break;
+            }
+
             $ip_addr = Utils::get_ip();
             $browser_ip = Utils::get_browser_ip();
             $loginfo='执行批量充值';
-            $mysql="insert into web_mem_log_data(UserName,Logintime,ConText,Loginip,Url) values('$loginname',now(),'$loginfo','$ip_addr','".$browser_ip."')";
-            DB::select($mysql);
 
+            $web_mem_log_data = new WebMemLogData;
+            $web_mem_log_data->create([
+                "UserName" => $loginname,
+                "LoginIP" => $ip_addr,
+                "LoginTime" => now(),
+                "ConText" => $loginfo,
+                "Url" => $browser_ip,
+                "Level" => $lv,
+            ]);
+
+            $user = User::where("UserName", $username)->first(["Money"]);
+
+            $currentAmount = $user["Money"];
+
+            $response["data"] = $currentAmount;
             $response['message'] = "Cash Data saved successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
@@ -697,8 +745,8 @@ class AdminPaymentController extends Controller
                     "CurType" => "RMB",
                     "Name" => $alias,
                     "User" => $login_user["UserName"],
-                    "Checked" => 1,
-                    "Date" => $current_time,
+                    // "Checked" => 1,
+                    // "Date" => $current_time,
                     "Order_Code" => $Order_Code,
                     "Notes" => $memo,
                 );
@@ -727,7 +775,6 @@ class AdminPaymentController extends Controller
                 }
 
             }
-
             $response['message'] = "Cash Bulk Data saved successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;

@@ -8,10 +8,11 @@ class WebMemLogData extends Model {
 
     protected $fillable = [
         'UserName',
-        'Logintime',
+        'LoginIP',
+        'LoginTime',
         'ConText',
-        'Loginip',
         'Url',
+        'Level',
     ];
     protected $table = 'web_mem_log_data';
     public $timestamps = false;

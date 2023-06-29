@@ -69,21 +69,21 @@ class AuthController extends Controller {
         $ip_addr = Utils::get_ip();
         $loginfo='用户登入成功';
         switch ($level){
-        case 'M':
-            $lv='管理员';
-            break;
-        case 'A':
-            $lv='公司';
-            break;
-        case 'B':
-            $lv='股东';
-            break;
-        case 'C':
-            $lv='总代理';
-            break;
-        case 'D':
-            $lv='代理商';
-            break;
+            case 'M':
+                $lv='管理员';
+                break;
+            case 'A':
+                $lv='公司';
+                break;
+            case 'B':
+                $lv='股东';
+                break;
+            case 'C':
+                $lv='总代理';
+                break;
+            case 'D':
+                $lv='代理商';
+                break;
         }
 
         $user = User::where('username', $request->username)->first();

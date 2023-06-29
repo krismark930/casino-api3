@@ -845,6 +845,7 @@ class UserController extends Controller {
             }
 
             if(!auth()->attempt($credentials)) {
+
                 if (intval($user['ErrorTimes']) >= 8) {
                     $response['message'] = 'Due to too many wrong passwords, your account has been locked!';
                     return response()->json($response, $response['status']);
@@ -856,8 +857,8 @@ class UserController extends Controller {
                     "UserName" => $credentials['UserName'],
                     "Status" => 0,
                     "LoginIP" => Utils::get_ip(),
-                    "LoginTime" => $datetime,
-                    "Context" => '登录失败(pass:'.$credentials['password'].')',
+                    "DateTime" => $datetime,
+                    "Contect" => '登录失败(pass:'.$credentials['password'].')',
                     "Url" => Utils::get_browser_ip()
                 ];
 
@@ -870,6 +871,13 @@ class UserController extends Controller {
 
                 $response['message'] = 'Incorrect name or password';
                 return response()->json($response, $response['status']);
+            }
+
+            if ($user["Status"] == 2) {
+
+                $response['message'] = 'account suspended';
+                return response()->json($response, $response['status']);
+
             }
 
             $accessToken = auth()->user()->createToken('authToken')->accessToken;
@@ -903,8 +911,8 @@ class UserController extends Controller {
                 "UserName" => $credentials['UserName'],
                 "Status" => 1,
                 "LoginIP" => Utils::get_ip(),
-                "LoginTime" => $datetime,
-                "Cotext" => '登录成功',
+                "DateTime" => $datetime,
+                "Contect" => '登录成功',
                 "Url" => Utils::get_browser_ip()
             ];
 

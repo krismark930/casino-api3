@@ -4862,6 +4862,8 @@ class BettingController extends Controller
             $grape = "";
             $ptype= "PR";
 
+            $ip_addr = Utils::get_ip();
+
             $new_web_report_data = new WebReportData();
 
             $new_web_report_data->ID = $id;

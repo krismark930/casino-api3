@@ -68,7 +68,7 @@ class AdminAccessController extends Controller
             $total_count = $result->count();
 
             $result = $result->offset(($page_no - 1) * $limit)
-                    ->take($limit)->get();
+                    ->take($limit)->orderBy("Date", "DESC")->get();
 
             $CK = 0;
             $TK = 0;

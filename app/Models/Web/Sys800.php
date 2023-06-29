@@ -35,6 +35,7 @@ class Sys800 extends Model {
         'Checked',
         'Music',
         'Notes',
+        'created_at'
     ];
 
     protected $table = 'web_sys800_data';

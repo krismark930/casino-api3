@@ -686,6 +686,8 @@ class SportReportController extends Controller
 
             // return $result;
 
+            $data = array();
+
             foreach($result as $row) {
                 $UserName = $row["M_Name"];
                 $result1 = WebReportData::where("M_Name", $row["M_Name"])->where("isFs", 0)->where("TurnRate", 0)->where("Cancel", 0)->where("Checked", 1)
@@ -707,6 +709,8 @@ class SportReportController extends Controller
                     ]);
 
                 if ($money_ts > 0) {
+
+                    array_push($data, $UserName."有效投注额:$VGOLD,反水比率：$fanshui,反水金额:$money_ts");
 
                     $Order_Code='CK'.date("YmdHis",time()+12*3600).mt_rand(1000,9999);
                     $adddate=date("Y-m-d");
@@ -735,9 +739,10 @@ class SportReportController extends Controller
             $loginfo='执行体育一键退水';
             $ip_addr = Utils::get_ip();
             $browser_ip = Utils::get_browser_ip();
-            $mysql="insert into web_mem_log_data(UserName,Loginip,LoginTime,ConText,Url) values('$loginname','$ip_addr',now(),'$loginfo','".$browser_ip."')";
+            $mysql="insert into web_mem_log_data(UserName,LoginIP,LoginTime,ConText,Url) values('$loginname','$ip_addr',now(),'$loginfo','".$browser_ip."')";
             DB::select($mysql);
 
+            $response["data"] = $data;
             $response['message'] = 'Sport Rebate finished successfully';
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
