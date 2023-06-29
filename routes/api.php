@@ -268,6 +268,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
 
     Route::group(['prefix' => 'home'], function ($router) {
         Route::post('/sys-config', [HomeController::class, 'getSysConfig']);
+        Route::get('/config', [HomeController::class, 'getConfig']);
     });
 
     Route::group(['prefix' => 'message', 'middleware' => 'auth:api'], function ($router) {
