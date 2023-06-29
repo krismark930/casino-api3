@@ -282,6 +282,26 @@ class AdminLotteryuserconfigController extends Controller
             $g_type = $request_data["g_type"];
             $user_group = $request_data["user_group"] ?? "";
 
+            $d3_rebate = $request_data["d3_rebate"] ?? "";
+            $p3_rebate = $request_data["p3_rebate"] ?? "";
+            $t3_rebate = $request_data["t3_rebate"] ?? "";
+            $cq_rebate = $request_data["cq_rebate"] ?? "";
+            $tj_rebate = $request_data["tj_rebate"] ?? "";
+            $jx_rebate = $request_data["jx_rebate"] ?? "";
+            $gdsf_rebate = $request_data["gdsf_rebate"] ?? "";
+            $gxsf_rebate = $request_data["gxsf_rebate"] ?? "";
+            $tjsf_rebate = $request_data["tjsf_rebate"] ?? "";
+            $cqsf_rebate = $request_data["cqsf_rebate"] ?? "";
+            $gd11_rebate = $request_data["gd11_rebate"] ?? "";
+            $bjpk_rebate = $request_data["bjpk_rebate"] ?? "";
+            $bjkn_rebate = $request_data["bjkn_rebate"] ?? "";
+            $xyft_rebate = $request_data["xyft_rebate"] ?? "";
+            $ffc5_rebate = $request_data["ffc5_rebate"] ?? "";
+            $tx_rebate = $request_data["tx_rebate"] ?? "";
+            $tw_rebate = $request_data["tw_rebate"] ?? "";
+            $azxy5_rebate = $request_data["azxy5_rebate"] ?? "";
+            $azxy10_rebate = $request_data["azxy10_rebate"] ?? "";
+
             if ($user_group != "") {
                 $bad_names = str_replace(',', ',', $user_group);
                 $bad_names = explode(",", $bad_names);
@@ -302,7 +322,9 @@ class AdminLotteryuserconfigController extends Controller
                 ->select(DB::raw("distinct(username)"))
                 ->get();
 
-            foreach($order_lottery as $item) {                
+            $result_1 = array();
+
+            foreach($order_lottery as $item) {
 
                 $result = DB::table("order_lottery as o")
                     ->join("order_lottery_sub as o_sub", "o.order_num", "=", "o_sub.order_num")
@@ -320,7 +342,8 @@ class AdminLotteryuserconfigController extends Controller
                             ->orWhere("o_sub.isFS", 0);
                     })
                     ->whereBetween("o.bet_time", [$s_time, $e_time])
-                    ->select(DB::raw("sum(o_sub.bet_money) as VGOLD"))
+                    ->where("o.username", $item["username"])
+                    ->select(DB::raw("sum(o_sub.bet_money) as VGOLD, o.Gtype as g_type"))
                     ->first();
 
                 $result = get_object_vars($result);
@@ -328,6 +351,7 @@ class AdminLotteryuserconfigController extends Controller
                 $VGOLD = $result["VGOLD"];
 
                 $user = User::where("UserName", $item["username"])->first();
+                $UserName = $user["UserName"];
                 $fanshui=$user['fanshui_cp'];
                 $agents=$user['Agents'];
                 $world=$user['World'];
@@ -335,7 +359,65 @@ class AdminLotteryuserconfigController extends Controller
                 $super=$user['Super'];
                 $admin=$user['Admin'];
                 $Money=$user['Money'];
-                $money_ts=round($VGOLD*$fanshui/100,2);
+
+                switch($result["g_type"]) {
+                    case "D3":
+                        $fanshui = $d3_rebate == "" ? $fanshui : $d3_rebate;
+                        break;
+                    case "P3":
+                        $fanshui = $p3_rebate == "" ? $fanshui : $p3_rebate;
+                        break;
+                    case "T3":
+                        $fanshui = $t3_rebate == "" ? $fanshui : $t3_rebate;
+                        break;
+                    case "CQ":
+                        $fanshui = $cq_rebate == "" ? $fanshui : $cq_rebate;
+                        break;
+                    case "TJ":
+                        $fanshui = $tj_rebate == "" ? $fanshui : $tj_rebate;
+                        break;
+                    case "JX":
+                        $fanshui = $jx_rebate == "" ? $fanshui : $jx_rebate;
+                        break;
+                    case "GDSF":
+                        $fanshui = $gdsf_rebate == "" ? $fanshui : $gdsf_rebate;
+                        break;
+                    case "GXSF":
+                        $fanshui = $gxsf_rebate == "" ? $fanshui : $gxsf_rebate;
+                        break;
+                    case "TJSF":
+                        $fanshui = $tjsf_rebate == "" ? $fanshui : $tjsf_rebate;
+                        break;
+                    case "CQSF":
+                        $fanshui = $cqsf_rebate == "" ? $fanshui : $cqsf_rebate;
+                        break;
+                    case "GD11":
+                        $fanshui = $gd11_rebate == "" ? $fanshui : $gd11_rebate;
+                        break;
+                    case "BJPK":
+                        $fanshui = $bjpk_rebate == "" ? $fanshui : $bjpk_rebate;
+                        break;
+                    case "BJKN":
+                        $fanshui = $bjkn_rebate == "" ? $fanshui : $bjkn_rebate;
+                        break;
+                    case "XYFT":
+                        $fanshui = $xyft_rebate == "" ? $fanshui : $xyft_rebate;
+                        break;
+                    case "FFC5":
+                        $fanshui = $ffc5_rebate == "" ? $fanshui : $ffc5_rebate;
+                        break;
+                    case "TXSSC":
+                        $fanshui = $tx_rebate == "" ? $fanshui : $tx_rebate;
+                        break;
+                    case "AZXY5":
+                        $fanshui = $azxy5_rebate == "" ? $fanshui : $azxy5_rebate;
+                        break;
+                    case "AZXY10":
+                        $fanshui = $azxy10_rebate == "" ? $fanshui : $azxy10_rebate;
+                        break;
+                }
+
+                $money_ts=round($VGOLD*(int)$fanshui/100,2);
 
                 DB::table("order_lottery as o")
                     ->join("order_lottery_sub as o_sub", "o.order_num", "=", "o_sub.order_num")
@@ -348,6 +430,9 @@ class AdminLotteryuserconfigController extends Controller
                     ]);
 
                 if ($money_ts > 0) {
+
+                    array_push($result_1, $UserName."有效投注额:$VGOLD,反水比率：$fanshui,反水金额:$money_ts");
+
                     $Order_Code='CK'.date("YmdHis",time()+12*3600).mt_rand(1000,9999);
                     $adddate=date("Y-m-d");
                     $date=date("Y-m-d H:i:s");
@@ -399,7 +484,6 @@ class AdminLotteryuserconfigController extends Controller
                         $new_log->save();
                     }
                 }
-
             }
 
             $data = array(
@@ -414,6 +498,7 @@ class AdminLotteryuserconfigController extends Controller
 
             $web_mem_log_data->create($data);
 
+            $response["data"] = $result_1;
             $response['message'] = "Discount Data updated successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;

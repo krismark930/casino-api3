@@ -345,7 +345,7 @@ class AdminStatisticsController extends Controller
             if ($parents_id==''){
                 $sql = "select * from web_mem_log_data where LoginTime like '%$date_start%' $search group by UserName order by ID desc";
             }else{
-                $sql = "select * from web_mem_log_data where LoginTime like '%$date_start%' and UserName='$parents_id' group by UserName order by ID desc";
+                $sql = "select * from web_mem_log_data where LoginTime like '%$date_start%' and UserName='$parents_id' order by ID desc";
             }
             $result = DB::select($sql);
             $cou=count($result);
