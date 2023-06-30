@@ -4195,6 +4195,56 @@ class KatanController extends Controller
             $rate = $request_data["rate"];
             $gold = $request_data["gold"];
 
+            $configs = Config::all();
+
+            $btm = $configs[0]['btm'];
+            $ctm = $configs[0]['ctm'];
+            $dtm = $configs[0]['dtm'];
+            $btmdx = $configs[0]['btmdx'];
+            $ctmdx = $configs[0]['ctmdx'];
+            $dtmdx = $configs[0]['dtmdx'];
+            $bzt = $configs[0]['bzt'];
+            $czt = $configs[0]['czt'];
+            $dzt = $configs[0]['dzt'];
+            $bztdx = $configs[0]['bztdx'];
+            $cztdx = $configs[0]['cztdx'];
+            $dztdx = $configs[0]['dztdx'];
+            $bzm = $configs[0]['bzm'];
+            $czm = $configs[0]['czm'];
+            $dzm = $configs[0]['dzm'];
+            $bzmdx = $configs[0]['bzmdx'];
+            $czmdx = $configs[0]['czmdx'];
+            $dzmdx = $configs[0]['dzmdx'];
+            $bth = $configs[0]['bth'];
+            $cth = $configs[0]['cth'];
+            $dth = $configs[0]['dth'];
+            $bthdx = $configs[0]['bthdx'];
+            $cthdx = $configs[0]['cthdx'];
+            $dthdx = $configs[0]['dthdx'];
+            $bzm6 = $configs[0]['bzm6'];
+            $czm6 = $configs[0]['czm6'];
+            $dzm6 = $configs[0]['dzm6'];
+            $bsx = $configs[0]['bsx'];
+            $csx = $configs[0]['csx'];
+            $dsx = $configs[0]['dsx'];
+            $bsx6 = $configs[0]['bsx6'];
+            $csx6 = $configs[0]['csx6'];
+            $dsx6 = $configs[0]['dsx6'];
+            $bsxp = $configs[0]['bsxp'];
+            $csxp = $configs[0]['csxp'];
+            $dsxp = $configs[0]['dsxp'];
+            $bbb = $configs[0]['bbb'];
+            $cbb = $configs[0]['cbb'];
+            $dbb = $configs[0]['dbb'];
+            $bzx = $configs[0]['bzx'];
+            $czx = $configs[0]['czx'];
+            $dzx = $configs[0]['dzx'];
+            $blx = $configs[0]['blx'];
+            $clx = $configs[0]['clx'];
+            $dlx = $configs[0]['dlx'];
+            $jifei = $configs[0]['jifei'];
+            $iszhudan = $configs[0]['iszhudan'];
+
             switch ($class2) {
 
                 case "二肖":

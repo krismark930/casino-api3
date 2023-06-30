@@ -101,6 +101,7 @@ use App\Http\Controllers\Api\Admin\AdminOtherGameLogsController;
 use App\Http\Controllers\Api\Admin\UserManagementController;
 use App\Http\Controllers\Api\Admin\AdminStatisticsController;
 use App\Http\Controllers\Api\Admin\SportReportController;
+use App\Http\Controllers\Api\Admin\RealGameCashController;
 
 /*
 |--------------------------------------------------------------------------
@@ -710,6 +711,17 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], func
         Route::get('/all', [SportReportController::class, 'getSportReport']);
         Route::post('/top', [SportReportController::class, 'getSportReportTop']);
         Route::post('/rebate', [SportReportController::class, 'startSportRebate']);
+    });
+
+    // real game money management
+
+    Route::group(['prefix' => 'real-game'], function ($router) {
+        Route::post('/ag-money', [RealGameCashController::class, 'getAGMoney']);
+        Route::post('/bbin-money', [RealGameCashController::class, 'getBBINMoney']);
+        Route::post('/mg-money', [RealGameCashController::class, 'getMGMoney']);
+        Route::post('/pt-money', [RealGameCashController::class, 'getPTMoney']);
+        Route::post('/og-money', [RealGameCashController::class, 'getOGMoney']);
+        Route::post('/ky-money', [RealGameCashController::class, 'getKYMoney']);
     });
 });
 
