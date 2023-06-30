@@ -53,7 +53,7 @@ class AdminOtherGameLogsController extends Controller
             $total_count = $result->count();
 
             $result = $result->offset(($page_no - 1) * $limit)
-                    ->take($limit)->get();
+                    ->take($limit)->orderBy("id", "desc")->get();
 
             foreach($result as $row) {
                 $row["time"] = date("Y-m-d H:i:s");
@@ -109,7 +109,7 @@ class AdminOtherGameLogsController extends Controller
             $total_count = $result->count();
 
             $result = $result->offset(($page_no - 1) * $limit)
-                    ->take($limit)->get();
+                    ->take($limit)->orderBy("id", "desc")->get();
 
             foreach($result as $row) {
                 $row["time"] = date("Y-m-d H:i:s");
@@ -167,7 +167,7 @@ class AdminOtherGameLogsController extends Controller
             $total_count = $result->count();
 
             $result = $result->offset(($page_no - 1) * $limit)
-                    ->take($limit)->get();
+                    ->take($limit)->orderBy("id", "desc")->get();
 
             foreach($result as $row) {
                 $row["time"] = date("Y-m-d H:i:s");
@@ -223,7 +223,7 @@ class AdminOtherGameLogsController extends Controller
             $total_count = $result->count();
 
             $result = $result->offset(($page_no - 1) * $limit)
-                    ->take($limit)->get();
+                    ->take($limit)->orderBy("id", "desc")->get();
 
             foreach($result as $row) {
                 $row["time"] = date("Y-m-d H:i:s");
@@ -279,7 +279,7 @@ class AdminOtherGameLogsController extends Controller
             $total_count = $result->count();
 
             $result = $result->offset(($page_no - 1) * $limit)
-                    ->take($limit)->get();
+                    ->take($limit)->orderBy("id", "desc")->get();
 
             foreach($result as $row) {
                 $row["time"] = date("Y-m-d H:i:s");
@@ -335,7 +335,7 @@ class AdminOtherGameLogsController extends Controller
             $total_count = $result->count();
 
             $result = $result->offset(($page_no - 1) * $limit)
-                    ->take($limit)->get();
+                    ->take($limit)->orderBy("id", "desc")->get();
 
             foreach($result as $row) {
                 $row["time"] = date("Y-m-d H:i:s");

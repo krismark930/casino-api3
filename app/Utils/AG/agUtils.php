@@ -7,6 +7,7 @@ use App\Utils\AG\des;
 class AGUtils {
 
     var $AG_agent = "H07_AGIN";
+    var $c_agent = "H07";
     var $md5key = "KGeEtsGSQ2wT";
     var $deskey = "Pa27VJ4p";
     var $giurl = "http://gi.bbin-api8.com:81/";
@@ -194,9 +195,8 @@ class AGUtils {
     }
 
     function getRealOrder($plan_code,$start_date, $end_date, $game_type, $order="username", $by="DESC", $page=1, $per_page=100) {
-        // return $this->AG_agent."+".$start_date."+".$end_date."+".$game_type."+".$order."+".$by."+".$page."+".$per_page."+".$plan_code;
         $key = md5($this->AG_agent."+".$start_date."+".$end_date."+".$game_type."+".$order."+".$by."+".$page."+".$per_page."+".$plan_code);
-        $url = $this->orderUrl."getorders.xml?cagent=".$this->AG_agent."&startdate=".$start_date."&enddate=".$end_date."&key=".$key;
+        $url = $this->orderUrl."getorders.xml?cagent=".$this->c_agent."&startdate=".$start_date."&enddate=".$end_date."&key=".$key;
         return $url;
         $xmlcode=$this->getTransactionUrl($url);
         return $xmlcode;

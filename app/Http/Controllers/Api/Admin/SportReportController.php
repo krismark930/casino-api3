@@ -725,7 +725,7 @@ class SportReportController extends Controller
                     $q1 = User::where("UserName", $row["M_Name"])->increment('Money', (int)$money_ts);
 
                     if($q1==1){
-                        $user_id=Utils::GetField($UserName,'ID');
+                        $user_id=Utils::GetField($UserName,'id');
                         $balance=Utils::GetField($UserName,'Money');
                         $datetime=date("Y-m-d H:i:s",time()+12*3600);
                         $money_log_sql="insert into money_log set user_id='$user_id',order_num='$Order_Code',about='".$loginname."体育返水<br>有效金额:$VGOLD<br>返水金额:$money_ts',update_time='$datetime',type='".$Date_Memo."体育返水',order_value='$money_ts',assets=$previousAmount,balance=$balance";
