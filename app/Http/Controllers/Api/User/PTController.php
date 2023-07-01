@@ -268,11 +268,11 @@ class PTController extends Controller
                         ->update($new_data);
                 }
             
-                $AGUtils = new AGUtils($sysConfig);
+                $PTUtils = new PTUtils($sysConfig);
 
                 $user = User::where("UserName", $UserName)->first();                
 
-                $balance= $AGUtils->getMoney_PT($user["PT_User"], $user["PT_Pass"]);
+                $balance= $PTUtils->getMoney_PT($user["PT_User"], $user["PT_Pass"]);
 
                 User::where("UserName", $UserName)->update([
                     "PT_Money" => $balance,

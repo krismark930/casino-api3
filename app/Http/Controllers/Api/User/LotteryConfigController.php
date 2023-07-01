@@ -38,6 +38,10 @@ class LotteryConfigController extends Controller
 
             $result = LotteryUserConfig::where("username", $user["UserName"])->first();
 
+            if (!isset($result)) {
+                $result = LotteryUserConfig::query()->first();
+            }
+
             $response["data"] = $result;
             $response['message'] = "Lottery User Config Data fetched successfully!";
             $response['success'] = TRUE;
