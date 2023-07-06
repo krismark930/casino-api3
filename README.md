@@ -62,3 +62,8 @@ sniper
 端口: 35115
 
 ssh -p 35115 root@27.126.187.10
+ssh  root@27.126.187.127
+
+27.126.187.127-131 (IP x 5)
+root
+A2epmRDYB4ba
