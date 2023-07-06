@@ -9,6 +9,8 @@ if [ "${EVN}" = "pre" ];then
     cp -f ./.env_pre ./.env
 else
     echo "pro"
+    cp -f ./.env_pro ./.env
+
     if [ "${TARGET}" = "jxc" ];then
         cp -f ./.env_pro_jxc ./.env
     fi
@@ -16,4 +18,5 @@ else
     if [ "${TARGET}" = "xyh" ];then
         cp -f ./.env_pro ./.env
     fi
+    
 fi
