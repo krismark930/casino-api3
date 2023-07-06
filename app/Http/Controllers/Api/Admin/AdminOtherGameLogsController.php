@@ -47,7 +47,7 @@ class AdminOtherGameLogsController extends Controller
             $result = AGLogs::query();
 
             if ($user_name != "") {
-                $result = $result->where("UserName", "like", "%$user_name%");
+                $result = $result->where("Username", "like", "%$user_name%");
             }
 
             $total_count = $result->count();
@@ -57,8 +57,8 @@ class AdminOtherGameLogsController extends Controller
 
             foreach($result as $row) {
                 $row["time"] = date("Y-m-d H:i:s");
-                $row["AG_User"] = Utils::GetField($row["UserName"], "AG_User");
-                $row["Alias"] = Utils::GetField($row["UserName"], "Alias");
+                $row["AG_User"] = Utils::GetField($row["Username"], "AG_User");
+                $row["Alias"] = Utils::GetField($row["Username"], "Alias");
             }
 
             $response["total_count"] = $total_count;
@@ -103,7 +103,7 @@ class AdminOtherGameLogsController extends Controller
             $result = BBINLogs::query();
 
             if ($user_name != "") {
-                $result = $result->where("UserName", "like", "%$user_name%");
+                $result = $result->where("Username", "like", "%$user_name%");
             }
 
             $total_count = $result->count();
@@ -113,8 +113,8 @@ class AdminOtherGameLogsController extends Controller
 
             foreach($result as $row) {
                 $row["time"] = date("Y-m-d H:i:s");
-                $row["BBIN_User"] = Utils::GetField($row["UserName"], "BBIN_User");
-                $row["Alias"] = Utils::GetField($row["UserName"], "Alias");
+                $row["BBIN_User"] = Utils::GetField($row["Username"], "BBIN_User");
+                $row["Alias"] = Utils::GetField($row["Username"], "Alias");
             }
 
             $response["total_count"] = $total_count;
@@ -159,9 +159,7 @@ class AdminOtherGameLogsController extends Controller
             $result = MGLogs::query();
 
             if ($user_name != "") {
-                $result = $result->where("UserName", "like", "%$user_name%");
-                $row["MG_User"] = Utils::GetField($row["UserName"], "MG_User");
-                $row["Alias"] = Utils::GetField($row["UserName"], "Alias");
+                $result = $result->where("Username", "like", "%$user_name%");
             }
 
             $total_count = $result->count();
@@ -171,6 +169,8 @@ class AdminOtherGameLogsController extends Controller
 
             foreach($result as $row) {
                 $row["time"] = date("Y-m-d H:i:s");
+                $row["MG_User"] = Utils::GetField($row["Username"], "MG_User");
+                $row["Alias"] = Utils::GetField($row["Username"], "Alias");
             }
 
             $response["total_count"] = $total_count;
@@ -215,9 +215,7 @@ class AdminOtherGameLogsController extends Controller
             $result = PTLogs::query();
 
             if ($user_name != "") {
-                $result = $result->where("UserName", "like", "%$user_name%");
-                $row["PT_User"] = Utils::GetField($row["UserName"], "PT_User");
-                $row["Alias"] = Utils::GetField($row["UserName"], "Alias");
+                $result = $result->where("Username", "like", "%$user_name%");
             }
 
             $total_count = $result->count();
@@ -227,6 +225,8 @@ class AdminOtherGameLogsController extends Controller
 
             foreach($result as $row) {
                 $row["time"] = date("Y-m-d H:i:s");
+                $row["PT_User"] = Utils::GetField($row["Username"], "PT_User");
+                $row["Alias"] = Utils::GetField($row["Username"], "Alias");
             }
 
             $response["total_count"] = $total_count;
@@ -271,9 +271,7 @@ class AdminOtherGameLogsController extends Controller
             $result = OGLogs::query();
 
             if ($user_name != "") {
-                $result = $result->where("UserName", "like", "%$user_name%");
-                $row["OG_User"] = Utils::GetField($row["UserName"], "OG_User");
-                $row["Alias"] = Utils::GetField($row["UserName"], "Alias");
+                $result = $result->where("Username", "like", "%$user_name%");
             }
 
             $total_count = $result->count();
@@ -283,6 +281,8 @@ class AdminOtherGameLogsController extends Controller
 
             foreach($result as $row) {
                 $row["time"] = date("Y-m-d H:i:s");
+                $row["OG_User"] = Utils::GetField($row["Username"], "OG_User");
+                $row["Alias"] = Utils::GetField($row["Username"], "Alias");
             }
 
             $response["total_count"] = $total_count;
@@ -327,9 +327,7 @@ class AdminOtherGameLogsController extends Controller
             $result = KYLogs::query();
 
             if ($user_name != "") {
-                $result = $result->where("UserName", "like", "%$user_name%");
-                $row["KY_User"] = Utils::GetField($row["UserName"], "KY_User");
-                $row["Alias"] = Utils::GetField($row["UserName"], "Alias");
+                $result = $result->where("Username", "like", "%$user_name%");
             }
 
             $total_count = $result->count();
@@ -339,6 +337,8 @@ class AdminOtherGameLogsController extends Controller
 
             foreach($result as $row) {
                 $row["time"] = date("Y-m-d H:i:s");
+                $row["KY_User"] = Utils::GetField($row["Username"], "KY_User");
+                $row["Alias"] = Utils::GetField($row["Username"], "Alias");
             }
 
             $response["total_count"] = $total_count;

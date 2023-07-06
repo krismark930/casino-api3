@@ -24,6 +24,8 @@ use App\Http\Controllers\Admin\AdminRealWaggerController;
 
 use App\Http\Controllers\Admin\ThirdParty\SportScoreResultController;
 
+use App\Http\Controllers\TestController;
+
 // API User Controllers
 use App\Http\Controllers\Api\User\BettingController;
 use App\Http\Controllers\Api\User\BKBettingController;
@@ -45,6 +47,8 @@ use App\Http\Controllers\Api\User\PTController;
 use App\Http\Controllers\Api\User\HomeController;
 use App\Http\Controllers\Api\User\MessageController;
 use App\Http\Controllers\Api\User\LotteryConfigController;
+use App\Http\Controllers\Api\User\PaymentMethodController;
+use App\Http\Controllers\Api\User\PostController;
 
 // API Admin Controllers
 use App\Http\Controllers\Api\Admin\WebSystemDataController;
@@ -98,6 +102,7 @@ use App\Http\Controllers\Api\Admin\AdminMessageController;
 use App\Http\Controllers\Api\Admin\AdminAccessController;
 use App\Http\Controllers\Api\Admin\AdminUserInfoController;
 use App\Http\Controllers\Api\Admin\AdminOtherGameLogsController;
+use App\Http\Controllers\Api\Admin\AdminPostController;
 use App\Http\Controllers\Api\Admin\UserManagementController;
 use App\Http\Controllers\Api\Admin\AdminStatisticsController;
 use App\Http\Controllers\Api\Admin\SportReportController;
@@ -115,7 +120,8 @@ use App\Http\Controllers\Api\Admin\RealGameCashController;
 */
 
 // user routes
-Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
+Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router) {
+    Route::get('/test', [TestController::class, 'addTest']);
     // betting routes
     Route::group(['prefix' => 'betting'], function ($router) {
         // ft betting order today api
@@ -123,7 +129,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
         // ft betting inplay api
         Route::post('/single-ft-play', [BettingController::class, 'saveFTBettingInPlay']);
         // ft betting champion api
-        Route::post('/single-ft-champion', [BettingController::class, 'saveFTBettingChampion']);        
+        Route::post('/single-ft-champion', [BettingController::class, 'saveFTBettingChampion']);
         // ft betting parlay api
         Route::post('/single-ft-parlay', [BettingController::class, 'saveFTBettingParlay']);
         // ft betting parlay api
@@ -141,7 +147,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
         // bk betting inplay api
         Route::post('/single-bk-play', [BKBettingController::class, 'saveBKBettingInPlay']);
         // bk betting champion api
-        Route::post('/single-bk-champion', [BKBettingController::class, 'saveBKBettingChampion']);        
+        Route::post('/single-bk-champion', [BKBettingController::class, 'saveBKBettingChampion']);
         // bk betting parlay api
         Route::post('/single-bk-parlay', [BKBettingController::class, 'saveBKBettingParlay']);
     });
@@ -160,7 +166,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
 
     // hong kong six mark
 
-    Route::group(['prefix' => 'ka-tan', 'middleware' => 'auth:api'], function ($router){
+    Route::group(['prefix' => 'ka-tan', 'middleware' => 'auth:api'], function ($router) {
         Route::post('/save', [KatanController::class, 'saveKatan']);
         Route::post('/parlay/save', [KatanController::class, 'saveKatanParlay']);
         Route::post('/even-code/save', [KatanController::class, 'saveKatanEven']);
@@ -172,11 +178,11 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
         Route::post('/bet-result/sub', [KatanController::class, 'getSubBetResult']);
     });
 
-    Route::group(['prefix' => 'ka-bl'], function ($router){
+    Route::group(['prefix' => 'ka-bl'], function ($router) {
         Route::post('/get', [KablController::class, 'getKablData']);
     });
 
-    Route::group(['prefix' => 'ka-kithe'], function ($router){
+    Route::group(['prefix' => 'ka-kithe'], function ($router) {
         Route::post('/game-status', [KakitheController::class, 'getCurrentGameStatus']);
         Route::post('/game-version', [KakitheController::class, 'getGameVersion']);
         Route::post('/game-result', [KakitheController::class, 'getGameResult']);
@@ -185,7 +191,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
 
     // macao six mark
 
-    Route::group(['prefix' => 'macao-ka-tan', 'middleware' => 'auth:api'], function ($router){
+    Route::group(['prefix' => 'macao-ka-tan', 'middleware' => 'auth:api'], function ($router) {
         Route::post('/save', [KatanController::class, 'saveMacaoKatan']);
         Route::post('/parlay/save', [KatanController::class, 'saveMacaoKatanParlay']);
         Route::post('/even-code/save', [KatanController::class, 'saveMacaoKatanEven']);
@@ -197,11 +203,11 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
         Route::post('/bet-result/sub', [KatanController::class, 'getMacaoSubBetResult']);
     });
 
-    Route::group(['prefix' => 'macao-ka-bl'], function ($router){
+    Route::group(['prefix' => 'macao-ka-bl'], function ($router) {
         Route::post('/get', [KablController::class, 'getMacaoKablData']);
     });
 
-    Route::group(['prefix' => 'macao-ka-kithe'], function ($router){
+    Route::group(['prefix' => 'macao-ka-kithe'], function ($router) {
         Route::post('/game-status', [KakitheController::class, 'getMacaoCurrentGameStatus']);
         Route::post('/game-version', [KakitheController::class, 'getMacaoGameVersion']);
         Route::post('/game-result', [KakitheController::class, 'getMacaoGameResult']);
@@ -282,10 +288,24 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router){
         Route::post('/item', [LotteryConfigController::class, 'getLotteryUserConfig']);
     });
 
+    Route::group(['prefix' => 'payment-method', 'middleware' => 'auth:api'], function ($router) {
+        Route::post('/item', [LotteryConfigController::class, 'getLotteryUserConfig']);
+    });
+
+    Route::group(['prefix' => 'third-party-payment'], function ($router) {
+        Route::post('/ly-pay', [PaymentMethodController::class, 'submitLYPay']);
+        Route::get('/ly-notify', [PaymentMethodController::class, 'notifyLY']);
+    });
+
+    Route::group(['prefix' => 'post', 'middleware' => 'auth:api'], function ($router) {
+        Route::get('/all', [PostController::class, 'getPosts']);
+        Route::post('/add', [PostController::class, 'savePost']);
+        Route::post('/item', [PostController::class, 'getPost']);
+    });
 });
 
 // admin routes
-Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], function ($router){
+Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], function ($router) {
     // web_system_data routes
     Route::group(['prefix' => 'web-system-data'], function ($router) {
         // get web_system_data api
@@ -504,7 +524,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], func
     Route::group(['prefix' => 'always-color'], function ($router) {
         Route::post('/order-list/get', [AdminAlwaysColorController::class, 'getOrderList']);
         Route::post('/order-cancel/all', [AdminAlwaysColorController::class, 'getOrderCancelAll']);
-        Route::post('/lottery-history-all', [AdminAlwaysColorController::class, 'getLotteryHistory']); 
+        Route::post('/lottery-history-all', [AdminAlwaysColorController::class, 'getLotteryHistory']);
         Route::post('/user-lottery', [AdminAlwaysColorController::class, 'getUserLottery']);
         Route::post('/detail-lottery', [AdminAlwaysColorController::class, 'getDetailLottery']);
     });
@@ -723,10 +743,18 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], func
         Route::post('/og-money', [RealGameCashController::class, 'getOGMoney']);
         Route::post('/ky-money', [RealGameCashController::class, 'getKYMoney']);
     });
+
+    // post management
+
+    Route::group(['prefix' => 'post-management'], function ($router) {
+        Route::post('/all', [AdminPostController::class, 'getPosts']);
+        Route::post('/update', [AdminPostController::class, 'updatePost']);
+        Route::post('/delete', [AdminPostController::class, 'deletePost']);
+    });
 });
 
 // routes for third party
-Route::group(['prefix' => 'third-party'], function ($router){
+Route::group(['prefix' => 'third-party'], function ($router) {
     // web_system_data routes
     Route::group(['prefix' => 'web-system-data'], function ($router) {
         // get web_system_data api
@@ -760,7 +788,7 @@ Route::group(['prefix' => 'third-party'], function ($router){
         // get ft data 
         Route::get('/ft-data', [MatchSportController::class, 'getFTData']);
         // get In play Data
-        Route::get('/ft-in-play-data', [MatchSportController::class, 'getFTInPlayData']);        
+        Route::get('/ft-in-play-data', [MatchSportController::class, 'getFTInPlayData']);
         Route::get('/ft-correct-score-inplay', [MatchSportController::class, 'getFTCorrectScoreInPlayData']);
         Route::post('/ft-corner-today', [MatchSportController::class, 'saveFT_CORNER_TODAY']);
 
@@ -843,7 +871,8 @@ Route::group(['prefix' => 'third-party'], function ($router){
         Route::post('/og-token', [OGController::class, 'getOGToken']);
         Route::post('/og-transaction', [OGController::class, 'getOGTransaction']);
         Route::get('/ag-transaction', [AGController::class, 'getAGTransaction']);
-        Route::post('/yoplay-transaction', [AGController::class, 'getYoplayTransaction']);
+        Route::get('/eg-transaction', [AGController::class, 'getEGameTransaction']);
+        Route::get('/yoplay-transaction', [AGController::class, 'getYoplayTransaction']);
         Route::post('/bbin-transaction', [BBINController::class, 'getBBINTransaction']);
         Route::post('/mg-transaction', [MGController::class, 'getMGTransaction']);
         Route::post('/pt-transaction', [PTController::class, 'getPTTransaction']);
@@ -859,7 +888,7 @@ Route::group(['prefix' => 'users', 'middleware' => 'CORS'], function ($router) {
 });
 
 /* Sports routes */
-Route::group(['prefix' => 'sport', 'middleware' => ['CORS', 'auth:admin']], function ($router){
+Route::group(['prefix' => 'sport', 'middleware' => ['CORS', 'auth:admin']], function ($router) {
 
     Route::post('/save_score', [SportController::class, 'saveScore']);
 
@@ -882,12 +911,12 @@ Route::group(['prefix' => 'sport', 'middleware' => ['CORS', 'auth:admin']], func
 });
 
 /* Admin routes. */
-Route::group(['prefix'=>'admin', 'middleware'=>'CORS'], function ($router) {
+Route::group(['prefix' => 'admin', 'middleware' => 'CORS'], function ($router) {
     /* Authentication */
     Route::post('/login', [AuthController::class, 'login'])->name('admin.auth.login');
     Route::post('/register', [AuthController::class, 'register'])->name('admin.auth.register');
 
-    Route::group(['prefix'=>'system-setting'], function ($router) {
+    Route::group(['prefix' => 'system-setting'], function ($router) {
         /* System Setting */
         // System Parameters
         // Website URL
@@ -901,7 +930,6 @@ Route::group(['prefix'=>'admin', 'middleware'=>'CORS'], function ($router) {
         //HomePage Notification
         Route::post('/system-parameters/get-homenotifications', [SystemParametersController::class, 'get_homenotifications'])->name('admin.system-setting.system-parameters.get-homenotifications');
         Route::post('/system-parameters/set-homenotifications', [SystemParametersController::class, 'set_homenotifications'])->name('admin.system-setting.system-parameters.set-homenotifications');
-
     });
 });
 
@@ -930,7 +958,7 @@ Route::group(['prefix' => 'account', 'middleware' => 'CORS'], function ($router)
 });
 
 
-Route::group(['prefix' => 'livebetting', 'middleware' => ['CORS', 'auth:admin']], function ($router){
+Route::group(['prefix' => 'livebetting', 'middleware' => ['CORS', 'auth:admin']], function ($router) {
     Route::get('/get_items', [AdminLiveBettingController::class, 'getItems'])->name('admin.livebetting.getItems');
     Route::get('/get_function_items', [AdminLiveBettingController::class, 'getFunctionItems'])->name('admin.livebetting.getFunctionItems');
     Route::get('/cancel_event', [AdminLiveBettingController::class, 'handleCancelEvent'])->name('admin.livebetting.handleCancelEvent');
@@ -938,16 +966,16 @@ Route::group(['prefix' => 'livebetting', 'middleware' => ['CORS', 'auth:admin']]
 });
 
 
-Route::group(['prefix' => 'searchbetting', 'middleware' => ['CORS', 'auth:admin']], function ($router){
-    Route::get('/get_items', [AdminSearchBettingController::class, 'getItems'])->name('admin.searchbetting.getItems');//->middleware('auth:admin');
+Route::group(['prefix' => 'searchbetting', 'middleware' => ['CORS', 'auth:admin']], function ($router) {
+    Route::get('/get_items', [AdminSearchBettingController::class, 'getItems'])->name('admin.searchbetting.getItems'); //->middleware('auth:admin');
     Route::get('/get_function_items', [AdminSearchBettingController::class, 'getFunctionItems'])->name('admin.searchbetting.getFunctionItems');
     Route::get('/cancel_event', [AdminSearchBettingController::class, 'handleCancelEvent'])->name('admin.searchbetting.handleCancelEvent');
     Route::get('/resume_event', [AdminSearchBettingController::class, 'handleResumeEvent'])->name('admin.searchbetting.handleResumeEvent');
     Route::get('/balance_event', [AdminSearchBettingController::class, 'handleBalanceEvent'])->name('admin.searchbetting.handleBalanceEvent');
 });
 
-Route::group(['prefix' => 'championbetting', 'middleware' => ['CORS', 'auth:admin']], function ($router){
-    Route::get('/get_items', [AdminChampionBettingController::class, 'getItems'])->name('admin.championbetting.getItems');//->middleware('auth:admin');
+Route::group(['prefix' => 'championbetting', 'middleware' => ['CORS', 'auth:admin']], function ($router) {
+    Route::get('/get_items', [AdminChampionBettingController::class, 'getItems'])->name('admin.championbetting.getItems'); //->middleware('auth:admin');
     Route::get('/get_function_items', [AdminChampionBettingController::class, 'getFunctionItems'])->name('admin.championbetting.getFunctionItems');
     Route::get('/cancel_event', [AdminChampionBettingController::class, 'handleCancelEvent'])->name('admin.championbetting.handleCancelEvent');
     Route::get('/resume_event', [AdminChampionBettingController::class, 'handleResumeEvent'])->name('admin.championbetting.handleResumeEvent');
@@ -955,14 +983,14 @@ Route::group(['prefix' => 'championbetting', 'middleware' => ['CORS', 'auth:admi
     Route::post('/delete-event', [AdminChampionBettingController::class, 'handleDeleteEvent']);
 });
 
-Route::group(['prefix' => 'alliancerestriction', 'middleware' => ['CORS', 'auth:admin']], function ($router){
+Route::group(['prefix' => 'alliancerestriction', 'middleware' => ['CORS', 'auth:admin']], function ($router) {
     Route::get('/get_items', [AdminAllianceRestrictionController::class, 'getItems'])->name('admin.alliance_restriction.getItems');
     Route::get('/get_item', [AdminAllianceRestrictionController::class, 'getItem'])->name('admin.alliance_restriction.getItem');
     Route::post('/set_item', [AdminAllianceRestrictionController::class, 'setItem'])->name('admin.alliance_restriction.setItem');
     Route::get('/delete_event', [AdminAllianceRestrictionController::class, 'handleDeleteEvent'])->name('admin.alliance_restriction.handleDeleteEvent');
 });
 
-Route::group(['prefix' => 'datamanipulation', 'middleware' => ['CORS', 'auth:admin']], function ($router){
+Route::group(['prefix' => 'datamanipulation', 'middleware' => ['CORS', 'auth:admin']], function ($router) {
     Route::get('/scheduledata/get_alliance_items', [AdminDataManipulationController::class, 'scheduledata_getAllianceTypes'])->name('admin.datamanipulation.scheduledata.getAllianceTypes');
     Route::get('/scheduledata/get_items', [AdminDataManipulationController::class, 'scheduledata_getItems'])->name('admin.datamanipulation.scheduledata.getItems');
     Route::get('/scheduledata/get_item', [AdminDataManipulationController::class, 'scheduledata_getItem'])->name('admin.datamanipulation.scheduledata.getItem');
@@ -971,14 +999,14 @@ Route::group(['prefix' => 'datamanipulation', 'middleware' => ['CORS', 'auth:adm
     Route::post('/scheduledata/delete_event', [AdminDataManipulationController::class, 'scheduledata_deleteEvent'])->name('admin.datamanipulation.scheduledata.deleteEvent');
 });
 
-Route::group(['prefix' => 'betcheck', 'middleware' => ['CORS', 'auth:admin']], function ($router){
+Route::group(['prefix' => 'betcheck', 'middleware' => ['CORS', 'auth:admin']], function ($router) {
     Route::get('/get_items', [AdminBetCheckController::class, 'getItems'])->name('admin.betcheck.getItems');
     Route::get('/get_functions', [AdminBetCheckController::class, 'getFunctions'])->name('admin.betcheck.getFunctions');
     Route::get('/cancel_event', [AdminBetCheckController::class, 'cancelEvent'])->name('admin.betcheck.cancelEvent');
     Route::get('/resume_event', [AdminBetCheckController::class, 'resumeEvent'])->name('admin.betcheck.resumeEvent');
 });
 
-Route::group(['prefix' => 'check-list', 'middleware' => ['CORS', 'auth:admin']], function ($router){
+Route::group(['prefix' => 'check-list', 'middleware' => ['CORS', 'auth:admin']], function ($router) {
     Route::get('/get_items', [AdminParlayController::class, 'getItems'])->name('admin.parlay.getItems');
     Route::get('/get_functions', [AdminParlayController::class, 'getFunctions'])->name('admin.betcheck.getFunctions');
     Route::get('/cancel_event', [AdminParlayController::class, 'cancelEvent'])->name('admin.betcheck.cancelEvent');
@@ -986,16 +1014,16 @@ Route::group(['prefix' => 'check-list', 'middleware' => ['CORS', 'auth:admin']],
     Route::get('/modify_event', [AdminParlayController::class, 'modifyEvent'])->name('admin.betcheck.modifyEvent');
 });
 
-Route::group(['prefix' => 'check-list', 'middleware' => ['CORS', 'auth:admin']], function ($router){
+Route::group(['prefix' => 'check-list', 'middleware' => ['CORS', 'auth:admin']], function ($router) {
     Route::post('/add_item', [AdminDataAddController::class, 'addItem'])->name('admin.parlay.addItem');
 });
 
-Route::group(['prefix' => 'data-refresh', 'middleware' => ['CORS', 'auth:admin']], function ($router){
+Route::group(['prefix' => 'data-refresh', 'middleware' => ['CORS', 'auth:admin']], function ($router) {
     Route::get('/get_data', [AdminDataController::class, 'getData'])->name('admin.dataRefresh.getData');
     Route::post('/set_data', [AdminDataController::class, 'setData'])->name('admin.dataRefresh.setData');
 });
 
-Route::group(['prefix' => 'real_wagger', 'middleware' => ['CORS', 'auth:admin']], function ($router){
+Route::group(['prefix' => 'real_wagger', 'middleware' => ['CORS', 'auth:admin']], function ($router) {
     Route::get('/get_league_list', [AdminRealWaggerController::class, 'getLeagueList'])->name('admin.realwagger.getLeagueList');
     Route::get('/get_sdata', [AdminRealWaggerController::class, 'getSTableData'])->name('admin.realwagger.getSTableData');
     Route::get('/get_hdata', [AdminRealWaggerController::class, 'getHTableData'])->name('admin.realwagger.getHTableData');
@@ -1008,4 +1036,3 @@ Route::group(['prefix' => 'real_wagger', 'middleware' => ['CORS', 'auth:admin']]
     Route::get('/get_pldata', [AdminRealWaggerController::class, 'getPLTableData'])->name('admin.realwagger.getPLTableData');
     Route::get('/get_result_data', [AdminRealWaggerController::class, 'getResultTableData'])->name('admin.realwagger.getResultTableData');
 });
-

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utils\AG;
+namespace App\Utils\LYPAY;
 
 class DES {
 
