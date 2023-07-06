@@ -56,3 +56,9 @@ https://www.nowscore.com/index.html
 ## 测试账号
 sniper
 123456
+
+27.126.187.10,17,24,30,37 (IP x 5)
+密碼: Upq2JUhntzm4
+端口: 35115
+
+ssh -p 35115 root@27.126.187.10
