@@ -31,39 +31,6 @@ class DES
         $this->secret_key = $key;
     }
 
-    public function require_pkcs5()
-    {
-        $this->pad_method = 'pkcs5';
-    }
-
-    protected function pad_or_unpad($str, $ext)
-    {
-        if ( is_null($this->pad_method) )
-        {
-            return $str;
-        }
-        else
-        {
-            $func_name = __CLASS__ . '::' . $this->pad_method . '_' . $ext . 'pad';
-            if ( is_callable($func_name) )
-            {
-                $size = mcrypt_get_block_size('MCRYPT_3DES', 'ecb');
-                return call_user_func($func_name, $str, $size);
-            }
-        }
-        return $str;
-    }
-
-    protected function pad($str)
-    {
-        return $this->pad_or_unpad($str, '');
-    }
-
-    protected function unpad($str)
-    {
-        return $this->pad_or_unpad($str, 'un');
-    }
-
     public function encrypt($str)
     {
         $iv_size = openssl_cipher_iv_length('AES-128-ECB');

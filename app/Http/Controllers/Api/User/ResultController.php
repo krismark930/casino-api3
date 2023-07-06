@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Validator;
 
 class ResultController extends Controller
 {
-    
-
     public function getResultFT(Request $request)
     {
         $response = [];
