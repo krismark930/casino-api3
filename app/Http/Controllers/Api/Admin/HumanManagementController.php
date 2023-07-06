@@ -83,6 +83,7 @@ class HumanManagementController extends Controller
                 $dz2 = Dz2::where("GameType", $item["gameType"])
                     ->orWhere("GameType_H5", $item["gameType"])
                     ->first(["GameName"]);
+                if(!isset($dz2)) continue;
                 $item["GameName"] = $dz2["GameName"];
                 $item["playerName"] = substr($item['playerName'],3);
                 $item["tableCode"] = str_replace("null","",$item['tableCode']);

@@ -195,7 +195,9 @@ class AGUtils {
     }
 
     function getRealOrder($plan_code,$start_date, $end_date, $game_type, $order="username", $by="DESC", $page=1, $per_page=100) {
-        $key = md5($this->AG_agent."+".$start_date."+".$end_date."+".$game_type."+".$order."+".$by."+".$page."+".$per_page."+".$plan_code);
+        // $key = md5($this->c_agent."+".$start_date."+".$end_date."+".$game_type."+".$order."+".$by."+".$page."+".$per_page."+".$plan_code);
+        $key = md5($this->c_agent.$start_date.$end_date.$plan_code);
+        // return $this->c_agent."+".$start_date."+".$end_date."+".$game_type."+".$order."+".$by."+".$page."+".$per_page."+".$plan_code;
         $url = $this->orderUrl."getorders.xml?cagent=".$this->c_agent."&startdate=".$start_date."&enddate=".$end_date."&key=".$key;
         return $url;
         $xmlcode=$this->getTransactionUrl($url);
@@ -205,8 +207,8 @@ class AGUtils {
     }
 
     function getYoplayOrder($plan_code, $agent, $loginname, $start_date, $end_date, $game_type, $billno, $order="username", $by="DESC", $page=1, $per_page=100) {
-        return $this->AG_agent."+".$start_date."+".$end_date."+".$game_type."+".$order."+".$by."+".$page."+".$per_page."+".$plan_code;
-        $key = md5($this->AG_agent."+".$agent."+".$loginname."+".$start_date."+".$end_date."+".$game_type."+".$billno."+".$order."+".$by."+".$page."+".$per_page."+".$plan_code);
+        return $this->c_agent."+".$start_date."+".$end_date."+".$game_type."+".$order."+".$by."+".$page."+".$per_page."+".$plan_code;
+        $key = md5($this->c_agent."+".$agent."+".$loginname."+".$start_date."+".$end_date."+".$game_type."+".$billno."+".$order."+".$by."+".$page."+".$per_page."+".$plan_code);
         $url = $this->orderUrl."getyoplayorders_ex.xml?cagent=".$this->AG_agent."&startdate=".$start_date."&enddate=".$end_date."&key=".$key;
         // return $url;
         $xmlcode=$this->getTransactionUrl($url);

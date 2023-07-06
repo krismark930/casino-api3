@@ -434,6 +434,8 @@ class AdminStatisticsController extends Controller
                 $n_sql='';
             }
 
+            $n_sql = $n_sql."and Online = 1";
+
             // $sql="select * from $data where Online=1 and Oid!='logout' and UserName<>'guest' $n_sql order by id desc";
             $sql="select * from $data where UserName<>'guest' $n_sql order by id desc";
             $result=DB::select($sql);

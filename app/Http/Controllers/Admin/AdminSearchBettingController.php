@@ -37,7 +37,9 @@ class AdminSearchBettingController extends Controller
 
         $data = array();
 
-        $mids = Report::whereBetween('BetTime',array($start_time, $end_time));
+        // $mids = Report::whereBetween('BetTime',array($start_time, $end_time));
+
+        $mids = Report::where("M_Date", $m_date);
 
         if ($active == 1) {
             $mids = $mids->where("Gtype", "FT");

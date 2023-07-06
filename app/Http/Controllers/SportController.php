@@ -21,7 +21,8 @@ include("include.php");
 
 class SportController extends Controller
 {
-    public function updateGetScore(Request $request) {
+    public function updateGetScore(Request $request)
+    {
 
         $response = [];
         $response['success'] = FALSE;
@@ -51,7 +52,6 @@ class SportController extends Controller
             $response['message'] = 'Get Score Data updated successfully';
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
-
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
             Log::error($e->getTraceAsString());
@@ -61,7 +61,8 @@ class SportController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function betResumption(Request $request) {
+    public function betResumption(Request $request)
+    {
 
         $response = [];
         $response['success'] = FALSE;
@@ -89,11 +90,11 @@ class SportController extends Controller
             $loginname = $request->user()->UserName;
 
             $web_report_data = Report::where("MID", $mid)
-                ->get(["ID","OrderID","M_Name","Middle","Pay_Type","BetScore","M_Result","Checked"]);
+                ->get(["ID", "OrderID", "M_Name", "Middle", "Pay_Type", "BetScore", "M_Result", "Checked"]);
 
             $sport = Sport::where("MID", $mid)->first();
 
-            foreach($web_report_data as $item) {
+            foreach ($web_report_data as $item) {
 
                 $ID = $item['ID'];
                 $username = $item['M_Name'];
@@ -101,7 +102,7 @@ class SportController extends Controller
                 $m_result = $item['M_Result'];
                 $OrderID = $item['OrderID'];
                 $Middle = $item['Middle'];
-                $Middle = explode("<FONT color=green>",$Middle)[0];
+                $Middle = explode("<FONT color=green>", $Middle)[0];
 
                 Report::where('ID', $ID)
                     ->where('Gtype', $g_type)
@@ -133,28 +134,26 @@ class SportController extends Controller
 
                     //会员金额操作成功
 
-                    if($q1 == 1 || $cash == 0) {
+                    if ($q1 == 1 || $cash == 0) {
 
-                        $balance = Utils::GetField($username,'Money');
+                        $balance = Utils::GetField($username, 'Money');
 
-                        $user_id = Utils::GetField($username,'id');
+                        $user_id = Utils::GetField($username, 'id');
 
-                        $datetime=date("Y-m-d H:i:s");
+                        $datetime = date("Y-m-d H:i:s");
 
                         $new_log = new MoneyLog;
                         $new_log->user_id = $user_id;
                         $new_log->order_num = $OrderID;
-                        $new_log->about = $loginname."审核比分恢复赛事<br>MID:".$mid."<br>RID:".$ID;
+                        $new_log->about = $loginname . "审核比分恢复赛事<br>MID:" . $mid . "<br>RID:" . $ID;
                         $new_log->update_time = $datetime;
                         $new_log->type = $Middle;
                         $new_log->order_value = $cash;
                         $new_log->assets = $assets;
                         $new_log->balance = $balance;
                         $new_log->save();
-
                     }
                 }
-
             }
 
             Sport::where('MID', $mid)
@@ -168,7 +167,7 @@ class SportController extends Controller
                     'Score' => 0,
                 ]);
 
-            $login_info = '恢复赛事'.$mid;
+            $login_info = '恢复赛事' . $mid;
 
             $ip_addr = Utils::get_ip();
 
@@ -185,7 +184,6 @@ class SportController extends Controller
             $response['message'] = 'Bet Resumption Data updated successfully';
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
-
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
             Log::error($e->getTraceAsString());
@@ -195,7 +193,8 @@ class SportController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function betEvent(Request $request) {        
+    public function betEvent(Request $request)
+    {
 
         $response = [];
         $response['success'] = FALSE;
@@ -226,52 +225,52 @@ class SportController extends Controller
 
             $sport = Sport::where("MID", $mid)->first("Score");
 
-            if($sport['Score'] == 1){
-                if(!($confirmed == -2 or $confirmed == -99)){
+            if ($sport['Score'] == 1) {
+                if (!($confirmed == -2 or $confirmed == -99)) {
                     $response["Message"] = "本场赛事已经结算，请先恢复结算再对本场赛事进行处理";
                     return response()->json($response, $response['status']);
                 }
             }
 
-            $Score_arr=array();
+            $Score_arr = array();
 
-            $Score_arr[1]='取消';
-            $Score_arr[2]='赛事腰斩';
-            $Score_arr[3]='赛事改期';
-            $Score_arr[4]='赛事延期';
-            $Score_arr[5]='赛事延赛';
-            $Score_arr[6]='赛事取消';
-            $Score_arr[7]='赛事无PK加时';
-            $Score_arr[8]='球员弃权';
-            $Score_arr[9]='队名错误';
-            $Score_arr[10]='主客场错误';
-            $Score_arr[11]='先发投手更换';
-            $Score_arr[12]='选手更换';
-            $Score_arr[13]='联赛名称错误';
-            $Score_arr[19]='提前开赛';
+            $Score_arr[1] = '取消';
+            $Score_arr[2] = '赛事腰斩';
+            $Score_arr[3] = '赛事改期';
+            $Score_arr[4] = '赛事延期';
+            $Score_arr[5] = '赛事延赛';
+            $Score_arr[6] = '赛事取消';
+            $Score_arr[7] = '赛事无PK加时';
+            $Score_arr[8] = '球员弃权';
+            $Score_arr[9] = '队名错误';
+            $Score_arr[10] = '主客场错误';
+            $Score_arr[11] = '先发投手更换';
+            $Score_arr[12] = '选手更换';
+            $Score_arr[13] = '联赛名称错误';
+            $Score_arr[19] = '提前开赛';
             //赛事腰斩 上半场赛事
-            $Score_arr[99]='赛事腰斩(下半场)';
+            $Score_arr[99] = '赛事腰斩(下半场)';
 
-            $Memo=$Score_arr[abs($confirmed)];
+            $Memo = $Score_arr[abs($confirmed)];
 
             //下半腰斩
-            if ( $confirmed == -99 ) {
+            if ($confirmed == -99) {
 
-                $confirmed=-2;
+                $confirmed = -2;
 
                 $reports = Report::where("MID", $mid)
-                    ->whereNotIn('Mtype', ['VRC','VRH','VMN','VMC','VMH','VOUH','VOUC','VRMH','VRMC','VRMN','VROUH','VROUC','VRRH','VRRC'])
+                    ->whereNotIn('Mtype', ['VRC', 'VRH', 'VMN', 'VMC', 'VMH', 'VOUH', 'VOUC', 'VRMH', 'VRMC', 'VRMN', 'VROUH', 'VROUC', 'VRRH', 'VRRC'])
                     ->where('Cancel', 0)
-                    ->get(['ID','OrderID','M_Name','Pay_Type','BetScore','M_Result','Middle']);
+                    ->get(['ID', 'OrderID', 'M_Name', 'Pay_Type', 'BetScore', 'M_Result', 'Middle']);
             } else {
 
                 $reports = Report::where("MID", $mid)
                     ->where('Cancel', 0)
-                    ->get(['ID','OrderID','M_Name','Pay_Type','BetScore','M_Result','Middle']);
-            }                       
+                    ->get(['ID', 'OrderID', 'M_Name', 'Pay_Type', 'BetScore', 'M_Result', 'Middle']);
+            }
 
 
-            foreach($reports as $item) {
+            foreach ($reports as $item) {
 
                 $ID = $item['ID'];
                 $username = $item['M_Name'];
@@ -280,11 +279,11 @@ class SportController extends Controller
                 $OrderID = $item['OrderID'];
                 $Middle = $item['Middle'];
 
-                if ( $m_result == '' ) {
+                if ($m_result == '') {
                     $Gold = $betscore;
                 } else {
                     $Gold = -$m_result;
-                }                
+                }
 
                 Report::where('ID', $ID)
                     ->where('Gtype', $g_type)
@@ -312,27 +311,25 @@ class SportController extends Controller
 
                 //会员金额操作成功
 
-                if($q1 == 1 || $Gold == 0) {
+                if ($q1 == 1 || $Gold == 0) {
 
-                    $balance = Utils::GetField($username,'Money');
+                    $balance = Utils::GetField($username, 'Money');
 
-                    $user_id = Utils::GetField($username,'id');
+                    $user_id = Utils::GetField($username, 'id');
 
-                    $datetime=date("Y-m-d H:i:s");
+                    $datetime = date("Y-m-d H:i:s");
 
                     $new_log = new MoneyLog;
                     $new_log->user_id = $user_id;
                     $new_log->order_num = $OrderID;
-                    $new_log->about = $loginname."设置为【".$Memo."】取消赛事<br>MID:".$mid."<br>RID:".$ID;
+                    $new_log->about = $loginname . "设置为【" . $Memo . "】取消赛事<br>MID:" . $mid . "<br>RID:" . $ID;
                     $new_log->update_time = $datetime;
                     $new_log->type = $Middle;
                     $new_log->order_value = $Gold;
                     $new_log->assets = $assets;
                     $new_log->balance = $balance;
                     $new_log->save();
-
                 }
-
             }
 
             if ($confirmed == -99) {
@@ -345,7 +342,6 @@ class SportController extends Controller
                         'Cancel' => 1,
                         'Score' => 1,
                     ]);
-
             } else {
 
                 Sport::where('MID', $mid)
@@ -358,10 +354,9 @@ class SportController extends Controller
                         'Cancel' => 1,
                         'Score' => 1,
                     ]);
-
             }
 
-            $login_info = '取消赛事'.$mid;
+            $login_info = '取消赛事' . $mid;
 
             $ip_addr = Utils::get_ip();
 
@@ -378,7 +373,6 @@ class SportController extends Controller
             $response['message'] = 'Bet Event Data updated successfully';
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
-
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
             Log::error($e->getTraceAsString());
@@ -386,9 +380,10 @@ class SportController extends Controller
         }
 
         return response()->json($response, $response['status']);
-    }    
+    }
 
-    public function updateSportOpen(Request $request) {        
+    public function updateSportOpen(Request $request)
+    {
 
         $response = [];
         $response['success'] = FALSE;
@@ -438,7 +433,8 @@ class SportController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function getLeagueByDate(Request $request) {        
+    public function getLeagueByDate(Request $request)
+    {
 
         $response = [];
         $response['success'] = FALSE;
@@ -479,7 +475,7 @@ class SportController extends Controller
         }
 
         return response()->json($response, $response['status']);
-    }    
+    }
 
     public function getItem(Request $request)
     {
@@ -519,8 +515,8 @@ class SportController extends Controller
             $search = $request_data["search"] ?? "";
             $league = $request_data["league"] ?? "";
             $score = $request_data["score"] ?? 0;
-            $start_time = $m_date." 00:00:00";
-            $end_time = $m_date." 23:59:59";
+            $start_time = $m_date . " 00:00:00";
+            $end_time = $m_date . " 23:59:59";
 
             $offset = $request_data['page'] ?? 1;
             $limit = $request_data['limit'] ?? 20;
@@ -554,24 +550,23 @@ class SportController extends Controller
 
                 if ($search !== "") {
                     $items = $items->where(function ($query) use ($search) {
-                        $query->where('M_League', 'LIKE', '%'.$search.'%')
-                              ->orWhere('TG_Team', 'LIKE', '%'.$search.'%')
-                              ->orWhere('MB_Team', 'LIKE', '%'.$search.'%');
+                        $query->where('M_League', 'LIKE', '%' . $search . '%')
+                            ->orWhere('TG_Team', 'LIKE', '%' . $search . '%')
+                            ->orWhere('MB_Team', 'LIKE', '%' . $search . '%');
                     });
                 }
 
                 $totalCount = $items->whereIn('MID', $MIDS)->count();
 
                 $items = $items->orderBy("MID", "desc")
-                    ->skip(($offset-1) * $limit)
+                    ->skip(($offset - 1) * $limit)
                     ->take($limit)
                     ->get();
-
             } else if ($display_type === 2) {
 
                 //显示只有投注的
 
-                $items = Sport::select('MID', 'M_Date', 'M_Start', 'M_Time', 'MB_Team', 'TG_Team', 'MB_Inball', 'TG_Inball', 'MB_Inball_HR', 'TG_Inball_HR', 'Cancel', 'Checked', 'Open', 'M_League','GetScore')
+                $items = Sport::select('MID', 'M_Date', 'M_Start', 'M_Time', 'MB_Team', 'TG_Team', 'MB_Inball', 'TG_Inball', 'MB_Inball_HR', 'TG_Inball_HR', 'Cancel', 'Checked', 'Open', 'M_League', 'GetScore')
                     // ->where('M_Date', $m_date)
                     ->where('Type', $g_type)
                     ->where('Score', $score);
@@ -581,9 +576,9 @@ class SportController extends Controller
 
                 if ($search !== "") {
                     $items = $items->where(function ($query) use ($search) {
-                        $query->where('M_League', 'LIKE', '%'.$search.'%')
-                              ->orWhere('TG_Team', 'LIKE', '%'.$search.'%')
-                              ->orWhere('MB_Team', 'LIKE', '%'.$search.'%');
+                        $query->where('M_League', 'LIKE', '%' . $search . '%')
+                            ->orWhere('TG_Team', 'LIKE', '%' . $search . '%')
+                            ->orWhere('MB_Team', 'LIKE', '%' . $search . '%');
                     });
                 }
 
@@ -612,9 +607,9 @@ class SportController extends Controller
 
                 if ($search !== "") {
                     $items = $items->where(function ($query) use ($search) {
-                        $query->where('M_League', 'LIKE', '%'.$search.'%')
-                              ->orWhere('TG_Team', 'LIKE', '%'.$search.'%')
-                              ->orWhere('MB_Team', 'LIKE', '%'.$search.'%');
+                        $query->where('M_League', 'LIKE', '%' . $search . '%')
+                            ->orWhere('TG_Team', 'LIKE', '%' . $search . '%')
+                            ->orWhere('MB_Team', 'LIKE', '%' . $search . '%');
                     });
                 }
 
@@ -624,10 +619,9 @@ class SportController extends Controller
                     ->skip(($offset - 1) * $limit)
                     ->take($limit)
                     ->get();
-
             }
 
-            foreach($items as $item) {
+            foreach ($items as $item) {
                 switch ($item['MB_Inball']) {
                     case -1:
                         $item['MB_Inball'] = Score1;
@@ -723,7 +717,7 @@ class SportController extends Controller
 
         $reports = Report::where("MID", $gid)->get();
 
-        foreach($reports as $report) {
+        foreach ($reports as $report) {
 
             if ($gtype == "FT") {
 
@@ -731,44 +725,43 @@ class SportController extends Controller
 
                 $half_handicap_array = [19, 119];
 
-                $handicap_array = [9,50,51,52,109,150,151,152];
+                $handicap_array = [9, 50, 51, 52, 109, 150, 151, 152];
 
                 if (in_array((int)$report["LineType"], $half_score_array)) {
                     if (in_array((int)$report["LineType"], $half_handicap_array)) {
                         if ($report["ShowType"] == "H") {
-                            $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$mb_inball_hr.":".$tg_inball_hr.")</b></FONT>";                            
+                            $report["Middle"] = $report["Middle"] . "<FONT color=green><b>&nbsp;(" . $mb_inball_hr . ":" . $tg_inball_hr . ")</b></FONT>";
                         } else {
-                            $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$tg_inball_hr.":".$mb_inball_hr.")</b></FONT>"; 
+                            $report["Middle"] = $report["Middle"] . "<FONT color=green><b>&nbsp;(" . $tg_inball_hr . ":" . $mb_inball_hr . ")</b></FONT>";
                         }
                     } else {
-                        $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$mb_inball_hr.":".$tg_inball_hr.")</b></FONT>";
+                        $report["Middle"] = $report["Middle"] . "<FONT color=green><b>&nbsp;(" . $mb_inball_hr . ":" . $tg_inball_hr . ")</b></FONT>";
                     }
                 } else {
                     if (in_array((int)$report["LineType"], $handicap_array)) {
                         if ($report["ShowType"] == "H") {
-                            $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$mb_inball.":".$tg_inball.")</b></FONT>";                           
+                            $report["Middle"] = $report["Middle"] . "<FONT color=green><b>&nbsp;(" . $mb_inball . ":" . $tg_inball . ")</b></FONT>";
                         } else {
-                            $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$tg_inball.":".$mb_inball.")</b></FONT>"; 
+                            $report["Middle"] = $report["Middle"] . "<FONT color=green><b>&nbsp;(" . $tg_inball . ":" . $mb_inball . ")</b></FONT>";
                         }
                     } else {
-                        $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$mb_inball.":".$tg_inball.")</b></FONT>";
+                        $report["Middle"] = $report["Middle"] . "<FONT color=green><b>&nbsp;(" . $mb_inball . ":" . $tg_inball . ")</b></FONT>";
                     }
                 }
-
             } else {
 
-                $handicap_array = [2,102,9,109];
+                $handicap_array = [2, 102, 9, 109];
                 if (in_array((int)$report["LineType"], $handicap_array)) {
                     if ($report["ShowType"] == "H") {
-                        $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$mb_inball.":".$tg_inball.")</b></FONT>";                           
+                        $report["Middle"] = $report["Middle"] . "<FONT color=green><b>&nbsp;(" . $mb_inball . ":" . $tg_inball . ")</b></FONT>";
                     } else {
-                        $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$tg_inball.":".$mb_inball.")</b></FONT>"; 
+                        $report["Middle"] = $report["Middle"] . "<FONT color=green><b>&nbsp;(" . $tg_inball . ":" . $mb_inball . ")</b></FONT>";
                     }
                 } else {
-                    $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$mb_inball.":".$tg_inball.")</b></FONT>";
+                    $report["Middle"] = $report["Middle"] . "<FONT color=green><b>&nbsp;(" . $mb_inball . ":" . $tg_inball . ")</b></FONT>";
                 }
-                
-                    // $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$mb_inball.":".$tg_inball.")</b></FONT>";
+
+                // $report["Middle"] = $report["Middle"]."<FONT color=green><b>&nbsp;(".$mb_inball.":".$tg_inball.")</b></FONT>";
             }
 
             Report::where("ID", $report["ID"])->update(["Middle" => $report["Middle"]]);
@@ -777,13 +770,13 @@ class SportController extends Controller
 
     public function checkFTScore(Request $request)
     {
-        
+
         $response = [];
         $response['success'] = FALSE;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
-        
+
             $gid = $request['id'];
             $new_item = $request['item'];
             $type = $new_item['type'];
@@ -829,7 +822,6 @@ class SportController extends Controller
                 $response['status'] = STATUS_OK;
 
                 return response()->json($response, $response['status']);
-
             }
 
             //需直接传递过来比分：上半和全场，可根据实际情况分别分批传递
@@ -946,21 +938,21 @@ class SportController extends Controller
                         break;
                     case 19:
                     case 119:
-                        $score=explode('<FONT color=red><b>',$row['Middle']);
-                        $msg=explode("</b></FONT><br>",$score[1]);
-                        $bcd=explode(":",$msg[0]);
-                        $m_in=$bcd[0];
-                        $t_in=$bcd[1];
-                        if ($row['ShowType']=='H'){
-                            $mbinscore1=$mb_in_score_v-$m_in;
-                            $tginscore1=$tg_in_score_v-$t_in;
-                        }else{
-                            $mbinscore1=$mb_in_score_v-$t_in;
-                            $tginscore1=$tg_in_score_v-$m_in;
+                        $score = explode('<FONT color=red><b>', $row['Middle']);
+                        $msg = explode("</b></FONT><br>", $score[1]);
+                        $bcd = explode(":", $msg[0]);
+                        $m_in = $bcd[0];
+                        $t_in = $bcd[1];
+                        if ($row['ShowType'] == 'H') {
+                            $mbinscore1 = $mb_in_score_v - $m_in;
+                            $tginscore1 = $tg_in_score_v - $t_in;
+                        } else {
+                            $mbinscore1 = $mb_in_score_v - $t_in;
+                            $tginscore1 = $tg_in_score_v - $m_in;
                         }
                         // return $row['M_Place'];
-                        $graded = Utils::odds_letb_vrb($mbinscore1,$tginscore1,$row['ShowType'],$row['M_Place'],$row['Mtype']);
-                        break;  
+                        $graded = Utils::odds_letb_vrb($mbinscore1, $tginscore1, $row['ShowType'], $row['M_Place'], $row['Mtype']);
+                        break;
                     case 20:
                     case 120:
                         $graded = Utils::odds_dime_vrb($mb_in_score_v, $tg_in_score_v, $row['M_Place'], $row['Mtype']);
@@ -1020,15 +1012,14 @@ class SportController extends Controller
 
                 //投注金额
 
-                $betscore = $row['BetScore'];  
+                $betscore = $row['BetScore'];
 
                 //有效金额
-                $vgold = $row['VGOLD']; 
+                $vgold = $row['VGOLD'];
 
                 if (empty($vgold) || $vgold <> 0) {
 
                     $vgold = abs($graded) * $row['BetScore'];
-
                 } else {
 
                     $vgold = 0;
@@ -1043,21 +1034,21 @@ class SportController extends Controller
 
                 //和会员结帐的金额
 
-                $members = $g_res + $turn; 
+                $members = $g_res + $turn;
 
                 //上缴总代理结帐的金额
 
-                $agents = $g_res * (1 - $d_point) + (1 - $d_point) * intval($row['D_Rate']) / 100 * intval($row['BetScore']) * abs($graded); 
+                $agents = $g_res * (1 - $d_point) + (1 - $d_point) * intval($row['D_Rate']) / 100 * intval($row['BetScore']) * abs($graded);
 
                 //上缴股东结帐
 
-                $world = $g_res * (1 - $c_point - $d_point) + (1 - $c_point - $d_point) * intval($row['C_Rate']) / 100 * $row['BetScore'] * abs($graded); 
+                $world = $g_res * (1 - $c_point - $d_point) + (1 - $c_point - $d_point) * intval($row['C_Rate']) / 100 * $row['BetScore'] * abs($graded);
 
                 if (1 - $b_point - $c_point - $d_point != 0) {
 
                     //上缴公司结帐
 
-                    $corprator = $g_res * (1 - $b_point - $c_point - $d_point) + (1 - $b_point - $c_point - $d_point) * intval($row['B_Rate']) / 100 * $row['BetScore'] * abs($graded); 
+                    $corprator = $g_res * (1 - $b_point - $c_point - $d_point) + (1 - $b_point - $c_point - $d_point) * intval($row['B_Rate']) / 100 * $row['BetScore'] * abs($graded);
                 } else {
 
                     $corprator = $g_res * ($b_point + $a_point) + ($b_point + $a_point) * intval($row['B_Rate']) / 100 * $row['BetScore'] * abs($graded); //和公司结帐
@@ -1065,11 +1056,11 @@ class SportController extends Controller
 
                 //和公司结帐
 
-                $super = $g_res * $a_point + $a_point * intval($row['A_Rate']) / 100 * $row['BetScore'] * abs($graded); 
+                $super = $g_res * $a_point + $a_point * intval($row['A_Rate']) / 100 * $row['BetScore'] * abs($graded);
 
                 //公司退水帐目
 
-                $agent = $g_res * 1 + 1 * intval($row['D_Rate']) / 100 * $row['BetScore'] * abs($graded); 
+                $agent = $g_res * 1 + 1 * intval($row['D_Rate']) / 100 * $row['BetScore'] * abs($graded);
 
 
                 $previousAmount = Utils::GetField($user, 'Money');
@@ -1077,7 +1068,7 @@ class SportController extends Controller
                 $user_id = Utils::GetField($user, 'id');
 
                 $datetime = date("Y-m-d H:i:s");
-                
+
                 $q1 = 0;
 
                 if (in_array($mtype, $bc_arr)) {
@@ -1201,7 +1192,7 @@ class SportController extends Controller
 
                 $user_data = array("user_name" => $user, 'current_money' => $current_user["Money"]);
 
-                $temp = array(                    
+                $temp = array(
                     'field_count' => $row_index,
                     'times' => $times,
                     'M_Name' => $row['M_Name'],
@@ -1246,7 +1237,6 @@ class SportController extends Controller
             $response['message'] = 'FT Score Data updated successfully';
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
-
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
             Log::error($e->getTraceAsString());
@@ -1258,7 +1248,7 @@ class SportController extends Controller
 
     public function checkBKScore(Request $request)
     {
-        
+
         $response = [];
         $response['success'] = FALSE;
         $response['status'] = STATUS_BAD_REQUEST;
@@ -1309,7 +1299,6 @@ class SportController extends Controller
                 $response['status'] = STATUS_OK;
 
                 return response()->json($response, $response['status']);
-
             }
 
             //需直接传递过来比分：上半和全场，可根据实际情况分别分批传递
@@ -1520,7 +1509,7 @@ class SportController extends Controller
                                 'Checked' => 1
                             ]);
                     }
-                }                
+                }
 
                 switch ($row['OddsType']) {
                     case 'H':
@@ -1592,7 +1581,6 @@ class SportController extends Controller
             $response['message'] = 'Bk Score Data updated successfully';
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
-
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
             Log::error($e->getTraceAsString());
@@ -1701,7 +1689,7 @@ class SportController extends Controller
                     case 15:
                         $graded = Utils::odds_eo($mb_in_score_v, $tg_in_score_v, $row['Mtype']);
                         break;
-                    case 115: 
+                    case 115:
                         $graded = Utils::odds_eo($mb_in_score_v, $tg_in_score_v, $row['Mtype']);
                         break;
                     case 6:
@@ -1744,20 +1732,20 @@ class SportController extends Controller
                         break;
                     case 19:
                     case 119:
-                        $score=explode('<FONT color=red><b>',$row['Middle']);
-                        $msg=explode("</b></FONT><br>",$score[1]);
-                        $bcd=explode(":",$msg[0]);
-                        $m_in=$bcd[0];
-                        $t_in=$bcd[1];
-                        if ($row['ShowType']=='H'){
-                            $mbinscore1=$mb_in_score_v-$m_in;
-                            $tginscore1=$tg_in_score_v-$t_in;
-                        }else{
-                            $mbinscore1=$mb_in_score_v-$t_in;
-                            $tginscore1=$tg_in_score_v-$m_in;
+                        $score = explode('<FONT color=red><b>', $row['Middle']);
+                        $msg = explode("</b></FONT><br>", $score[1]);
+                        $bcd = explode(":", $msg[0]);
+                        $m_in = $bcd[0];
+                        $t_in = $bcd[1];
+                        if ($row['ShowType'] == 'H') {
+                            $mbinscore1 = $mb_in_score_v - $m_in;
+                            $tginscore1 = $tg_in_score_v - $t_in;
+                        } else {
+                            $mbinscore1 = $mb_in_score_v - $t_in;
+                            $tginscore1 = $tg_in_score_v - $m_in;
                         }
-                        $graded = Utils::odds_letb_vrb($mbinscore1,$tginscore1,$row['ShowType'],$row['M_Place'],$row['Mtype']);
-                        break;  
+                        $graded = Utils::odds_letb_vrb($mbinscore1, $tginscore1, $row['ShowType'], $row['M_Place'], $row['Mtype']);
+                        break;
                     case 20:
                     case 120:
                         $graded = Utils::odds_dime_vrb($mb_in_score_v, $tg_in_score_v, $row['M_Place'], $row['Mtype']);
@@ -1786,7 +1774,6 @@ class SportController extends Controller
                     case 14:
                         $graded = Utils::odds_pd_v($mb_in_score_v, $tg_in_score_v, $row['Mtype']);
                         break;
-                
                 }
 
                 $num = 0;
@@ -1848,7 +1835,7 @@ class SportController extends Controller
                     $isQC = 0;
                 } else {
                     $isQC = 1;
-                } 
+                }
                 //是否全场赛事注单
                 if ($mb_in_score_v < 0 and $mb_in_score < 0) {
                     $BiFen = "半场:" . $Score_arr[abs($mb_in_score_v)] . " 全场:" . $Score_arr[abs($mb_in_score)];
@@ -1858,7 +1845,7 @@ class SportController extends Controller
                     $BiFen = "半场:$mb_in_score_v-$tg_in_score_v 全场:$mb_in_score-$tg_in_score";
                 }
                 //取消注单  全场比分为“取消”只取消全场  半场比分取消：全部取消
-                if (((int)$mb_in_score < 0 and $isQC == 1) or (int)$mb_in_score_v < 0) {  
+                if (((int)$mb_in_score < 0 and $isQC == 1) or (int)$mb_in_score_v < 0) {
                     if ($row['Checked'] == 0) {
                         if ($row['Pay_Type'] == 1) {
                             $cash = $row['BetScore'];
@@ -1895,7 +1882,7 @@ class SportController extends Controller
                                 'Confirmed' => $mb_in_score
                             ]);
                     }
-                } else { 
+                } else {
                     //结算注单
                     if ($row['Checked'] == 0) {
                         if ($row['Pay_Type'] == 1) {
@@ -1909,27 +1896,27 @@ class SportController extends Controller
 
                         $half_handicap_array = [19, 119];
 
-                        $handicap_array = [9,50,51,52,109,150,151,152];
+                        $handicap_array = [9, 50, 51, 52, 109, 150, 151, 152];
 
                         if (in_array((int)$row["LineType"], $half_score_array)) {
                             if (in_array((int)$row["LineType"], $half_handicap_array)) {
                                 if ($row["ShowType"] == "H") {
-                                    $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$mb_in_score_v.":".$tg_in_score_v.")</b></FONT>";                            
+                                    $Middle = $row["Middle"] . "<FONT color=green><b>&nbsp;(" . $mb_in_score_v . ":" . $tg_in_score_v . ")</b></FONT>";
                                 } else {
-                                    $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$tg_in_score_v.":".$mb_in_score_v.")</b></FONT>"; 
+                                    $Middle = $row["Middle"] . "<FONT color=green><b>&nbsp;(" . $tg_in_score_v . ":" . $mb_in_score_v . ")</b></FONT>";
                                 }
                             } else {
-                                $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$mb_in_score_v.":".$tg_in_score_v.")</b></FONT>";
+                                $Middle = $row["Middle"] . "<FONT color=green><b>&nbsp;(" . $mb_in_score_v . ":" . $tg_in_score_v . ")</b></FONT>";
                             }
                         } else {
                             if (in_array((int)$row["LineType"], $handicap_array)) {
                                 if ($row["ShowType"] == "H") {
-                                    $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$mb_in_score.":".$tg_in_score.")</b></FONT>";                           
+                                    $Middle = $row["Middle"] . "<FONT color=green><b>&nbsp;(" . $mb_in_score . ":" . $tg_in_score . ")</b></FONT>";
                                 } else {
-                                    $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$tg_in_score.":".$mb_in_score.")</b></FONT>"; 
+                                    $Middle = $row["Middle"] . "<FONT color=green><b>&nbsp;(" . $tg_in_score . ":" . $mb_in_score . ")</b></FONT>";
                                 }
                             } else {
-                                $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$mb_in_score.":".$tg_in_score.")</b></FONT>";
+                                $Middle = $row["Middle"] . "<FONT color=green><b>&nbsp;(" . $mb_in_score . ":" . $tg_in_score . ")</b></FONT>";
                             }
                         }
 
@@ -2173,17 +2160,17 @@ class SportController extends Controller
                     }
                     if ($q1 == 1 || $cash == 0) {
 
-                        $handicap_array = [2,102,9,109];
+                        $handicap_array = [2, 102, 9, 109];
                         if (in_array((int)$row["LineType"], $handicap_array)) {
                             if ($row["ShowType"] == "H") {
-                                $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$mb_in_score.":".$tg_in_score.")</b></FONT>";                           
+                                $Middle = $row["Middle"] . "<FONT color=green><b>&nbsp;(" . $mb_in_score . ":" . $tg_in_score . ")</b></FONT>";
                             } else {
-                                $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$tg_in_score.":".$mb_in_score.")</b></FONT>"; 
+                                $Middle = $row["Middle"] . "<FONT color=green><b>&nbsp;(" . $tg_in_score . ":" . $mb_in_score . ")</b></FONT>";
                             }
                         } else {
-                            $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$mb_in_score.":".$tg_in_score.")</b></FONT>";
+                            $Middle = $row["Middle"] . "<FONT color=green><b>&nbsp;(" . $mb_in_score . ":" . $tg_in_score . ")</b></FONT>";
                         }
-                        
+
                         // $Middle = $row["Middle"]."<FONT color=green><b>&nbsp;(".$mb_in_score.":".$tg_in_score.")</b></FONT>";
 
                         $currentAmount = Utils::GetField($user, 'Money');
@@ -2377,40 +2364,32 @@ class SportController extends Controller
 
                     if (in_array($mtype[$i], $half_handicap_array)) {
 
-                        if ($show[i] == "H") {
+                        if ($show[$i] == "H") {
 
-                            $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$mb_in_v.":".$tg_in_v.")</b></FONT>";
-
+                            $middle_array[$i] = $middle_array[$i] . "<FONT color=green><b>&nbsp;(" . $mb_in_v . ":" . $tg_in_v . ")</b></FONT>";
                         } else {
 
-                            $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$tg_in_v.":".$mb_in_v.")</b></FONT>";
-
+                            $middle_array[$i] = $middle_array[$i] . "<FONT color=green><b>&nbsp;(" . $tg_in_v . ":" . $mb_in_v . ")</b></FONT>";
                         }
                     } else {
 
-                        $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$mb_in_v.":".$tg_in_v.")</b></FONT>";
+                        $middle_array[$i] = $middle_array[$i] . "<FONT color=green><b>&nbsp;(" . $mb_in_v . ":" . $tg_in_v . ")</b></FONT>";
                     }
-
                 } else {
 
                     if (in_array($mtype[$i], $handicap_array)) {
 
-                        if ($show[i] == "H") {
+                        if ($show[$i] == "H") {
 
-                            $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$mb_in.":".$tg_in.")</b></FONT>";
-
+                            $middle_array[$i] = $middle_array[$i] . "<FONT color=green><b>&nbsp;(" . $mb_in . ":" . $tg_in . ")</b></FONT>";
                         } else {
 
-                            $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$tg_in.":".$mb_in.")</b></FONT>";
-
+                            $middle_array[$i] = $middle_array[$i] . "<FONT color=green><b>&nbsp;(" . $tg_in . ":" . $mb_in . ")</b></FONT>";
                         }
-
                     } else {
 
-                        $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$mb_in.":".$tg_in.")</b></FONT>";
-
+                        $middle_array[$i] = $middle_array[$i] . "<FONT color=green><b>&nbsp;(" . $mb_in . ":" . $tg_in . ")</b></FONT>";
                     }
-
                 }
             }
 
@@ -2500,7 +2479,6 @@ class SportController extends Controller
                         'T_Result' => $agent,
                         'Checked' => 1
                     ]);
-
             } else {
 
                 Report::where('ID', $id)
@@ -2535,10 +2513,10 @@ class SportController extends Controller
             ->where('Checked', 0)
             ->get();
 
-            // return $reports;
+        // return $reports;
 
         foreach ($reports as $report) {
-            $notgraded = 0;           
+            $notgraded = 0;
             $id = $report['ID'];
             $user = $report['M_Name'];
             $winrate = 1;
@@ -2571,23 +2549,19 @@ class SportController extends Controller
 
                 if (in_array($mtype[$i], $handicap_array)) {
 
-                    if ($show[i] == "H") {
+                    if ($show[$i] == "H") {
 
-                        $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$mb_in.":".$tg_in.")</b></FONT>";
-
+                        $middle_array[$i] = $middle_array[$i] . "<FONT color=green><b>&nbsp;(" . $mb_in . ":" . $tg_in . ")</b></FONT>";
                     } else {
 
-                        $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$tg_in.":".$mb_in.")</b></FONT>";
-
+                        $middle_array[$i] = $middle_array[$i] . "<FONT color=green><b>&nbsp;(" . $tg_in . ":" . $mb_in . ")</b></FONT>";
                     }
-
                 } else {
 
-                    $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$mb_in.":".$tg_in.")</b></FONT>";
-
+                    $middle_array[$i] = $middle_array[$i] . "<FONT color=green><b>&nbsp;(" . $mb_in . ":" . $tg_in . ")</b></FONT>";
                 }
 
-                    // $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$mb_in.":".$tg_in.")</b></FONT>";
+                // $middle_array[$i] = $middle_array[$i]."<FONT color=green><b>&nbsp;(".$mb_in.":".$tg_in.")</b></FONT>";
 
                 if ($mb_in == '' || $mb_in == '-' || $tg_in == '' || $tg_in == '-') {
                     $graded = "99";
@@ -2597,12 +2571,11 @@ class SportController extends Controller
                     $graded = 88;
                 } else {
                     if ($mtype[$i] == 'ODD' || $mtype[$i] == 'EVEN') {
-                        $graded = Utils::odds_eo($mb_in,$tg_in,$mtype[$i]);
-                    }else if($mtype[$i] == 'OUH' || $mtype[$i] == 'OUC' || $mtype[$i] == 'ROUH' or $mtype[$i] == 'ROUC') {
-                        $graded = Utils::odds_dime($mb_in, $tg_in,$letb[$i], $mtype[$i]);
-
-                    }else {
-                        $graded = Utils::odds_letb($mb_in, $tg_in,$show[$i], $letb[$i], $mtype[$i]);
+                        $graded = Utils::odds_eo($mb_in, $tg_in, $mtype[$i]);
+                    } else if ($mtype[$i] == 'OUH' || $mtype[$i] == 'OUC' || $mtype[$i] == 'ROUH' or $mtype[$i] == 'ROUC') {
+                        $graded = Utils::odds_dime($mb_in, $tg_in, $letb[$i], $mtype[$i]);
+                    } else {
+                        $graded = Utils::odds_letb($mb_in, $tg_in, $show[$i], $letb[$i], $mtype[$i]);
                     }
                 }
 
@@ -2715,8 +2688,7 @@ class SportController extends Controller
                         'A_Result' => $super,
                         'T_Result' => $agent,
                         'Checked' => 1
-                    ]);                    
-
+                    ]);
             } else {
 
                 Report::where('ID', $id)
@@ -3083,7 +3055,7 @@ class SportController extends Controller
         return response()->json([
             "success" => true,
             "data" => $items,
-            "count" => $count
+            "count" => $report_count
         ], 200);
     }
 
@@ -3147,7 +3119,7 @@ class SportController extends Controller
         if ($validator->fails())
             return response()->json([
                 'success' => false,
-                'message' => $validator->messages()->toArray()
+                'message' => $validator->errors()->toArray()
             ]);
         WebReportTemp::where('id', $request->id)->update(['gold' => $gold, 'm_win' => $request->m_win]);
         $responseMessage = "更新成功";

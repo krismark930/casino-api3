@@ -493,9 +493,9 @@ class UserManagementController extends Controller
 
             if($search!=''){
                 if($data=='web_agents_data'){  //代理商没有机器码
-                    $search="and (UserName like '%$search%' or LoginName like '%$search%' or Alias like '%$search%')";
+                    $search="and (UserName like '%$search%' or LoginName like '%$search%' or Alias like '%$search%' or AddDate like '%$search%')";
                 }else{
-                    $search="and (UserName like '%$search%' or LoginName like '%$search%' or Alias like '%$search%' or MachineCode='$search')";
+                    $search="and (UserName like '%$search%' or LoginName like '%$search%' or Alias like '%$search%' or MachineCode='$search' or AddDate like '%$search%')";
                 }
             }else{
                 $search="";

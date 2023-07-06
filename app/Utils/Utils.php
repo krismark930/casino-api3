@@ -15,7 +15,7 @@ use App\Models\OrderLotterySub;
 use App\Models\OrderLottery;
 use App\Models\Web\MoneyLog;
 use Carbon\Carbon;
-use DB;
+use Illuminate\Support\Facades\DB;
 class Utils {
     const Scores = [
         '',
@@ -3587,6 +3587,7 @@ class Utils {
         return $change_rate;
     }
     static function fileter0($rate){
+        $fileter0 = "";
         for($i=1;$i<strlen($rate);$i++){
             if (substr($rate, -$i, 1)<>'0'){
                 if (substr($rate, -$i, 1)=='.'){
@@ -7025,95 +7026,6 @@ class Utils {
         }
         $win_chk = $grade;
         return $win_chk;
-    }
-    //标准过关计算：
-    static function odds_p($mid, $mtype, $mrate)
-    {
-        $winrate = 1;
-        $mid = explode(',', $mid);
-        $mtype = explode(',', $mtype);
-        $rate1 = explode(',', $mrate);
-        for ($i = 0; $i < sizeof($mid); $i++) {
-            $result1 = DB::table('foot_match')->select('MB_Inball', 'TG_Inball')->where('ID', $mid[$i])->get();
-            $rowr = $result1[0];
-            $mb_in = $rowr['MB_Inball'];
-            $tg_in = $rowr['TG_Inball'];
-            if ($mb_in <> '' and $tg_in <> '') {
-                $graded = win_chk($mb_in, $tg_in, $mtype[$i]);
-                switch ($graded) {
-                    case "1":
-                        $winrate = $winrate * ($rate1[$i]);
-                        break;
-                    case "-1":
-                        $winrate = 0;
-                        break;
-                    case "0":
-                        $winrate = 0;
-                        break;
-                }
-            } else {
-                $winrate = 0;
-            }
-        }
-        $odd_p = $winrate;
-        return $odd_p;
-    }
-    //让球过关计算：
-    static function odd_pr($mid, $mtype, $mrate, $mplace, $showtype)
-    {
-        $winrate = 1;
-        $mid = explode(',', $mid);
-        $mtype = explode(',', $mtype);
-        $rate = explode(',', $mrate);
-        $letb = explode(',', $mplace);
-        $show = explode(',', $showtype);
-        $cou = sizeof($mid);
-        $count = 0;
-        for ($i = 0; $i < $cou; $i++) {
-            $result1 = DB::table('foot_match')->select('MB_Inball', 'TG_Inball')->where('ID', $mid[$i])->get();
-            $rowr = $result1[0];
-            $mb_in = $rowr['MB_Inball'];
-            $tg_in = $rowr['TG_Inball'];
-            $graded = letb_chk($mb_in, $tg_in, $show[$i], $letb[$i], $mtype[$i]);
-            switch ($graded) {
-                case "1":
-                    $winrate = $winrate * (1 + $rate[i]);
-                    break;
-                case "-1":
-                    $winrate = 0;
-                    break;
-                case "0":
-                    $winrate = $winrate;
-                    break;
-                case "0.5":
-                    $winrate = $winrate * (1 + $rate[i] / 2);
-                    break;
-                case "-0.5":
-                    if ($count > 1) {
-                        $winrate = 0;
-                    } else {
-                        $winrate = $winrate * (1 / 2);
-                    }
-                    $count = $count + 1;
-                    break;
-            }
-        }
-        $odd_pr = $winrate;
-        return $odd_pr;
-    }
-
-    static function encrypt($input) {
-        $size = mcrypt_get_block_size('des', 'ecb');
-        $input = $this->pkcs5_pad($input, $size);
-        $key = "Facai168Facai168";
-        $td = mcrypt_module_open('des', '', 'ecb', '');
-        $iv = @mcrypt_create_iv (mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
-         @mcrypt_generic_init($td, $key, $iv);
-        $data = mcrypt_generic($td, $input);
-         mcrypt_generic_deinit($td);
-         mcrypt_module_close($td);
-        $data = base64_encode($data);
-        return preg_replace("/\s*/", '',$data);
     }
 
     static function decrypt($encrypted) {

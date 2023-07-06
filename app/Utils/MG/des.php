@@ -21,7 +21,7 @@ class DES {
         return $encrypted;
     }
 
-    function decrypt($encrypted) {
+    function decrypt($str) {
 
         $iv = '';
 
