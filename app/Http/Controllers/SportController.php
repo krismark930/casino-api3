@@ -1592,11 +1592,13 @@ class SportController extends Controller
 
     public function autoFTCheckScore()
     {
-        $web_system_data = WebSystemData::all();
-        $settime = $web_system_data[0]['udp_ft_score'];
-        $time = $web_system_data[0]['udp_ft_results'];
+        // $web_system_data = WebSystemData::all();
+        // $settime = $web_system_data[0]['udp_ft_score'];
+        // $time = $web_system_data[0]['udp_ft_results'];
+
         // $date = date('Y-m-d', time() - $time * 60 * 60);
         // $mDate = date('Y-m-d', time() - $time * 60 * 60);
+
         $date = date('Y-m-d');
         $mDate = date('Y-m-d');
         // $mDate = '2023-05-27';
@@ -1615,6 +1617,9 @@ class SportController extends Controller
         $Score_arr[11] = '先发投手更换';
         $Score_arr[12] = '选手更换';
         $Score_arr[13] = '联赛名称错误';
+        $Score_arr[14] = '不显示赛程';
+        $Score_arr[15] = '赛事腰斩';
+        $Score_arr[16] = '赛事时间不';
         $Score_arr[19] = '提前开赛';
 
         $match_sports = Sport::where("Type", "FT")
@@ -1636,6 +1641,8 @@ class SportController extends Controller
             $tg_in_score = $match_sport['TG_Inball'];
             $mb_in_score_v = $match_sport['MB_Inball_HR'];
             $tg_in_score_v = $match_sport['TG_Inball_HR'];
+
+            if (!is_numeric($mb_in_score)) continue;
 
             // Utils::ProcessUpdate($gid, 3);  //防止并发处理
 
@@ -1715,6 +1722,7 @@ class SportController extends Controller
                             $mbinscore1 = $mb_in_score - $m_in;
                             $tginscore1 = $tg_in_score - $t_in;
                         } else {
+                            // return response()->json($gid);
                             $mbinscore1 = $mb_in_score - $t_in;
                             $tginscore1 = $tg_in_score - $m_in;
                         }
@@ -1984,6 +1992,9 @@ class SportController extends Controller
         $Score_arr[11] = '先发投手更换';
         $Score_arr[12] = '选手更换';
         $Score_arr[13] = '联赛名称错误';
+        $Score_arr[14] = '不显示赛程';
+        $Score_arr[15] = '赛事腰斩';
+        $Score_arr[16] = '赛事时间不';
         $Score_arr[19] = '提前开赛';
 
         $match_sports = Sport::where("Type", "BK")
@@ -2003,6 +2014,8 @@ class SportController extends Controller
             $mb_in_score_v = $match_sport['MB_Inball_HR'];
             $tg_in_score_v = $match_sport['TG_Inball_HR'];
 
+            if (!is_numeric($mb_in_score)) continue;
+
             // Utils::ProcessUpdate($gid, 3);  //防止并发处理
 
             $reports = Report::select('ID', 'MID', 'OrderID', 'Active', 'M_Name', 'LineType', 'OpenType', 'ShowType', 'Mtype', 'Gwin', 'VGOLD', 'TurnRate', 'BetType', 'M_Place', 'M_Rate', 'Middle', 'BetScore', 'A_Rate', 'B_Rate', 'C_Rate', 'D_Rate', 'A_Point', 'B_Point', 'C_Point', 'D_Point', 'Pay_Type', 'Checked')
@@ -2018,6 +2031,7 @@ class SportController extends Controller
                 $mtype = $row['Mtype'];
                 $id = $row['ID'];
                 $user = $row['M_Name'];
+
                 switch ($row['LineType']) {
                     case 2:
                     case 102:

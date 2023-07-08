@@ -6,15 +6,18 @@ use App\Utils\AG\des;
 
 class AGUtils {
 
-    var $AG_agent = "H07_AGIN";
-    var $c_agent = "H07";
-    var $md5key = "KGeEtsGSQ2wT";
-    var $deskey = "Pa27VJ4p";
-    var $giurl = "http://gi.bbin-api8.com:81/";
-    var $gciurl = "https://gci.bbin-api8.com/";
-    var $orderUrl = "http://h9zs07.gdcapi.com:3333/";
+    var $AG_agent;
+    var $md5key;
+    var $deskey;
+    var $giurl;
+    var $gciurl;
 
     public function __construct($sysConfig) {
+        $this->AG_agent = env('AG_AGENT');
+        $this->md5key = env('AG_MD5KEY');
+        $this->deskey = env('AG_DESKEY');
+        $this->giurl = env('AG_GI_URL');
+        $this->gciurl = env('AG_GCI_URL');
     }
 
     function Addmember($username,$password,$tp=1){
@@ -192,29 +195,6 @@ class AGUtils {
             break;
       }
       return $content;
-    }
-
-    function getRealOrder($plan_code,$start_date, $end_date, $game_type, $order="username", $by="DESC", $page=1, $per_page=100) {
-        // $key = md5($this->c_agent."+".$start_date."+".$end_date."+".$game_type."+".$order."+".$by."+".$page."+".$per_page."+".$plan_code);
-        $key = md5($this->c_agent.$start_date.$end_date.$plan_code);
-        // return $this->c_agent."+".$start_date."+".$end_date."+".$game_type."+".$order."+".$by."+".$page."+".$per_page."+".$plan_code;
-        $url = $this->orderUrl."getorders.xml?cagent=".$this->c_agent."&startdate=".$start_date."&enddate=".$end_date."&key=".$key;
-        return $url;
-        $xmlcode=$this->getTransactionUrl($url);
-        return $xmlcode;
-        $result = json_decode(json_encode(simplexml_load_string($xmlcode)), true);
-        return $result;
-    }
-
-    function getYoplayOrder($plan_code, $agent, $loginname, $start_date, $end_date, $game_type, $billno, $order="username", $by="DESC", $page=1, $per_page=100) {
-        return $this->c_agent."+".$start_date."+".$end_date."+".$game_type."+".$order."+".$by."+".$page."+".$per_page."+".$plan_code;
-        $key = md5($this->c_agent."+".$agent."+".$loginname."+".$start_date."+".$end_date."+".$game_type."+".$billno."+".$order."+".$by."+".$page."+".$per_page."+".$plan_code);
-        $url = $this->orderUrl."getyoplayorders_ex.xml?cagent=".$this->AG_agent."&startdate=".$start_date."&enddate=".$end_date."&key=".$key;
-        // return $url;
-        $xmlcode=$this->getTransactionUrl($url);
-        return $xmlcode;
-        $result = json_decode(json_encode(simplexml_load_string($xmlcode)), true);
-        return $result;
     }
 
     function getpassword($len=10)

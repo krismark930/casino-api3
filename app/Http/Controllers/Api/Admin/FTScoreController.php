@@ -229,6 +229,16 @@ class FTScoreController extends Controller
                     $mb_inball_hr='-15';
                     $tg_inball_hr='-15';
                 }
+
+                if ($mb_inball==Score16 or $tg_inball==Score16){
+                    $mb_inball='-16';
+                    $tg_inball='-16';
+                }
+
+                if ($mb_inball_hr==Score16 or $tg_inball_hr==Score16){
+                    $mb_inball_hr='-16';
+                    $tg_inball_hr='-16';
+                }
                 
 
                 if ($mb_inball==Score19 or $tg_inball==Score19){

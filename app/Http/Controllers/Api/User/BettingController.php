@@ -1173,7 +1173,7 @@ class BettingController extends Controller
 
             $w_mid = "<br>[" . $match_sports['MB_MID'] . "]vs[" . $match_sports['TG_MID'] . "]<br>";
 
-            $lines=$match_sports['M_League']."(".date("m-d").")"."<br>[".$match_sports['MB_MID'].']vs['.$match_sports['TG_MID']."]<br>".$w_mb_team."&nbsp;&nbsp;<FONT COLOR=#0000BB><b>".$Sign."</b></FONT>&nbsp;&nbsp;".$w_tg_team."&nbsp;&nbsp;<FONT color=red><b>$inball</b></FONT><br>";
+            $lines=$match_sports['M_League']."<br>[".$match_sports['MB_MID'].']vs['.$match_sports['TG_MID']."]<br>".$w_mb_team."&nbsp;&nbsp;<FONT COLOR=#0000BB><b>".$Sign."</b></FONT>&nbsp;&nbsp;".$w_tg_team."&nbsp;&nbsp;<FONT color=red><b>$inball</b></FONT><br>";
 
             $lines=$lines."<FONT color=#cc0000>".$w_m_place."</FONT>&nbsp;".$bottom1_cn."@&nbsp;<FONT color=#cc0000><b>".$w_m_rate."</b></FONT>";  
 
@@ -2810,7 +2810,7 @@ class BettingController extends Controller
                 $bottom1_en = "";
             }
 
-            $lines=$match_sports['M_League']."(".date("m-d").")"."<br>[".$match_sports['MB_MID'].']vs['.$match_sports['TG_MID']."]<br>".$w_mb_team."&nbsp;&nbsp;<FONT COLOR=#0000BB><b>".$Sign."</b></FONT>&nbsp;&nbsp;".$w_tg_team."&nbsp;&nbsp;<FONT color=red><b>$inball</b></FONT><br>";
+            $lines=$match_sports['M_League']."<br>[".$match_sports['MB_MID'].']vs['.$match_sports['TG_MID']."]<br>".$w_mb_team."&nbsp;&nbsp;<FONT COLOR=#0000BB><b>".$Sign."</b></FONT>&nbsp;&nbsp;".$w_tg_team."&nbsp;&nbsp;<FONT color=red><b>$inball</b></FONT><br>";
 
             $lines=$lines."<FONT color=#cc0000>".$w_m_place."</FONT>&nbsp;".$bottom1_cn."@&nbsp;<FONT color=#cc0000><b>".$w_m_rate."</b></FONT>";  
 
@@ -4435,7 +4435,7 @@ class BettingController extends Controller
                 $bottom1_en = "";
             }
 
-            $lines=$match_sports['M_League']."(".date("m-d").")"."<br>[".$match_sports['MB_MID'].']vs['.$match_sports['TG_MID']."]<br>".$w_mb_team."&nbsp;&nbsp;<FONT COLOR=#0000BB><b>".$Sign."</b></FONT>&nbsp;&nbsp;".$w_tg_team."&nbsp;&nbsp;<FONT color=red><b>$inball</b></FONT><br>";
+            $lines=$match_sports['M_League']."<br>[".$match_sports['MB_MID'].']vs['.$match_sports['TG_MID']."]<br>".$w_mb_team."&nbsp;&nbsp;<FONT COLOR=#0000BB><b>".$Sign."</b></FONT>&nbsp;&nbsp;".$w_tg_team."&nbsp;&nbsp;<FONT color=red><b>$inball</b></FONT><br>";
 
             $lines=$lines."<FONT color=#cc0000>".$w_m_place."</FONT>&nbsp;".$bottom1_cn."@&nbsp;<FONT color=#cc0000><b>".$w_m_rate."</b></FONT>";  
 

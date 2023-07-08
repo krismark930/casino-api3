@@ -9,8 +9,8 @@ use App\Models\Test;
 class TestController extends Controller
 {
     public function addTest() {
-        $test = new Test;
-        $test->name = "11111";
-        $test->save();
+        // $test = new Test;
+        // $test->name = "test";
+        // $test->save();
     }
 }

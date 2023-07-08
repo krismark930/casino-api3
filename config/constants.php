@@ -82,7 +82,7 @@ defined('Score12') or define("Score12", '选手更换');
 defined('Score13') or define("Score13", '联赛名称错误');
 defined('Score14') or define("Score14", '不显示赛程');
 defined('Score15') or define("Score15", '赛事腰斩');
-defined('Score16') or define("Score16", '');
+defined('Score16') or define("Score16", '赛事时间不');
 defined('Score17') or define("Score17", '');
 defined('Score18') or define("Score18", '');
 defined('Score19') or define("Score19", '提前开赛');

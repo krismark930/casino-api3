@@ -131,26 +131,13 @@ class ChessController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function getKYTransaction(Request $request) {
+    public function getKYTransaction() {
 
         $response = [];
         $response['success'] = FALSE;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
-
-            $rules = [
-                // "KindID" => "required|numeric",
-            ];
-
-            $validator = Validator::make($request->all(), $rules);
-
-            if ($validator->fails()) {
-                $errorResponse = validation_error_response($validator->errors()->toArray());
-                return response()->json($errorResponse, $response['status']);
-            }
-
-            $request_data = $request->all();
 
             $sysConfig = SysConfig::all()->first();
 
@@ -196,11 +183,11 @@ class ChessController extends Controller
                         $web_report_ky->create($GameData2);
                     }
 
-                    $balance = $KYUtils->KY_Money2($GameData['list']['Accounts'][$i]);
+                    // $balance = $KYUtils->KY_Money2($GameData['list']['Accounts'][$i]);
 
-                    User::where("UserName", $UserName)->update([
-                        "KY_Money" => $balance,
-                    ]);
+                    // User::where("UserName", $UserName)->update([
+                    //     "KY_Money" => $balance,
+                    // ]);
                 }
             }
 

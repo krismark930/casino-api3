@@ -180,7 +180,7 @@ class AGController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function getAGTransaction(Request $request)
+    public function getAGTransaction()
     {
 
         $response = [];
@@ -215,12 +215,13 @@ class AGController extends Controller
                 "SG",
             );
 
+            $url = env("TRANSACTION_URL") . "/third-party/ag-transaction/real";
 
-            $url = env("TRANSACTION_URL") . "/ag.php";
+            $result = get_object_vars(json_decode(GetUrl($url)));
 
-            $result = get_object_vars(json_decode(GetUrl($url)))["row"] ?? array();
+            $result = get_object_vars($result["data"])["row"] ?? array();
 
-            return $result;
+            // return $result;
 
             foreach ($result as $row) {
 
@@ -287,9 +288,9 @@ class AGController extends Controller
                         ->update($new_data);
                 }
 
-                $AGUtils = new AGUtils($sysConfig);
+                // $AGUtils = new AGUtils($sysConfig);
 
-                $user = User::where("UserName", $playerName)->first();
+                // $user = User::where("UserName", $playerName)->first();
 
                 // $balance = $AGUtils->getMoney($user["AG_User"], $user["AG_Pass"]);
 
@@ -310,7 +311,7 @@ class AGController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function getEGameTransaction(Request $request)
+    public function getEGameTransaction()
     {
 
         $response = [];
@@ -346,37 +347,40 @@ class AGController extends Controller
             );
 
 
-            $url = env("TRANSACTION_URL") . "/ag.php";
+            $url = env("TRANSACTION_URL") . "/third-party/ag-transaction/egame";
 
-            $result = get_object_vars(json_decode(GetUrl($url)))["row"] ?? array();
+            $result = get_object_vars(json_decode(GetUrl($url)));
 
-            return $result;
+            $result = get_object_vars($result["data"])["row"] ?? array();
 
-            foreach ($result as $row) {
+            // return $result;
 
-                $row = get_object_vars(get_object_vars($row)["@attributes"]);
+            foreach ($result as $item) {
 
-                $billNo = $row["billNo"];
-                $playerName = $row["playName"];
+                $item = get_object_vars($item)["@attributes"];
+                $item = get_object_vars($item);
+
+                // return $item;
+
+                $billNo = $item["billno"];
+                $playerName = $item["username"];
                 $Type = "";
-                $GameType = $row["gameType"];
-                $gameCode = $row["gameCode"];
-                $netAmount = $row["netAmount"];
-                $betTime = $row["betTime"];
-                $betAmount = $row["betAmount"];
-                $validBetAmount = $row["validBetAmount"];
-                $playType = $row["playType"];
-                $tableCode = $row["tableCode"];
-                $loginIP = $row["betIP"];
-                $recalcuTime = $row["recalcuTime"];
-                $platformType = $row["platformType"];
-                $round = $row["round"];
+                $GameType = $item["gametype"];
+                $gameCode = $item["gmcode"];
+                $netAmount = $item["dst_amount"];
+                $betTime = $item["billtime"];
+                $betAmount = $item["account"];
+                $validBetAmount = $item["valid_account"];
+                $playType = $item["slottype"];
+                $tableCode = $item["slottype"];
+                $loginIP = $item["betIP"];
+                $recalcuTime = $item["reckontime"];
+                $platformType = $item["platformtype"];
+                $round = $item["round"] ?? "";
                 $VendorId = 0;
-                $result = $row["result"];
+                $result = $item["flag"];
                 $gameType = addslashes($GameType);
                 $gameCode = addslashes($gameCode);
-
-                // return $gameType;
 
                 $web_report_zr = WebReportZr::where("billNo", $billNo)
                     ->where("platformType", $platformType)->first();
@@ -417,9 +421,9 @@ class AGController extends Controller
                         ->update($new_data);
                 }
 
-                $AGUtils = new AGUtils($sysConfig);
+                // $AGUtils = new AGUtils($sysConfig);
 
-                $user = User::where("UserName", $playerName)->first();
+                // $user = User::where("UserName", $playerName)->first();
 
                 // $balance = $AGUtils->getMoney($user["AG_User"], $user["AG_Pass"]);
 
@@ -428,7 +432,7 @@ class AGController extends Controller
                 // ]);
             }
 
-            $response['message'] = "AG Game Transaction saved successfully!";
+            $response['message'] = "EG Game Transaction saved successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
@@ -440,7 +444,7 @@ class AGController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function getYoplayTransaction(Request $request)
+    public function getYoplayTransaction()
     {
 
         $response = [];
@@ -509,92 +513,89 @@ class AGController extends Controller
             $users = User::query()->get(["AG_User"]);
 
 
-            $url = env("TRANSACTION_URL") . "/yoplay.php";
+            $url = env("TRANSACTION_URL") . "/third-party/ag-transaction/yoplay";
 
-            $result = get_object_vars(json_decode(GetUrl($url)))["row"] ?? array();
+            $result = get_object_vars(json_decode(GetUrl($url)));
 
-            return get_object_vars(json_decode(GetUrl($url)));
+            $result = get_object_vars($result["data"])["row"] ?? array();
 
-            foreach ($yo_play_game_type as $game_type) {
+            // return $result;
 
-                foreach ($orders as $order) {
+            foreach ($result as $item) {
 
-                    foreach ($users as $user) {
+                $item = get_object_vars($item)["@attributes"];
+                $item = get_object_vars($item);
 
-                        $AG_User = $user["AG_User"];
+                // return $item;
 
-                        $agent = "";
+                $billNo = $item["billno"];
+                $playerName = $item["username"];
+                $Type = "";
+                $GameType = $item["gametype"];
+                $gameCode = $item["gmcode"];
+                $netAmount = $item["dst_amount"];
+                $betTime = $item["billtime"];
+                $betAmount = $item["account"];
+                $validBetAmount = $item["valid_account"];
+                $playType = $item["slottype"];
+                $tableCode = $item["slottype"];
+                $loginIP = $item["betIP"];
+                $recalcuTime = $item["reckontime"];
+                $platformType = $item["platformtype"];
+                $round = $item["round"] ?? "";
+                $VendorId = 0;
+                $result = $item["flag"];
+                $gameType = addslashes($GameType);
+                $gameCode = addslashes($gameCode);
 
-                        $billno = "";
+                $web_report_zr = WebReportZr::where("billNo", $billNo)
+                    ->where("platformType", $platformType)->first();
 
-                        $orders = $AGUtils->getYoplayOrder($plan_code, $agent, $AG_User, $start_date, $end_date, $game_type, $billno);
+                $user = User::where("AG_User", $playerName)->first();
 
-                        return $orders;
-                    }
+                if (!isset($user)) continue;
 
-                    $billNo = $order[0]["result"][1]["row"]["billNo"];
-                    $playerName = $order[0]["result"][1]["row"]["playName"];
-                    $Type = "";
-                    $GameType = $order[0]["result"][1]["row"]["gameType"];
-                    $gameCode = $order[0]["result"][1]["row"]["gameCode"];
-                    $netAmount = $order[0]["result"][1]["row"]["netAmount"];
-                    $betTime = $order[0]["result"][1]["row"]["betTime"];
-                    $betAmount = $order[0]["result"][1]["row"]["betAmount"];
-                    $validBetAmount = $order[0]["result"][1]["row"]["validBetAmount"];
-                    $playType = $order[0]["result"][1]["row"]["playType"];
-                    $tableCode = $order[0]["result"][1]["row"]["tableCode"];
-                    $loginIP = $order[0]["result"][1]["row"]["betIP"];
-                    $recalcuTime = $order[0]["result"][1]["row"]["recalcuTime"];
-                    $platformType = $order[0]["result"][1]["row"]["platformType"];
-                    $round = $order[0]["result"][1]["row"]["round"];
-                    $VendorId = 0;
-                    $result = $order[0]["result"][1]["row"]["result"];
-                    $gameType = addslashes($GameType);
-                    $gameCode = addslashes($gameCode);
+                $UserName = $user["UserName"];
 
-                    $web_report_zr = WebReportZr::where("billNo", $billNo)
-                        ->where("platformType", $platformType)->first();
+                $new_data = array(
+                    "billNo" => $billNo,
+                    "UserName" => $UserName,
+                    "playerName" => $playerName,
+                    "Type" => $Type,
+                    "gameType" => $gameType,
+                    "gameCode" => $gameCode,
+                    "netAmount" => $netAmount,
+                    "betTime" => $betTime,
+                    "betAmount" => $betAmount,
+                    "validBetAmount" => $validBetAmount,
+                    "playType" => $playType,
+                    "tableCode" => $tableCode,
+                    "loginIP" => $loginIP,
+                    "recalcuTime" => $recalcuTime,
+                    "round" => $round,
+                    "platformType" => $platformType,
+                    "VendorId" => $VendorId,
+                    "Checked" => 1,
+                );
 
-                    $new_data = array(
-                        "billNo" => $billNo,
-                        "UserName" => $UserName,
-                        "playerName" => $playerName,
-                        "Type" => $Type,
-                        "gameType" => $gameType,
-                        "gameCode" => $gameCode,
-                        "netAmount" => $netAmount,
-                        "betTime" => $betTime,
-                        "betAmount" => $betAmount,
-                        "validBetAmount" => $validBetAmount,
-                        "playType" => $playType,
-                        "tableCode" => $tableCode,
-                        "loginIP" => $loginIP,
-                        "recalcuTime" => $recalcuTime,
-                        "round" => $round,
-                        "platformType" => $platformType,
-                        "VendorId" => $VendorId,
-                        "Checked" => 1,
-                    );
-
-                    if (isset($web_report_zr)) {
-                        $web_report_zr = new WebReportZr;
-                        $web_report_zr->create($new_data);
-                    } else {
-                        WebReportZr::where("billNo", $billNo)
-                            ->where("platformType", $platformType)
-                            ->update($new_data);
-                    }
-
-                    $AGUtils = new AGUtils($sysConfig);
-
-                    $user = User::where("UserName", $UserName)->first();
-
-                    $balance = $AGUtils->getMoney($user["AG_User"], $user["AG_Pass"]);
-
-                    User::where("UserName", $UserName)->update([
-                        "AG_Money" => $balance,
-                    ]);
+                if (!isset($web_report_zr)) {
+                    $web_report_zr = new WebReportZr;
+                    $web_report_zr->create($new_data);
+                } else {
+                    WebReportZr::where("billNo", $billNo)
+                        ->where("platformType", $platformType)
+                        ->update($new_data);
                 }
+
+                // $AGUtils = new AGUtils($sysConfig);
+
+                // $user = User::where("UserName", $UserName)->first();
+
+                // $balance = $AGUtils->getMoney($user["AG_User"], $user["AG_Pass"]);
+
+                // User::where("UserName", $UserName)->update([
+                //     "AG_Money" => $balance,
+                // ]);
             }
 
             $response['message'] = "YOPLAY Game Transaction saved successfully!";
