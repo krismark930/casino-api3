@@ -1,6 +1,6 @@
 docker run --name laravel -p 8088:80 -v /Users/villian/app/php/fujia/casino-api3:/var/www/html/app laraedit/laraedit
 docker rm -rf laravel
-docker run --name laravel -p 8088:80  -e WEBROOT=/var/www/html/public -v /Users/villian/app/php/fujia/casino-api3:/var/www/html tangramor/nginx-php8-fpm:php8.2.2_node19.6.0
+docker run --name laravel -p 8088:80 --network coinuse  -e WEBROOT=/var/www/html/public -v /Users/villian/app/php/fujia/casino-api3:/var/www/html tangramor/nginx-php8-fpm:php8.2.2_node19.6.0
 
            TZ: 'Asia/Shanghai'
             WEBROOT: '/var/www/html/public'
@@ -46,3 +46,24 @@ php artisan migrate:rollback --path=/database/migrations/fileName.php
     
     - npm i
     - node(nodemon) server.js
+
+
+## 比分
+
+https://www.nowscore.com/index.html
+
+
+## 测试账号
+sniper
+123456
+
+27.126.187.10,17,24,30,37 (IP x 5)
+密碼: Upq2JUhntzm4
+端口: 35115
+
+ssh -p 35115 root@27.126.187.10
+ssh  root@27.126.187.127
+
+27.126.187.127-131 (IP x 5)
+root
+A2epmRDYB4ba
