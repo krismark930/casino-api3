@@ -298,6 +298,8 @@ class AdminSearchBettingController extends Controller
                 'memberResult' => $M_Result,
                 'betSlip' => $operate,
                 'function' => 'function',
+                'g_type' => $row["Gtype"],
+                'm_id' => $row["MID"],
             );
 
             array_push($data, $temp);

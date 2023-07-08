@@ -10,13 +10,19 @@ class KYUtils {
     var $md5Key;
     var $aesKey;
     var $KY_CJ_Time;
-    var $apiUrl="https://api.dxx28.com/channelHandle";  //正式环境
-    var $apiUrl2="https://wc1-api.hddv1.com/channelHandle";  //测试环境
+    var $apiUrl;  //正式环境
+    var $apiUrl2;  //测试环境
 
     public function __construct($sysConfig) {
-        $this->agent = $sysConfig['KY_Agent'];
-        $this->md5Key = $sysConfig['KY_md5key'];
-        $this->aesKey = $sysConfig['KY_aeskey'];
+        $this->apiUrl=env('KY_URL');  //正式环境
+        $this->apiUrl2=env('KY_URL_2');  //测试环境
+
+        // $this->agent = $sysConfig['KY_Agent'];
+        // $this->md5Key = $sysConfig['KY_md5key'];
+        // $this->aesKey = $sysConfig['KY_aeskey'];
+        $this->agent = env('KY_AGENT');
+        $this->md5Key = env('KY_MD5KEY');
+        $this->aesKey = env('KY_AESKEY');
         $this->KY_CJ_Time = $sysConfig["KY_CJ_Time"];
     }
 
@@ -34,7 +40,6 @@ class KYUtils {
         $endTime=($this->KY_CJ_Time+$sc)*1000;
         $params="s=6&startTime=$startTime&endTime=$endTime";
         $aes->set_key($this->aesKey);
-        $aes->require_pkcs5();
         $param = urlencode($aes->encrypt($params)); //参数加密字符串
         $key = md5($this->agent.$timestamp.$this->md5Key); //MD5校验字符串
         $url=$apiUrl.'?agent='.$this->agent.'&timestamp='.$timestamp.'&param='.$param.'&key='.$key;
@@ -63,7 +68,6 @@ class KYUtils {
         $loginip = $this->getip_KY();
         $params="s=0&account=$username&money=0&orderid=$orderid&ip=$loginip&lineCode=$lineCode&KindID=0";
         $aes->set_key($this->aesKey);
-        $aes->require_pkcs5();
         $param = urlencode($aes->encrypt($params));	//参数加密字符串
         $key = md5($this->agent.$timestamp.$this->md5Key);	//MD5校验字符串
         $url=$this->apiUrl.'?agent='.$this->agent.'&timestamp='.$timestamp.'&param='.$param.'&key='.$key;
@@ -84,7 +88,6 @@ class KYUtils {
         $timestamp = str_pad($aes->getMillisecond(),13,0);	//时间戳
         $params="s=5&account=$username";
         $aes->set_key($this->aesKey);
-        $aes->require_pkcs5();
         $param = urlencode($aes->encrypt($params));	//参数加密字符串
         $key = md5 ($this->agent.$timestamp.$this->md5Key);	//MD5校验字符串
         $url=$this->apiUrl.'?agent='.$this->agent.'&timestamp='.$timestamp.'&param='.$param.'&key='.$key;
@@ -115,7 +118,6 @@ class KYUtils {
             }
         }
         $aes->set_key($this->aesKey);
-        $aes->require_pkcs5();
         $param = urlencode($aes->encrypt($params));	//参数加密字符串
         $key = md5 ($this->agent.$timestamp.$this->md5Key);	//MD5校验字符串
         $url=$this->apiUrl.'?agent='.$this->agent.'&timestamp='.$timestamp.'&param='.$param.'&key='.$key;
@@ -146,7 +148,6 @@ class KYUtils {
         $timestamp = str_pad($aes->getMillisecond(),13,0);	//时间戳
         $params="s=1&account=$username";
         $aes->set_key($this->aesKey);
-        $aes->require_pkcs5();
         $param = urlencode($aes->encrypt($params));	//参数加密字符串
         $key = md5 ($this->agent.$timestamp.$this->md5Key);	//MD5校验字符串
         $url=$this->apiUrl.'?agent='.$this->agent.'&timestamp='.$timestamp.'&param='.$param.'&key='.$key;
@@ -165,7 +166,6 @@ class KYUtils {
         $timestamp = str_pad($aes->getMillisecond(),13,0);	//时间戳
         $params="s=7&account=$username";
         $aes->set_key($this->aesKey);
-        $aes->require_pkcs5();
         $param = urlencode($aes->encrypt($params));	//参数加密字符串
         $key = md5 ($this->agent.$timestamp.$this->md5Key);	//MD5校验字符串
         $url=$this->apiUrl.'?agent='.$this->agent.'&timestamp='.$timestamp.'&param='.$param.'&key='.$key;
@@ -195,7 +195,6 @@ class KYUtils {
         $timestamp = str_pad($aes->getMillisecond(),13,0);	//时间戳
         $params="s=14";
         $aes->set_key($this->aesKey);
-        $aes->require_pkcs5();
         $param = urlencode($aes->encrypt($params));	//参数加密字符串
         $key = md5 ($this->agent.$timestamp.$this->md5Key);	//MD5校验字符串
         $url=$this->apiUrl.'?agent='.$this->agent.'&timestamp='.$timestamp.'&param='.$param.'&key='.$key;
@@ -217,12 +216,11 @@ class KYUtils {
         $loginip=$this->getip_KY();
         $params="s=0&account=$username&money=0&orderid=$orderid&ip=$loginip&lineCode=$lineCode&KindID=$KindID";
         $aes->set_key($this->aesKey);
-        $aes->require_pkcs5();
         $param = urlencode($aes->encrypt($params));	//参数加密字符串
         $key = md5 ($this->agent.$timestamp.$this->md5Key);	//MD5校验字符串
         $url=$this->apiUrl.'?agent='.$this->agent.'&timestamp='.$timestamp.'&param='.$param.'&key='.$key;
         $jsonStr=$this->getUrl_KY($url);
-        // return $url;
+        // return $this->apiUrl;
         $jsonData=json_decode($jsonStr,true);
         if($jsonData['d']['code']==0 and count($jsonData,1)>1){
             $url=$jsonData['d']['url'];
@@ -245,7 +243,6 @@ class KYUtils {
         $loginip=$this->getip_KY();
         $params="s=0&account=$username&money=$money&orderid=$orderid&ip=$loginip&lineCode=$lineCode&KindID=$KindID";
         $aes->set_key($aesKey);
-        $aes->require_pkcs5();
         $param = urlencode($aes->encrypt($params));	//参数加密字符串
         $key = md5($agent.$timestamp.$md5Key);	//MD5校验字符串
         $url=$this->apiUrl2.'?agent='.$agent.'&timestamp='.$timestamp.'&param='.$param.'&key='.$key;
@@ -265,7 +262,6 @@ class KYUtils {
         $timestamp = str_pad($aes->getMillisecond(),13,0);	//时间戳
         $params="s=4&orderid=$orderid";
         $aes->set_key($this->aesKey);
-        $aes->require_pkcs5();
         $param = urlencode($aes->encrypt($params));	//参数加密字符串
         $key = md5 ($this->agent.$timestamp.$this->md5Key);	//MD5校验字符串
         $url=$this->apiUrl.'?agent='.$this->agent.'&timestamp='.$timestamp.'&param='.$param.'&key='.$key;
@@ -289,7 +285,6 @@ class KYUtils {
         $timestamp = str_pad($aes->getMillisecond(),13,0);	//时间戳
         $params="s=8&account=$username";
         $aes->set_key($this->aesKey);
-        $aes->require_pkcs5();
         $param = urlencode($aes->encrypt($params));	//参数加密字符串
         $key = md5 ($this->agent.$timestamp.$this->md5Key);	//MD5校验字符串
         $url=$this->apiUrl.'?agent='.$this->agent.'&timestamp='.$timestamp.'&param='.$param.'&key='.$key;

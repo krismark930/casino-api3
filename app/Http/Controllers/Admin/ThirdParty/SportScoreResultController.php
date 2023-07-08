@@ -72,11 +72,13 @@ class SportScoreResultController extends Controller {
             $uid = $request_data["uid"];
             $date = $request_data["date"];
 			$game_type = $request_data["game_type"];
+
 			if ($date == "Today") {
 				$list_date = date('Y-m-d');
 			} else {
 				$list_date = date('Y-m-d', strtotime('-1 day'));
 			}
+			
 			// $list_date = "2023-06-18";
 
 			$url = "http://125.252.69.119/app/member/account/result/result.php?game_type=$game_type&list_date=$list_date&uid=$uid&langx=zh-cn";
@@ -388,13 +390,23 @@ class SportScoreResultController extends Controller {
                 }
 
                 if ($GMH == Score15 or $GMC == Score15) {
-                	$GMH = -14;
-                	$GMC = -14;
+                	$GMH = -15;
+                	$GMC = -15;
                 }
 
                 if ($HGMH == Score15 or $HGMC == Score15){
-                    $HGMH = -14;
-                    $HGMC = -14;
+                    $HGMH = -15;
+                    $HGMC = -15;
+                }
+
+                if ($GMH==Score16 or $GMC==Score16){
+                    $GMH='-16';
+                    $GMC='-16';
+                }
+
+                if ($HGMH==Score16 or $HGMC==Score16){
+                    $HGMH='-16';
+                    $HGMC='-16';
                 }
 
                 if ($GMH==Score19 or $GMC==Score19){

@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Http\Controllers\TestController;
 
 class LotteryCheckoutCommand extends Command
 {
@@ -19,7 +18,7 @@ class LotteryCheckoutCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Lottery Checkout Command';
 
     /**
      * Create a new command instance.
@@ -38,7 +37,6 @@ class LotteryCheckoutCommand extends Command
      */
     public function handle()
     {
-        $testController = new TestController();
-        $testController->addTest();
+        return 0;
     }
 }

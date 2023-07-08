@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\LotteryCheckoutCommand::class,
+        \App\Console\Commands\AGTransactionCommand::class,
     ];
 
     /**
@@ -25,6 +26,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('lottery:checkout')->everyMinute();
+        $schedule->command('ag:transaction')->everyMinute();
     }
 
     /**
