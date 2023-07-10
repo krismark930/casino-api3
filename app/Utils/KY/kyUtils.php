@@ -54,7 +54,7 @@ class KYUtils {
 
         $jsonData=json_decode($jsonStr,true);
 
-        $GameData=$jsonData['d'];
+        $GameData=$jsonData['d'] ?? array("code" => "error");
 
         return $GameData;
     }

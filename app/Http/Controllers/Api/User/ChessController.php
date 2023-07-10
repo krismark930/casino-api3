@@ -202,6 +202,8 @@ class ChessController extends Controller
                 ]);
             } else {
                 $response["message"] = "刷新太快";
+                $response['success'] = FALSE;
+                $response['status'] = STATUS_OK;
                 return response()->json($response, $response['status']);
             }
 
