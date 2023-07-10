@@ -1390,7 +1390,14 @@ class BettingController extends Controller
 
             if (!isset($user)) {
                 $response['message'] = 'Please login again!';
-                return response()->json($response, $response['status']);                
+                return response()->json($response, $response['status']);
+            }
+
+            // return $bad_name_jq;
+
+            if(in_array($user["UserName"], $bad_name_jq) && ($line == 5 || $line == 15 || $line == 110 || $line == 120)) {
+                $response['message'] = '赛程已关闭,无法进行交易!!';
+                return response()->json($response, $response['status']);
             }
 
             // return $user;
@@ -2273,6 +2280,114 @@ class BettingController extends Controller
 
                     break;
 
+                case 110:
+
+                    $bet_type = '角球大小';
+
+                    $bet_type_tw = "角球大小";
+
+                    $bet_type_en = "Corner Over/Under";
+
+                    $caption = "足球";
+
+                    $turn_rate = "FT_Turn_OU_";
+
+                    $MB_Dime_Rate_RB = $match_sports["MB_Dime_Rate_RB"];
+
+                    $TG_Dime_Rate_RB = $match_sports["TG_Dime_Rate_RB"];
+
+                    $rate = get_other_ioratio($odd_f_type, $MB_Dime_Rate_RB, $TG_Dime_Rate_RB, 100);
+
+                    switch ($type) {
+
+                        case "H":
+
+                            $w_m_place = $match_sports["MB_Dime_RB"];
+
+                            $w_m_place = str_replace('O', '大&nbsp;', $w_m_place);
+
+                            $w_m_place_tw = $match_sports["MB_Dime_RB"];
+
+                            $w_m_place_tw = str_replace('O', '大&nbsp;', $w_m_place_tw);
+
+                            $w_m_place_en = $match_sports["MB_Dime_RB"];
+
+                            $w_m_place_en = str_replace('O', 'over&nbsp;', $w_m_place_en);
+
+                            $m_place = $match_sports["MB_Dime_RB"];
+
+                            $s_m_place = $match_sports["MB_Dime_RB"];
+
+                            if ($langx == "zh-cn") {
+
+                                $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
+                            } else if ($langx == "zh-cn") {
+
+                                $s_m_place = str_replace('O', '大&nbsp;', $s_m_place);
+                            } else if ($langx == "en-us" or $langx == 'th-tis') {
+
+                                $s_m_place = str_replace('O', 'over&nbsp;', $s_m_place);
+                            }
+
+                            $w_m_rate = number_format($rate[0], 3);
+
+                            $turn_url = "";
+
+                            $mtype = 'ROUH';
+
+                            break;
+
+                        case "C":
+
+                            $w_m_place = $match_sports["TG_Dime_RB"];
+
+                            $w_m_place = str_replace('U', '小&nbsp;', $w_m_place);
+
+                            $w_m_place_tw = $match_sports["TG_Dime_RB"];
+
+                            $w_m_place_tw = str_replace('U', '小&nbsp;', $w_m_place_tw);
+
+                            $w_m_place_en = $match_sports["TG_Dime_RB"];
+
+                            $w_m_place_en = str_replace('U', 'under&nbsp;', $w_m_place_en);
+
+                            $m_place = $match_sports["TG_Dime_RB"];
+
+                            $s_m_place = $match_sports["TG_Dime_RB"];
+
+                            if ($langx == "zh-cn") {
+
+                                $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
+                            } else if ($langx == "zh-cn") {
+
+                                $s_m_place = str_replace('U', '小&nbsp;', $s_m_place);
+                            } else if ($langx == "en-us" or $langx == 'th-tis') {
+
+                                $s_m_place = str_replace('U', 'under&nbsp;', $s_m_place);
+                            }
+
+                            $w_m_rate = number_format($rate[1], 3);
+
+                            $turn_url = "";
+
+                            $mtype = 'ROUC';
+
+                            break;
+                    }
+
+                    $Sign = "VS.";
+
+                    $grape = $m_place;
+
+                    $turn = "FT_Turn_OU";
+
+                    $gwin = ($w_m_rate) * $gold;
+
+                    $ptype = 'ROU';
+
+                    break;
+
+                
                 case 53:
 
                     $bet_type = '滚球大小';
@@ -2628,7 +2743,7 @@ class BettingController extends Controller
                         $w_m_place="和局";
                         $w_m_place_tw="和局";
                         $w_m_place_en="Flat";
-                        $s_m_place=$Draw;
+                        $s_m_place="";
                         $w_m_rate=Utils::num_rate($open,$match_sports["M_Flat_Rate_RB_H"]);
                         $turn_url="";
                         $mtype='VRMN';
@@ -2787,6 +2902,77 @@ class BettingController extends Controller
                     }
                     $ptype='VROU';              
                     break;
+                case 120:
+                    $bet_type='半场角球大小';
+                    $bet_type_tw="半場角球大小";
+                    $bet_type_en="1st Half Corner Over/Under";
+                    $btype="- <font color=red><b>".Order_1st_Half."</b></font>";     
+                    $caption = ORDER_FT.Order_1st_Half_Running_Ball_Over_Under_betting_order;
+                    $turn_rate="FT_Turn_OU_".$open;
+                    $rate=get_other_ioratio($odd_f_type,$match_sports["MB_Dime_Rate_RB_H"],$match_sports["TG_Dime_Rate_RB_H"],100);
+                    switch ($type){
+                    case "H":
+                        $w_m_place=$match_sports["MB_Dime_RB_H"];
+                        $w_m_place=str_replace('O','大&nbsp;',$w_m_place);
+                        $w_m_place_tw=$match_sports["MB_Dime_RB_H"];
+                        $w_m_place_tw=str_replace('O','大&nbsp;',$w_m_place_tw);
+                        $w_m_place_en=$match_sports["MB_Dime_RB_H"];
+                        $w_m_place_en=str_replace('O','over&nbsp;',$w_m_place_en);
+                        
+                        $m_place=$match_sports["MB_Dime_RB_H"];
+                        
+                        $s_m_place=$match_sports["MB_Dime_RB_H"];
+                        if ($langx=="zh-cn"){
+                            $s_m_place=str_replace('O','大&nbsp;',$s_m_place);
+                        }else if ($langx=="zh-cn"){
+                            $s_m_place=str_replace('O','大&nbsp;',$s_m_place);
+                        }else if ($langx=="en-us" or $langx=='th-tis'){
+                            $s_m_place=str_replace('O','over&nbsp;',$s_m_place);
+                        }           
+                        $w_m_rate=change_rate($open,$rate[0]);
+                        $turn_url="";
+                        $mtype='VROUH';
+                        break;
+                    case "C":
+                        $w_m_place=$match_sports["TG_Dime_RB_H"];
+                        $w_m_place=str_replace('U','小&nbsp;',$w_m_place);
+                        $w_m_place_tw=$match_sports["TG_Dime_RB_H"];
+                        $w_m_place_tw=str_replace('U','小&nbsp;',$w_m_place_tw);
+                        $w_m_place_en=$match_sports["TG_Dime_RB_H"];
+                        $w_m_place_en=str_replace('U','under&nbsp;',$w_m_place_en);
+                        
+                        $m_place=$match_sports["TG_Dime_RB_H"];
+                        
+                        $s_m_place=$match_sports["TG_Dime_RB_H"];
+                        if ($langx=="zh-cn"){
+                            $s_m_place=str_replace('U','小&nbsp;',$s_m_place);
+                        }else if ($langx=="zh-cn"){
+                            $s_m_place=str_replace('U','小&nbsp;',$s_m_place);
+                        }else if ($langx=="en-us" or $langx=='th-tis'){
+                            $s_m_place=str_replace('U','under&nbsp;',$s_m_place);
+                        }
+                        $w_m_rate=change_rate($open,$rate[1]);
+                        $turn_url="";
+                        $mtype='VROUC';
+                        break;
+                    }
+
+                    $Sign="VS.";
+                    $grape=$m_place;
+                    $turn="FT_Turn_OU";
+                    if ($odd_f_type=='H'){
+                        $gwin=($w_m_rate)*$gold;
+                    }else if ($odd_f_type=='M' or $odd_f_type=='I'){
+                        if ($w_m_rate<0){
+                            $gwin=$gold;
+                        }else{
+                            $gwin=($w_m_rate)*$gold;
+                        }
+                    }else if ($odd_f_type=='E'){
+                        $gwin=($w_m_rate-1)*$gold;
+                    }
+                    $ptype='VROU';              
+                    break;
             }            
 
 
@@ -2800,7 +2986,7 @@ class BettingController extends Controller
 
             $w_tg_mid = $match_sports['TG_MID'];
 
-            if ($line == 19 or $line == 20 or $line == 31) {
+            if ($line == 19 or $line == 20 or $line == 120 or $line == 31) {
                 $bottom1_cn = "-&nbsp;<font color=#666666>[上半]</font>&nbsp;";
                 $bottom1_tw = "-&nbsp;<font color=#666666>[上半]</font>&nbsp;";
                 $bottom1_en = "-&nbsp;<font color=#666666>[1st Half]</font>&nbsp;";
@@ -2903,6 +3089,10 @@ class BettingController extends Controller
             $new_web_report_data->MB_MID = $w_mb_mid;
             $new_web_report_data->TG_MID = $w_tg_mid;
             $new_web_report_data->Pay_Type = $pay_type;
+            $new_web_report_data->Danger = 1;
+            $new_web_report_data->QQ83068506 = $inball;
+            $new_web_report_data->MB_ball = $mb_ball;
+            $new_web_report_data->TG_ball = $tg_ball;
 
             $new_web_report_data->save();
 
@@ -4978,7 +5168,7 @@ class BettingController extends Controller
             $end_date = $request_data["endDate"];
             $g_type = $request_data["gameType"];
 
-            $user_id = Auth::guard("api")->user()->id;
+            $user_id = $request->user()->id;
 
             $user = User::where('id', $user_id)->where('Status', 0)->first();
 
@@ -5093,12 +5283,38 @@ class BettingController extends Controller
 
         try {
 
-            $m_name = Auth::guard("api")->user()->UserName;
+            $m_name = $request->user()->UserName;
 
             $not_bet_score = Report::where("M_Name", $m_name)->where('Checked', 0)->sum('BetScore');
 
             $response['data'] = $not_bet_score;
             $response['message'] = 'Not Bet Score Data fetched successfully!';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    }
+
+    public function getWebSystemItem(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+
+            $web_system_data = WebSystemData::find(1);
+
+            $config = Config::query()->first();
+
+            $response['data'] = $web_system_data;
+            $response['config'] = $config;
+            $response['message'] = 'Web System Item fetched successfully!';
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {

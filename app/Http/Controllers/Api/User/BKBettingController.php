@@ -67,8 +67,6 @@ class BKBettingController extends Controller
             $hg_confirm = $configs[0]['HG_Confirm'];
             $bad_name = explode(",", $configs[0]['BadMember']);
             $bad_name2 = explode(",", $configs[0]['BadMember2']);
-            $bad_name3 = explode(",", $configs[0]['BadMember3']);
-            $bad_name_jq = explode(",", $configs[0]['BadMember_JQ']);
 
             $user_id = $request_data["id"];
             // $user_id = Auth::guard("api")->user()->id;

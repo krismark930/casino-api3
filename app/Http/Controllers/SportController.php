@@ -10,7 +10,9 @@ use App\Models\Web\Report;
 use App\Models\Config;
 use App\Models\Web\MoneyLog;
 use App\Models\Web\WebMemLogData;
+use App\Models\WebReportData;
 use App\Models\WebReportTemp;
+use App\Models\WebReportLog;
 use App\Utils\Utils;
 use DB;
 use Exception;
@@ -21,6 +23,138 @@ include("include.php");
 
 class SportController extends Controller
 {
+    public function sportsBettingCheckout(Request $request)
+    {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+
+            $rules = [];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                $errorResponse = validation_error_response($validator->errors()->toArray());
+                return response()->json($errorResponse, $response['status']);
+            }
+
+            $web_system_data = WebSystemData::find(1);
+
+            $ft_time = $web_system_data["udp_ft_time"];
+            $time_ft = $web_system_data["ft_time_udp"];
+
+            $jiaoqiu_time = 150;
+            $xiaoqiu_time = 20;
+            $djzq_time = 70;
+
+            $current_time = date('Y-m-d H:i:s', strtotime(' + 1 hours')); // current time
+
+            $current_date = date('Y-m-d'); // current date
+
+            $time = date('Y-m-d H:i:s', time() + 24 * 60 * 60 - 3 * $ft_time); // 3 minutes before in current time
+
+            $times = date('Y-m-d H:i:s', time() + 24 * 60 * 60 - 3 * $time_ft); // 3 minutes before in current time
+
+            // 没有角球的时间
+
+            WebReportData::where("BetTime", "<", $times)
+                ->where("Active", 1)
+                ->where("Danger", 1)
+                ->where(function ($query) {
+                    $query->where("LineType", 5)
+                        ->orWhere("LineType", 15)
+                        ->orWhere("LineType", 21)
+                        ->orWhere("LineType", 9)
+                        ->orWhere("LineType", 50)
+                        ->orWhere("LineType", 51)
+                        ->orWhere("LineType", 52)
+                        ->orWhere("LineType", 10)
+                        ->orWhere("LineType", 110)
+                        ->orWhere("LineType", 53)
+                        ->orWhere("LineType", 54)
+                        ->orWhere("LineType", 55)
+                        ->orWhere("LineType", 19)
+                        ->orWhere("LineType", 20)
+                        ->orWhere("LineType", 31)
+                        ->orWhere("LineType", 120);
+                })
+                ->where("M_Result", "")
+                ->where("Cancel", "!=", 1)
+                ->update([
+                    "Danger" => 0
+                ]);
+
+            $web_report_data = WebReportData::where("BetTime", "<", $time)
+                ->where("Active", 1)
+                ->where("Danger", 1)
+                ->whereIn("LineType", [5, 15, 21, 9, 50, 51, 52, 10, 110, 53, 54, 55, 19, 20, 31, 120])
+                ->where("M_Result", "")
+                ->where("Cancel", "!=", 1)
+                ->get();
+
+            foreach ($web_report_data as $row) {
+                $id = $row['ID'];
+                $mid = $row['MID'];
+                $username = $row['M_Name'];
+                $betscore = $row['BetScore'];
+                $m_result = $row['M_Result'];
+                $mb_ball = $row['MB_ball'];
+                $tg_ball = $row['TG_ball'];
+
+                $sport = Sport::where("MID", $mid)->first();
+
+                $ft_mb_ball = $sport["MB_Ball"];
+                $ft_tg_ball = $sport['TG_Ball'];
+
+                if ($mb_ball == $ft_mb_ball && $tg_ball == $ft_tg_ball) {
+                    WebReportData::where("ID", $id)->update(["Danger" => 0]);
+                } else {
+                    WebReportData::where("ID", $id)->update([
+                        "VGOLD" => 0,
+                        "M_Result" => 0,
+                        "A_Result" => 0,
+                        "B_Result" => 0,
+                        "C_Result" => 0,
+                        "D_Result" => 0,
+                        "Cancel" => 1,
+                        "MB_ball" => $ft_mb_ball,
+                        "TG_ball" => $ft_tg_ball,
+                        "Confirmed" => -18,
+                        "Danger" => 0,
+                    ]);
+                    if ($m_result == '') {
+
+                        $q1 = User::where("UserName", $username)
+                            ->where("Pay_Type", 1)
+                            ->increment('Money', (int)$betscore);
+
+                        $web_report_log = new WebReportLog;
+
+                        $web_report_log->Rid = $id;
+                        $web_report_log->username = $username;
+                        $web_report_log->money = Utils::GetField($username, 'Money');
+                        $web_report_log->gold = $betscore;
+                        $web_report_log->mtype = $betscore . "进球取消";
+
+                        $web_report_log->save();
+                    }
+                }
+            }
+
+            $response['message'] = 'Get Score Data updated successfully';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    }
     public function updateGetScore(Request $request)
     {
 

@@ -139,6 +139,7 @@ class PaymentMethodController extends Controller
             // return preg_replace('/\s+/', '', $signStr);
             $sign = strtoupper(md5(preg_replace('/\s+/', '', $signStr)));
             $PayInfo['sign'] = $sign;
+            return $PayInfo;
             // $PayInfo["signStr"] = preg_replace('/\s+/', '', $signStr);
 
             $result = $Config->fetchPost(env('LY_PAY_URL'), $PayInfo);

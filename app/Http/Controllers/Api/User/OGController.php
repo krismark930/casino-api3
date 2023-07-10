@@ -245,6 +245,8 @@ class OGController extends Controller
 
             if ($game_array == null) {
                 $response["message"] = "Transaction Not Found!";
+                $response['success'] = FALSE;
+                $response['status'] = STATUS_OK;
                 return response()->json($response, $response['status']);
             }
 

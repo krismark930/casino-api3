@@ -74,9 +74,9 @@ class AdminSystemController extends Controller
 
             $config = Config::all()->first();
 
-            $user = $request->user();
+            $web_system_data = WebSystemData::find(1);
 
-            $response["web_system_data"] = $user;
+            $response["web_system_data"] = $web_system_data;
             $response["sys_config"] = $sysConfig;
             $response["config"] = $config;
             $response['message'] = "System Data fetched successfully!";
@@ -367,31 +367,31 @@ class AdminSystemController extends Controller
             $BadArea = $request_data["BadArea"] ?? "";
 
             if ($GongGao != "") {
-                WebSystemData::where("id", $user["id"])->update([
+                WebSystemData::where("id", 1)->update([
                     "GongGao" => $GongGao,
                 ]);
             }
 
             if ($systimee != "") {
-                WebSystemData::where("id", $user["id"])->update([
+                WebSystemData::where("id", 1)->update([
                     "systimee" => $systimee,
                 ]);
             }
 
             if ($systime != "") {
-                WebSystemData::where("id", $user["id"])->update([
+                WebSystemData::where("id", 1)->update([
                     "systime" => $systime,
                 ]);
             }
 
             if ($website != "") {
-                WebSystemData::where("id", $user["id"])->update([
+                WebSystemData::where("id", 1)->update([
                     "website" => $website,
                 ]);
             }
 
             if ($BadArea != "") {
-                WebSystemData::where("id", $user["id"])->update([
+                WebSystemData::where("id", 1)->update([
                     "BadArea" => $BadArea,
                 ]);
             }

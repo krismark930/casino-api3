@@ -302,6 +302,10 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router) 
         Route::post('/add', [PostController::class, 'savePost']);
         Route::post('/item', [PostController::class, 'getPost']);
     });
+
+    Route::group(['prefix' => 'web-system-data', 'middleware' => 'auth:api'], function ($router) {
+        Route::get('/item', [BettingController::class, 'getWebSystemItem']);
+    });
 });
 
 // admin routes
