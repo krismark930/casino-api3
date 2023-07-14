@@ -39,7 +39,7 @@ class PaymentMethodController extends Controller
             $amount = $request_data['amount'];
             $username = $request_data['username'];
             $bankcode = $request_data['bankcode'];
-            $BillNO = "LY" . date("YmdHis") . mt_rand(10000, 99999);
+            $BillNO = "LY" . Carbon::now("Asia/Hong_Kong")->format("YmdHis") . mt_rand(10000, 99999);
             $Date = date("Y-m-d");
             $DateTime = date("Y-m-d H:i:s");
             $PayID = $request_data['PayID'] ?? 6;
@@ -68,6 +68,7 @@ class PaymentMethodController extends Controller
                     $trade_type = '23';
                 }
             }
+
             if ($paytype == 3) {
                 if ($Config->isMobile()) {
                     $trade_type = '02';
@@ -75,13 +76,19 @@ class PaymentMethodController extends Controller
                     $trade_type = '13';
                 }
             }
+
             if ($paytype == 4)    $trade_type = '12';
+
             if ($paytype == 5) {
                 $trade_type = '05';
             }
+
             if ($paytype == 7)    $trade_type = '07';
+
             if ($paytype == 8)    $trade_type = '11';
-            $trade_type = '11';
+
+            $trade_type = '23';
+
             $out_trade_no = $BillNO;
             $body = 'QB';
             $attach = '';
@@ -134,17 +141,20 @@ class PaymentMethodController extends Controller
                 }
             }
 
-            $signStr = $signStr.'key='.$PayKey;
-            // return $signStr;
-            // return preg_replace('/\s+/', '', $signStr);
+            $signStr = $signStr . 'key=' . $PayKey;
+
             $sign = strtoupper(md5(preg_replace('/\s+/', '', $signStr)));
+
             $PayInfo['sign'] = $sign;
-            return $PayInfo;
-            // $PayInfo["signStr"] = preg_replace('/\s+/', '', $signStr);
+
+            // return $PayInfo;
+
+            $PayInfo["signStr"] = preg_replace('/\s+/', '', $signStr);
 
             $result = $Config->fetchPost(env('LY_PAY_URL'), $PayInfo);
 
             $response["data"] = $result;
+            $response["config"] = $PayInfo;
             $response['message'] = "LY PayInfo Data fetched successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
@@ -190,8 +200,8 @@ class PaymentMethodController extends Controller
                 fclose($f);
             }
 
-            $request_data = $request->all();            
-            
+            $request_data = $request->all();
+
             $mch_id = $request_data['mch_id'];  //商户号
             $out_trade_no = $request_data['out_trade_no'];  //商户订单号
             $trade_no = $request_data['trade_no'];  //系统定单号
@@ -201,7 +211,7 @@ class PaymentMethodController extends Controller
             $nonce_str = $request_data['nonce_str'];
             $time_end = $request_data['time_end'];
             $sign = $request_data['sign'];  //签名
-            
+
             $Music = $Config->GetMusic($mch_id);
             $PayKey = $Config->GetPayKey($mch_id);
 
@@ -232,12 +242,13 @@ class PaymentMethodController extends Controller
 
             $signStr .= "key=" . $PayKey;
 
-            $signature = strtoupper(md5($signStr));            
-            
-            if ($signature == $sign and $trade_state == 'SUCCESS') {
-                $Config->InsertPayLog($out_trade_no, $total_fee / 100, '', 1, 'LYPAY', $Music);
+            $signature = strtoupper(md5($signStr));
+
+            if ($trade_state == 'SUCCESS') {
+                $Config->InsertPayLog($request_data, $out_trade_no, $total_fee / 100, '', 1, 'LYPAY', $Music);
             } else {
-                echo 'error';
+                $response['message'] = "LY Notify Data failed!";
+                return response()->json($response, $response['status']);
             }
 
             $response['message'] = "LY Notify Data fetched successfully!";
@@ -249,6 +260,6 @@ class PaymentMethodController extends Controller
             $response['status'] = STATUS_GENERAL_ERROR;
         }
 
-        return response()->json($response, $response['status']);
+        return "SUCCESS";
     }
 }

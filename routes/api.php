@@ -100,6 +100,7 @@ use App\Http\Controllers\Api\Admin\AdminBankController;
 use App\Http\Controllers\Api\Admin\AdminSystemController;
 use App\Http\Controllers\Api\Admin\AdminMessageController;
 use App\Http\Controllers\Api\Admin\AdminAccessController;
+use App\Http\Controllers\Api\Admin\AdminDiscountController;
 use App\Http\Controllers\Api\Admin\AdminUserInfoController;
 use App\Http\Controllers\Api\Admin\AdminOtherGameLogsController;
 use App\Http\Controllers\Api\Admin\AdminPostController;
@@ -107,6 +108,7 @@ use App\Http\Controllers\Api\Admin\UserManagementController;
 use App\Http\Controllers\Api\Admin\AdminStatisticsController;
 use App\Http\Controllers\Api\Admin\SportReportController;
 use App\Http\Controllers\Api\Admin\RealGameCashController;
+use App\Http\Controllers\Api\User\DiscountController;
 
 /*
 |--------------------------------------------------------------------------
@@ -294,7 +296,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router) 
 
     Route::group(['prefix' => 'third-party-payment'], function ($router) {
         Route::post('/ly-pay', [PaymentMethodController::class, 'submitLYPay']);
-        Route::get('/ly-notify', [PaymentMethodController::class, 'notifyLY']);
+        Route::post('/ly-notify', [PaymentMethodController::class, 'notifyLY']);
     });
 
     Route::group(['prefix' => 'post', 'middleware' => 'auth:api'], function ($router) {
@@ -305,6 +307,10 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router) 
 
     Route::group(['prefix' => 'web-system-data', 'middleware' => 'auth:api'], function ($router) {
         Route::get('/item', [BettingController::class, 'getWebSystemItem']);
+    });
+
+    Route::group(['prefix' => 'discount'], function ($router) {
+        Route::get('/all', [DiscountController::class, 'getDiscountAll']);
     });
 });
 
@@ -754,6 +760,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], func
         Route::post('/all', [AdminPostController::class, 'getPosts']);
         Route::post('/update', [AdminPostController::class, 'updatePost']);
         Route::post('/delete', [AdminPostController::class, 'deletePost']);
+    });
+
+    // discount management
+
+    Route::group(['prefix' => 'discount-management'], function ($router) {
+        Route::post('/get', [AdminDiscountController::class, 'getDiscountData']);
+        Route::post('/add', [AdminDiscountController::class, 'saveDiscountItem']);
+        Route::post('/update', [AdminDiscountController::class, 'updatedDiscountItem']);
+        Route::post('/delete', [AdminDiscountController::class, 'deleteDiscountItem']);
     });
 });
 

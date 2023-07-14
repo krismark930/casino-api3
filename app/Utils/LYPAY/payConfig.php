@@ -5,6 +5,7 @@ namespace App\Utils\LYPAY;
 use App\Models\WebPaymentData;
 use Illuminate\Support\Facades\DB;
 use App\Utils\Utils;
+use App\Models\WebPaymentBillNo;
 
 class PayConfig {
 
@@ -95,7 +96,7 @@ class PayConfig {
 	}
 
 
-	function InsertPayLog($BillNO, $Gold, $UserName = "", $Check = 1, $Platform = 'RCPAY', $Music = 1)
+	function InsertPayLog($request_data, $BillNO, $Gold, $UserName = "", $Check = 1, $Platform = 'RCPAY', $Music = 1)
 	{
 		global $dbname;
 		if ($UserName == "") {
@@ -104,11 +105,14 @@ class PayConfig {
 			$row = get_object_vars($result[0]);
 			$UserName = $row['UserName'];
 		}
-		$pp = http_build_query($_REQUEST);
+		$pp = http_build_query($request_data);
 		if ($pp == '') file_get_contents("php://input");
+		$result = WebPaymentBillNo::where("BillNo", $BillNO)->first();
+		if (isset($result)) return;
 		$sql = "insert into `web_payment_billno` set `BillNo`='$BillNO',Gold=$Gold,UserName = '$UserName',Platform='$Platform',`Date`='" . Date("Y-m-d") . "',`Checked`=0,Memo='$pp'";
-		$result = DB::select($sql);
-		$newid_billno = $result["ID"];
+		DB::select($sql);
+		$newid_billno = DB::getPdo()->lastInsertId();
+		// return $newid_billno;
 		if ($Check == 1) {
 			$sql = "select Gold from  `web_payment_billno2` where `BillNo`='$BillNO' and UserName='$UserName' and Checked=0";
 			$result = DB::select($sql);
@@ -143,14 +147,15 @@ class PayConfig {
 			$previousAmount = Utils::GetField($UserName, "Money");
 			$currentAmount = $previousAmount + $Gold;
 			$sql = "insert into web_sys800_data set Checked=1,Payway='W',Gold='$Gold',previousAmount='$previousAmount',currentAmount='$currentAmount',AddDate='$date',Type='S',UserName='$UserName',Agents='$agents',World='$world',Corprator='$corprator',Super='$super',Admin='$admin',CurType='RMB',Date='$datetime',Name='$alias',User='$UserName',Waterno='$Waterno',Order_Code='$BillNO',Music=$Music,Bank_Account='$Waterno',Bank_Address='$Waterno'";
-			$result = DB::select($sql);
-			$newid_sys800 = $result["ID"];
+			DB::select($sql);
+			$newid_sys800 = DB::getPdo()->lastInsertId();
 			$assets = Utils::GetField($UserName, 'Money');
 			$user_id = Utils::GetField($UserName, 'id');
 			$datetime_bj = date("Y-m-d H:i:s", time() + 12 * 3600);
-			$sql_amt = "update web_member_data set Credit=Credit+$Gold,Money=Money+$Gold  where UserName='$UserName'";
-			$q1 = DB::select($sql_amt);
-			if ($q1 == 1) {
+			$sql_amt = "UPDATE web_member_data SET Credit = Credit + ?, Money = Money + ? WHERE UserName = ?";
+			$q1 = DB::update($sql_amt, [$Gold, $Gold, $UserName]);
+			// return $q1;
+			if ($q1 > 0) {
 				$balance = Utils::GetField($UserName, 'Money');
 				$money_log_sql = "insert into money_log set user_id='$user_id',order_num='$BillNO',about='在线充值',update_time='$datetime_bj',type='第3方在线充值($Platform)',order_value='$Gold',assets=$assets,balance=$balance";
 				DB::select($money_log_sql);

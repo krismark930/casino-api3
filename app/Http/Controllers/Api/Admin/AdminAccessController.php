@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use App\Utils\Utils;
 use App\Models\User;
 use App\Models\Web\MoneyLog;
+use App\Models\Web\WebMemLogData;
 
 class AdminAccessController extends Controller
 {
@@ -164,6 +165,23 @@ class AdminAccessController extends Controller
 
             Sys800::where("ID", $ID)->delete();
 
+            $login_info = '现金系统删除';
+
+            $loginname = $request->user()->UserName;
+    
+            $ip_addr = Utils::get_ip();
+    
+            $web_mem_log_data = new WebMemLogData();
+    
+            $web_mem_log_data->UserName = $loginname;
+            $web_mem_log_data->LoginTime = now();
+            $web_mem_log_data->Context = $login_info;
+            $web_mem_log_data->LoginIP = $ip_addr;
+            $web_mem_log_data->Url = Utils::get_browser_ip();
+            $web_mem_log_data->Level = "管理员";
+    
+            $web_mem_log_data->save();
+
             $response['message'] = "Web Sys800 Data deleted successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
@@ -239,6 +257,23 @@ class AdminAccessController extends Controller
                 $new_log->save();
 
             }
+
+            $login_info = '恢复提款';
+
+            $loginname = $request->user()->UserName;
+    
+            $ip_addr = Utils::get_ip();
+    
+            $web_mem_log_data = new WebMemLogData();
+    
+            $web_mem_log_data->UserName = $loginname;
+            $web_mem_log_data->LoginTime = now();
+            $web_mem_log_data->Context = $login_info;
+            $web_mem_log_data->LoginIP = $ip_addr;
+            $web_mem_log_data->Url = Utils::get_browser_ip();
+            $web_mem_log_data->Level = "管理员";
+    
+            $web_mem_log_data->save();
 
             $response['message'] = "Web Sys800 Data canceld successfully!";
             $response['success'] = TRUE;

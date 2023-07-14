@@ -18,7 +18,8 @@ use Carbon\Carbon;
 class ChessController extends Controller
 {
 
-    public function getChessGameAll(Request $request) {
+    public function getChessGameAll(Request $request)
+    {
 
         $response = [];
         $response['success'] = FALSE;
@@ -41,8 +42,8 @@ class ChessController extends Controller
 
             $result = Dz2::where("PlatformType", "KY")->get();
 
-            foreach($result as $item) {
-                $item["ZH_Logo_File"] = "http://pic.pj6678.com/".$item["ZH_Logo_File"];
+            foreach ($result as $item) {
+                $item["ZH_Logo_File"] = "http://pic.pj6678.com/" . $item["ZH_Logo_File"];
             }
 
             $response["data"] = $result;
@@ -58,7 +59,8 @@ class ChessController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function getKYUrl(Request $request) {
+    public function getKYUrl(Request $request)
+    {
 
         $response = [];
         $response['success'] = FALSE;
@@ -87,36 +89,32 @@ class ChessController extends Controller
                 $KindID = 0;
             }
 
-            $KY_User=$user["KY_User"];
-            $username=$user['UserName'];
+            $KY_User = $user["KY_User"];
+            $username = $user['UserName'];
 
             $login_url = "";
 
             $sysConfig = SysConfig::all()->first();
-
-            if ($username == "guest") {
-                $KYUtils = new KYUtils($sysConfig);
-                $login_url = $KYUtils->KY_GameUrl2();
-            } else {
-                $KYUtils = new KYUtils($sysConfig);
-                if ($KY_User==null || $KY_User=="") {
-                    $AG_User =ltrim(trim($sysConfig['AG_User']));
-                    if(!preg_match("/^[A-Za-z0-9]{4,12}$/", $username)){ 
-                        $KY_User=$AG_User.'_'.$KYUtils->getpassword_KY(10);
-                    }else{
-                        $KY_User=$AG_User.'_'.trim($user['UserName']).$KYUtils->getpassword_KY(1);
-                    }
-                    $KY_User=strtoupper($KY_User);
-                    $result = $KYUtils->Add_KY_member($KY_User);
-                    if($result==1) {
-                        User::where("UserName", $username)->update(["KY_User" => $KY_User]);
-                    } else {
-                        $response["message"] = '网络异常，请与在线客服联系！';
-                        return response()->json($response, $response['status']);
-                    }
+            $KYUtils = new KYUtils($sysConfig);
+            
+            if ($KY_User == null || $KY_User == "") {
+                $AG_User = ltrim(trim($sysConfig['AG_User']));
+                if (!preg_match("/^[A-Za-z0-9]{4,12}$/", $username)) {
+                    $KY_User = $AG_User . '_' . $KYUtils->getpassword_KY(10);
+                } else {
+                    $KY_User = $AG_User . '_' . trim($user['UserName']) . $KYUtils->getpassword_KY(1);
                 }
-                $login_url = $KYUtils->KY_GameUrl($KY_User,$KindID);                
+                $KY_User = strtoupper($KY_User);
+                $result = $KYUtils->Add_KY_member($KY_User);
+                if ($result == 1) {
+                    User::where("UserName", $username)->update(["KY_User" => $KY_User]);
+                } else {
+                    $response["message"] = '网络异常，请与在线客服联系！';
+                    return response()->json($response, $response['status']);
+                }
             }
+
+            $login_url = $KYUtils->KY_GameUrl($KY_User, $KindID);
 
             $response["data"] = $login_url;
             $response['message'] = "Chess Game URL fetched successfully!";
@@ -131,7 +129,8 @@ class ChessController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function getKYTransaction() {
+    public function getKYTransaction()
+    {
 
         $response = [];
         $response['success'] = FALSE;
@@ -152,29 +151,29 @@ class ChessController extends Controller
             $GameData = $KYUtils->getKYGameRecords($sc);
             $GameData2 = array();
 
-            $error=$GameData['code'];
+            $error = $GameData['code'];
             $allcount = 0;
 
-            if($GameData['code']==0){
-                $allcount=$GameData['count'];
-                for($i = 0; $i < $allcount; $i++) {
+            if ($GameData['code'] == 0) {
+                $allcount = $GameData['count'];
+                for ($i = 0; $i < $allcount; $i++) {
                     unset($GameData2);
-                    $GameData2['GameID']=$GameData['list']['GameID'][$i];
-                    $GameData2['Accounts']=str_replace($agent.'_','',$GameData['list']['Accounts'][$i]);
-                    $GameData2['ServerID']=$GameData['list']['ServerID'][$i];
-                    $GameData2['KindID']=$GameData['list']['KindID'][$i];
-                    $GameData2['TableID']=$GameData['list']['TableID'][$i];
-                    $GameData2['ChairID']=$GameData['list']['ChairID'][$i];
-                    $GameData2['UserCount']=$GameData['list']['UserCount'][$i];
-                    $GameData2['CellScore']=$GameData['list']['CellScore'][$i];
-                    $GameData2['AllBet']=$GameData['list']['AllBet'][$i];
-                    $GameData2['Profit']=$GameData['list']['Profit'][$i];
-                    $GameData2['Revenue']=$GameData['list']['Revenue'][$i];
-                    $GameData2['GameStartTime']=$GameData['list']['GameStartTime'][$i];
-                    $GameData2['GameEndTime']=$GameData['list']['GameEndTime'][$i];
-                    $GameData2['CardValue']=$GameData['list']['CardValue'][$i];
-                    $GameData2['ChannelID']=$GameData['list']['ChannelID'][$i];
-                    $GameData2['LineCode']=str_replace($agent.'_','',$GameData['list']['LineCode'][$i]);
+                    $GameData2['GameID'] = $GameData['list']['GameID'][$i];
+                    $GameData2['Accounts'] = str_replace($agent . '_', '', $GameData['list']['Accounts'][$i]);
+                    $GameData2['ServerID'] = $GameData['list']['ServerID'][$i];
+                    $GameData2['KindID'] = $GameData['list']['KindID'][$i];
+                    $GameData2['TableID'] = $GameData['list']['TableID'][$i];
+                    $GameData2['ChairID'] = $GameData['list']['ChairID'][$i];
+                    $GameData2['UserCount'] = $GameData['list']['UserCount'][$i];
+                    $GameData2['CellScore'] = $GameData['list']['CellScore'][$i];
+                    $GameData2['AllBet'] = $GameData['list']['AllBet'][$i];
+                    $GameData2['Profit'] = $GameData['list']['Profit'][$i];
+                    $GameData2['Revenue'] = $GameData['list']['Revenue'][$i];
+                    $GameData2['GameStartTime'] = $GameData['list']['GameStartTime'][$i];
+                    $GameData2['GameEndTime'] = $GameData['list']['GameEndTime'][$i];
+                    $GameData2['CardValue'] = $GameData['list']['CardValue'][$i];
+                    $GameData2['ChannelID'] = $GameData['list']['ChannelID'][$i];
+                    $GameData2['LineCode'] = str_replace($agent . '_', '', $GameData['list']['LineCode'][$i]);
                     $game = WebReportKy::where("GameID", $GameData2["GameID"])->first();
                     if (isset($game)) {
                         WebReportKy::where("GameID", $GameData2["GameID"])->update($GameData2);
@@ -193,10 +192,10 @@ class ChessController extends Controller
 
             $current_timestamp = Carbon::now("Asia/Hong_Kong")->timestamp;
 
-            if(($error==0 and $allcount>0) or $error==16){  //未出错更新采集时间
-                $newDateTime=date("Y-m-d H:i:s",$KY_CJ_Time+$sc);
-                $newDateTime2=date("Y-m-d H:i:s",$current_timestamp-$sc);
-                if($newDateTime>$newDateTime2) $newDateTime=$newDateTime2;
+            if (($error == 0 and $allcount > 0) or $error == 16) {  //未出错更新采集时间
+                $newDateTime = date("Y-m-d H:i:s", $KY_CJ_Time + $sc);
+                $newDateTime2 = date("Y-m-d H:i:s", $current_timestamp - $sc);
+                if ($newDateTime > $newDateTime2) $newDateTime = $newDateTime2;
                 SysConfig::query()->update([
                     "KY_CJ_Time" => $newDateTime
                 ]);
