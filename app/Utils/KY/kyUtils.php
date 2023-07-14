@@ -28,7 +28,7 @@ class KYUtils {
 
     function getKYGameRecords($sc) {
 
-        $apiUrl="https://record.dxx28.com/getRecordHandle";
+        $apiUrl=env('KY_RECORD_URL');
 
         $aes = new DES();
         $lineCode=$_SERVER['HTTP_HOST'];
@@ -226,30 +226,6 @@ class KYUtils {
             $url=$jsonData['d']['url'];
             if($KindID>0) $url.='&jumpType=0';  //直接进入游戏不显示大厅
             return $url;
-        }else{
-            return "";
-        }
-    }
-
-    function KY_GameUrl2($money=2000,$KindID=0) {  //成功返回网址，失败返回空值
-        
-        $agent='70948';$aesKey='F0646A04C0C11EF7';$md5Key='9FD736F9E1478C14';
-
-        $aes = new DES();
-        $username=$this->getpassword_KY(10);
-        $lineCode=$_SERVER['HTTP_HOST'];
-        $timestamp = str_pad($aes->getMillisecond(),13,0);	//时间戳
-        $orderid = $aes->getOrderId($agent);	//订单号
-        $loginip=$this->getip_KY();
-        $params="s=0&account=$username&money=$money&orderid=$orderid&ip=$loginip&lineCode=$lineCode&KindID=$KindID";
-        $aes->set_key($aesKey);
-        $param = urlencode($aes->encrypt($params));	//参数加密字符串
-        $key = md5($agent.$timestamp.$md5Key);	//MD5校验字符串
-        $url=$this->apiUrl2.'?agent='.$agent.'&timestamp='.$timestamp.'&param='.$param.'&key='.$key;
-        $jsonStr=$this->getUrl_KY($url);
-        $jsonData=json_decode($jsonStr,true);
-        if($jsonData['d']['code']==0 and count($jsonData,1)>1){
-            return $jsonData['d']['url'];
         }else{
             return "";
         }

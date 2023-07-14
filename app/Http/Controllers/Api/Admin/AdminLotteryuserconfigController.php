@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use DB;
 use App\Models\LotteryUserConfig;
 use App\Models\OrderLottery;
 use App\Models\OrderLotterySub;
@@ -16,6 +15,7 @@ use App\Models\Web\Sys800;
 use App\Models\Web\WebMemLogData;
 use App\Models\Web\MoneyLog;
 use App\Utils\Utils;
+use Illuminate\Support\Facades\DB;
 
 class AdminLotteryuserconfigController extends Controller
 {
@@ -491,7 +491,8 @@ class AdminLotteryuserconfigController extends Controller
                 "LoginIP" => Utils::get_ip(),
                 "LoginTime" => now(),
                 "Context" => '执行彩票一键退水',
-                "Url" => Utils::get_browser_ip(),       
+                "Url" => Utils::get_browser_ip(),
+                "Level" => "管理员"
             );
 
             $web_mem_log_data = new WebMemLogData;

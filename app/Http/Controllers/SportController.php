@@ -23,7 +23,7 @@ include("include.php");
 
 class SportController extends Controller
 {
-    public function sportsBettingCheckout(Request $request)
+    public function sportsBettingCheckout()
     {
 
         $response = [];
@@ -32,35 +32,27 @@ class SportController extends Controller
 
         try {
 
-            $rules = [];
-
-            $validator = Validator::make($request->all(), $rules);
-
-            if ($validator->fails()) {
-                $errorResponse = validation_error_response($validator->errors()->toArray());
-                return response()->json($errorResponse, $response['status']);
-            }
-
             $web_system_data = WebSystemData::find(1);
 
-            $ft_time = $web_system_data["udp_ft_time"];
-            $time_ft = $web_system_data["ft_time_udp"];
+            // $ft_time = $web_system_data["udp_ft_time"];
+            // $time_ft = $web_system_data["ft_time_udp"];
 
-            $jiaoqiu_time = 150;
-            $xiaoqiu_time = 20;
-            $djzq_time = 70;
+            $jiaoqiu_time = env('jiaoqiu_time');
+            $xiaoqiu_time = env('xiaoqiu_time');
+            $djzq_time = env('djzq_time');
+            $ft_time = env('ft_time');
 
             $current_time = date('Y-m-d H:i:s', strtotime(' + 1 hours')); // current time
 
             $current_date = date('Y-m-d'); // current date
 
-            $time = date('Y-m-d H:i:s', time() + 24 * 60 * 60 - 3 * $ft_time); // 3 minutes before in current time
+            $time = date('Y-m-d H:i:s', time() + 24 * 60 * 60 - $ft_time); // 3 minutes before in current time
 
-            $times = date('Y-m-d H:i:s', time() + 24 * 60 * 60 - 3 * $time_ft); // 3 minutes before in current time
+            // $times = date('Y-m-d H:i:s', time() + 24 * 60 * 60 - 3 * $time_ft); // 3 minutes before in current time
 
             // 没有角球的时间
 
-            WebReportData::where("BetTime", "<", $times)
+            WebReportData::where("BetTime", "<", $time)
                 ->where("Active", 1)
                 ->where("Danger", 1)
                 ->where(function ($query) {
@@ -83,6 +75,85 @@ class SportController extends Controller
                 })
                 ->where("M_Result", "")
                 ->where("Cancel", "!=", 1)
+                ->where("Middle", "not like", "%角球%")
+                ->update([
+                    "Danger" => 0
+                ]);
+
+            // 角球的时间
+
+            $time = date('Y-m-d H:i:s', time() + 24 * 60 * 60 - $jiaoqiu_time);
+
+            WebReportData::where("BetTime", "<", $time)
+                ->where("Active", 1)
+                ->where("Danger", 1)
+                ->where(function ($query) {
+                    $query->where("LineType", 5)
+                        ->orWhere("LineType", 15)
+                        ->orWhere("LineType", 21)
+                        ->orWhere("LineType", 9)
+                        ->orWhere("LineType", 50)
+                        ->orWhere("LineType", 51)
+                        ->orWhere("LineType", 52)
+                        ->orWhere("LineType", 10)
+                        ->orWhere("LineType", 110)
+                        ->orWhere("LineType", 53)
+                        ->orWhere("LineType", 54)
+                        ->orWhere("LineType", 55)
+                        ->orWhere("LineType", 19)
+                        ->orWhere("LineType", 20)
+                        ->orWhere("LineType", 31)
+                        ->orWhere("LineType", 120);
+                })
+                ->where("M_Result", "")
+                ->where("Cancel", "!=", 1)
+                ->where("Middle", "like", "%角球%")
+                ->update([
+                    "Danger" => 0
+                ]);
+
+            // 电竞足球提前确认
+
+            $time = date('Y-m-d H:i:s', time() + 24 * 60 * 60 - $djzq_time);
+
+            WebReportData::where("BetTime", "<", $time)
+                ->where("Active", 1)
+                ->where("Danger", 1)
+                ->where(function ($query) {
+                    $query->where("LineType", 5)
+                        ->orWhere("LineType", 15)
+                        ->orWhere("LineType", 21)
+                        ->orWhere("LineType", 9)
+                        ->orWhere("LineType", 50)
+                        ->orWhere("LineType", 51)
+                        ->orWhere("LineType", 52)
+                        ->orWhere("LineType", 10)
+                        ->orWhere("LineType", 110)
+                        ->orWhere("LineType", 53)
+                        ->orWhere("LineType", 54)
+                        ->orWhere("LineType", 55)
+                        ->orWhere("LineType", 19)
+                        ->orWhere("LineType", 20)
+                        ->orWhere("LineType", 31)
+                        ->orWhere("LineType", 120);
+                })
+                ->where("M_Result", "")
+                ->where("Cancel", "!=", 1)
+                ->where("Middle", "like", "%电竞足球%")
+                ->update([
+                    "Danger" => 0
+                ]);
+
+            //确认小球时间30秒
+
+            $time = date('Y-m-d H:i:s', time() + 24 * 60 * 60 - $xiaoqiu_time);
+
+            WebReportData::where("BetTime", "<", $time)
+                ->where("Active", 1)
+                ->where("Danger", 1)
+                ->whereIn("Mtype", ["ROUC", "VROUC"])
+                ->where("M_Result", "")
+                ->where("Cancel", "!=", 1)
                 ->update([
                     "Danger" => 0
                 ]);
@@ -103,6 +174,8 @@ class SportController extends Controller
                 $m_result = $row['M_Result'];
                 $mb_ball = $row['MB_ball'];
                 $tg_ball = $row['TG_ball'];
+                $Middle = $row['Middle'];
+                $OrderID = $row['OrderID'];
 
                 $sport = Sport::where("MID", $mid)->first();
 
@@ -127,24 +200,47 @@ class SportController extends Controller
                     ]);
                     if ($m_result == '') {
 
+                        $assets = Utils::GetField($username, 'Money');
+
                         $q1 = User::where("UserName", $username)
                             ->where("Pay_Type", 1)
                             ->increment('Money', (int)$betscore);
 
-                        $web_report_log = new WebReportLog;
+                        if ($q1 == 1) {
 
-                        $web_report_log->Rid = $id;
-                        $web_report_log->username = $username;
-                        $web_report_log->money = Utils::GetField($username, 'Money');
-                        $web_report_log->gold = $betscore;
-                        $web_report_log->mtype = $betscore . "进球取消";
+                            $balance = Utils::GetField($username, 'Money');
 
-                        $web_report_log->save();
+                            $user_id = Utils::GetField($username, 'id');
+
+                            $datetime = date("Y-m-d H:i:s");
+
+                            $new_log = new MoneyLog;
+                            $new_log->user_id = $user_id;
+                            $new_log->order_num = $OrderID;
+                            $new_log->about = "进球取消(系统)<br>MID:" . $mid . "<br>RID:" . $id;
+                            $new_log->update_time = $datetime;
+                            $new_log->type = $Middle;
+                            $new_log->order_value = $betscore;
+                            $new_log->assets = $assets;
+                            $new_log->balance = $balance;
+                            $new_log->save();
+
+                            $web_report_log = new WebReportLog;
+
+                            $web_report_log->Rid = $id;
+                            $web_report_log->username = $username;
+                            $web_report_log->money = Utils::GetField($username, 'Money');
+                            $web_report_log->gold = $betscore;
+                            $web_report_log->mtype = $betscore . "进球取消";
+
+                            $web_report_log->save();
+                        } else {
+                        }
                     }
                 }
             }
 
-            $response['message'] = 'Get Score Data updated successfully';
+            $response['message'] = 'Sports Betting checkouted successfully';
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
@@ -500,7 +596,7 @@ class SportController extends Controller
             $web_mem_log_data->LoginTime = now();
             $web_mem_log_data->Context = $login_info;
             $web_mem_log_data->LoginIP = $ip_addr;
-            $web_mem_log_data->level = 2;
+            $web_mem_log_data->Level = "管理员";
 
             $web_mem_log_data->save();
 
@@ -657,7 +753,8 @@ class SportController extends Controller
 
             $MIDS = "";
 
-            $reports = Report::select('MID')->whereBetween('BetTime', [$start_time, $end_time])->get();
+            // $reports = Report::select('MID')->whereBetween('BetTime', [$start_time, $end_time])->get();
+            $reports = Report::select('MID')->get();
 
             foreach ($reports as $report) {
                 $MIDS = $MIDS . $report["MID"] . ",";
@@ -674,7 +771,7 @@ class SportController extends Controller
                 //显示全部
 
                 $items = Sport::select('MID', 'M_Date', 'M_Start', 'M_Time', 'MB_Team', 'TG_Team', 'MB_Inball', 'TG_Inball', 'MB_Inball_HR', 'TG_Inball_HR', 'Cancel', 'Checked', 'Open', 'M_League', 'GetScore')
-                    // ->where('M_Date', $m_date)
+                    ->where('M_Date', $m_date)
                     ->where('Type', $g_type)
                     ->where('Score', $score);
 
@@ -701,7 +798,7 @@ class SportController extends Controller
                 //显示只有投注的
 
                 $items = Sport::select('MID', 'M_Date', 'M_Start', 'M_Time', 'MB_Team', 'TG_Team', 'MB_Inball', 'TG_Inball', 'MB_Inball_HR', 'TG_Inball_HR', 'Cancel', 'Checked', 'Open', 'M_League', 'GetScore')
-                    // ->where('M_Date', $m_date)
+                    ->where('M_Date', $m_date)
                     ->where('Type', $g_type)
                     ->where('Score', $score);
 
@@ -731,7 +828,7 @@ class SportController extends Controller
                 //显示二次比分
 
                 $items = Sport::select('MID', 'M_Date', 'M_Start', 'M_Time', 'MB_Team', 'TG_Team', 'MB_Inball', 'TG_Inball', 'MB_Inball_HR', 'TG_Inball_HR', 'Cancel', 'Checked', 'Open', 'M_League', 'GetScore')
-                    // ->where('M_Date', $m_date)
+                    ->where('M_Date', $m_date)
                     ->where('Type', $g_type)
                     ->where('Score', 1)
                     ->where('Checked', 1);

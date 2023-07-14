@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use DB;
 use App\Models\Kabl;
 use App\Models\MacaoKabl;
 use App\Models\KaTan;
@@ -15,6 +14,7 @@ use App\Models\MacaoKatan;
 use App\Models\Kakithe;
 use App\Models\MacaoKakithe;
 use App\Utils\Utils;
+use Illuminate\Support\Facades\DB;
 
 class AdminKablController extends Controller
 {

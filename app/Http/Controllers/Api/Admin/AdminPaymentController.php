@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Models\Web\Sys800;
 use App\Utils\Utils;
 use App\Models\Web\MoneyLog;
+use App\Models\Web\SysConfig;
 use App\Models\WebPaymentData;
 use App\Models\Web\WebMemLogData;
 
@@ -137,12 +138,12 @@ class AdminPaymentController extends Controller
                 $item->Alias = Utils::GetField($item->UserName, "Alias");
 
                 if (strtoupper($item->Bank_Address) == 'USDT' && $item->Type == 'T') {
-                    $USDT = SysConfig::query()->first(["USDT"]);
-                    if (!isset($USDT)) {
-                        $USDT = 1.0000;
+                    $sys_config = SysConfig::query()->first(["USDT"]);
+                    if (!isset($sys_config)) {
+                        $sys_config["USDT"] = 1.0000;
                     }
-                    $usdt_number = abs($item->Gold) / $USDT;
-                    $item->BankInfo = "USDT汇率:".$USDT."<br>".$row['Bank_Account']."<br>".number_format($usdt_number,2);
+                    $usdt_number = abs($item->Gold) / $sys_config["USDT"];
+                    $item->BankInfo = "USDT汇率:".$sys_config["USDT"]."<br>".$item->Bank_Account."<br>".number_format($usdt_number,2);
                 } else {
                     if(strtoupper($item->Bank)=='USDT' && $item->Type == 'T') {
                         $item->BankInfo = $item->Bank_Address."<br>".$item->Bank_Account;

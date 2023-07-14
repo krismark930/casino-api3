@@ -77,8 +77,8 @@ class AGController extends Controller
             $result = Dz2::where("Open", 1)
                 ->where(function ($query) {
                     $query->where("PlatformType", "AG")
-                        ->orWhere("PlatformType", "YOPLAY")
-                        ->orWhere("PlatformType", "XIN");
+                        ->orWhere("PlatformType", "YOPLAY");
+                        // ->orWhere("PlatformType", "XIN");
                 })
                 ->get();
 

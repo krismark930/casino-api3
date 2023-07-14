@@ -187,7 +187,7 @@ class PTController extends Controller
             $agentCode = $sysConfig['PT_User'];
             $key = '';
 
-            $url="http://999.bbin-api.com/pt_data.php?agentCod=$agentCod&key=";
+            $url="http://999.bbin-api.com/pt_data.php?agentCod=$agentCode&key=";
 
             $web_report_zr = WebReportZr::where("platformType", 'PT')
                 ->orWhere("Checked", 1)

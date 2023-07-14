@@ -16,9 +16,10 @@ use Carbon\Carbon;
 
 class OGController extends Controller
 {
+    protected $arrGameType = array();  
+    protected $arrPlayType=array();
     public function __construct() {
 
-        $this->arrGameType=array();
         $this->arrGameType['SPEED BACCARAT']='极速百家乐';
         $this->arrGameType['BACCARAT']='百家乐';
         $this->arrGameType['BIDDING BACCARAT']='竞咪百家乐';
@@ -27,7 +28,6 @@ class OGController extends Controller
         $this->arrGameType['DRAGON']='幸运转盘龙';
         $this->arrGameType['ROULETTE']='轮盘';
 
-        $this->arrPlayType=array();
         //百家乐
         $this->arrPlayType['player']='闲';
         $this->arrPlayType['banker']='庄';
@@ -239,9 +239,13 @@ class OGController extends Controller
 
             $OG_CJ_Time = $sysConfig["OG_CJ_Time"];
 
+            // $OG_CJ_Time = "2023-07-14 16:23:39";
+
             $OGUtils = new OGUtils($sysConfig);
 
             $game_array = $OGUtils->GetGameData($OG_CJ_Time);
+
+            // return $game_array;
 
             if ($game_array == null) {
                 $response["message"] = "Transaction Not Found!";
@@ -265,20 +269,25 @@ class OGController extends Controller
                 $gameCode=$item['roundno'];  //游戏局号  
                 $netAmount=$item['winloseamount'];  //输赢
                 $betTime=$item['bettingdate'];  //投注时间
-                $gameType=$this->arrGameType[$item['gamename']];  //游戏名称
+                $gameType=$this->arrGameType[$item['gamename']] ?? $item['gamename'];  //游戏名称
                 $betAmount=$item['bettingamount'];  //投注金额
                 $validBetAmount=$item['validbet'];  //有效金额
                 if($item['winloseresult']=='tie') $validBetAmount=0;
-                $playType=$this->arrPlayType[$item['bet']];  //投注内容
+                $playType=$this->arrPlayType[$item['bet']] ?? $item['bet'];  //投注内容
                 $tableCode=$item['gameid'];  //桌台号
-                $loginIP='余额:'.$item['balance'];
-                $recalcuTime='';  //派彩时间
+                $loginIP=$item["status"];
+                $recalcuTime=$item['bettingdate'];  //派彩时间
                 $platformType='OG';
                 $Type="BR";
                 $round=$item['bettingcode'];
                 $VendorId=$item['vendor_id'];
 
+                $user = User::where("OG_User", strtoupper($playerName))->first();
+
+                if (!isset($user)) continue;
+
                 $game = WebReportZr::where("billNo", $billNo)->where("platformType", $platformType)->first();
+
                 $new_data = array (
                     "billNo" => $billNo,
                     "UserName" => $UserName,
@@ -297,8 +306,9 @@ class OGController extends Controller
                     "round" => "",
                     "platformType" => $platformType,
                     "VendorId" => $VendorId,
-                    "Checked" => 1,  
+                    "Checked" => 1,
                 );
+
                 if (!isset($game)) {
                     $web_report_zr = new WebReportZr;
                     $web_report_zr->create($new_data);
@@ -308,11 +318,11 @@ class OGController extends Controller
                         ->update($new_data);
                 }
 
-                $balance= $OGUtils->OG_Money(strtoupper($playerName));
+                // $balance= $OGUtils->OG_Money(strtoupper($playerName));
 
-                User::where("UserName", $UserName)->update([
-                    "OG_Money" => $balance,
-                ]);
+                // User::where("UserName", $UserName)->update([
+                //     "OG_Money" => $balance,
+                // ]);
             }
 
             // return $game_array;

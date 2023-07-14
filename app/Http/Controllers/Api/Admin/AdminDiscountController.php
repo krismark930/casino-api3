@@ -1,28 +1,22 @@
 <?php
 
-namespace App\Http\Controllers\api\admin;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Discount;
+use App\Models\Web\WebMemLogData;
+use App\Utils\Utils;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
-use App\Models\WebSystemData;
-use App\Models\User;
-use App\Models\Web\Sys800;
-use App\Utils\Utils;
-use App\Models\Web\MoneyLog;
-use App\Models\WebPaymentData;
-use App\Models\Web\Bank;
-use App\Models\Web\SysConfig;
-use App\Models\Web\WebMemLogData;
+use Illuminate\Support\Facades\Storage;
 
-class AdminBankController extends Controller
+class AdminDiscountController extends Controller
 {
 
-    public function getWebBankData(Request $request) {
+    public function getDiscountData(Request $request)
+    {
 
         $response = [];
         $response['success'] = FALSE;
@@ -31,7 +25,7 @@ class AdminBankController extends Controller
         try {
 
             $rules = [
-                "lv" => "required|string",
+                "type" => "required|numeric",
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -42,44 +36,15 @@ class AdminBankController extends Controller
             }
 
             $request_data = $request->all();
-            $lv = $request_data["lv"];
+            $type = $request_data["type"];
 
-            $role = "";
+            $result = Discount::where("type", $type)->get();
 
-            switch ($lv){
-                case 'M':
-                    $role='Admin';
-                    break;  
-                case 'A':
-                    $role='Super';
-                    break;
-                case 'B':
-                    $role='Corprator';
-                    break;
-                case 'C':
-                    $role='World';
-                    break;
-                case 'D':
-                    $role='Agents';
-                    break;
+            foreach($result as $row) {
+                $row["image"] = env('APP_URL').Storage::url($row["image"]);
             }
 
-            $name = "admin";
-
-            $user_count = User::where($role, $name)->where("Pay_Type", 1)->count();
-
-            if ($user_count == 0) {
-                $response["message"] = "目前还没有会员，请添加后再操作!!";
-                return response()->json($response, $response['status']);
-            }
-
-            $sysConfig = SysConfig::all()->first();
-
-            $sysConfig["tjck"] = $sysConfig["tjck"] == 1 ? true : false;
-
-            $result = Bank::orderBy("sort", "asc")->orderBy("ID", "asc")->get();
-
-            $login_info = '看了银行数据';
+            $login_info = '看到优惠';
 
             $loginname = $request->user()->UserName;
     
@@ -97,8 +62,7 @@ class AdminBankController extends Controller
             $web_mem_log_data->save();
 
             $response["data"] = $result;
-            $response["usdt_rate"] = $sysConfig;
-            $response['message'] = "Web Bank Data fetched successfully!";
+            $response['message'] = "Discount Data fetched successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
@@ -110,7 +74,8 @@ class AdminBankController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function addWebBankData(Request $request) {
+    public function saveDiscountItem(Request $request)
+    {
 
         $response = [];
         $response['success'] = FALSE;
@@ -119,9 +84,9 @@ class AdminBankController extends Controller
         try {
 
             $rules = [
-                "bankname" => "required|string",
-                "bankno" => "required|string",
-                "bankaddress" => "required|string",
+                "type" => "required|numeric",
+                "title" => "required|string",
+                "content" => "required|string",
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -132,35 +97,28 @@ class AdminBankController extends Controller
             }
 
             $request_data = $request->all();
+            $type = $request_data["type"];
+            $title = $request_data["title"];
+            $content = $request_data["content"];
 
-            $ID = $request_data["ID"] ?? "";
-            $bankname = $request_data["bankname"];
-            $alias = $request_data["alias"] ?? "";
-            $bankno = $request_data["bankno"];
-            $bankaddress = $request_data["bankaddress"];
-            $vip = $request_data["vip"] ?? "";
-            $min_amount = $request_data["min_amount"] ?? "";
-            $max_amount = $request_data["max_amount"] ?? "";
+            $file_name = "";
 
-            $new_data = array(
-                "bankname" => $bankname,
-                "alias" => $alias,
-                "bankno" => $bankno,
-                "bankaddress" => $bankaddress,
-                "vip" => $vip,
-                "min_amount" => $min_amount,
-                "max_amount" => $max_amount,
-            );
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');
+                $file_name = $file->getClientOriginalName();
 
-            if ($ID == "") {
-                $bank = new Bank;
-                $bank->create($new_data);
-            } else {
-                Bank::where("ID", $ID)
-                    ->update($new_data);
+                // Move the uploaded file to the desired location
+                $file->move(storage_path('app/public/upload/discount'), $file_name);
             }
 
-            $login_info = '添加了银行数据';
+            $discount = new Discount;
+            $discount->title = $title;
+            $discount->content = $content;
+            $discount->type = $type;
+            $discount->image = "upload/discount/" . $file_name;
+            $discount->save();
+
+            $login_info = '优惠添加';
 
             $loginname = $request->user()->UserName;
     
@@ -176,8 +134,8 @@ class AdminBankController extends Controller
             $web_mem_log_data->Level = "管理员";
     
             $web_mem_log_data->save();
-            
-            $response['message'] = "Web Bank Data saved successfully!";
+
+            $response['message'] = "Discount Data saved successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
@@ -189,7 +147,8 @@ class AdminBankController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function useWebBankData(Request $request) {
+    public function updatedDiscountItem(Request $request)
+    {
 
         $response = [];
         $response['success'] = FALSE;
@@ -198,8 +157,10 @@ class AdminBankController extends Controller
         try {
 
             $rules = [
-                "ID" => "required|numeric",
-                "open" => "required|numeric",
+                "id" => "required|numeric",
+                "type" => "required|numeric",
+                "title" => "required|string",
+                "content" => "required|string",
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -210,13 +171,32 @@ class AdminBankController extends Controller
             }
 
             $request_data = $request->all();
+            $id = $request_data["id"];
+            $type = $request_data["type"];
+            $title = $request_data["title"];
+            $content = $request_data["content"];
 
-            $ID = $request_data["ID"];
-            $open = $request_data["open"];
+            $file_name = "";
 
-            Bank::where("ID", $ID)->update(["open" => $open]);
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');
+                $file_name = $file->getClientOriginalName();
 
-            $login_info = '更新了银行数据';
+                // Move the uploaded file to the desired location
+                $file->move(storage_path('app/public/upload/discount'), $file_name);
+            }
+
+            $discount = Discount::find($id);
+            $discount->title = $title;
+            $discount->content = $content;
+            $discount->type = $type;
+            if ($file_name != "") {
+                $discount->image = "upload/discount/" . $file_name;                
+            }
+
+            $discount->save();
+
+            $login_info = '优惠更新';
 
             $loginname = $request->user()->UserName;
     
@@ -232,8 +212,8 @@ class AdminBankController extends Controller
             $web_mem_log_data->Level = "管理员";
     
             $web_mem_log_data->save();
-            
-            $response['message'] = "Web Bank Data updated successfully!";
+
+            $response['message'] = "Discount Data updated successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
@@ -245,7 +225,8 @@ class AdminBankController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function deleteWebBankData(Request $request) {
+    public function deleteDiscountItem(Request $request)
+    {
 
         $response = [];
         $response['success'] = FALSE;
@@ -254,7 +235,7 @@ class AdminBankController extends Controller
         try {
 
             $rules = [
-                "ID" => "required|numeric",
+                "id" => "required|numeric",
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -265,12 +246,11 @@ class AdminBankController extends Controller
             }
 
             $request_data = $request->all();
+            $id = $request_data["id"];
 
-            $ID = $request_data["ID"];
+            Discount::where("id", $id)->delete();
 
-            Bank::where("ID", $ID)->delete();
-
-            $login_info = '删除了银行数据';
+            $login_info = '优惠删除';
 
             $loginname = $request->user()->UserName;
     
@@ -286,8 +266,8 @@ class AdminBankController extends Controller
             $web_mem_log_data->Level = "管理员";
     
             $web_mem_log_data->save();
-            
-            $response['message'] = "Web Bank Data deleted successfully!";
+
+            $response['message'] = "Discount Data deleted successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
@@ -297,6 +277,5 @@ class AdminBankController extends Controller
         }
 
         return response()->json($response, $response['status']);
-    } 
+    }
 }
-

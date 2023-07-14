@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Sport;
 use App\Models\WebReportData;
 use App\Models\User;
+use App\Models\Web\WebMemLogData;
 use App\Utils\Utils;
 
 class SportReportController extends Controller
@@ -87,11 +88,20 @@ class SportReportController extends Controller
 
             $data = array("ft_caption" => $ft_caption, "ft_caption1" => $ft_caption1, "bk_caption" => $bk_caption, "bk_caption1" => $bk_caption1);
 
+            $login_info = '滚球注单投注明细';
+
             $ip_addr = Utils::get_ip();
-            $browser_ip = Utils::get_browser_ip();
-            $loginfo='滚球注单投注明细';
-            $mysql="insert into web_mem_log_data(UserName,Logintime,ConText,Loginip,Url) values('$loginname',now(),'$loginfo','$ip_addr','".$browser_ip."')";
-            DB::select($mysql);
+
+            $web_mem_log_data = new WebMemLogData();
+
+            $web_mem_log_data->UserName = $loginname;
+            $web_mem_log_data->LoginTime = now();
+            $web_mem_log_data->Context = $login_info;
+            $web_mem_log_data->LoginIP = $ip_addr;
+            $web_mem_log_data->Url = Utils::get_browser_ip();
+            $web_mem_log_data->Level = "管理员";
+
+            $web_mem_log_data->save();
 
             $response["data"] = $data;
             $response['message'] = 'Sport Report Data fetched successfully';
@@ -736,11 +746,20 @@ class SportReportController extends Controller
 
             }
 
-            $loginfo='执行体育一键退水';
+            $login_info = '执行体育一键退水';
+
             $ip_addr = Utils::get_ip();
-            $browser_ip = Utils::get_browser_ip();
-            $mysql="insert into web_mem_log_data(UserName,LoginIP,LoginTime,ConText,Url) values('$loginname','$ip_addr',now(),'$loginfo','".$browser_ip."')";
-            DB::select($mysql);
+
+            $web_mem_log_data = new WebMemLogData();
+
+            $web_mem_log_data->UserName = $loginname;
+            $web_mem_log_data->LoginTime = now();
+            $web_mem_log_data->Context = $login_info;
+            $web_mem_log_data->LoginIP = $ip_addr;
+            $web_mem_log_data->Url = Utils::get_browser_ip();
+            $web_mem_log_data->Level = "管理员";
+
+            $web_mem_log_data->save();
 
             $response["data"] = $data;
             $response['message'] = 'Sport Rebate finished successfully';

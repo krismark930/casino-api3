@@ -4,7 +4,6 @@ namespace App\Http\Controllers\api\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use DB;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -12,8 +11,10 @@ use App\Models\User;
 use App\Models\OrderLottery;
 use App\Models\OrderLotterySub;
 use App\Models\Web\MoneyLog;
+use App\Models\Web\WebMemLogData;
 use App\Utils\Utils;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class AdminAlwaysColorController extends Controller
 {
@@ -48,7 +49,7 @@ class AdminAlwaysColorController extends Controller
             $tf_id = $request_data["tf_id"] ?? "";
             $uid = $request_data["uid"] ?? "";
             $user_name = $request_data["user_name"] ?? "";
-            $cancel_reson = $request_data["cancel_reason"] ?? "";
+            $cancel_reason = $request_data["cancel_reason"] ?? "";
             $page_no = $request_data["page"] ?? 1;
             $limit = $request_data["limit"] ?? 20;
             $isnulldate = false;
@@ -258,6 +259,23 @@ class AdminAlwaysColorController extends Controller
                 "t_sy" => round($t_sy, 2)
             );
 
+            $login_info = '看到的订单列表';
+
+            $loginname = $request->user()->UserName;
+    
+            $ip_addr = Utils::get_ip();
+    
+            $web_mem_log_data = new WebMemLogData();
+    
+            $web_mem_log_data->UserName = $loginname;
+            $web_mem_log_data->LoginTime = now();
+            $web_mem_log_data->Context = $login_info;
+            $web_mem_log_data->LoginIP = $ip_addr;
+            $web_mem_log_data->Url = Utils::get_browser_ip();
+            $web_mem_log_data->Level = "管理员";
+    
+            $web_mem_log_data->save();
+
             $response["data"] = $result1;
             $response["total_item"] = $total;
             $response['message'] = "Order List Data fetched successfully!";
@@ -370,6 +388,23 @@ class AdminAlwaysColorController extends Controller
 
                 }
             }
+
+            $login_info = '看到的订单列表';
+
+            $loginname = $request->user()->UserName;
+    
+            $ip_addr = Utils::get_ip();
+    
+            $web_mem_log_data = new WebMemLogData();
+    
+            $web_mem_log_data->UserName = $loginname;
+            $web_mem_log_data->LoginTime = now();
+            $web_mem_log_data->Context = $login_info;
+            $web_mem_log_data->LoginIP = $ip_addr;
+            $web_mem_log_data->Url = Utils::get_browser_ip();
+            $web_mem_log_data->Level = "管理员";
+    
+            $web_mem_log_data->save();
 
 
             $response['message'] = "Order List canceled successfully!";
@@ -737,6 +772,23 @@ class AdminAlwaysColorController extends Controller
             array_push($data, $azxy5_array);
             array_push($data, $azxy10_array);
 
+            $login_info = '看过彩票历史';
+
+            $loginname = $request->user()->UserName;
+    
+            $ip_addr = Utils::get_ip();
+    
+            $web_mem_log_data = new WebMemLogData();
+    
+            $web_mem_log_data->UserName = $loginname;
+            $web_mem_log_data->LoginTime = now();
+            $web_mem_log_data->Context = $login_info;
+            $web_mem_log_data->LoginIP = $ip_addr;
+            $web_mem_log_data->Url = Utils::get_browser_ip();
+            $web_mem_log_data->Level = "管理员";
+    
+            $web_mem_log_data->save();
+
             $response["data"] = $data;
             $response['message'] = "Total Order History Data fetched successfully!";
             $response['success'] = TRUE;
@@ -878,6 +930,23 @@ class AdminAlwaysColorController extends Controller
                 "t_allmoney" => $t_allmoney,
                 "t_sy" => round($t_sy, 2)
             );
+
+            $login_info = '看过彩票';
+
+            $loginname = $request->user()->UserName;
+    
+            $ip_addr = Utils::get_ip();
+    
+            $web_mem_log_data = new WebMemLogData();
+    
+            $web_mem_log_data->UserName = $loginname;
+            $web_mem_log_data->LoginTime = now();
+            $web_mem_log_data->Context = $login_info;
+            $web_mem_log_data->LoginIP = $ip_addr;
+            $web_mem_log_data->Url = Utils::get_browser_ip();
+            $web_mem_log_data->Level = "管理员";
+    
+            $web_mem_log_data->save();
 
             $response["data"] = $result1;
             $response["total_item"] = $total;
@@ -1056,6 +1125,23 @@ class AdminAlwaysColorController extends Controller
                 "t_allmoney" => $t_allmoney,
                 "t_sy" => round($t_sy, 2)
             );
+
+            $login_info = '看过彩票';
+
+            $loginname = $request->user()->UserName;
+    
+            $ip_addr = Utils::get_ip();
+    
+            $web_mem_log_data = new WebMemLogData();
+    
+            $web_mem_log_data->UserName = $loginname;
+            $web_mem_log_data->LoginTime = now();
+            $web_mem_log_data->Context = $login_info;
+            $web_mem_log_data->LoginIP = $ip_addr;
+            $web_mem_log_data->Url = Utils::get_browser_ip();
+            $web_mem_log_data->Level = "管理员";
+    
+            $web_mem_log_data->save();
 
             $response["data"] = $result1;
             $response["total_item"] = $total;
