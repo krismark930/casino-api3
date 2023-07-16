@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -633,13 +634,13 @@ class UserManagementController extends Controller
                 $sql = "select * from $data where $agents $status and $user='$parents_id'  order by " . $sort . " " . $orderby;
             }
 
+            $total_count = count(DB::select($sql));
+
             $offset = ($page - 1) * $limit;
             $mysql = $sql . " limit $offset,$limit;";
 
 
             $result = DB::select($mysql);
-
-            $total_count = count($result);
 
             $response["total_count"] = $total_count;
             $response["data"] = $result;
@@ -790,6 +791,7 @@ class UserManagementController extends Controller
 
             $AddDate = date('Y-m-d H:i:s'); //新增日期
             $username = $_REQUEST['UserName']; //帐号
+            $loginname = $_REQUEST['LoginName']; //帐号
             if ($lv == "MEM") {
                 $password = Hash::make($_REQUEST['password']); //密码
             } else {
@@ -798,7 +800,7 @@ class UserManagementController extends Controller
             $maxcredit = $_REQUEST['maxcredit']; //总信用额度
             $wager = $_REQUEST['wager']; // 即时注单
             $CurType = $_REQUEST['CurType'] ?? ""; //币别
-            $alias = $_REQUEST['Alias']; //名称
+            $alias = $_REQUEST['Alias'] ?? ""; //名称
             $usedate = $_REQUEST['usedate'] ?? "";
             $address = $_REQUEST['address'] ?? "";
 
@@ -1704,7 +1706,7 @@ class UserManagementController extends Controller
 
                 $sql = "insert into web_member_data set ";
                 $sql .= "UserName='" . $username . "',";
-                $sql .= "LoginName='" . $username . "',";
+                $sql .= "LoginName='" . $loginname . "',";
                 $sql .= "PassWord='" . $password . "',";
                 $sql .= "Credit=0,";
                 $sql .= "Money=0,";
@@ -2886,7 +2888,7 @@ class UserManagementController extends Controller
 
             $_REQUEST = $request->all();
             $id = $_REQUEST["id"];
-            $user = $_REQUEST["UserName"];
+            $username = $_REQUEST["UserName"];
             //$gold=$_REQUEST["maxcredit"];//总信用额度
             $pasd = $_REQUEST["password"]; //密码
             $Address = $_REQUEST["Address"] ?? ""; //取款密码
@@ -2907,10 +2909,87 @@ class UserManagementController extends Controller
             $Phone = $_REQUEST['Phone'] ?? ""; //手机号码
             $QQ = $_REQUEST['QQ'] ?? ""; //QQ
             $Notes = $_REQUEST['Notes'] ?? ""; //备注
+            $newmoney = $_REQUEST["Money"] ?? "";
+            $credit = $_REQUEST["Credit"] ?? "";
 
-            $mysql = "update web_member_data set OpenType='$type',fanshui='$fanshui',fanshui_cp='$fanshui_cp',fanshui_zr='$fanshui_zr',fanshui_dz='$fanshui_dz',fanshui_ky='$fanshui_ky',VIP='$VIP',Bank_Address='$Bank_Address',Bank_Account='$Bank_Account',Notes='$Notes',question='$question',answer='$answer' where id='$id'";
+            $user = User::find($id);
+
+            $money = $user["Money"];
+            $agent = $user["Agents"];
+            $world = $user["World"];
+            $corprator = $user["Corprator"];
+            $super = $user["Super"];
+            $admin = $user["Admin"];
+
+            $kk = (int)$newmoney - $money;
+            $date = date("Y-m-d");
+            $datetime = date("Y-m-d H:i:s");
+
+            $mysql = "update web_member_data set OpenType='$type',fanshui='$fanshui',fanshui_cp='$fanshui_cp',fanshui_zr='$fanshui_zr',fanshui_dz='$fanshui_dz',fanshui_ky='$fanshui_ky',VIP='$VIP',Bank_Address='$Bank_Address',Bank_Account='$Bank_Account',Notes='$Notes',question='$question',answer='$answer',Money='$newmoney',Credit='$credit' where id='$id'";
 
             DB::select($mysql);
+
+            $login_user = $request->user();
+
+            $loginname = $login_user["UserName"];
+
+            $current_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
+
+            $Order_Code = 'TK' . date("YmdHis", time() + 12 * 3600) . mt_rand(1000, 9999);
+            $sys_800 = new Sys800;
+
+            if ($kk > 0) {
+                
+                $data = array(
+                    "Payway" => "W",
+                    "Gold" => $kk,
+                    "previousAmount" => $money,
+                    "currentAmount" => $newmoney,
+                    "AddDate" => $current_time,
+                    "Type" => "S",
+                    "UserName" => $username,
+                    "Agents" => $agent,
+                    "World" => $world,
+                    "Corprator" => $corprator,
+                    "Super" => $super,
+                    "Admin" => $admin,
+                    "CurType" => "RMB",
+                    "Name" => $alias,
+                    "User" => $loginname,
+                    "Checked" => 1,
+                    "Date" => $current_time,
+                    "Order_Code" => $Order_Code,
+                    "Notes" => "",
+                );
+
+                $sys_800->create($data);
+            } else {
+                $sql = "insert into web_sys800_data set Checked=1,Payway='AG',Gold='$kk',AddDate='$date',Type='T',UserName='會員$user',Agents='$agent',Admin='$admin',CurType='RMB',Date='$datetime',Bank_Address='新余额:$newmoney',Bank_Account='旧余额:$money',Order_Code='會員提款'";
+                DB::select($sql);
+
+                $kk = $money - $newmoney;
+
+                $data = array(
+                    "Payway" => "W",
+                    "Gold" => $kk,
+                    "AddDate" => $current_time,
+                    "Type" => "T",
+                    "UserName" => $username,
+                    "Agents" => $agent,
+                    "World" => $world,
+                    "Corprator" => $corprator,
+                    "Super" => $super,
+                    "Admin" => $admin,
+                    "CurType" => "RMB",
+                    "Name" => $alias,
+                    "User" => $login_user["UserName"],
+                    // "Date" => $current_time,
+                    "Order_Code" => $Order_Code,
+                    "Notes" => "",
+                );
+
+                $sys_800->create($data);
+            }
 
             $response['message'] = "Member data updated successfully!";
             $response['success'] = TRUE;

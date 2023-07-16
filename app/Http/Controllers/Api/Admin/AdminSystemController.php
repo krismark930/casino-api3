@@ -225,6 +225,12 @@ class AdminSystemController extends Controller
             $web_slider_time_wap = $request_data["web_slider_time_wap"] ?? "";
             $web_refreshtime_wap = $request_data["web_refreshtime_wap"] ?? "";
 
+            $phone_number_show = $request_data["phone_number_show"];
+
+            SysConfig::where("id", 1)->update([
+                "phone_number_show" => $phone_number_show
+            ]);
+
             if ($isReg != "") {
                 SysConfig::where("id", 1)->update([
                     "isReg" => $isReg,

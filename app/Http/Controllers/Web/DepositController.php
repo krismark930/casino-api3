@@ -87,14 +87,15 @@ class DepositController extends Controller {
             'isCrypto' => 'required',
             'money' => 'required',
             'name' => 'required',
-            'bank' => 'required',
-            'bankAddress' => 'required',
-            'bankAccount' => 'required',
+            // 'bank' => 'required',
+            // 'bankAddress' => 'required',
+            // 'bankAccount' => 'required',
         ]);
-        if($validator->fails()){
+        if($validator->fails()){            
+            $errorResponse = validation_error_response($validator->errors()->toArray());
             return response()->json([
                 'success' => false,
-                'message' => $validator->messages()->toArray()
+                'message' => $errorResponse
             ], 500);
         }
         error_log($request->isCrypto);
@@ -116,9 +117,9 @@ class DepositController extends Controller {
             "Admin" => $user->Admin,
             "CurType" => 'RMB',
             "Name" => $request->isCrypto ? $user->Alias : $request->name,//$user->Alias,
-            "Bank" => $request->bank,
-            "Bank_Address" => $request->bankAddress,
-            "Bank_Account" => $request->bankAccount,
+            "Bank" => $request->bank ?? "",
+            "Bank_Address" => $request->bankAddress ?? "",
+            "Bank_Account" => $request->bankAccount ?? "",
             "Order_Code" => $Order_Code,
             "created_at" => date("Y-m-d H:i:s")
         ];

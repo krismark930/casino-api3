@@ -32,6 +32,7 @@ class UserController extends Controller {
 
             $rules = [
                 'UserName' => 'required|string',
+                'login_name' => 'required|string',
                 'password' => 'required|min:6',
             ];
 
@@ -44,10 +45,12 @@ class UserController extends Controller {
 
             $request_data = $request->all();
 
-            $inviter = $request_data['inviter_id'];            
+            $inviter = $request_data['inviter_id'];
             $user_name = $request_data['UserName'];
+            $login_name = $request_data['login_name'];
             $password = $request_data["password"];
             $intro = $request_data["intro"] ?? "";
+            $phone_number = $request_data["phone_number"] ?? "";
 
             $inviter_id = 0;
 
@@ -493,7 +496,7 @@ class UserController extends Controller {
 
             $ip_addr = Utils::get_ip();
 
-            $user = User::where("UserName", $user_name)->first();
+            $user = User::where("UserName", $user_name)->orWhere("LoginName", $login_name)->first();
 
             if (isset($user)) {
                 $response['message'] = '帐户已经有人使用，请重新注册！';
@@ -512,7 +515,7 @@ class UserController extends Controller {
             $user = new User();
 
             $user["UserName"] = $user_name;
-            $user["LoginName"] = $user_name;
+            $user["LoginName"] = $login_name;
             $user["password"] = Hash::make($password);
             $user["invite_url"] = '/login'.'/'.$InviteUrl;
             $user["inviter_id"] = $inviter_id;
@@ -798,6 +801,7 @@ class UserController extends Controller {
             $user["E_Mail"] = $e_mail ?? "";
             $user["question"] = $question ?? "";
             $user["answer"] = $answer ?? "";
+            $user["Phone"] = $phone_number ?? "";
 
             $user->save();
             
@@ -822,7 +826,7 @@ class UserController extends Controller {
         $response['status'] = STATUS_BAD_REQUEST;
 
         $rules = [
-            'UserName' => 'required|string',
+            'LoginName' => 'required|string',
             'password' => 'required|min:6',
         ];
 
@@ -835,12 +839,12 @@ class UserController extends Controller {
 
         try {
         
-            $credentials = $request->only(["UserName","password"]);
+            $credentials = $request->only(["LoginName","password"]);
 
-            $user = User::where('UserName',$credentials['UserName'])->first();
+            $user = User::where('LoginName',$credentials['LoginName'])->first();
 
             if (!isset($user)) {
-                $response['message'] = 'Please enter valid registered UserName.';
+                $response['message'] = 'Please enter valid registered LoginName.';
                 return response()->json($response, $response['status']);
             }
 
@@ -854,7 +858,7 @@ class UserController extends Controller {
                 $datetime = date("Y-m-d H:i:s");
 
                 $new_data = [
-                    "UserName" => $credentials['UserName'],
+                    "UserName" => $credentials['LoginName'],
                     "Status" => 0,
                     "LoginIP" => Utils::get_ip(),
                     "DateTime" => $datetime,
@@ -866,7 +870,7 @@ class UserController extends Controller {
 
                 $web_member_logs->create($new_data);
 
-                User::where('UserName',$credentials['UserName'])
+                User::where('LoginName',$credentials['LoginName'])
                     ->update(["ErrorTimes" => (int)$user["ErrorTimes"] + 1]);
 
                 $response['message'] = 'Incorrect name or password';
@@ -880,20 +884,20 @@ class UserController extends Controller {
 
             }
 
-            $accessToken = auth()->user()->createToken('authToken')->accessToken;
+            $accessToken = $user->createToken('authToken')->accessToken;
 
             $user->access_token = $accessToken;
 
             $str = time();
 
-            $uid=strtolower(substr(md5($str),0,10).substr(md5($credentials['UserName']),0,10).'ra'.rand(0,9));
+            $uid=strtolower(substr(md5($str),0,10).substr(md5($credentials['LoginName']),0,10).'ra'.rand(0,9));
             $ip_addr=Utils::get_ip();
             $browser_ip = Utils::get_browser_ip();
             $date=date("Y-m-d");
             $datetime=date("Y-m-d H:i:s");
             $MachineCode=substr(strtoupper(md5('newhg'.$str.mt_rand(1,9999))),8,20);
 
-            User::where('UserName',$credentials['UserName'])
+            User::where('LoginName',$credentials['LoginName'])
                 ->where("Status", "<=", 1)
                 ->update([
                     "Oid" => $uid,
@@ -908,7 +912,7 @@ class UserController extends Controller {
                 ]);
 
             $new_data = [
-                "UserName" => $credentials['UserName'],
+                "UserName" => $credentials['LoginName'],
                 "Status" => 1,
                 "LoginIP" => Utils::get_ip(),
                 "DateTime" => $datetime,
@@ -935,13 +939,13 @@ class UserController extends Controller {
         return response()->json($response, $response['status']);
     }
 
-    public function viewProfile() {
+    public function viewProfile(Request $request) {
 
         $response = [];
         $response['success'] = FALSE;
 
         try {
-            $user = Auth::guard("api")->user();
+            $user = $request->user();
             $user = User::where("UserName", $user["UserName"])->first();
             $response['data'] = $user;
             $response['message'] = 'Profile detail fetched successfully';
@@ -956,18 +960,18 @@ class UserController extends Controller {
         return response()->json($response, $response['status']);
     }
 
-    public function logout(){
+    public function logout(Request $request){
         
         $response = [];
         $response['success'] = FALSE;
 
         try {        
-            $user = Auth::guard("api")->user()->token();
+            $user = $request->user()->token();
             $user->revoke();
             $response['message'] = 'Logout successfully';
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
             Log::error($e->getTraceAsString());
             $response['status'] = STATUS_GENERAL_ERROR;
