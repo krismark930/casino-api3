@@ -212,7 +212,7 @@ class AdminStatisticsController extends Controller
         $response['success'] = FALSE;
         $response['status'] = STATUS_BAD_REQUEST;
 
-        try {   
+        try {
 
             $rules = [];
 
@@ -277,10 +277,10 @@ class AdminStatisticsController extends Controller
                         $row["Cancel"] = '<font color=blue>已提出</font><br>';
                     }
                 }
-                $row = $row;
+                // $row = $row;
             }
 
-            $total_value = array("CK" => $CK, "TK" => $TK);
+            $total_value = array("CK" => $CK, "TK" => $TK, "DF" => $CK - $TK);
 
             $response["total_value"] = $total_value;
             $response["data"] = $data;

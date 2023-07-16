@@ -31,7 +31,7 @@ class HumanManagementController extends Controller
         try {
 
             $rules = [
-                "date" => "required|string",
+                // "date" => "required|string",
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -43,7 +43,7 @@ class HumanManagementController extends Controller
 
             $request_data = $request->all();
 
-            $date = $request_data["date"];
+            $date = $request_data["date"] ?? "";
             $platform_type = $request_data["platformType"] ?? "";
             $type = $request_data["type"] ?? "";
             $user = $request_data["user"] ?? "";
@@ -51,6 +51,30 @@ class HumanManagementController extends Controller
             $limit = $request_data["limit"] ?? 20;
             $s_time = $date . " 00:00:00";
             $e_time = $date . " 23:59:59";
+
+            if ($date == "") {
+
+                $result = WebReportZr::where("playerName", "like", "%$user%");
+
+                if ($platform_type != "") {
+                    if ($platform_type == "AGIN") {
+                        $result = $result->where("platformType", "AGIN")->orWhere("platformType", "XIN")->get();
+                    } else {
+                        $result = $result->where("platformType", $platform_type)->get();
+                    }
+                }
+
+                $total_count = count($result);
+
+                $response["data"] = $result;
+                $response["total_count"] = $total_count;
+                $response['message'] = "Human Query Data fetched successfully!";
+                $response['success'] = TRUE;
+                $response['status'] = STATUS_OK;
+
+                return response()->json($response, $response['status']);
+
+            }
 
             $result = WebReportZr::whereBetween("betTime", [$s_time, $e_time]);
 
@@ -114,7 +138,7 @@ class HumanManagementController extends Controller
         try {
 
             $rules = [
-                "date" => "required|string",
+                // "date" => "required|string",
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -126,13 +150,30 @@ class HumanManagementController extends Controller
 
             $request_data = $request->all();
 
-            $date = $request_data["date"];
+            $date = $request_data["date"] ?? "";
             $type = $request_data["type"] ?? "";
             $user = $request_data["user"] ?? "";
             $page_no = $request_data["page_no"] ?? 1;
             $limit = $request_data["limit"] ?? 20;
             $s_time = $date . " 00:00:00";
             $e_time = $date . " 23:59:59";
+
+            if ($date == "") {
+
+                $result = WebReportKy::where("Accounts", "like", "%$user%")->get();
+
+                $total_count = count($result);
+
+                $response["data"] = $result;
+                $response["total_count"] = $total_count;
+                $response["ky_type"] = array();
+                $response['message'] = "Human Query KY Data fetched successfully!";
+                $response['success'] = TRUE;
+                $response['status'] = STATUS_OK;
+
+                return response()->json($response, $response['status']);
+
+            }
 
             $ky_type = array();
 
