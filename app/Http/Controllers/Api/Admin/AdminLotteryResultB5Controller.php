@@ -1071,13 +1071,13 @@ class AdminLotteryResultB5Controller extends Controller
 
                     $q1 = User::where("id", $userid)
                         ->where("Pay_Type", 1)
-                        ->increment('Money', $bet_money_total);
+                        ->increment('Money', $bet_win_total);
 
                     //会员金额操作成功
 
                     if($q1 == 1) {
 
-                        $balance=   $assets + $bet_money_total;
+                        $balance=   $assets + $bet_win_total;
 
                         $datetime = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
 
@@ -1087,7 +1087,7 @@ class AdminLotteryResultB5Controller extends Controller
                         $new_log->about = $lottery_name;
                         $new_log->update_time = $datetime;
                         $new_log->type = $bet_type;
-                        $new_log->order_value = $bet_money_total;
+                        $new_log->order_value = $bet_win_total;
                         $new_log->assets = $assets;
                         $new_log->balance = $balance;
                         $new_log->save();

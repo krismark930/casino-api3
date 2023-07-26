@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Http\Request;
-use App\Http\Controllers\TestController;
 use App\Http\Controllers\Api\User\AGController;
 use App\Http\Controllers\ScheduleTestController;
 
@@ -46,7 +45,9 @@ class AGTransactionCommand extends Command
         $AGController = new AGController();
         $AGController->getAGTransaction();
         $AGController->getEGameTransaction();
+        $AGController->getSlotGameTransaction();
         $AGController->getYoplayTransaction();
+        $AGController->getHunterTransaction();
         return 0;
     }
 }

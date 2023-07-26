@@ -16,12 +16,10 @@ class OGUtils
     var $OG_Token;
     var $Token_Uptime;
     var $ApiUrl;
-    var $ApiUrl2;  //获取数据APIURL
 
     public function __construct($sysConfig)
     {
         $this->ApiUrl = env('OG_URL');
-        $this->ApiUrl2 = env('OG_URL_2');
 
         $this->X_Operator = env('OG_X_OPERATOR');
         $this->X_Key = env('OG_X_KEY');
@@ -119,21 +117,6 @@ class OGUtils
         } else {
             return $json_data['data']['url'];
         }
-    }
-
-    function OG_GameUrl2()
-    {  //试玩
-        $this->ApiUrl = "https://marsapi-test.haa477.com:8443"; //测试环境
-        $this->X_Operator = 'marstestcny';
-        $this->X_Key = 'eBsSqWQ2mdiTZM6G';
-        $this->GetToken();  //获取测试环境Token
-        $username = $this->getpassword_OG();
-        $result = $this->Add_OG_Member($username, "TryAccount", $username . "@qq.com");
-        if ($result == 0) return '';
-        $result = $this->OG_Deposit($username, '', 10000, $action = "IN");
-        if ($result['result'] == 0) return '';
-        $GameUrl = $this->OG_GameUrl($username);
-        return $GameUrl;
     }
 
     function OG_Money($username)
@@ -306,14 +289,12 @@ class OGUtils
 
     function GetGameData($SDate)
     {
-        //获取下注记录
-        $ApiUrl = "https://tigerapi.pwqr820.com:38888"; // test
-        // $ApiUrl = "https://tigerapi.all5555.com:38888"; // normal
+        $ApiUrl = env('OG_TRANSACTION_URL');
         $postdata = array();
         $postdata['Operator'] = $this->X_Operator;
         $postdata['Key'] = $this->X_Key;
         $postdata['SDate'] = $SDate;
-        $postdata['EDate'] = date("Y-m-d H:i:s", strtotime($SDate) + 600);
+        $postdata['EDate'] = date("Y-m-d H:i:s", strtotime($SDate) + 60);
         $postdata['Provider'] = "ogplus";
         $url = $ApiUrl . '/transaction';
         $htmlcode = $this->curl_info_s($url, null, null, $postdata, $ApiUrl);

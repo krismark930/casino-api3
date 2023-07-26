@@ -199,6 +199,7 @@ class HumanManagementController extends Controller
 
             $result = $result->offset(($page_no - 1) * $limit)
                 ->take($limit)
+                ->orderBy("GameStartTime", "desc")
                 ->get();
 
             foreach ($result as $item) {
@@ -262,6 +263,7 @@ class HumanManagementController extends Controller
 
             $result = $result->offset(($page_no - 1) * $limit)
                 ->take($limit)
+                ->orderBy("SceneStartTime", "desc")
                 ->get();
 
             foreach ($result as $item) {

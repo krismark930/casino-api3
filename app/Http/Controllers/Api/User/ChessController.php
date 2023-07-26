@@ -14,6 +14,7 @@ use App\Models\Web\SysConfig;
 use App\Models\WebReportKy;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class ChessController extends Controller
 {
@@ -43,7 +44,11 @@ class ChessController extends Controller
             $result = Dz2::where("PlatformType", "KY")->get();
 
             foreach ($result as $item) {
-                $item["ZH_Logo_File"] = "http://pic.pj6678.com/" . $item["ZH_Logo_File"];
+                if (!is_file(storage_path("app/public/upload/zr_images/") . $item["ZH_Logo_File"])) {
+                    $item["ZH_Logo_File"] = "http://pic.pj6678.com/" . $item["ZH_Logo_File"];
+                } else {
+                    $item["ZH_Logo_File"] = env('APP_URL') . Storage::url("upload/zr_images/") . $item["ZH_Logo_File"];
+                }
             }
 
             $response["data"] = $result;
@@ -96,7 +101,7 @@ class ChessController extends Controller
 
             $sysConfig = SysConfig::all()->first();
             $KYUtils = new KYUtils($sysConfig);
-            
+
             if ($KY_User == null || $KY_User == "") {
                 $AG_User = ltrim(trim($sysConfig['AG_User']));
                 if (!preg_match("/^[A-Za-z0-9]{4,12}$/", $username)) {

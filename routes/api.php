@@ -288,6 +288,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router) 
 
     Route::group(['prefix' => 'lottery-config', 'middleware' => 'auth:api'], function ($router) {
         Route::post('/item', [LotteryConfigController::class, 'getLotteryUserConfig']);
+        Route::get('/add', [LotteryConfigController::class, 'addLotteryUserConfig']);
     });
 
     Route::group(['prefix' => 'payment-method', 'middleware' => 'auth:api'], function ($router) {
@@ -892,6 +893,7 @@ Route::group(['prefix' => 'third-party'], function ($router) {
         Route::get('/ag-transaction', [AGController::class, 'getAGTransaction']);
         Route::get('/eg-transaction', [AGController::class, 'getEGameTransaction']);
         Route::get('/yoplay-transaction', [AGController::class, 'getYoplayTransaction']);
+        Route::get('/hunter-transaction', [AGController::class, 'getHunterTransaction']);
         Route::post('/bbin-transaction', [BBINController::class, 'getBBINTransaction']);
         Route::post('/mg-transaction', [MGController::class, 'getMGTransaction']);
         Route::post('/pt-transaction', [PTController::class, 'getPTTransaction']);

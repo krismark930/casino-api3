@@ -12,6 +12,7 @@ use App\Models\Dz2;
 use App\Utils\AG\agUtils;
 use App\Models\Web\SysConfig;
 use App\Models\User;
+use App\Models\WebReportHtr;
 use App\Models\WebReportZr;
 use Carbon\Carbon;
 
@@ -444,6 +445,113 @@ class AGController extends Controller
         return response()->json($response, $response['status']);
     }
 
+    public function getSlotGameTransaction()
+    {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+
+
+            $url = env("TRANSACTION_URL") . "/third-party/ag-transaction/slot-game";
+
+            $result = get_object_vars(json_decode(GetUrl($url)));
+
+            $result = get_object_vars($result["data"])["row"] ?? array();
+
+            // return $result;
+
+            foreach ($result as $item) {
+
+                $item = get_object_vars($item)["@attributes"];
+                $item = get_object_vars($item);
+
+                // return $item;
+
+                $billNo = $item["billno"];
+                $playerName = $item["username"];
+                $Type = "";
+                $GameType = $item["gametype"];
+                $gameCode = $item["gmcode"];
+                $netAmount = $item["dst_amount"];
+                $betTime = $item["billtime"];
+                $betAmount = $item["account"];
+                $validBetAmount = $item["valid_account"];
+                $playType = $item["slottype"];
+                $tableCode = $item["slottype"];
+                $loginIP = $item["betIP"];
+                $recalcuTime = $item["reckontime"];
+                $platformType = $item["platformtype"];
+                $round = $item["round"] ?? "";
+                $VendorId = 0;
+                $result = $item["flag"];
+                $gameType = addslashes($GameType);
+                $gameCode = addslashes($gameCode);
+
+                $web_report_zr = WebReportZr::where("billNo", $billNo)
+                    ->where("platformType", $platformType)->first();
+
+                $user = User::where("AG_User", $playerName)->first();
+
+                if (!isset($user)) continue;
+
+                $UserName = $user["UserName"];
+
+                $new_data = array(
+                    "billNo" => $billNo,
+                    "UserName" => $UserName,
+                    "playerName" => $playerName,
+                    "Type" => $Type,
+                    "gameType" => $gameType,
+                    "gameCode" => $gameCode,
+                    "netAmount" => $netAmount,
+                    "betTime" => $betTime,
+                    "betAmount" => $betAmount,
+                    "validBetAmount" => $validBetAmount,
+                    "playType" => $playType,
+                    "tableCode" => $tableCode,
+                    "loginIP" => $loginIP,
+                    "recalcuTime" => $recalcuTime,
+                    "round" => $round,
+                    "platformType" => $platformType,
+                    "VendorId" => $VendorId,
+                    "Checked" => 1,
+                );
+
+                if (!isset($web_report_zr)) {
+                    $web_report_zr = new WebReportZr;
+                    $web_report_zr->create($new_data);
+                } else {
+                    WebReportZr::where("billNo", $billNo)
+                        ->where("platformType", $platformType)
+                        ->update($new_data);
+                }
+
+                // $AGUtils = new AGUtils($sysConfig);
+
+                // $user = User::where("UserName", $playerName)->first();
+
+                // $balance = $AGUtils->getMoney($user["AG_User"], $user["AG_Pass"]);
+
+                // User::where("UserName", $UserName)->update([
+                //     "AG_Money" => $balance,
+                // ]);
+            }
+
+            $response['message'] = "EG Game Transaction saved successfully!";
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    }
+
     public function getYoplayTransaction()
     {
 
@@ -599,6 +707,113 @@ class AGController extends Controller
             }
 
             $response['message'] = "YOPLAY Game Transaction saved successfully!";
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    }
+
+    public function getHunterTransaction()
+    {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+
+            $url = env("TRANSACTION_URL") . "/third-party/ag-transaction/hunter";
+
+            $result = get_object_vars(json_decode(GetUrl($url)));
+
+            $result = get_object_vars($result["data"])["row"] ?? array();
+
+            // return $result;
+
+            foreach ($result as $item) {
+
+                $item = get_object_vars($item)["@attributes"];
+                $item = get_object_vars($item);
+
+                // return $item;
+
+                $tradeNo = $item["billno"];
+                $playerName = $item["username"];
+                $type = $item["fishid"];
+                $GameType = $item["gametype"];
+                $netAmount = $item["dst_amount"];
+                $srcAmount = $item["src_amount"];
+                $betTime = date("Y-m-d H:i:s", $item["billtime"]);
+                $recalcuTime = date("Y-m-d H:i:s", $item["reckontime"]);
+                $betAmount = $item["account"];
+                $validBetAmount = $item["cus_account"];
+                $cost = $item["fishcost"];
+                $scene_id = $item["sceneid"];
+                $room_id = $item["roomid"];
+                $room_bet = $item["betx"];
+                $loginIP = $item["betIp"];
+                $platformType = "HUNTER";
+                $jackpotcontribute = "jackpotcontribute";
+                $VendorId = 0;
+                $gameType = addslashes($GameType);
+
+                $web_report_htr = WebReportHtr::where("tradeNo", $tradeNo)
+                    ->where("platformType", $platformType)->first();
+
+                $user = User::where("AG_User", $playerName)->first();
+
+                if (!isset($user)) continue;
+
+                $UserName = $user["UserName"];
+
+                $new_data = array(
+                    "tradeNo" => $tradeNo,
+                    "UserName" => $UserName,
+                    "playerName" => $playerName,
+                    "Type" => $type,
+                    "platformType" => $platformType,
+                    "sceneId" => $scene_id,
+                    "SceneStartTime" => $betTime,
+                    "SceneEndTime" => $recalcuTime,
+                    "Roomid" => $room_id,
+                    "Roombet" => $room_bet,
+                    "Cost" => $betAmount,
+                    "Earn" => $validBetAmount,
+                    "Jackpotcomm" => $jackpotcontribute,
+                    "transferAmount" => "",
+                    "previousAmount" => $srcAmount,
+                    "currentAmount" => $netAmount,
+                    "IP" => $loginIP,
+                    "VendorId" => $VendorId,
+                    "Checked" => 1,
+                );
+
+                if (!isset($web_report_htr)) {
+                    $web_report_htr = new WebReportHtr();
+                    $web_report_htr->create($new_data);
+                } else {
+                    WebReportHtr::where("tradeNo", $tradeNo)
+                        ->where("platformType", $platformType)
+                        ->update($new_data);
+                }
+
+                // $AGUtils = new AGUtils($sysConfig);
+
+                // $user = User::where("UserName", $UserName)->first();
+
+                // $balance = $AGUtils->getMoney($user["AG_User"], $user["AG_Pass"]);
+
+                // User::where("UserName", $UserName)->update([
+                //     "AG_Money" => $balance,
+                // ]);
+            }
+
+            $response['message'] = "Hunter Game Transaction saved successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {

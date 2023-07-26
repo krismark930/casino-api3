@@ -9,5 +9,28 @@ class WebReportHtr extends Model
 {
     use HasFactory;
     protected $table = "web_report_htr";
+
+    protected $fillable = [
+        "tradeNo",
+        "UserName",
+        "playerName",
+        "Type",
+        "platformType",
+        "sceneId",
+        "SceneStartTime",
+        "SceneEndTime",
+        "Roomid",
+        "Roombet",
+        "Cost",
+        "Earn",
+        "Jackpotcomm",
+        "transferAmount",
+        "previousAmount",
+        "currentAmount",
+        "IP",
+        "VendorId",
+        "Checked",
+    ];
+
     public $timestamps = false;
 }
