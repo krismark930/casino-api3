@@ -175,7 +175,7 @@ class PTController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function getPTTransaction(Request $request) {
+    public function getPTTransaction() {
 
         $response = [];
         $response['success'] = FALSE;
@@ -183,101 +183,119 @@ class PTController extends Controller
 
         try {
 
-            $sysConfig = SysConfig::all()->first();
-            $agentCode = $sysConfig['PT_User'];
-            $key = '';
+            $filename_array = array();
 
-            $url="http://999.bbin-api.com/pt_data.php?agentCod=$agentCode&key=";
+            array_push($filename_array, Carbon::now()->setTimezone('GMT-4')->format("YmdHi"));
 
-            $web_report_zr = WebReportZr::where("platformType", 'PT')
-                ->orWhere("Checked", 1)
-                ->select(DB::raw("max(VendorId) as VendorId"))
-                ->first();
+            for ($i = 1; $i <= 40; $i++) {
 
-            if (isset($web_report_zr)) {
-                $url = $url."&VendorId=".$web_report_zr->VendorId;
+                array_push($filename_array, Carbon::now()->setTimezone('GMT-4')->subMinutes($i)->format("YmdHi"));
             }
 
-            $htmlcode = GetUrl($url);
-            $htmlcode=ltrim(trim($htmlcode));
-            $data=explode("\r\n",$htmlcode);
-            $allcount=0;
-            $UserName_arr=array();
+            $date = Carbon::now()->setTimezone('GMT-4')->format("Ymd");
 
-            foreach($data as $item) {
-                $zr_data=json_decode($item);
-                if(count($zr_data) <= 0) continue;
-                $billNo = $zr_data->billNo;
-                $playerName=$zr_data->playerName;
-                $Type=$zr_data->Type;
-                $GameType=$zr_data->GameType;
-                $gameCode=$zr_data->gameCode;
-                $netAmount=$zr_data->netAmount;
-                $betTime=$zr_data->betTime;
-                $betAmount=$zr_data->betAmount;
-                $validBetAmount=$zr_data->validBetAmount;
-                $playType=$zr_data->playType;
-                $tableCode=$zr_data->tableCode;
-                $loginIP=$zr_data->loginIP;
-                $recalcuTime=$zr_data->recalcuTime;
-                $platformType=$zr_data->platformType;
-                $round=$zr_data->round;
-                $VendorId=$zr_data->VendorId;
-                $result=$zr_data->result;
-                $UserName = "";
-                if($UserName_arr[$playerName] == '') {
-                    $user = User::where("PT_User", $playerName)->first();
-                    $UserName=$user['UserName'];
-                    $UserName_arr[$playerName]=$UserName;
-                }else{
-                    $UserName=$UserName_arr[$playerName];
-                }
+            foreach ($filename_array as $file_name) {
 
-                $gameType=addslashes($GameType);
-                $gameCode=addslashes($gameCode);
-                $web_report_zr = WebReportZr::where("billNo", $billNo)
-                    ->where("platformType", $platformType)->first();
+                $file_path = "PT/" . $date . "/" . $file_name . ".xml";
 
-                $new_data = array (
-                    "billNo" => $billNo,
-                    "UserName" => $UserName,
-                    "playerName" => $playerName,
-                    "Type" => $Type,
-                    "gameType" => $gameType,
-                    "gameCode" => $gameCode,
-                    "netAmount" => $netAmount,
-                    "betTime" => $betTime,
-                    "betAmount" => $betAmount,
-                    "validBetAmount" => $validBetAmount,
-                    "playType" => $playType,
-                    "tableCode" => $tableCode,
-                    "loginIP" => $loginIP,
-                    "recalcuTime" => $recalcuTime,
-                    "round" => $round,
-                    "platformType" => $platformType,
-                    "VendorId" => $VendorId,
-                    "Checked" => 1,
-                );
+                // return $file_path;
 
-                if (isset($web_report_zr)) {
-                    $web_report_zr = new WebReportZr;
-                    $web_report_zr->create($new_data);
-                } else {
-                    WebReportZr::where("billNo", $billNo)
-                        ->where("platformType", $platformType)
-                        ->update($new_data);
-                }
+                $fileExists = Storage::disk('ftp')->exists($file_path);
+
+                // $fileExists = Storage::disk('ftp')->exists("PT/20230727/202307270848.xml");
+
+                if ($fileExists) {
+
+                    $xmlContents = Storage::disk('ftp')->get($file_path);
+
+                    // $xmlContents = Storage::disk('ftp')->get("PT/20230727/202307270848.xml");
+    
+                    $xml_array = explode("\r\n", $xmlContents);
+    
+                    $xml_array = array_filter($xml_array);
+    
+                    foreach($xml_array as $xml) {
+        
+                        $result = simplexml_load_string($xml);
             
-                $PTUtils = new PTUtils($sysConfig);
+                        $row = get_object_vars($result);
+    
+                        $row = $row["@attributes"];
 
-                $user = User::where("UserName", $UserName)->first();                
+                        // return $row;
 
-                $balance= $PTUtils->getMoney_PT($user["PT_User"], $user["PT_Pass"]);
+                        $billNo = $row["billNo"];
+                        $playerName = $row["playerName"];
+                        $GameType = $row["gameType"];
+                        $gameCode = $row["gameCode"] == "null" ? "" : $row["gameCode"];
+                        $netAmount = $row["netAmount"];
+                        $betTime = $row["betTime"];
+                        $betAmount = $row["betAmount"];
+                        $validBetAmount = $row["validBetAmount"];
+                        $playType = $row["playType"] == "null" ? "" : $row["playType"];
+                        $tableCode = $row["tableCode"] == "null" ? "" : $row["tableCode"];
+                        $loginIP = $row["loginIP"];
+                        $recalcuTime = $row["recalcuTime"];
+                        $platformType = $row["platformType"];
+                        $round = $row["round"];
+                        $VendorId = $row["agentCode"];
+                        $result = $row["result"] ?? "";
+                        $gameType = addslashes($GameType);
+                        $gameCode = addslashes($gameCode);
+    
+                        $web_report_zr = WebReportZr::where("billNo", $billNo)
+                            ->where("platformType", $platformType)->first();
+    
+                        $user = User::where("PT_User", $playerName)->first();
 
-                User::where("UserName", $UserName)->update([
-                    "PT_Money" => $balance,
-                ]);
+                        // return $user;
+    
+                        if (!isset($user)) continue;
+    
+                        $UserName = $user["UserName"];
+    
+                        $new_data = array(
+                            "billNo" => $billNo,
+                            "UserName" => $UserName,
+                            "playerName" => $playerName,
+                            "gameType" => $gameType,
+                            "gameCode" => $gameCode,
+                            "netAmount" => $netAmount,
+                            "betTime" => $betTime,
+                            "betAmount" => $betAmount,
+                            "validBetAmount" => $validBetAmount,
+                            "playType" => $playType,
+                            "tableCode" => $tableCode,
+                            "loginIP" => $loginIP,
+                            "recalcuTime" => $recalcuTime,
+                            "round" => $round,
+                            "platformType" => $platformType,
+                            "VendorId" => $VendorId,
+                            "Checked" => 1,
+                        );
+    
+                        if (!isset($web_report_zr)) {
+                            $web_report_zr = new WebReportZr;
+                            $web_report_zr->create($new_data);
+                        } else {
+                            WebReportZr::where("billNo", $billNo)
+                                ->where("platformType", $platformType)
+                                ->update($new_data);
+                        }
 
+                        $sysConfig = SysConfig::all()->first();
+            
+            
+                        $PTUtils = new PTUtils($sysConfig);
+            
+                        $balance = $PTUtils->getMoney_PT($user["PT_User"], $user["PT_Pass"]);
+            
+                        User::where("UserName", $UserName)->update([
+                            "PT_Money" => $balance,
+                        ]);
+    
+                    }
+                }
             }
 
             $response['message'] = "PT Game Transaction saved successfully!";

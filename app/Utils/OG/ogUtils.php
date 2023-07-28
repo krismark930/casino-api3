@@ -287,14 +287,14 @@ class OGUtils
         }
     }
 
-    function GetGameData($SDate)
+    function GetGameData($start_date, $end_date)
     {
         $ApiUrl = env('OG_TRANSACTION_URL');
         $postdata = array();
         $postdata['Operator'] = $this->X_Operator;
         $postdata['Key'] = $this->X_Key;
-        $postdata['SDate'] = $SDate;
-        $postdata['EDate'] = date("Y-m-d H:i:s", strtotime($SDate) + 60);
+        $postdata['SDate'] = $start_date;
+        $postdata['EDate'] = $end_date;
         $postdata['Provider'] = "ogplus";
         $url = $ApiUrl . '/transaction';
         $htmlcode = $this->curl_info_s($url, null, null, $postdata, $ApiUrl);

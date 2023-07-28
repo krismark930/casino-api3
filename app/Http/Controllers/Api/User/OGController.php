@@ -239,29 +239,19 @@ class OGController extends Controller
 
             $sysConfig = SysConfig::all()->first();
 
-            $OG_CJ_Time = $sysConfig["OG_CJ_Time"];
+            $end_date = Carbon::now()->setTimezone('GMT+8')->format("Y-m-d H:i:s");
+            $start_date = Carbon::now()->setTimezone('GMT+8')->subMinutes(10)->format("Y-m-d H:i:s");
 
-            // $OG_CJ_Time = "2023-07-22 18:05:52";
+            // $start_date = "2023-07-28 12:52:00";
+            // $end_date = "2023-07-28 13:02:00";
 
             $OGUtils = new OGUtils($sysConfig);
 
-            $game_array = $OGUtils->GetGameData($OG_CJ_Time);
-
-            if ($game_array == null) {
-                $response["message"] = "Transaction Not Found!";
-                $response['success'] = FALSE;
-                $response['status'] = STATUS_OK;
-                return response()->json($response, $response['status']);
-            }
-
-            $error = 0;
-
-            $current_timestamp = Carbon::now("Asia/Hong_Kong")->timestamp;
+            $game_array = $OGUtils->GetGameData($start_date, $end_date);
 
             foreach ($game_array as $item) {
                 $billNo = $item['bettingcode'];
                 if ($billNo == '') {
-                    $error++;
                     continue;
                 }
                 $playerName = substr($item['membername'], 5);
@@ -323,20 +313,6 @@ class OGController extends Controller
                 // User::where("UserName", $UserName)->update([
                 //     "OG_Money" => $balance,
                 // ]);
-            }
-
-            // return $game_array;
-
-            if ($error == 0) {
-                //未出错更新采集时间
-                $newDateTime = date("Y-m-d H:i:s", strtotime($OG_CJ_Time) + 60);
-                // $newDateTime2 = date("Y-m-d H:i:s", $current_timestamp + 12 * 3600 - 600);
-                // if ($newDateTime > $newDateTime2) {
-                //     $newDateTime = $newDateTime2;
-                // }
-                SysConfig::query()->update([
-                    "OG_CJ_Time" => $newDateTime
-                ]);
             }
 
             $response['message'] = "OG Game Transaction saved successfully!";

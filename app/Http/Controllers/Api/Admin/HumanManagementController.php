@@ -102,6 +102,7 @@ class HumanManagementController extends Controller
 
             $result = $result->offset(($page_no - 1) * $limit)
                 ->take($limit)
+                ->orderBy("betTime", "desc")
                 ->get();
 
             foreach ($result as $item) {
