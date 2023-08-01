@@ -64,7 +64,7 @@ class OGUtils
         $json_data = json_decode($htmlcode, true);
         if ($json_data['status'] <> 'success') {
             $t = date("Y-m-d H:i:s");
-            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/tmp/og_" . date("Ymd") . ".txt";
+            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/storage/tmp/og_" . date("Ymd") . ".txt";
             $f = fopen($tmpfile, 'a');
             fwrite($f, $t . "\r\n会员开户\r\n$htmlcode\r\n\r\n");
             fclose($f);
@@ -94,7 +94,7 @@ class OGUtils
         // return $this->OG_Token;
         if ($json_data['status'] <> 'success') {
             $t = date("Y-m-d H:i:s");
-            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/tmp/og_" . date("Ymd") . ".txt";
+            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/storage/tmp/og_" . date("Ymd") . ".txt";
             $f = fopen($tmpfile, 'a');
             fwrite($f, $t . "\r\n获取游戏金钥\r\n$htmlcode\r\n\r\n");
             fclose($f);
@@ -111,7 +111,7 @@ class OGUtils
         $json_data = json_decode($htmlcode, true);
         if ($json_data['status'] <> 'success') {
             $t = date("Y-m-d H:i:s");
-            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/tmp/og_" . date("Ymd") . ".txt";
+            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/storage/tmp/og_" . date("Ymd") . ".txt";
             $f = fopen($tmpfile, 'a');
             fwrite($f, $t . "\r\n获取游戏网址\r\n$htmlcode\r\n\r\n");
             fclose($f);
@@ -155,7 +155,7 @@ class OGUtils
         $json_data = json_decode($htmlcode, true);
         if ($json_data['status'] <> 'success') {
             $t = date("Y-m-d H:i:s");
-            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/tmp/og_" . date("Ymd") . ".txt";
+            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/storage/tmp/og_" . date("Ymd") . ".txt";
             $f = fopen($tmpfile, 'a');
             fwrite($f, $t . "\r\n获取余额\r\n$htmlcode\r\n\r\n");
             fclose($f);
@@ -193,7 +193,7 @@ class OGUtils
         $result['billno'] = $transferId;
         if ($json_data['status'] <> 'success') {
             $t = date("Y-m-d H:i:s");
-            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/tmp/og_" . date("Ymd") . ".txt";
+            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/storage/tmp/og_" . date("Ymd") . ".txt";
             $f = fopen($tmpfile, 'a');
             fwrite($f, $t . "\r\n转账\r\n$htmlcode\r\n\r\n");
             fclose($f);
@@ -227,7 +227,7 @@ class OGUtils
         $json_data = json_decode($htmlcode, true);
         if ($json_data['status'] <> 'success') {
             $t = date("Y-m-d H:i:s");
-            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/tmp/og_" . date("Ymd") . ".txt";
+            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/storage/tmp/og_" . date("Ymd") . ".txt";
             $f = fopen($tmpfile, 'a');
             fwrite($f, $t . "\r\n转账查询\r\n$htmlcode\r\n\r\n");
             fclose($f);
@@ -264,7 +264,7 @@ class OGUtils
         //print_r($json_data);exit;
         if ($json_data['status'] <> 'success') {
             $t = date("Y-m-d H:i:s");
-            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/tmp/og_" . date("Ymd") . ".txt";
+            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/storage/tmp/og_" . date("Ymd") . ".txt";
             $f = fopen($tmpfile, 'a');
             fwrite($f, $t . "\r\n修改限红\r\n$htmlcode\r\n\r\n");
             fclose($f);
