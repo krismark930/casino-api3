@@ -219,6 +219,7 @@ class KYUtils {
         $param = urlencode($aes->encrypt($params));	//参数加密字符串
         $key = md5 ($this->agent.$timestamp.$this->md5Key);	//MD5校验字符串
         $url=$this->apiUrl.'?agent='.$this->agent.'&timestamp='.$timestamp.'&param='.$param.'&key='.$key;
+        return $url;
         $jsonStr=$this->getUrl_KY($url);
         // return $this->apiUrl;
         $jsonData=json_decode($jsonStr,true);
