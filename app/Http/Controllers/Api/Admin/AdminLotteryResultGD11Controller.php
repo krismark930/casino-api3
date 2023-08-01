@@ -19,13 +19,14 @@ use App\Utils\Utils;
 
 class AdminLotteryResultGD11Controller extends Controller
 {
-    public function getLotteryResult(Request $request) {
+    public function getLotteryResult(Request $request)
+    {
 
         $response = [];
         $response['success'] = FALSE;
         $response['status'] = STATUS_BAD_REQUEST;
 
-        try {   
+        try {
 
             $rules = [
                 "g_type" => "required|string",
@@ -52,7 +53,7 @@ class AdminLotteryResultGD11Controller extends Controller
             }
             $result = $result->orderBy("qishu", "desc")->get();
 
-            foreach($result as $item) {
+            foreach ($result as $item) {
                 $item["lottery_type"] = $lottery_type;
             }
 
@@ -69,13 +70,14 @@ class AdminLotteryResultGD11Controller extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function getLotteryResultById(Request $request) {
+    public function getLotteryResultById(Request $request)
+    {
 
         $response = [];
         $response['success'] = FALSE;
         $response['status'] = STATUS_BAD_REQUEST;
 
-        try {   
+        try {
 
             $rules = [
                 "id" => "required|numeric",
@@ -104,15 +106,16 @@ class AdminLotteryResultGD11Controller extends Controller
         }
 
         return response()->json($response, $response['status']);
-    }    
+    }
 
-    public function saveLotteryResult(Request $request) {
+    public function saveLotteryResult(Request $request)
+    {
 
         $response = [];
         $response['success'] = FALSE;
         $response['status'] = STATUS_BAD_REQUEST;
 
-        try {   
+        try {
 
             $rules = [
                 "action" => "required|string",
@@ -138,7 +141,7 @@ class AdminLotteryResultGD11Controller extends Controller
             $ball_4 = $request_data["ball_4"];
             $ball_5 = $request_data["ball_5"];
 
-            if ($action == "add" && $id==0) {
+            if ($action == "add" && $id == 0) {
 
                 $create_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
 
@@ -161,14 +164,13 @@ class AdminLotteryResultGD11Controller extends Controller
                 $item["ball_5"] = $ball_5;
 
                 $item->save();
-
             } else if ($action == "edit" && $id > 0) {
 
                 $item = LotteryResultGD11::find($id);
 
                 $time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
 
-                $prev_text = "修改时间：".($time)."。\n修改前内容：".$item["ball_1"].",".$item["ball_2"].",".$item["ball_3"].",".$item["ball_4"].",".$item["ball_5"]."。\n修改后内容：".$ball_1.",".$ball_2.",".$ball_3.",".$ball_4.",".$ball_5."。\n\n".$item["prev_text"];
+                $prev_text = "修改时间：" . ($time) . "。\n修改前内容：" . $item["ball_1"] . "," . $item["ball_2"] . "," . $item["ball_3"] . "," . $item["ball_4"] . "," . $item["ball_5"] . "。\n修改后内容：" . $ball_1 . "," . $ball_2 . "," . $ball_3 . "," . $ball_4 . "," . $ball_5 . "。\n\n" . $item["prev_text"];
 
                 $item["qishu"] = $qishu;
                 $item["prev_text"] = $prev_text;
@@ -178,12 +180,9 @@ class AdminLotteryResultGD11Controller extends Controller
                 $item["ball_3"] = $ball_3;
                 $item["ball_4"] = $ball_4;
                 $item["ball_5"] = $ball_5;
-                $item["ball_6"] = $ball_6;
-                $item["ball_7"] = $ball_7;
-                $item["ball_8"] = $ball_8;
 
                 $item->save();
-            }            
+            }
 
             $response['message'] = "GD11 Lottery Result updated successfully!";
             $response['success'] = TRUE;
@@ -197,13 +196,14 @@ class AdminLotteryResultGD11Controller extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function checkoutResult(Request $request) {
+    public function checkoutResult(Request $request)
+    {
 
         $response = [];
         $response['success'] = FALSE;
         $response['status'] = STATUS_BAD_REQUEST;
 
-        try {   
+        try {
 
             $rules = [
                 "qishu" => "required|numeric",
@@ -237,25 +237,25 @@ class AdminLotteryResultGD11Controller extends Controller
 
             if ($js_type == 1) {
                 //获取已结算的订单
-                $orders = Utils::getOrdersJs($g_type,$qishu);
+                $orders = Utils::getOrdersJs($g_type, $qishu);
                 //订单不为空，进行退钱操作
-                if(count($orders) > 0) {
-                    foreach($orders as $order){
+                if (count($orders) > 0) {
+                    foreach ($orders as $order) {
                         $order = get_object_vars($order);
                         $userid = $order['user_id'];
                         $datereg = $order['order_sub_num'];
                         $resultMoney = User::find($userid);
-                        $assets = round($resultMoney['Money'],2);
+                        $assets = round($resultMoney['Money'], 2);
                         OrderLottery::where("id", $order["id"])->update(["status" => 0]);
                         OrderLotterySub::where("id", $order["sub_id"])
-                                ->update(["status" => 0, "is_win" => null]);
-                        if($order['is_win']=="1" || $order['is_win']=="2" || ($order['is_win']=="0" && $order['fs']>0)){
+                            ->update(["status" => 0, "is_win" => null]);
+                        if ($order['is_win'] == "1" || $order['is_win'] == "2" || ($order['is_win'] == "0" && $order['fs'] > 0)) {
                             //退钱
-                            if($order['is_win']=="1"){//中奖金额+反水
-                                $bet_money_total = $order['win']+$order['fs'];
-                            }elseif($order['is_win']=="2"){//平局的钱，返回的是下注的钱
+                            if ($order['is_win'] == "1") { //中奖金额+反水
+                                $bet_money_total = $order['win'] + $order['fs'];
+                            } elseif ($order['is_win'] == "2") { //平局的钱，返回的是下注的钱
                                 $bet_money_total = $order['bet_money'];
-                            }elseif($order['is_win']=="0" && $order['fs']>0){//反水的钱
+                            } elseif ($order['is_win'] == "0" && $order['fs'] > 0) { //反水的钱
                                 $bet_money_total = $order['fs'];
                             }
 
@@ -265,9 +265,9 @@ class AdminLotteryResultGD11Controller extends Controller
 
                             //会员金额操作成功
 
-                            if($q1 == 1) {
+                            if ($q1 == 1) {
 
-                                $balance=   $assets - $bet_money_total;
+                                $balance =   $assets - $bet_money_total;
 
                                 $datetime = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
 
@@ -281,18 +281,17 @@ class AdminLotteryResultGD11Controller extends Controller
                                 $new_log->assets = $assets;
                                 $new_log->balance = $balance;
                                 $new_log->save();
-
                             }
                         }
                     }
                 }
                 $stateType = "2";
-            }  
+            }
 
             //获取未结算的订单
-            $orders = Utils::getOrdersByStatus($g_type,$qishu,"0");
+            $orders = Utils::getOrdersByStatus($g_type, $qishu, "0");
 
-            if(count($orders) == 0) {
+            if (count($orders) == 0) {
                 LotteryResultGD11::where("qishu", $qishu)
                     ->update(["state" => $stateType]);
 
@@ -303,23 +302,23 @@ class AdminLotteryResultGD11Controller extends Controller
                 return response()->json($response, $response['status']);
             }
 
-            $ballArray = array($result['ball_1'],$result['ball_2'],$result['ball_3'],$result['ball_4'],$result['ball_5']);
-            $beforeThreeArray = array($result['ball_1'],$result['ball_2'],$result['ball_3']);
-            $middleThreeArray = array($result['ball_2'],$result['ball_3'],$result['ball_4']);
-            $afterThreeArray  = array($result['ball_3'],$result['ball_4'],$result['ball_5']);
+            $ballArray = array($result['ball_1'], $result['ball_2'], $result['ball_3'], $result['ball_4'], $result['ball_5']);
+            $beforeThreeArray = array($result['ball_1'], $result['ball_2'], $result['ball_3']);
+            $middleThreeArray = array($result['ball_2'], $result['ball_3'], $result['ball_4']);
+            $afterThreeArray  = array($result['ball_3'], $result['ball_4'], $result['ball_5']);
             $ball1 = $result['ball_1'];
             $ball2 = $result['ball_2'];
             $ball3 = $result['ball_3'];
             $ball4 = $result['ball_4'];
             $ball5 = $result['ball_5'];
 
-            $hms[]      = Utils::gd11x5_Auto($ballArray,1);
-            $hms[]      = Utils::gd11x5_Auto($ballArray,2);
-            $hms[]      = Utils::gd11x5_Auto($ballArray,3);
-            $hms[]      = Utils::gd11x5_Auto($ballArray,4);
-            $hms[]      = Utils::gd11x5_Auto($ballArray,5);
-            $hms[]      = Utils::gd11x5_Auto($ballArray,6);
-            $hms[]      = Utils::gd11x5_Auto($ballArray,7);
+            $hms[]      = Utils::gd11x5_Auto($ballArray, 1);
+            $hms[]      = Utils::gd11x5_Auto($ballArray, 2);
+            $hms[]      = Utils::gd11x5_Auto($ballArray, 3);
+            $hms[]      = Utils::gd11x5_Auto($ballArray, 4);
+            $hms[]      = Utils::gd11x5_Auto($ballArray, 5);
+            $hms[]      = Utils::gd11x5_Auto($ballArray, 6);
+            $hms[]      = Utils::gd11x5_Auto($ballArray, 7);
 
             $ds_1 = Utils::Ssc_Ds($ball1);
             $dx_1 = Utils::gd11x5_Dx($ball1);
@@ -332,16 +331,16 @@ class AdminLotteryResultGD11Controller extends Controller
             $ds_5 = Utils::Ssc_Ds($ball5);
             $dx_5 = Utils::gd11x5_Dx($ball5);
 
-            $zh_dx = Utils::gd11x5_Auto($ballArray,2);
-            $zh_ds = Utils::gd11x5_Auto($ballArray,3);
-            $zh_tiger = Utils::gd11x5_Auto($ballArray,4);
+            $zh_dx = Utils::gd11x5_Auto($ballArray, 2);
+            $zh_ds = Utils::gd11x5_Auto($ballArray, 3);
+            $zh_tiger = Utils::gd11x5_Auto($ballArray, 4);
             $zh_dx_en = Utils::getEnNameGd11($zh_dx);
             $zh_ds_en = Utils::getEnNameGd11($zh_ds);
             $zh_tiger_en = Utils::getEnNameGd11($zh_tiger);
 
-            $before_shunzi = Utils::gd11x5_Auto($beforeThreeArray,5);
-            $middle_shunzi = Utils::gd11x5_Auto($middleThreeArray,5);
-            $after_shunzi = Utils::gd11x5_Auto($afterThreeArray,5);
+            $before_shunzi = Utils::gd11x5_Auto($beforeThreeArray, 5);
+            $middle_shunzi = Utils::gd11x5_Auto($middleThreeArray, 5);
+            $after_shunzi = Utils::gd11x5_Auto($afterThreeArray, 5);
             $before_shunzi_en = Utils::getEnNameGd11($before_shunzi);
             $middle_shunzi_en = Utils::getEnNameGd11($middle_shunzi);
             $after_shunzi_en = Utils::getEnNameGd11($after_shunzi);
@@ -390,10 +389,10 @@ class AdminLotteryResultGD11Controller extends Controller
             $ball4_WsDx_en = Utils::getEnNameGd11($ball4_WsDx);
             $ball5_WsDx_en = Utils::getEnNameGd11($ball5_WsDx);
 
-            foreach($orders as $order){
+            foreach ($orders as $order) {
                 $order = get_object_vars($order);
                 $is_win = "false";
-                $betInfo = explode(":",$order["number"]);
+                $betInfo = explode(":", $order["number"]);
                 $quick_type = $order["quick_type"];
                 $rTypeName = $order["rtype_str"];
 
@@ -527,44 +526,44 @@ class AdminLotteryResultGD11Controller extends Controller
                 //         }
                 //     }
                 // }
-                
+
                 $betInfo = $order["number"];
-                if($quick_type=="第一球"){
-                    if($betInfo==$dx_1 || $betInfo==$ds_1 || $betInfo==$ball1){
+                if ($quick_type == "第一球") {
+                    if ($betInfo == $dx_1 || $betInfo == $ds_1 || $betInfo == $ball1) {
                         $is_win = "true";
                     }
-                }elseif($quick_type=="第二球"){
-                    if($betInfo==$dx_2 || $betInfo==$ds_2 || $betInfo==$ball2){
+                } elseif ($quick_type == "第二球") {
+                    if ($betInfo == $dx_2 || $betInfo == $ds_2 || $betInfo == $ball2) {
                         $is_win = "true";
                     }
-                }elseif($quick_type=="第三球"){
-                    if($betInfo==$dx_3 || $betInfo==$ds_3 || $betInfo==$ball3){
+                } elseif ($quick_type == "第三球") {
+                    if ($betInfo == $dx_3 || $betInfo == $ds_3 || $betInfo == $ball3) {
                         $is_win = "true";
                     }
-                }elseif($quick_type=="第四球"){
-                    if($betInfo==$dx_4 || $betInfo==$ds_4 || $betInfo==$ball4){
+                } elseif ($quick_type == "第四球") {
+                    if ($betInfo == $dx_4 || $betInfo == $ds_4 || $betInfo == $ball4) {
                         $is_win = "true";
                     }
-                }elseif($quick_type=="第五球"){
-                    if($betInfo==$dx_5 || $betInfo==$ds_5 || $betInfo==$ball5){
+                } elseif ($quick_type == "第五球") {
+                    if ($betInfo == $dx_5 || $betInfo == $ds_5 || $betInfo == $ball5) {
                         $is_win = "true";
                     }
-                }elseif($quick_type=="总和龙虎和"){
-                    if(in_array($betInfo,array($hms[1],$hms[2],$hms[3]))){
+                } elseif ($quick_type == "总和龙虎和") {
+                    if (in_array($betInfo, array($hms[1], $hms[2], $hms[3]))) {
                         $is_win = "true";
-                    }elseif(($betInfo=="总和大" || $betInfo=="总和小") &&$zh_dx=="总和30"){
+                    } elseif (($betInfo == "总和大" || $betInfo == "总和小") && $zh_dx == "总和30") {
                         $is_win = "tie";
                     }
-                }elseif($quick_type=="前三"){
-                    if($betInfo==$hms[4]){
+                } elseif ($quick_type == "前三") {
+                    if ($betInfo == $hms[4]) {
                         $is_win = "true";
                     }
-                }elseif($quick_type=="中三"){
-                    if($betInfo==$hms[5]){
+                } elseif ($quick_type == "中三") {
+                    if ($betInfo == $hms[5]) {
                         $is_win = "true";
                     }
-                }elseif($quick_type=="后三"){
-                    if($betInfo==$hms[6]){
+                } elseif ($quick_type == "后三") {
+                    if ($betInfo == $hms[6]) {
                         $is_win = "true";
                     }
                 }
@@ -572,17 +571,17 @@ class AdminLotteryResultGD11Controller extends Controller
                 $userid = $order['user_id'];
                 $datereg = $order['order_sub_num'];
                 $resultMoney = User::find($userid);
-                $assets = round($resultMoney['money'],2);
+                $assets = round($resultMoney['money'], 2);
 
-                if($is_win == "true"){
+                if ($is_win == "true") {
                     $win_sign = "1";
-                    $bet_money_total = $order['win']+$order['fs'];
+                    $bet_money_total = $order['win'] + $order['fs'] + $order['bet_money'];
                     $bet_type = "彩票手工结算-彩票中奖";
-                }elseif($is_win == "tie"){
+                } elseif ($is_win == "tie") {
                     $win_sign = "2";
                     $bet_money_total = $order['bet_money'];
                     $bet_type = "彩票手工结算-彩票和局";
-                }else{
+                } else {
                     $win_sign = "0";
                     $bet_money_total = $order['fs'];
                     $bet_type = "彩票手工结算-彩票反水";
@@ -593,19 +592,19 @@ class AdminLotteryResultGD11Controller extends Controller
                 OrderLottery::where("id", $order["id"])->update(["status" => $stateType]);
 
                 OrderLotterySub::where("id", $order["sub_id"])
-                            ->update(["status" => $stateType, "is_win" => $win_sign]);
+                    ->update(["status" => $stateType, "is_win" => $win_sign]);
 
-                if($win_sign == "1" ||$win_sign == "2" || ($win_sign == "0" && $order['fs']>0)){
+                if ($win_sign == "1" || $win_sign == "2" || ($win_sign == "0" && $order['fs'] > 0)) {
 
                     $q1 = User::where("id", $userid)
                         ->where("Pay_Type", 1)
-                        ->increment('Money', $win_money);
+                        ->increment('Money', $bet_money_total);
 
                     //会员金额操作成功
 
-                    if($q1 == 1) {
+                    if ($q1 == 1) {
 
-                        $balance=   $assets + $bet_money_total;
+                        $balance =   $assets + $bet_money_total;
 
                         $datetime = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
 
@@ -619,7 +618,6 @@ class AdminLotteryResultGD11Controller extends Controller
                         $new_log->assets = $assets;
                         $new_log->balance = $balance;
                         $new_log->save();
-
                     }
                 }
             }
@@ -637,5 +635,5 @@ class AdminLotteryResultGD11Controller extends Controller
         }
 
         return response()->json($response, $response['status']);
-    }        
+    }
 }

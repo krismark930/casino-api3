@@ -9,9 +9,10 @@ class LotteryUserConfig extends Model
 {
     use HasFactory;
     protected $fillable = [
+        "userid",
+        "username",
         "cq_lower_bet",
         "cq_max_bet",
-        "cq_lower_bet",
         "cq_bet",
         "cq_bet_reb",
         "jx_lower_bet",
@@ -67,7 +68,6 @@ class LotteryUserConfig extends Model
         "cqsf_lower_bet",
         "cqsf_bet",
         "cqsf_bet_reb",
-        "cq_max_bet",
         "jx_max_bet",
         "tj_max_bet",
         "gdsf_max_bet",

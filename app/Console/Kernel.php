@@ -14,7 +14,13 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\LotteryCheckoutCommand::class,
-        \App\Console\Commands\AGTransactionCommand::class,
+        \App\Console\Commands\AGINTransactionCommand::class,
+        \App\Console\Commands\XINTransactionCommand::class,
+        \App\Console\Commands\YOPLAYTransactionCommand::class,
+        \App\Console\Commands\HUNTERTransactionCommand::class,
+        \App\Console\Commands\BBINTransactionCommand::class,
+        \App\Console\Commands\PTTransactionCommand::class,
+        \App\Console\Commands\MGTransactionCommand::class,
         \App\Console\Commands\SportsCheckoutCommand::class,
     ];
 
@@ -27,7 +33,13 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('lottery:checkout')->everyMinute();
-        $schedule->command('ag:transaction')->everyMinute();
+        $schedule->command('agin:transaction')->everyMinute();
+        $schedule->command('xin:transaction')->everyMinute();
+        $schedule->command('yoplay:transaction')->everyMinute();
+        $schedule->command('hunter:transaction')->everyMinute();
+        $schedule->command('bbin:transaction')->everyMinute();
+        $schedule->command('mg:transaction')->everyMinute();
+        $schedule->command('pt:transaction')->everyMinute();
         $schedule->command('sports:checkout')->everyMinute();
     }
 

@@ -518,7 +518,7 @@ class AdminLotteryResultCQSFController extends Controller
                     }
                     if($is_win == "true"){
                         $win_sign = "1";
-                        $bet_money_total = $order['win']+$order['fs'];
+                        $bet_money_total = $order['win']+$order['fs'] + $order['bet_money'];
                         $bet_type = "彩票手工结算-彩票中奖";
                     }elseif($is_win == "tie"){
                         $win_sign = "2";
@@ -542,7 +542,7 @@ class AdminLotteryResultCQSFController extends Controller
 
                     $q1 = User::where("id", $userid)
                         ->where("Pay_Type", 1)
-                        ->increment('Money', $win_money);
+                        ->increment('Money', $bet_money_total);
 
                     //会员金额操作成功
 
