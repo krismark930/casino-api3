@@ -420,7 +420,7 @@ class AdminLotteryResultAZXY10Controller extends Controller
                     $zhds   = Utils::convertToEnPK10(Utils::Pk10_Auto($hm , 3 , 0),null);   
                     $zh     = Utils::Pk10_Auto($hm , 1 , 0);
 
-                    if(in_array($betContent, array($zhdx,$zhds)) || in_array($zh,$zhArray)){
+                    if(in_array($betContent, array($zhdx,$zhds)) || in_array($zh,$betInfo)){
                         $win_sign = "1";
                         $bet_money_total = $order['win']+$order['fs'];
                         $bet_type = "彩票手工结算-彩票中奖";

@@ -4007,9 +4007,9 @@ class ThirdpartyLotteryResultController extends Controller
                     $zfb = Klsf_Zfb($rs['ball_1']);
                     $dnxb = Klsf_Dnxb($rs['ball_1']);
                     if($rows['number']==$rs['ball_1'] || $rows['number']==$ds || $rows['number']==$dx || $rows['number']==$wdx || $rows['number']==$hds || $rows['number']==$zfb || $rows['number']==$dnxb){
-                        Utils::BalanceToAccount($rows,1,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,1,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }else{
-                        Utils::BalanceToAccount($rows,0,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,0,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }
                 }
                 //开始结算第二球
@@ -4021,9 +4021,9 @@ class ThirdpartyLotteryResultController extends Controller
                     $zfb = Klsf_Zfb($rs['ball_2']);
                     $dnxb = Klsf_Dnxb($rs['ball_2']);
                     if($rows['number']==$rs['ball_2'] || $rows['number']==$ds || $rows['number']==$dx || $rows['number']==$wdx || $rows['number']==$hds || $rows['number']==$zfb || $rows['number']==$dnxb){
-                        Utils::BalanceToAccount($rows,1,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,1,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }else{
-                        Utils::BalanceToAccount($rows,0,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,0,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }
                 }
                 //开始结算第三球
@@ -4035,9 +4035,9 @@ class ThirdpartyLotteryResultController extends Controller
                     $zfb = Klsf_Zfb($rs['ball_3']);
                     $dnxb = Klsf_Dnxb($rs['ball_3']);
                     if($rows['number']==$rs['ball_3'] || $rows['number']==$ds || $rows['number']==$dx || $rows['number']==$wdx || $rows['number']==$hds || $rows['number']==$zfb || $rows['number']==$dnxb){
-                        Utils::BalanceToAccount($rows,1,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,1,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }else{
-                        Utils::BalanceToAccount($rows,0,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,0,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }
                 }
                 //开始结算第四球
@@ -4049,9 +4049,9 @@ class ThirdpartyLotteryResultController extends Controller
                     $zfb = Klsf_Zfb($rs['ball_4']);
                     $dnxb = Klsf_Dnxb($rs['ball_4']);
                     if($rows['number']==$rs['ball_4'] || $rows['number']==$ds || $rows['number']==$dx || $rows['number']==$wdx || $rows['number']==$hds || $rows['number']==$zfb || $rows['number']==$dnxb){
-                        Utils::BalanceToAccount($rows,1,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,1,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }else{
-                        Utils::BalanceToAccount($rows,0,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,0,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }
                 }
                 //开始结算第五球
@@ -4063,9 +4063,9 @@ class ThirdpartyLotteryResultController extends Controller
                     $zfb = Klsf_Zfb($rs['ball_5']);
                     $dnxb = Klsf_Dnxb($rs['ball_5']);
                     if($rows['number']==$rs['ball_5'] || $rows['number']==$ds || $rows['number']==$dx || $rows['number']==$wdx || $rows['number']==$hds || $rows['number']==$zfb || $rows['number']==$dnxb){
-                        Utils::BalanceToAccount($rows,1,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,1,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }else{
-                        Utils::BalanceToAccount($rows,0,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,0,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }
                 }
                 //开始结算第六球
@@ -4077,9 +4077,9 @@ class ThirdpartyLotteryResultController extends Controller
                     $zfb = Klsf_Zfb($rs['ball_6']);
                     $dnxb = Klsf_Dnxb($rs['ball_6']);
                     if($rows['number']==$rs['ball_6'] || $rows['number']==$ds || $rows['number']==$dx || $rows['number']==$wdx || $rows['number']==$hds || $rows['number']==$zfb || $rows['number']==$dnxb){
-                        Utils::BalanceToAccount($rows,1,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,1,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }else{
-                        Utils::BalanceToAccount($rows,0,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,0,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }
                 }
                 //开始结算第七球
@@ -4091,9 +4091,9 @@ class ThirdpartyLotteryResultController extends Controller
                     $zfb = Klsf_Zfb($rs['ball_7']);
                     $dnxb = Klsf_Dnxb($rs['ball_7']);
                     if($rows['number']==$rs['ball_7'] || $rows['number']==$ds || $rows['number']==$dx || $rows['number']==$wdx || $rows['number']==$hds || $rows['number']==$zfb || $rows['number']==$dnxb){
-                        Utils::BalanceToAccount($rows,1,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,1,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }else{
-                        Utils::BalanceToAccount($rows,0,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,0,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }
                 }
                 //开始结算第八球
@@ -4105,21 +4105,21 @@ class ThirdpartyLotteryResultController extends Controller
                     $zfb = Klsf_Zfb($rs['ball_8']);
                     $dnxb = Klsf_Dnxb($rs['ball_8']);
                     if($rows['number']==$rs['ball_8'] || $rows['number']==$ds || $rows['number']==$dx || $rows['number']==$wdx || $rows['number']==$hds || $rows['number']==$zfb || $rows['number']==$dnxb){
-                        Utils::BalanceToAccount($rows,1,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,1,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }else{
-                        Utils::BalanceToAccount($rows,0,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,0,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }
                 }
                 //开始结算总和大小
                 if($rows['number']=='总和大' || $rows['number']=='总和小'){
                     $zonghe = Klsf_Auto($hm,2);
                     if($zonghe=='总和和'){  //和局,退还本金
-                        Utils::BalanceToAccount($rows,2,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,2,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }else{
                         if($rows['number']==$zonghe){
-                            Utils::BalanceToAccount($rows,1,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                            Utils::BalanceToAccount($rows,1,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                         }else{
-                            Utils::BalanceToAccount($rows,0,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                            Utils::BalanceToAccount($rows,0,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                         }
                     }
 
@@ -4128,30 +4128,30 @@ class ThirdpartyLotteryResultController extends Controller
                 if($rows['number']=='总和单' || $rows['number']=='总和双'){
                     $zonghe = Klsf_Auto($hm,3);
                     if($rows['number']==$zonghe){
-                        Utils::BalanceToAccount($rows,1,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,1,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }else{
-                        Utils::BalanceToAccount($rows,0,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,0,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }
                 }
                 //开始结算总和尾大小
                 if($rows['number']=='总和尾大' || $rows['number']=='总和尾小'){
                     $zonghe = Klsf_Auto($hm,4);
                     if($rows['number']==$zonghe){
-                        Utils::BalanceToAccount($rows,1,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,1,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }else{
-                        Utils::BalanceToAccount($rows,0,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,0,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }
                 }
                 //开始结算龙虎
                 if($rows['number']=='龙' || $rows['number']=='虎'){
                     $longhu = Klsf_Auto($hm,5);
                     if($longhu=='和'){  //和局,退还本金
-                        Utils::BalanceToAccount($rows,2,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                        Utils::BalanceToAccount($rows,2,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                     }else{
                         if($rows['number']==$longhu){
-                            Utils::BalanceToAccount($rows,1,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                            Utils::BalanceToAccount($rows,1,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                         }else{
-                            Utils::BalanceToAccount($rows,0,'广东快乐十分');  //is_win值:0未中奖 1中奖 2和局 3赢一半
+                            Utils::BalanceToAccount($rows,0,'天津十分彩');  //is_win值:0未中奖 1中奖 2和局 3赢一半
                         }
                     }
                 }

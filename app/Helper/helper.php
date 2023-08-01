@@ -1403,9 +1403,9 @@ function Klsf_Wdx($ball){
 //广东快乐10分合单双
 function Klsf_Hdx($ball){
     if(($ball%10+floor($ball/10))%2==0){
-        return '合数双';
+        return '合双';
     }else{
-        return '合数单';
+        return '合单';
     }
 }
 //广东快乐10分中发白
@@ -1807,18 +1807,18 @@ function Bjsc_Auto($num , $type){
         if($zh==11){
             return '和';
         }elseif($zh>11){
-            return '大';
+            return '冠亚大';
         }else{
-            return '小';
+            return '冠亚小';
         }
     }
     if($type==3){
         if($zh==11){
             return '和';
         }elseif($zh%2==0){
-            return '双';
+            return '冠亚双';
         }else{
-            return '单';
+            return '冠亚单';
         }
     }
     if($type==4){

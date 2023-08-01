@@ -9,8 +9,8 @@ use App\Models\Test;
 class ScheduleTestController extends Controller
 {
     public function scheduleTest() {
-        // $test = new Test;
-        // $test->name = "test";
-        // $test->save();
+        $test = new Test;
+        $test->name = "test";
+        $test->save();
     }
 }

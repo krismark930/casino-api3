@@ -3,25 +3,24 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Api\User\AGController;
 use App\Http\Controllers\ScheduleTestController;
 
-class AGTransactionCommand extends Command
+class HUNTERTransactionCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'ag:transaction';
+    protected $signature = 'hunter:transaction';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'AG Transaction Command';
+    protected $description = 'Command description';
 
     /**
      * Create a new command instance.
@@ -40,14 +39,11 @@ class AGTransactionCommand extends Command
      */
     public function handle()
     {
-        $testController = new ScheduleTestController();
-        $testController->scheduleTest();
         $AGController = new AGController();
-        $AGController->getAGTransaction();
-        $AGController->getEGameTransaction();
-        $AGController->getSlotGameTransaction();
-        $AGController->getYoplayTransaction();
         $AGController->getHunterTransaction();
+
+        // $testController = new ScheduleTestController();
+        // $testController->scheduleTest();
         return 0;
     }
 }

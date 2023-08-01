@@ -110,6 +110,7 @@ class AdminSystemController extends Controller
             }
 
             $request_data = $request->all();
+            $update_type = $request_data["update_type"] ?? "";
             $PCURL = $request_data["PCURL"] ?? "";
             $WAPURL = $request_data["WAPURL"] ?? "";
             $BadMember = $request_data["BadMember"] ?? "";
@@ -120,58 +121,66 @@ class AdminSystemController extends Controller
             $kf3 = $request_data["kf3"] ?? "";
             $kf4 = $request_data["kf4"] ?? "";
 
-            if ($PCURL != "") {
-                $config = Config::where("id", 1)->update([
-                    "PCURL" => $PCURL,
-                ]);
-            }
+            if ($update_type == "url") {
 
-            if ($WAPURL != "") {
-                $config = Config::where("id", 1)->update([
-                    "WAPURL" => $WAPURL,
-                ]);                
-            }
+                // if ($PCURL != "") {
+                    $config = Config::where("id", 1)->update([
+                        "PCURL" => $PCURL,
+                    ]);
+                // }
+    
+                // if ($WAPURL != "") {
+                    $config = Config::where("id", 1)->update([
+                        "WAPURL" => $WAPURL,
+                    ]);                
+                // }
 
-            if ($BadMember != "") {
-                $config = Config::where("id", 1)->update([
-                    "BadMember" => $BadMember,
-                ]);                
-            }
+            } else if($update_type == "black_list") {
 
-            if ($BadMember2 != "") {
-                $config = Config::where("id", 1)->update([
-                    "BadMember2" => $BadMember2,
-                ]);                
-            }
+                // if ($BadMember != "") {
+                    $config = Config::where("id", 1)->update([
+                        "BadMember" => $BadMember,
+                    ]);                
+                // }
+    
+                // if ($BadMember2 != "") {
+                    $config = Config::where("id", 1)->update([
+                        "BadMember2" => $BadMember2,
+                    ]);                
+                // }
+    
+                // if ($BadMember_JQ != "") {
+                    $config = Config::where("id", 1)->update([
+                        "BadMember_JQ" => $BadMember_JQ,
+                    ]);                
+                // }
 
-            if ($BadMember_JQ != "") {
-                $config = Config::where("id", 1)->update([
-                    "BadMember_JQ" => $BadMember_JQ,
-                ]);                
-            }
+            } else if($update_type == "customer_service") {
 
-            if ($kf1 != "") {
-                $config = Config::where("id", 1)->update([
-                    "kf1" => $kf1,
-                ]);                
-            }
+                // if ($kf1 != "") {
+                    $config = Config::where("id", 1)->update([
+                        "kf1" => $kf1,
+                    ]);                
+                // }
+    
+                // if ($kf2 != "") {
+                    $config = Config::where("id", 1)->update([
+                        "kf2" => $kf2,
+                    ]);                
+                // }
+    
+                // if ($kf3 != "") {
+                    $config = Config::where("id", 1)->update([
+                        "kf3" => $kf3,
+                    ]);                
+                // }
+    
+                // if ($kf4 != "") {
+                    $config = Config::where("id", 1)->update([
+                        "kf4" => $kf4,
+                    ]);                
+                // }
 
-            if ($kf2 != "") {
-                $config = Config::where("id", 1)->update([
-                    "kf2" => $kf2,
-                ]);                
-            }
-
-            if ($kf3 != "") {
-                $config = Config::where("id", 1)->update([
-                    "kf3" => $kf3,
-                ]);                
-            }
-
-            if ($kf4 != "") {
-                $config = Config::where("id", 1)->update([
-                    "kf4" => $kf4,
-                ]);                
             }
 
 
@@ -225,7 +234,7 @@ class AdminSystemController extends Controller
             $web_slider_time_wap = $request_data["web_slider_time_wap"] ?? "";
             $web_refreshtime_wap = $request_data["web_refreshtime_wap"] ?? "";
 
-            $phone_number_show = $request_data["phone_number_show"];
+            $phone_number_show = $request_data["phone_number_show"] ?? "";
 
             SysConfig::where("id", 1)->update([
                 "phone_number_show" => $phone_number_show
@@ -366,40 +375,51 @@ class AdminSystemController extends Controller
             $user = $request->user();
 
             $request_data = $request->all();
+            $update_type = $request_data["update_type"];
             $GongGao = $request_data["GongGao"] ?? "";
             $systimee = $request_data["systimee"] ?? "";
             $systime = $request_data["systime"] ?? "";
             $website = $request_data["website"] ?? "";
             $BadArea = $request_data["BadArea"] ?? "";
 
-            if ($GongGao != "") {
-                WebSystemData::where("id", 1)->update([
-                    "GongGao" => $GongGao,
-                ]);
-            }
+            if ($update_type == "gong_gao") {
 
-            if ($systimee != "") {
-                WebSystemData::where("id", 1)->update([
-                    "systimee" => $systimee,
-                ]);
-            }
+                // if ($GongGao != "") {
+                    WebSystemData::where("id", 1)->update([
+                        "GongGao" => $GongGao,
+                    ]);
+                // }
 
-            if ($systime != "") {
-                WebSystemData::where("id", 1)->update([
-                    "systime" => $systime,
-                ]);
-            }
+            } else if ($update_type == "systimee") {
 
-            if ($website != "") {
-                WebSystemData::where("id", 1)->update([
-                    "website" => $website,
-                ]);
-            }
+                // if ($systimee != "") {
+                    WebSystemData::where("id", 1)->update([
+                        "systimee" => $systimee,
+                    ]);
+                // }
 
-            if ($BadArea != "") {
-                WebSystemData::where("id", 1)->update([
-                    "BadArea" => $BadArea,
-                ]);
+            } else if( $update_type == "systime") {
+
+                // if ($systime != "") {
+                    WebSystemData::where("id", 1)->update([
+                        "systime" => $systime,
+                    ]);
+                // }
+    
+                // if ($website != "") {
+                    WebSystemData::where("id", 1)->update([
+                        "website" => $website,
+                    ]);
+                // }
+
+            } else if ($update_type == "monitor") {
+
+                // if ($BadArea != "") {
+                    WebSystemData::where("id", 1)->update([
+                        "BadArea" => $BadArea,
+                    ]);
+                // }
+
             }
 
             $response['message'] = "System Data updated successfully!";

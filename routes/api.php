@@ -288,6 +288,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router) 
 
     Route::group(['prefix' => 'lottery-config', 'middleware' => 'auth:api'], function ($router) {
         Route::post('/item', [LotteryConfigController::class, 'getLotteryUserConfig']);
+        Route::get('/add', [LotteryConfigController::class, 'addLotteryUserConfig']);
     });
 
     Route::group(['prefix' => 'payment-method', 'middleware' => 'auth:api'], function ($router) {
@@ -888,14 +889,19 @@ Route::group(['prefix' => 'third-party'], function ($router) {
     // other game routes
     Route::group(['prefix' => 'other-game'], function ($router) {
         Route::post('/og-token', [OGController::class, 'getOGToken']);
-        Route::post('/og-transaction', [OGController::class, 'getOGTransaction']);
-        Route::get('/ag-transaction', [AGController::class, 'getAGTransaction']);
+        Route::get('/og-transaction', [OGController::class, 'getOGTransaction']);
+        Route::get('/ag-transaction', [AGController::class, 'getFTPAGINTransaction']);
         Route::get('/eg-transaction', [AGController::class, 'getEGameTransaction']);
-        Route::get('/yoplay-transaction', [AGController::class, 'getYoplayTransaction']);
-        Route::post('/bbin-transaction', [BBINController::class, 'getBBINTransaction']);
-        Route::post('/mg-transaction', [MGController::class, 'getMGTransaction']);
-        Route::post('/pt-transaction', [PTController::class, 'getPTTransaction']);
-        Route::post('/ky-transaction', [ChessController::class, 'getKYTransaction']);
+        Route::get('/yoplay-transaction', [AGController::class, 'getFTPYoplayTransaction']);
+        Route::get('/xin-transaction', [AGController::class, 'getFTPXinTransaction']);
+        Route::get('/xin-api-slot-transaction', [AGController::class, 'getXinSlotTransaction']);
+        Route::get('/xin-api-transaction', [AGController::class, 'getXinTransaction']);
+        Route::get('/hunter-ftp-transaction', [AGController::class, 'getFTPHunterTransaction']);
+        Route::get('/hunter-transaction', [AGController::class, 'getHunterTransaction']);
+        Route::get('/bbin-transaction', [BBINController::class, 'getFTPBBINTransaction']);
+        Route::get('/mg-transaction', [MGController::class, 'getFTPMGTransaction']);
+        Route::get('/pt-transaction', [PTController::class, 'getPTTransaction']);
+        Route::get('/ky-transaction', [ChessController::class, 'getKYTransaction']);
     });
 });
 
