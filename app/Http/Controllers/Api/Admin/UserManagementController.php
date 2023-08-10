@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Web\MoneyLog;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -2884,8 +2885,6 @@ class UserManagementController extends Controller
                 return response()->json($errorResponse, $response['status']);
             }
 
-            $logined_user = $request->user();
-
             $_REQUEST = $request->all();
             $id = $_REQUEST["id"];
             $username = $_REQUEST["UserName"];
@@ -2909,8 +2908,11 @@ class UserManagementController extends Controller
             $Phone = $_REQUEST['Phone'] ?? ""; //手机号码
             $QQ = $_REQUEST['QQ'] ?? ""; //QQ
             $Notes = $_REQUEST['Notes'] ?? ""; //备注
-            $newmoney = $_REQUEST["Money"] ?? "";
+            // $newmoney = $_REQUEST["Money"] ?? "";
             $credit = $_REQUEST["Credit"] ?? "";
+
+            $operation_type = $_REQUEST["operation_type"] ?? "";
+            $more_money = $_REQUEST["more_money"] ?? "";
 
             $user = User::find($id);
 
@@ -2921,13 +2923,27 @@ class UserManagementController extends Controller
             $super = $user["Super"];
             $admin = $user["Admin"];
 
-            $kk = (int)$newmoney - $money;
+            // $kk = (int)$newmoney - $money;
             $date = date("Y-m-d");
             $datetime = date("Y-m-d H:i:s");
 
-            $mysql = "update web_member_data set OpenType='$type',fanshui='$fanshui',fanshui_cp='$fanshui_cp',fanshui_zr='$fanshui_zr',fanshui_dz='$fanshui_dz',fanshui_ky='$fanshui_ky',VIP='$VIP',Bank_Address='$Bank_Address',Bank_Account='$Bank_Account',Notes='$Notes',question='$question',answer='$answer',Money='$newmoney',Credit='$credit' where id='$id'";
+            $mysql = "update web_member_data set OpenType='$type',fanshui='$fanshui',fanshui_cp='$fanshui_cp',fanshui_zr='$fanshui_zr',fanshui_dz='$fanshui_dz',fanshui_ky='$fanshui_ky',VIP='$VIP',Bank_Address='$Bank_Address',Bank_Account='$Bank_Account',Notes='$Notes',question='$question',answer='$answer',Credit='$credit' where id='$id'";
 
             DB::select($mysql);
+
+            if ($username != "") {
+
+                User::where("id", $id)->update([
+                    "UserName" => $username
+                ]);
+            }
+
+            if ($pasd != "") {
+
+                User::where("id", $id)->update([
+                    "password" => Hash::make($pasd),
+                ]);
+            }
 
             $login_user = $request->user();
 
@@ -2938,11 +2954,13 @@ class UserManagementController extends Controller
             $Order_Code = 'TK' . date("YmdHis", time() + 12 * 3600) . mt_rand(1000, 9999);
             $sys_800 = new Sys800;
 
-            if ($kk > 0) {
-                
+            if ($more_money != "" && $operation_type == "1") {
+
+                $newmoney = (int)$money + (int)$more_money;
+
                 $data = array(
                     "Payway" => "W",
-                    "Gold" => $kk,
+                    "Gold" => $more_money,
                     "previousAmount" => $money,
                     "currentAmount" => $newmoney,
                     "AddDate" => $current_time,
@@ -2959,19 +2977,40 @@ class UserManagementController extends Controller
                     "Checked" => 1,
                     "Date" => $current_time,
                     "Order_Code" => $Order_Code,
+                    "created_at" => $current_time,
                     "Notes" => "",
                 );
 
                 $sys_800->create($data);
-            } else {
-                $sql = "insert into web_sys800_data set Checked=1,Payway='AG',Gold='$kk',AddDate='$date',Type='T',UserName='會員$user',Agents='$agent',Admin='$admin',CurType='RMB',Date='$datetime',Bank_Address='新余额:$newmoney',Bank_Account='旧余额:$money',Order_Code='會員提款'";
-                DB::select($sql);
 
-                $kk = $money - $newmoney;
+                $user["Money"] = $newmoney;
+                $user->save();
+
+                $new_log = new MoneyLog();
+                $new_log->user_id = $user["id"];
+                $new_log->order_num = $Order_Code;
+                $new_log->about = $user["UserName"]."人工加款";
+                $new_log->update_time = $current_time;
+                $new_log->type = $user["UserName"]."人工加款";
+                $new_log->order_value = $more_money;
+                $new_log->assets = $money;
+                $new_log->balance = $newmoney;
+                $new_log->save();
+            }
+
+            $Order_Code = 'CK' . date("YmdHis", time() + 12 * 3600) . mt_rand(1000, 9999);
+
+            if ($more_money != "" && $operation_type == "2") {
+                // $sql = "insert into web_sys800_data set Checked=1,Payway='AG',Gold='$kk',AddDate='$date',Type='T',UserName='會員$user',Agents='$agent',Admin='$admin',CurType='RMB',Date='$datetime',Bank_Address='新余额:$newmoney',Bank_Account='旧余额:$money',Order_Code='會員提款'";
+                // DB::select($sql);
+
+                $newmoney = (int)$money - (int)$more_money;
 
                 $data = array(
                     "Payway" => "W",
-                    "Gold" => $kk,
+                    "Gold" => $more_money,
+                    "previousAmount" => $money,
+                    "currentAmount" => $newmoney,
                     "AddDate" => $current_time,
                     "Type" => "T",
                     "UserName" => $username,
@@ -2983,12 +3022,28 @@ class UserManagementController extends Controller
                     "CurType" => "RMB",
                     "Name" => $alias,
                     "User" => $login_user["UserName"],
-                    // "Date" => $current_time,
+                    "Date" => $current_time,
                     "Order_Code" => $Order_Code,
+                    "created_at" => $current_time,
+                    "Checked" => 1,
                     "Notes" => "",
                 );
 
                 $sys_800->create($data);
+
+                $new_log = new MoneyLog();
+                $new_log->user_id = $user["id"];
+                $new_log->order_num = $Order_Code;
+                $new_log->about = $user["UserName"]."人工扣款";
+                $new_log->update_time = $current_time;
+                $new_log->type = $user["UserName"]."人工扣款";
+                $new_log->order_value = $more_money;
+                $new_log->assets = $money;
+                $new_log->balance = $newmoney;
+                $new_log->save();
+
+                $user["Money"] = $newmoney;
+                $user->save();
             }
 
             $response['message'] = "Member data updated successfully!";
