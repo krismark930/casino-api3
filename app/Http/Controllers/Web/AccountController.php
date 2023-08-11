@@ -97,9 +97,9 @@ class AccountController extends Controller {
         $bank_account = Utils::SafeString($request["bank_account"]);
         $bank_address = Utils::SafeString($request["bank_address"]);
 
-        if($bank_account=="" or $bank_address=="" or $bank_card_owner=="" or $bank_card_type==""){
-            return response()->json(['success'=>false, 'message' => "非法参数!"]);
-        }
+        // if($bank_account=="" or $bank_address=="" or $bank_card_owner=="" or $bank_card_type==""){
+        //     return response()->json(['success'=>false, 'message' => "非法参数!"]);
+        // }
 
         $originbank = UserBankAccount::where('bank_account',$bank_account)->first();
         if($originbank){

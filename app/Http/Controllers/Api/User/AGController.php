@@ -1718,8 +1718,8 @@ class AGController extends Controller
                     $GameType = $item["gametype"];
                     $netAmount = $item["dst_amount"];
                     $srcAmount = $item["src_amount"];
-                    $betTime = date("Y-m-d H:i:s", $item["billtime"]);
-                    $recalcuTime = date("Y-m-d H:i:s", $item["reckontime"]);
+                    $betTime = date("Y-m-d H:i:s", $item["billtime"] + 3600);
+                    $recalcuTime = date("Y-m-d H:i:s", $item["reckontime"] + 3600);
                     $betAmount = $item["account"];
                     $validBetAmount = $item["cus_account"];
                     $cost = $item["fishcost"];
