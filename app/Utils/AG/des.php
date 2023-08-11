@@ -16,6 +16,8 @@ class DES {
 
         $encrypted = openssl_encrypt($input, "des-ecb", $this->key, OPENSSL_RAW_DATA, $iv);
 
+        return $encrypted;
+
         $encrypted = base64_encode($encrypted);
 
         return $encrypted;
