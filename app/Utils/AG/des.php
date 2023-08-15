@@ -23,7 +23,7 @@ class DES
 
         // $encrypted = openssl_encrypt($input, "DES-ECB", $this->key, OPENSSL_RAW_DATA, $iv);
 
-        $encrypted = openssl_encrypt($input, "DES-ECB", $this->key, OPENSSL_ZERO_PADDING);
+        $encrypted = openssl_encrypt($input, "DES-ECB", $this->key, OPENSSL_ZERO_PADDING, $iv);
         
 
         if ($encrypted == false) {
