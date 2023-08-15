@@ -2,29 +2,37 @@
 
 namespace App\Utils\AG;
 
-class DES {
+class DES
+{
 
     protected $key = '';
 
-    public function __construct($key) {
+    public function __construct($key)
+    {
         $this->key = $key;
     }
 
-    function encrypt($input) {
+    function encrypt($input)
+    {
 
+        $iv_size = openssl_cipher_iv_length('DES-ECB');
         $iv = '';
+        if ($iv_size > 0) {
+            $iv = openssl_random_pseudo_bytes($iv_size);
+        }
 
-        // $encrypted = openssl_encrypt($input, "des-ecb", $this->key, OPENSSL_RAW_DATA, $iv);
+        // $encrypted = openssl_encrypt($input, "DES-ECB", $this->key, OPENSSL_RAW_DATA, $iv);
 
-        $encrypted = openssl_encrypt($input, "des-ecb", $this->key);
+        $encrypted = openssl_encrypt($input, "DES-ECB", $this->key, OPENSSL_ZERO_PADDING);
+        
 
         if ($encrypted == false) {
             $error = openssl_error_string();
             return $error;
-            $t=date("Y-m-d H:i:s");
-            $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/ssl_".date("Ymd").".txt";
-            $f=fopen($tmpfile,'a');
-            fwrite($f,$t."\r\nSSL_ERROR\r\n$error\r\n\r\n");
+            $t = date("Y-m-d H:i:s");
+            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/tmp/ssl_" . date("Ymd") . ".txt";
+            $f = fopen($tmpfile, 'a');
+            fwrite($f, $t . "\r\nSSL_ERROR\r\n$error\r\n\r\n");
             fclose($f);
         }
 
@@ -33,7 +41,8 @@ class DES {
         return $encrypted;
     }
 
-    function decrypt($str) {
+    function decrypt($str)
+    {
 
         $iv = '';
 
@@ -55,5 +64,3 @@ class DES {
         return $decrypted;
     }
 }
-
-?>
