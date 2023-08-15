@@ -4,14 +4,12 @@ pipeline {
         bbranch ="${Branch}".replace('origin/', '');
     }
     stages {
-        stage('git'){
+        stage('config'){
             steps {
-                // 
-               // git branch: "${bbranch}",credentialsId: '007', url: 'git@github.com:BlockBeliever/bourse-api.git'
                 echo "${bbranch}";
+                sh "curl -H 'Authorization: token ${githubToken}' -H 'Accept: application/vnd.github.v3.raw' -kLJ -o .env 'https://raw.githubusercontent.com/other-project2/zi-api/main/.env'";
+                sh 'ls -al';
                 echo Branch;
-                // def check_groovy_file="./Jenkinsfile2";
-                // load "${check_groovy_file}";
                 echo 'git clone';
             }
         }
