@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Dz2;
+use App\Models\Test;
 use App\Utils\OG\ogUtils;
 use App\Models\Web\SysConfig;
 use App\Models\User;
@@ -18,6 +19,7 @@ class OGController extends Controller
 {
     protected $arrGameType = array();
     protected $arrPlayType = array();
+
     public function __construct()
     {
 
@@ -201,7 +203,7 @@ class OGController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function getOGToken(Request $request)
+    public function getOGToken()
     {
 
         $response = [];
@@ -228,7 +230,7 @@ class OGController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function getOGTransaction(Request $request)
+    public function getOGTransaction()
     {
 
         $response = [];
@@ -242,14 +244,17 @@ class OGController extends Controller
             $end_date = Carbon::now()->setTimezone('GMT+8')->format("Y-m-d H:i:s");
             $start_date = Carbon::now()->setTimezone('GMT+8')->subMinutes(10)->format("Y-m-d H:i:s");
 
-            // $start_date = "2023-07-28 12:52:00";
-            // $end_date = "2023-07-28 13:02:00";
+            // $end_date = "2023-07-30 12:28:00";
+            // $start_date = "2023-07-30 12:18:00";
 
             $OGUtils = new OGUtils($sysConfig);
 
             $game_array = $OGUtils->GetGameData($start_date, $end_date);
 
+            // return $game_array;
+
             foreach ($game_array as $item) {
+
                 $billNo = $item['bettingcode'];
                 if ($billNo == '') {
                     continue;
@@ -273,6 +278,8 @@ class OGController extends Controller
                 $VendorId = $item['vendor_id'];
 
                 $user = User::where("OG_User", strtoupper($playerName))->first();
+
+                // return $user;
 
                 if (!isset($user)) continue;
 

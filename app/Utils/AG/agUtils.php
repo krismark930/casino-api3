@@ -45,6 +45,7 @@ class AGUtils {
         $para="cagent=".$this->AG_agent."/\\\\/loginname=".$username."/\\\\/actype=".$tp."/\\\\/password=".$password."/\\\\/dm=".$dm."/\\\\/sid=".$this->AG_agent.date("ymdhis").rand(1000,9999)."/\\\\/lang=1/\\\\/gameType=".$gameType."/\\\\/oddtype=".$oddtype."/\\\\/cur=CNY";
         $params=$crypt->encrypt($para);
         $key=md5($params.$this->md5key);
+        return array("key" => $this->deskey, "params" => $params);
         $url=$this->gciurl."forwardGame.do?params=".$params."&key=".$key;
         return  $url;
     }

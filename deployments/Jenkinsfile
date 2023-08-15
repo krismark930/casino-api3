@@ -7,10 +7,9 @@ pipeline {
         stage('config'){
             steps {
                 echo "${bbranch}";
-                sh "curl -H 'Authorization: token ${githubToken}' -H 'Accept: application/vnd.github.v3.raw' -kLJ -o .env 'https://raw.githubusercontent.com/other-project2/zi-api/main/.env'";
-                sh 'ls -al';
-                echo Branch;
-                echo 'git clone';
+                // sh "curl -H 'Authorization: token ${githubToken}' -H 'Accept: application/vnd.github.v3.raw' -kLJ -o .env 'https://raw.https://github.com/bl-casino/config/main/.env'";
+                // sh 'ls -al';
+                echo 'cat clone';
             }
         }
         stage('build') {

@@ -960,7 +960,7 @@ class AdminAlwaysColorController extends Controller
         }
 
         return response()->json($response, $response['status']);
-    }   
+    }
 
 
     public function getDetailLottery(Request $request) {

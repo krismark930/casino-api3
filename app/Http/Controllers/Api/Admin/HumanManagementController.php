@@ -46,7 +46,8 @@ class HumanManagementController extends Controller
             $date = $request_data["date"] ?? "";
             $platform_type = $request_data["platformType"] ?? "";
             $type = $request_data["type"] ?? "";
-            $user = $request_data["user"] ?? "";
+            $user_name = $request_data["user"] ?? "";
+            $player_name = $request_data["player_name"] ?? "";
             $page_no = $request_data["page_no"] ?? 1;
             $limit = $request_data["limit"] ?? 20;
             $s_time = $date . " 00:00:00";
@@ -54,11 +55,15 @@ class HumanManagementController extends Controller
 
             if ($date == "") {
 
-                $result = WebReportZr::where("playerName", "like", "%$user%");
+                $result = WebReportZr::where("playerName", "like", "%$player_name%");
 
                 if ($platform_type != "") {
                     if ($platform_type == "AGIN") {
-                        $result = $result->where("platformType", "AGIN")->orWhere("platformType", "XIN")->get();
+                        $result = $result->where(function ($query) {
+                            $query->where("platformType", "AGIN")
+                            ->orWhere("platformType", "XIN")
+                            ->orWhere("platformType", "YOPLAY");
+                        })->get();
                     } else {
                         $result = $result->where("platformType", $platform_type)->get();
                     }
@@ -73,13 +78,12 @@ class HumanManagementController extends Controller
                 $response['status'] = STATUS_OK;
 
                 return response()->json($response, $response['status']);
-
             }
 
             $result = WebReportZr::whereBetween("betTime", [$s_time, $e_time]);
 
-            if ($user != "") {
-                $result = $result->where("playerName", "like", "%$user%");
+            if ($user_name != "") {
+                $result = $result->where("playerName", "like", "%$user_name%");
             }
 
             if ($platform_type != "") {
@@ -154,6 +158,7 @@ class HumanManagementController extends Controller
             $date = $request_data["date"] ?? "";
             $type = $request_data["type"] ?? "";
             $user = $request_data["user"] ?? "";
+            $player_name = $request_data["player_name"] ?? "";
             $page_no = $request_data["page_no"] ?? 1;
             $limit = $request_data["limit"] ?? 20;
             $s_time = $date . " 00:00:00";
@@ -161,7 +166,7 @@ class HumanManagementController extends Controller
 
             if ($date == "") {
 
-                $result = WebReportKy::where("Accounts", "like", "%$user%")->get();
+                $result = WebReportZr::where("playerName", "like", "%$player_name%");
 
                 $total_count = count($result);
 
@@ -173,7 +178,6 @@ class HumanManagementController extends Controller
                 $response['status'] = STATUS_OK;
 
                 return response()->json($response, $response['status']);
-
             }
 
             $ky_type = array();

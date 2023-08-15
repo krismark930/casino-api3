@@ -22,6 +22,9 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\PTTransactionCommand::class,
         \App\Console\Commands\MGTransactionCommand::class,
         \App\Console\Commands\SportsCheckoutCommand::class,
+        \App\Console\Commands\OGTokenCommand::class,
+        \App\Console\Commands\OGTransactionCommand::class,
+        \App\Console\Commands\KYTransactionCommand::class,
     ];
 
     /**

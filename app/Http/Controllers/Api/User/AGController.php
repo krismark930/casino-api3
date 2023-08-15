@@ -88,7 +88,11 @@ class AGController extends Controller
                 ->get();
 
             foreach ($result as $item) {
-                $item["ZH_Logo_File"] = "http://pic.pj6678.com/" . $item["ZH_Logo_File"];
+                if (!is_file(storage_path("app/public/upload/zr_images/").$item["ZH_Logo_File"])) {
+                    $item["ZH_Logo_File"] = "http://pic.pj6678.com/".$item["ZH_Logo_File"];
+                } else {
+                    $item["ZH_Logo_File"] = env('APP_URL').Storage::url("upload/zr_images/").$item["ZH_Logo_File"];
+                }
             }
 
             $response["data"] = $result;
@@ -1718,8 +1722,8 @@ class AGController extends Controller
                     $GameType = $item["gametype"];
                     $netAmount = $item["dst_amount"];
                     $srcAmount = $item["src_amount"];
-                    $betTime = date("Y-m-d H:i:s", $item["billtime"]);
-                    $recalcuTime = date("Y-m-d H:i:s", $item["reckontime"]);
+                    $betTime = date("Y-m-d H:i:s", $item["billtime"] + 3600);
+                    $recalcuTime = date("Y-m-d H:i:s", $item["reckontime"] + 3600);
                     $betAmount = $item["account"];
                     $validBetAmount = $item["cus_account"];
                     $cost = $item["fishcost"];
