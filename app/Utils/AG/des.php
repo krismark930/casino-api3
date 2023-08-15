@@ -18,8 +18,9 @@ class DES {
 
         $encrypted = openssl_encrypt($input, "des-ecb", $this->key);
 
-        if ($encrypted === false) {
+        if ($encrypted == false) {
             $error = openssl_error_string();
+            return $error;
             $t=date("Y-m-d H:i:s");
             $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/ssl_".date("Ymd").".txt";
             $f=fopen($tmpfile,'a');
