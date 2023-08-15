@@ -21,9 +21,9 @@ class DES
             $iv = openssl_random_pseudo_bytes($iv_size);
         }
 
-        // $encrypted = openssl_encrypt($input, "DES-ECB", $this->key, OPENSSL_RAW_DATA, $iv);
+        $encrypted = openssl_encrypt($input, "DES-ECB", $this->key, OPENSSL_RAW_DATA, $iv);
 
-        $encrypted = openssl_encrypt($input, "DES-ECB", $this->key, OPENSSL_ZERO_PADDING, $iv);
+        // $encrypted = openssl_encrypt($input, "DES-ECB", $this->key, OPENSSL_ZERO_PADDING, $iv);
         
 
         if ($encrypted == false) {
