@@ -1,4 +1,4 @@
-FROM tangramor/nginx-php8-fpm:php8.2.2_node19.6.0
+FROM tangramor/nginx-php8-fpm:php8.1.13_node19.2.0
 
 LABEL name="biyong admin@biyong.com"
 

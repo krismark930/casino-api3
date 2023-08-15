@@ -95,7 +95,6 @@ class AGUtils
             $url = $this->giurl . "doBusiness.do?params=" . $params . "&key=" . $key;
             unset($xmlcode);
             $xmlcode = $this->getUrl($url);
-
             $t = date("Y-m-d H:i:s");
             $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/tmp/ag_" . date("Ymd") . ".txt";
             $f = fopen($tmpfile, 'a');
