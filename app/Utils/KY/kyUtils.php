@@ -46,7 +46,7 @@ class KYUtils {
         $jsonStr = $this->getUrl_KY($url);
         $t=date("Y-m-d H:i:s");
         if($jsonStr<>""){
-            $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/ky_".date("Ymd").".txt";
+            $tmpfile=$_SERVER['DOCUMENT_ROOT']."/storage/tmp/ky_".date("Ymd").".txt";
             $f=fopen($tmpfile,'a');
             fwrite($f,$this->KY_CJ_Time."\r\n".$jsonStr."\r\n");
             fclose($f);
@@ -123,7 +123,7 @@ class KYUtils {
         $url=$this->apiUrl.'?agent='.$this->agent.'&timestamp='.$timestamp.'&param='.$param.'&key='.$key;
         $jsonStr=$this->getUrl_KY($url);
         $time=date("Y-m-d H:i:s");
-        $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/ky_".date("Ymd").".txt";
+        $tmpfile=$_SERVER['DOCUMENT_ROOT']."/storage/tmp/ky_".date("Ymd").".txt";
         $f=fopen($tmpfile,'a');
         if($tp=='IN'){
             fwrite($f,$time."转入\r\n会员号:$username  金额:$Gold  定单号:$orderid\r\n$jsonStr\r\n\r\n");

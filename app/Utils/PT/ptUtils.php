@@ -35,7 +35,7 @@ class PTUtils
         $result = $this->getResult_PT($xmlcode);
         if ($result['info'] <> '0') {
             $t = date("Y-m-d H:i:s");
-            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/tmp/pt_" . date("Ymd") . ".txt";
+            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/storage/tmp/pt_" . date("Ymd") . ".txt";
             $f = fopen($tmpfile, 'a');
             fwrite($f, $t . "\r\n会员开户\r\n$xmlcode\r\n\r\n");
             fclose($f);
@@ -81,7 +81,7 @@ class PTUtils
         $xmlcode = $this->getUrl_PT($url);
 
         $t = date("Y-m-d H:i:s");
-        $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/tmp/PT_" . date("Ymd") . ".txt";
+        $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/storage/tmp/PT_" . date("Ymd") . ".txt";
         $f = fopen($tmpfile, 'a');
         fwrite($f, "预转账$t\r\n会员号:$username  金额:$Gold  定单号:$billno\r\n$xmlcode\r\n\r\n");
         fclose($f);
@@ -96,7 +96,7 @@ class PTUtils
             $xmlcode = $this->getUrl_PT($url);
 
             $t = date("Y-m-d H:i:s");
-            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/tmp/PT_" . date("Ymd") . ".txt";
+            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/storage/tmp/PT_" . date("Ymd") . ".txt";
             $f = fopen($tmpfile, 'a');
             fwrite($f, "确认$t\r\n会员号:$username  金额:" . $Gold . "  定单号:$billno\r\n$xmlcode\r\n\r\n");
             fclose($f);
