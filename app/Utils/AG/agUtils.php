@@ -3,6 +3,7 @@
 namespace App\Utils\AG;
 
 use App\Utils\AG\des;
+use Illuminate\Support\Facades\Storage;
 
 class AGUtils
 {
@@ -35,7 +36,10 @@ class AGUtils
         $result = $this->getResult($xmlcode);
         if ($result['info'] != '0') {
             $t = date("Y-m-d H:i:s");
-            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/tmp/ag_" . date("Ymd") . ".txt";
+            if (!Storage::exists('public/tmp')) {
+                Storage::makeDirectory("public/tmp");
+            }
+            $tmpfile = storage_path('app/public/tmp/ag_') . date("Ymd") . ".txt";
             $f = fopen($tmpfile, 'a');
             fwrite($f, $t . "\r\n会员开户\r\n$xmlcode\r\n\r\n");
             fclose($f);
@@ -82,7 +86,10 @@ class AGUtils
         $xmlcode = $this->getUrl($url);
 
         $t = date("Y-m-d H:i:s");
-        $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/tmp/ag_" . date("Ymd") . ".txt";
+        if (!Storage::exists('public/tmp')) {
+            Storage::makeDirectory("public/tmp");
+        }
+        $tmpfile = storage_path('app/public/tmp/ag_') . date("Ymd") . ".txt";
         $f = fopen($tmpfile, 'a');
         fwrite($f, "预转账$t\r\n会员号:$username  金额:$Gold  定单号:$billno\r\n$xmlcode\r\n\r\n");
         fclose($f);
@@ -95,12 +102,6 @@ class AGUtils
             $url = $this->giurl . "doBusiness.do?params=" . $params . "&key=" . $key;
             unset($xmlcode);
             $xmlcode = $this->getUrl($url);
-            $t = date("Y-m-d H:i:s");
-            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/tmp/ag_" . date("Ymd") . ".txt";
-            $f = fopen($tmpfile, 'a');
-            fwrite($f, "确认$t\r\n会员号:$username  金额:" . $Gold . "  定单号:$billno\r\n$xmlcode\r\n\r\n");
-            fclose($f);
-
             unset($result);
             $result = $this->getResult($xmlcode);
         }

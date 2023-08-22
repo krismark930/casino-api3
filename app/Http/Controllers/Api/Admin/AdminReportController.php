@@ -7,13 +7,13 @@ use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use DB;
 use App\Models\Kaguan;
 use App\Models\Kamem;
 use App\Models\KaTan;
 use App\Models\MacaoKatan;
 use App\Models\Kakithe;
 use App\Models\MacaoKakithe;
+use Illuminate\Support\Facades\DB;
 
 class AdminReportController extends Controller
 {

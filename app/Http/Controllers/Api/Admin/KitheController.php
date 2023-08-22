@@ -3129,7 +3129,7 @@ class KitheController extends Controller
                     if ($gold !== 0) {
                         $previousAmount = Utils::GetField($username, 'Money');
 
-                        $q1 = User::where("UserName", $username)->decrement('Money', $gold);
+                        $q1 = User::where("UserName", $username)->decrement('Money', $gold)->decrement('withdrawal_condition', $gold);
 
                         if ($q1 == 1) {
 
@@ -6886,7 +6886,7 @@ class KitheController extends Controller
                     if ($gold !== 0) {
                         $previousAmount = Utils::GetField($username, 'Money');
 
-                        $q1 = User::where("UserName", $username)->decrement('Money', $gold);
+                        $q1 = User::where("UserName", $username)->decrement('Money', $gold)->decrement('withdrawal_condition', $gold);
 
                         if ($q1 == 1) {
 

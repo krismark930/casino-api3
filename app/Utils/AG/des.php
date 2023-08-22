@@ -2,6 +2,8 @@
 
 namespace App\Utils\AG;
 
+use Illuminate\Support\Facades\Storage;
+
 class DES
 {
 
@@ -28,7 +30,10 @@ class DES
             $error = openssl_error_string();
             // return $error;
             $t = date("Y-m-d H:i:s");
-            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/tmp/ssl_" . date("Ymd") . ".txt";
+            if (!Storage::exists('public/tmp')) {
+                Storage::makeDirectory("public/tmp");
+            }
+            $tmpfile = storage_path('app/public/tmp/ssl_') . date("Ymd") . ".txt";
             $f = fopen($tmpfile, 'a');
             fwrite($f, $t . "\r\nSSL_ERROR\r\n$error\r\n\r\n");
             fclose($f);

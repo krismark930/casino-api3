@@ -3,6 +3,7 @@
 namespace App\Utils\BBIN;
 
 use App\Utils\BBIN\des;
+use Illuminate\Support\Facades\Storage;
 
 class BBINUtils
 {
@@ -34,7 +35,10 @@ class BBINUtils
 		$result = $this->getResult_BBIN($xmlcode);
 		if ($result['info'] <> '0') {
 			$t = date("Y-m-d H:i:s");
-			$tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/storage/tmp/bbin_" . date("Ymd") . ".txt";
+            if (!Storage::exists('public/tmp')) {
+                Storage::makeDirectory("public/tmp");
+            }
+            $tmpfile = storage_path('app/public/tmp/bbin_') . "/tmp/bbin_" . date("Ymd") . ".txt";
 			$f = fopen($tmpfile, 'a');
 			fwrite($f, $t . "\r\n会员开户\r\n$xmlcode\r\n\r\n");
 			fclose($f);
@@ -81,7 +85,10 @@ class BBINUtils
 		$xmlcode = $this->getUrl_BBIN($url);
 
 		$t = date("Y-m-d H:i:s");
-		$tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/storage/tmp/bbin_" . date("Ymd") . ".txt";
+		if (!Storage::exists('public/tmp')) {
+			Storage::makeDirectory("public/tmp");
+		}
+		$tmpfile = storage_path('app/public/tmp/bbin_'). date("Ymd") . ".txt";
 		$f = fopen($tmpfile, 'a');
 		fwrite($f, "预转账$t\r\n会员号:$username  金额:$Gold  定单号:$billno\r\n$xmlcode\r\n\r\n");
 		fclose($f);
@@ -96,7 +103,10 @@ class BBINUtils
 			$xmlcode = $this->getUrl_BBIN($url);
 
 			$t = date("Y-m-d H:i:s");
-			$tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/storage/tmp/bbin_" . date("Ymd") . ".txt";
+            if (!Storage::exists('public/tmp')) {
+                Storage::makeDirectory("public/tmp");
+            }
+            $tmpfile = storage_path('app/public/tmp/bbin_') . date("Ymd") . ".txt";
 			$f = fopen($tmpfile, 'a');
 			fwrite($f, "确认$t\r\n会员号:$username  金额:" . $Gold . "  定单号:$billno\r\n$xmlcode\r\n\r\n");
 			fclose($f);

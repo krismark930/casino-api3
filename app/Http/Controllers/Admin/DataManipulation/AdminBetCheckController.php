@@ -10,6 +10,7 @@ use App\Models\Web\Report;
 use App\Models\Web\System;
 use App\Models\User;
 use App\Models\GUser;
+use Exception;
 
 class AdminBetCheckController extends Controller
 {
@@ -220,7 +221,8 @@ class AdminBetCheckController extends Controller
             try {
               User::where('UserName', $username)
                 ->where('Pay_Type', 1)
-                ->increment('Money', $betscore);
+                ->increment('Money', $betscore)
+                ->increment('withdrawal_condition', $betscore);
               $this->MoneyToSsc($username);
             } catch (Exception $e) {
               return response()->json('操作失败11!', 500);
@@ -229,7 +231,8 @@ class AdminBetCheckController extends Controller
             try {
               User::where('UserName', $username)
                 ->where('Pay_Type', 1)
-                ->decrement('Money', $m_result);
+                ->decrement('Money', $m_result)
+                ->increment('withdrawal_condition', $betscore);
               $this->MoneyToSsc($username);
             } catch(Exception $e) {
               return response()->json('操作失败22!', 500);

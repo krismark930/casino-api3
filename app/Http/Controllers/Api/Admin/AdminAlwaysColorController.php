@@ -367,6 +367,7 @@ class AdminAlwaysColorController extends Controller
                     //返还金额
                     $user = User::find($user_id);
                     $user->Money = $new_money;
+                    $user->withdrawal_condition = $user->withdrawal_condition + $bet_money;
                     $user->save();
 
                     DB::table('order_lottery as o')

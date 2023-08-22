@@ -521,6 +521,7 @@ class UserController extends Controller {
             $user["inviter_id"] = $inviter_id;
             $user["Credit"] = 0;
             $user["Money"] = 0;
+            $user["withdrawal_condition"] = 0;
             $user["Alias"] = $alias ?? "";
             $user["Sports"] = $sports;
             $user["Lottery"] = $lottery;

@@ -366,6 +366,16 @@ class SportController extends Controller
 
                     if ($q1 == 1 || $cash == 0) {
 
+                        $user = User::where("UserName", $username)->first();
+
+                        $withdrawal_condition = $user["withdrawal_condition"];
+
+                        $new_withdrawal_condition = $withdrawal_condition - $betscore;
+
+                        $user->withdrawal_condition = $new_withdrawal_condition;
+
+                        $user->save();
+
                         $balance = Utils::GetField($username, 'Money');
 
                         $user_id = Utils::GetField($username, 'id');
@@ -3021,10 +3031,10 @@ class SportController extends Controller
                     $m_result = $rrow['M_Result'];
                     if ($rrow['Pay_Type'] == 1) { //结算之后的现金返回 - Cash back after settlement
                         if ($m_result == '') {
-                            User::where('UserName', $username)->where('Pay_Type', 1)->increment('Money', $betscore) or die("操作失败11!");
+                            User::where('UserName', $username)->where('Pay_Type', 1)->increment('Money', $betscore)->increment('withdrawal_condition', $betscore);
                             Utils::MoneyToSsc($username);
                         } else {
-                            User::where('UserName', $username)->where('Pay_Type', 1)->decrement('Money', $m_result) or die("操作失败22!");
+                            User::where('UserName', $username)->where('Pay_Type', 1)->decrement('Money', $m_result);
                             Utils::MoneyToSsc($username);
                         }
                     }
@@ -3054,7 +3064,7 @@ class SportController extends Controller
                     if ($rrow['Pay_Type'] == 1) { //结算之后的现金返回
                         if ($rrow['Checked'] == 1) {
                             $cash = $betscore + $m_result;
-                            User::where('UserName', $username)->where('Pay_Type', 1)->decrement('Money', $cash) or die("操作失败1!");
+                            User::where('UserName', $username)->where('Pay_Type', 1)->decrement('Money', $cash)->decrement('withdrawal_condition', $betscore);
                             Utils::MoneyToSsc($username);
                         }
                     }

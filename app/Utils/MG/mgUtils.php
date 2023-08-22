@@ -3,15 +3,16 @@
 namespace App\Utils\MG;
 
 use App\Utils\MG\des;
+use Illuminate\Support\Facades\Storage;
 
 class MGUtils
 {
 
-    var $MG_agent;
-    var $md5key_MG;
-    var $deskey_MG;
-    var $giurl_MG;
-    var $gciurl_MG;
+    public $MG_agent;
+    public $md5key_MG;
+    public $deskey_MG;
+    public $giurl_MG;
+    public $gciurl_MG;
     public function __construct($row)
     {
         $this->MG_agent = env('MG_AGENT');
@@ -32,9 +33,12 @@ class MGUtils
         // return $url;
         $xmlcode = $this->getUrl_MG($url);
         $result = $this->getResult_MG($xmlcode);
-        if ($result['info'] <> '0') {
+        if ($result['info'] != '0') {
             $t = date("Y-m-d H:i:s");
-            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/storage/tmp/mg_" . date("Ymd") . ".txt";
+            if (!Storage::exists('public/tmp')) {
+                Storage::makeDirectory("public/tmp");
+            }
+            $tmpfile = storage_path('app/public/tmp/mg_') . date("Ymd") . ".txt";
             $f = fopen($tmpfile, 'a');
             fwrite($f, $t . "\r\n会员开户\r\n$xmlcode\r\n\r\n");
             fclose($f);
@@ -49,7 +53,7 @@ class MGUtils
         $params = $crypt->encrypt($para);
         $key = md5($params . $this->md5key_MG);
         $url = $this->gciurl_MG . "forwardGame.do?params=" . $params . "&key=" . $key;
-        return  $url;
+        return $url;
     }
 
     function getMoney_MG($username, $password, $tp = 1)
@@ -62,7 +66,7 @@ class MGUtils
         $url = $this->giurl_MG . "doBusiness.do?params=" . $params . "&key=" . $key;
         $xmlcode = $this->getUrl_MG($url);
         $result = $this->getResult_MG($xmlcode);
-        return  intval($result['info']);
+        return intval($result['info']);
     }
 
     // d存款 w提款 vd VIP存款 vw VIP提款
@@ -83,12 +87,13 @@ class MGUtils
         $xmlcode = $this->getUrl_MG($url);
 
         $t = date("Y-m-d H:i:s");
-        $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/storage/tmp/MG_" . date("Ymd") . ".txt";
+        if (!Storage::exists('public/tmp')) {
+            Storage::makeDirectory("public/tmp");
+        }
+        $tmpfile = storage_path('app/public/tmp/MG_') . date("Ymd") . ".txt";
         $f = fopen($tmpfile, 'a');
         fwrite($f, "预转账$t\r\n会员号:$username  金额:$Gold  定单号:$billno\r\n$xmlcode\r\n\r\n");
         fclose($f);
-
-
 
         $result = $this->getResult_MG($xmlcode);
         //print_r($result);exit;
@@ -101,7 +106,10 @@ class MGUtils
             $xmlcode = $this->getUrl_MG($url);
 
             $t = date("Y-m-d H:i:s");
-            $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/storage/tmp/MG_" . date("Ymd") . ".txt";
+            if (!Storage::exists('public/tmp')) {
+                Storage::makeDirectory("public/tmp");
+            }
+            $tmpfile = storage_path('app/public/tmp/MG_') . date("Ymd") . ".txt";
             $f = fopen($tmpfile, 'a');
             fwrite($f, "确认$t\r\n会员号:$username  金额:" . $Gold . "  定单号:$billno\r\n$xmlcode\r\n\r\n");
             fclose($f);
@@ -122,15 +130,15 @@ class MGUtils
         $key = md5($params . $this->md5key_MG);
         $url = $this->giurl_MG . "doBusiness.do?params=" . $params . "&key=" . $key;
         $xmlcode = $this->getUrl_MG($url);
-        return  $this->getResult_MG($xmlcode);
+        return $this->getResult_MG($xmlcode);
     }
 
     function getUrl_MG($url)
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);  //超时60秒
-        curl_setopt($ch, CURLOPT_USERAGENT, ' WEB_LIB_GI_' . $this->MG_agent);  //设置浏览器类型，含代理号
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30); //超时60秒
+        curl_setopt($ch, CURLOPT_USERAGENT, ' WEB_LIB_GI_' . $this->MG_agent); //设置浏览器类型，含代理号
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $html = curl_exec($ch);
@@ -154,23 +162,23 @@ class MGUtils
     function getContent_MG($sourceStr, $star, $end, $flag)
     {
         switch ($flag) {
-            case 0:  //取指定字符前面的
+            case 0: //取指定字符前面的
                 echo strrpos($sourceStr, $end);
                 echo '-----' . strlen($end);
                 $content = substr($sourceStr, 0, strrpos($sourceStr, $end) + strlen($end));
                 break;
-            case 1:  //取指定字符之间的,不包括指定字符
+            case 1: //取指定字符之间的,不包括指定字符
                 $content = substr($sourceStr, strpos($sourceStr, $star) + strlen($star));
                 $content = substr($content, 0, strpos($content, $end));
                 break;
-            case 2:  //取指定字符之间的，包括指定字符
+            case 2: //取指定字符之间的，包括指定字符
                 $content = strstr($sourceStr, $star);
                 $content = substr($content, 0, strpos($content, $end) + strlen($end));
                 break;
-            case 3:  //取指定字符之后的，不包括指定字符
+            case 3: //取指定字符之后的，不包括指定字符
                 $content = substr($sourceStr, strrpos($sourceStr, $star) + strlen($star));
                 break;
-            case 4:  //取指定字符之后的，包括指定字符
+            case 4: //取指定字符之后的，包括指定字符
                 $content = strstr($sourceStr, $star);
                 break;
         }
