@@ -2914,6 +2914,12 @@ class UserManagementController extends Controller
             $operation_type = $_REQUEST["operation_type"] ?? "";
             $more_money = $_REQUEST["more_money"] ?? "";
 
+            $condition_multiplier = $_REQUEST["condition_multiplier"];
+            $withdrawal_condition = $_REQUEST["withdrawal_condition"];
+
+            $withdraw_condition_type = $_REQUEST["withdraw_condition_type"];
+            $withdraw_more_money = $_REQUEST["withdraw_more_money"];
+
             $user = User::find($id);
 
             $money = $user["Money"];
@@ -2927,7 +2933,7 @@ class UserManagementController extends Controller
             $date = date("Y-m-d");
             $datetime = date("Y-m-d H:i:s");
 
-            $mysql = "update web_member_data set OpenType='$type',fanshui='$fanshui',fanshui_cp='$fanshui_cp',fanshui_zr='$fanshui_zr',fanshui_dz='$fanshui_dz',fanshui_ky='$fanshui_ky',VIP='$VIP',Bank_Address='$Bank_Address',Bank_Account='$Bank_Account',Notes='$Notes',question='$question',answer='$answer',Credit='$credit' where id='$id'";
+            $mysql = "update web_member_data set OpenType='$type',fanshui='$fanshui',fanshui_cp='$fanshui_cp',fanshui_zr='$fanshui_zr',fanshui_dz='$fanshui_dz',fanshui_ky='$fanshui_ky',VIP='$VIP',Bank_Address='$Bank_Address',Bank_Account='$Bank_Account',Notes='$Notes',question='$question',answer='$answer',Credit='$credit',condition_multiplier='$condition_multiplier' where id='$id'";
 
             DB::select($mysql);
 
@@ -3045,6 +3051,111 @@ class UserManagementController extends Controller
                 $user["Money"] = $newmoney;
                 $user->save();
             }
+
+            $Order_Code = 'TK' . date("YmdHis", time() + 12 * 3600) . mt_rand(1000, 9999);
+            $sys_800 = new Sys800;
+
+            if ($withdraw_more_money != "" && $withdraw_condition_type == "1") {
+
+                $newmoney = (int)$withdrawal_condition + (int)$withdraw_more_money;
+
+                $data = array(
+                    "Payway" => "W",
+                    "Gold" => $withdraw_more_money,
+                    "previousAmount" => $withdrawal_condition,
+                    "currentAmount" => $newmoney,
+                    "AddDate" => $current_time,
+                    "Type" => "S",
+                    "UserName" => $username,
+                    "Agents" => $agent,
+                    "World" => $world,
+                    "Corprator" => $corprator,
+                    "Super" => $super,
+                    "Admin" => $admin,
+                    "CurType" => "RMB",
+                    "Name" => $alias,
+                    "User" => $loginname,
+                    "Checked" => 1,
+                    "Date" => $current_time,
+                    "Order_Code" => $Order_Code,
+                    "created_at" => $current_time,
+                    "Notes" => "洗码金额加款",
+                );
+
+                $sys_800->create($data);
+
+                $user["withdrawal_condition"] = $newmoney;
+                $user->save();
+
+                $new_log = new MoneyLog();
+                $new_log->user_id = $user["id"];
+                $new_log->order_num = $Order_Code;
+                $new_log->about = $user["UserName"]."洗码金额加款";
+                $new_log->update_time = $current_time;
+                $new_log->type = $user["UserName"]."洗码金额加款";
+                $new_log->order_value = $withdraw_more_money;
+                $new_log->assets = $withdrawal_condition;
+                $new_log->balance = $newmoney;
+                $new_log->save();
+            }
+
+            $Order_Code = 'CK' . date("YmdHis", time() + 12 * 3600) . mt_rand(1000, 9999);
+
+            if ($withdraw_more_money != "" && $withdraw_condition_type == "2") {
+
+                $newmoney = (int)$withdrawal_condition - (int)$withdraw_more_money;
+
+                $data = array(
+                    "Payway" => "W",
+                    "Gold" => $withdraw_more_money,
+                    "previousAmount" => $withdrawal_condition,
+                    "currentAmount" => $newmoney,
+                    "AddDate" => $current_time,
+                    "Type" => "T",
+                    "UserName" => $username,
+                    "Agents" => $agent,
+                    "World" => $world,
+                    "Corprator" => $corprator,
+                    "Super" => $super,
+                    "Admin" => $admin,
+                    "CurType" => "RMB",
+                    "Name" => $alias,
+                    "User" => $login_user["UserName"],
+                    "Date" => $current_time,
+                    "Order_Code" => $Order_Code,
+                    "created_at" => $current_time,
+                    "Checked" => 1,
+                    "Notes" => "洗码金额扣款",
+                );
+
+                $sys_800->create($data);
+
+                $new_log = new MoneyLog();
+                $new_log->user_id = $user["id"];
+                $new_log->order_num = $Order_Code;
+                $new_log->about = $user["UserName"]."洗码金额扣款";
+                $new_log->update_time = $current_time;
+                $new_log->type = $user["UserName"]."洗码金额扣款";
+                $new_log->order_value = $withdraw_more_money;
+                $new_log->assets = $withdrawal_condition;
+                $new_log->balance = $newmoney;
+                $new_log->save();
+
+                $user["withdrawal_condition"] = $newmoney;
+                $user->save();
+            }
+
+            $ip_addr = Utils::get_ip();
+
+            $web_mem_log_data = new WebMemLogData();
+
+            $web_mem_log_data->UserName = $loginname;
+            $web_mem_log_data->LoginTime = now();
+            $web_mem_log_data->Context = "会员更新";
+            $web_mem_log_data->LoginIP = $ip_addr;
+            $web_mem_log_data->level = 2;
+
+            $web_mem_log_data->save();
 
             $response['message'] = "Member data updated successfully!";
             $response['success'] = TRUE;

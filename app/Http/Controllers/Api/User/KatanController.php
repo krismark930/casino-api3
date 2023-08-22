@@ -978,6 +978,8 @@ class KatanController extends Controller
 
                     $user["Money"] = $assets - $sum_m;
 
+                    $user["withdrawal_condition"] = $user["withdrawal_condition"] - $sum_m <= 0 ? 0 : $user["withdrawal_condition"] - $sum_m;
+
                     if ($user->save()) {
 
                         $money_log = new MoneyLog();
@@ -1152,6 +1154,8 @@ class KatanController extends Controller
             $datetime = date("Y-m-d H:i:s");
 
             $user["Money"] = $assets - $sum_m;
+
+            $user["withdrawal_condition"] = $user["withdrawal_condition"] - $sum_m <= 0 ? 0 : $user["withdrawal_condition"] - $sum_m;
 
             if ($user->save()) {
 
@@ -1359,6 +1363,8 @@ class KatanController extends Controller
                 $datetime = date("Y-m-d H:i:s");
 
                 $user["Money"] = $assets - $sum_m;
+
+                $user["withdrawal_condition"] = $user["withdrawal_condition"] - $sum_m <= 0 ? 0 : $user["withdrawal_condition"] - $sum_m;
 
                 if ($user->save()) {
 
@@ -1749,6 +1755,8 @@ class KatanController extends Controller
 
             $user["Money"] = $assets - $sum_m;
 
+            $user["withdrawal_condition"] = $user["withdrawal_condition"] - $sum_m <= 0 ? 0 : $user["withdrawal_condition"] - $sum_m;
+
             if ($user->save()) {
 
                 $money_log = new MoneyLog();
@@ -2034,6 +2042,8 @@ class KatanController extends Controller
 
                 $user["Money"] = $assets - $sum_m;
 
+                $user["withdrawal_condition"] = $user["withdrawal_condition"] - $sum_m <= 0 ? 0 : $user["withdrawal_condition"] - $sum_m;
+
                 if ($user->save()) {
 
                     $money_log = new MoneyLog();
@@ -2306,6 +2316,8 @@ class KatanController extends Controller
 
                 $user["Money"] = $assets - $sum_m;
 
+                $user["withdrawal_condition"] = $user["withdrawal_condition"] - $sum_m <= 0 ? 0 : $user["withdrawal_condition"] - $sum_m;
+
                 if ($user->save()) {
 
                     $money_log = new MoneyLog();
@@ -2523,6 +2535,8 @@ class KatanController extends Controller
                 $datetime = date("Y-m-d H:i:s");
 
                 $user["Money"] = $assets - $sum_m;
+
+                $user["withdrawal_condition"] = $user["withdrawal_condition"] - $sum_m <= 0 ? 0 : $user["withdrawal_condition"] - $sum_m;
 
                 if ($user->save()) {
 
@@ -3749,6 +3763,8 @@ class KatanController extends Controller
 
                     $user["Money"] = $assets - $sum_m;
 
+                    $user["withdrawal_condition"] = $user["withdrawal_condition"] - $sum_m <= 0 ? 0 : $user["withdrawal_condition"] - $sum_m;
+
                     if ($user->save()) {
 
                         $money_log = new MoneyLog();
@@ -3923,6 +3939,8 @@ class KatanController extends Controller
             $datetime = date("Y-m-d H:i:s");
 
             $user["Money"] = $assets - $sum_m;
+
+            $user["withdrawal_condition"] = $user["withdrawal_condition"] - $sum_m <= 0 ? 0 : $user["withdrawal_condition"] - $sum_m;
 
             if ($user->save()) {
 
@@ -4130,6 +4148,8 @@ class KatanController extends Controller
                 $datetime = date("Y-m-d H:i:s");
 
                 $user["Money"] = $assets - $sum_m;
+
+                $user["withdrawal_condition"] = $user["withdrawal_condition"] - $sum_m <= 0 ? 0 : $user["withdrawal_condition"] - $sum_m;
 
                 if ($user->save()) {
 
@@ -4520,6 +4540,8 @@ class KatanController extends Controller
 
             $user["Money"] = $assets - $sum_m;
 
+            $user["withdrawal_condition"] = $user["withdrawal_condition"] - $sum_m <= 0 ? 0 : $user["withdrawal_condition"] - $sum_m;
+
             if ($user->save()) {
 
                 $money_log = new MoneyLog();
@@ -4805,6 +4827,8 @@ class KatanController extends Controller
 
                 $user["Money"] = $assets - $sum_m;
 
+                $user["withdrawal_condition"] = $user["withdrawal_condition"] - $sum_m <= 0 ? 0 : $user["withdrawal_condition"] - $sum_m;
+
                 if ($user->save()) {
 
                     $money_log = new MoneyLog();
@@ -5077,6 +5101,8 @@ class KatanController extends Controller
 
                 $user["Money"] = $assets - $sum_m;
 
+                $user["withdrawal_condition"] = $user["withdrawal_condition"] - $sum_m <= 0 ? 0 : $user["withdrawal_condition"] - $sum_m;
+
                 if ($user->save()) {
 
                     $money_log = new MoneyLog();
@@ -5294,6 +5320,8 @@ class KatanController extends Controller
                 $datetime = date("Y-m-d H:i:s");
 
                 $user["Money"] = $assets - $sum_m;
+
+                $user["withdrawal_condition"] = $user["withdrawal_condition"] - $sum_m <= 0 ? 0 : $user["withdrawal_condition"] - $sum_m;
 
                 if ($user->save()) {
 

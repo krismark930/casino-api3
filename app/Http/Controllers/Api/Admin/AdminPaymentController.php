@@ -3,27 +3,28 @@
 namespace App\Http\Controllers\api\admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\WebPaymentData;
+use App\Models\WebSystemData;
+use App\Models\Web\MoneyLog;
+use App\Models\Web\Sys800;
+use App\Models\Web\SysConfig;
+use App\Models\Web\WebMemLogData;
+use App\Utils\Utils;
+use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
-use App\Models\WebSystemData;
-use App\Models\User;
-use App\Models\Web\Sys800;
-use App\Utils\Utils;
-use App\Models\Web\MoneyLog;
-use App\Models\Web\SysConfig;
-use App\Models\WebPaymentData;
-use App\Models\Web\WebMemLogData;
 
 class AdminPaymentController extends Controller
 {
-    public function getCashSystem(Request $request) {
+    public function getCashSystem(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -63,21 +64,21 @@ class AdminPaymentController extends Controller
 
             $role = "";
 
-            switch ($lv){
+            switch ($lv) {
                 case 'M':
-                    $role='Admin';
-                    break;  
+                    $role = 'Admin';
+                    break;
                 case 'A':
-                    $role='Super';
+                    $role = 'Super';
                     break;
                 case 'B':
-                    $role='Corprator';
+                    $role = 'Corprator';
                     break;
                 case 'C':
-                    $role='World';
+                    $role = 'World';
                     break;
                 case 'D':
-                    $role='Agents';
+                    $role = 'Agents';
                     break;
             }
 
@@ -100,11 +101,11 @@ class AdminPaymentController extends Controller
                 $result = $result->where("web_sys800_data.Type", $rtype)->where("web_sys800_data.Type2", 1);
             } else if ($rtype == "") {
                 $result = $result->where("web_sys800_data.Type2", "!=", 3);
-            } else if($rtype = "F") {
+            } else if ($rtype = "F") {
                 $result = $result->where("web_sys800_data.Type2", 2);
-            } else if($rtype == "Q") {
+            } else if ($rtype == "Q") {
                 $result = $result->where("web_sys800_data.Cancel", 1);
-            } else if($rtype = "C") {
+            } else if ($rtype = "C") {
                 $result = $result->where("web_sys800_data.Checked", 0);
             }
 
@@ -114,7 +115,7 @@ class AdminPaymentController extends Controller
                 ->offset(($page_no - 1) * $limit)
                 ->take($limit)->orderBy("ID", "desc")->get();
 
-            foreach($result as $item) {
+            foreach ($result as $item) {
                 if ($item->Type == "S") {
                     $item->status = "存入";
                     $item->type = "存入";
@@ -124,7 +125,7 @@ class AdminPaymentController extends Controller
                 }
 
                 if ($item->Cancel == 1) {
-                    $item->status = "<font color='red'>".$item->status."已拒绝</font>";
+                    $item->status = "<font color='red'>" . $item->status . "已拒绝</font>";
                 }
 
                 if ($item->Type2 == 1) {
@@ -143,20 +144,20 @@ class AdminPaymentController extends Controller
                         $sys_config["USDT"] = 1.0000;
                     }
                     $usdt_number = abs($item->Gold) / $sys_config["USDT"];
-                    $item->BankInfo = "USDT汇率:".$sys_config["USDT"]."<br>".$item->Bank_Account."<br>".number_format($usdt_number,2);
+                    $item->BankInfo = "USDT汇率:" . $sys_config["USDT"] . "<br>" . $item->Bank_Account . "<br>" . number_format($usdt_number, 2);
                 } else {
-                    if(strtoupper($item->Bank)=='USDT' && $item->Type == 'T') {
-                        $item->BankInfo = $item->Bank_Address."<br>".$item->Bank_Account;
-                    }else{
-                        $item->BankInfo = $item->Bank."<br>".$item->Bank_Address."<br>".$item->Bank_Account;
-                    }                    
+                    if (strtoupper($item->Bank) == 'USDT' && $item->Type == 'T') {
+                        $item->BankInfo = $item->Bank_Address . "<br>" . $item->Bank_Account;
+                    } else {
+                        $item->BankInfo = $item->Bank . "<br>" . $item->Bank_Address . "<br>" . $item->Bank_Account;
+                    }
                 }
             }
 
             $response["data"] = $result;
             $response["total_count"] = $total_count;
             $response['message'] = "Cash Data fatched successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -167,10 +168,11 @@ class AdminPaymentController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function reviewCash(Request $request) {
+    public function reviewCash(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -205,21 +207,66 @@ class AdminPaymentController extends Controller
 
             if ($sys_800["Type"] == "S") {
                 $username = $sys_800["UserName"];
-                $previousAmount = Utils::GetField($username,'Money');
+                $previousAmount = Utils::GetField($username, 'Money');
                 $user_id = Utils::GetField($username, "id");
                 Utils::ProcessUpdate($username);
 
-                $currentAmount = $previousAmount + (int)$gold;
+                $currentAmount = $previousAmount + (int) $gold;
+
+                $user = User::where("UserName", $username)->first();
+                $withdrawal_condition = $user["withdrawal_condition"];
+                $condition_multiplier = $user["condition_multiplier"];
+                $agent = $user["Agents"];
+                $world = $user["World"];
+                $corprator = $user["Corprator"];
+                $super = $user["Super"];
+                $admin = $user["Admin"];
+                $alias = $user["Alias"];
+
+                $login_user = $request->user();
+
+                $loginname = $login_user["UserName"];
+
+                $new_withdrawal_condition = $withdrawal_condition + (int) $gold * $condition_multiplier;
 
                 $q1 = User::where("UserName", $username)
                     ->update([
                         'Money' => $currentAmount,
                         'Credit' => $currentAmount,
+                        'withdrawal_condition' => $new_withdrawal_condition,
                     ]);
 
-                if($q1 == 1) {
+                if ($q1 == 1) {
 
-                    $currentAmount = Utils::GetField($username,'Money');
+                    $Order_Code = 'TK' . date("YmdHis", time() + 12 * 3600) . mt_rand(1000, 9999);
+                    $sys_800 = new Sys800;
+
+                    $data = array(
+                        "Payway" => "W",
+                        "Gold" => (int) $gold * $condition_multiplier,
+                        "previousAmount" => $withdrawal_condition,
+                        "currentAmount" => $new_withdrawal_condition,
+                        "AddDate" => $current_time,
+                        "Type" => "S",
+                        "UserName" => $username,
+                        "Agents" => $agent,
+                        "World" => $world,
+                        "Corprator" => $corprator,
+                        "Super" => $super,
+                        "Admin" => $admin,
+                        "CurType" => "RMB",
+                        "Name" => $alias,
+                        "User" => $loginname,
+                        "Checked" => 1,
+                        "Date" => $current_time,
+                        "Order_Code" => $Order_Code,
+                        "created_at" => $current_time,
+                        "Notes" => "洗码金额加款",
+                    );
+
+                    $sys_800->create($data);
+
+                    $currentAmount = Utils::GetField($username, 'Money');
 
                     Sys800::where("ID", $id)->update([
                         "Payway" => "B",
@@ -228,13 +275,13 @@ class AdminPaymentController extends Controller
                         "User" => $user["UserName"],
                         "Date" => $current_time,
                         "previousAmount" => $previousAmount,
-                        "currentAmount" => $currentAmount,                        
+                        "currentAmount" => $currentAmount,
                     ]);
 
                     $new_log = new MoneyLog;
                     $new_log->user_id = $user_id;
                     $new_log->order_num = $sys_800["Order_Code"];
-                    $new_log->about = $user["UserName"]."审核存款";
+                    $new_log->about = $user["UserName"] . "审核存款";
                     $new_log->update_time = $current_time;
                     $new_log->type = "存款";
                     $new_log->order_value = $gold;
@@ -244,31 +291,31 @@ class AdminPaymentController extends Controller
 
                 } else {
 
-                    $currentAmount = $previousAmount - (int)$gold;
-                
+                    $currentAmount = $previousAmount - (int) $gold;
+
                     User::where("UserName", $username)
                         ->update([
-                            'Money' => (int)$currentAmount,
-                            'Credit' => (int)$currentAmount,
+                            'Money' => (int) $currentAmount,
+                            'Credit' => (int) $currentAmount,
                         ]);
                 }
             } else {
                 $username = $sys_800["UserName"];
-                $previousAmount = Utils::GetField($username,'Money');
+                $previousAmount = Utils::GetField($username, 'Money');
                 $user_id = Utils::GetField($username, "id");
                 Utils::ProcessUpdate($username);
 
-                $currentAmount = $previousAmount - (int)$gold;
+                $currentAmount = $previousAmount - (int) $gold;
 
                 $q1 = User::where("UserName", $username)
                     ->update([
-                        'Money' => (int)$currentAmount,
-                        'Credit' => (int)$currentAmount,
+                        'Money' => (int) $currentAmount,
+                        'Credit' => (int) $currentAmount,
                     ]);
 
-                if($q1 == 1) {
+                if ($q1 == 1) {
 
-                    $currentAmount = Utils::GetField($username,'Money');
+                    $currentAmount = Utils::GetField($username, 'Money');
 
                     Sys800::where("ID", $id)->update([
                         "Checked" => 1,
@@ -276,13 +323,13 @@ class AdminPaymentController extends Controller
                         "User" => $user["UserName"],
                         "Date" => $current_time,
                         "previousAmount" => $previousAmount,
-                        "currentAmount" => $currentAmount, 
+                        "currentAmount" => $currentAmount,
                     ]);
 
                     $new_log = new MoneyLog;
                     $new_log->user_id = $user_id;
                     $new_log->order_num = $sys_800["Order_Code"];
-                    $new_log->about = $user["UserName"]."审核提款";
+                    $new_log->about = $user["UserName"] . "审核提款";
                     $new_log->update_time = $current_time;
                     $new_log->type = "提款";
                     $new_log->order_value = -$gold;
@@ -292,12 +339,12 @@ class AdminPaymentController extends Controller
 
                 } else {
 
-                    $currentAmount = $previousAmount + (int)$gold;
-                
+                    $currentAmount = $previousAmount + (int) $gold;
+
                     User::where("UserName", $username)
                         ->incrementEach([
-                            'Money' => (int)$currentAmount,
-                            'Credit' => (int)$currentAmount,
+                            'Money' => (int) $currentAmount,
+                            'Credit' => (int) $currentAmount,
                         ]);
                 }
 
@@ -309,7 +356,7 @@ class AdminPaymentController extends Controller
 
             $response["data"] = $currentAmount;
             $response['message'] = "Cash Data reviewed successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -320,10 +367,11 @@ class AdminPaymentController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function rejectCash(Request $request) {
+    public function rejectCash(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -359,11 +407,11 @@ class AdminPaymentController extends Controller
 
             if ($sys_800["Type"] == "T" && $sys_800["Checked"] == 0) {
                 $username = $sys_800["UserName"];
-                $previousAmount = Utils::GetField($username,'Money');
+                $previousAmount = Utils::GetField($username, 'Money');
                 $user_id = Utils::GetField($username, "id");
                 Utils::ProcessUpdate($username);
 
-                $currentAmount = $previousAmount + (int)$gold;
+                $currentAmount = $previousAmount + (int) $gold;
 
                 $q1 = User::where("UserName", $username)
                     ->update([
@@ -371,9 +419,9 @@ class AdminPaymentController extends Controller
                         'Credit' => $currentAmount,
                     ]);
 
-                if($q1 == 1) {
+                if ($q1 == 1) {
 
-                    $currentAmount = Utils::GetField($username,'Money');
+                    $currentAmount = Utils::GetField($username, 'Money');
 
                     Sys800::where("ID", $id)->update([
                         "Payway" => "B",
@@ -382,15 +430,15 @@ class AdminPaymentController extends Controller
                         "Music" => 1,
                         "User" => $user["UserName"],
                         "Date" => $current_time,
-                        "Notes" => $cancel_result                       
+                        "Notes" => $cancel_result,
                     ]);
 
                     $new_log = new MoneyLog;
                     $new_log->user_id = $user_id;
                     $new_log->order_num = $sys_800["Order_Code"];
-                    $new_log->about = $user["UserName"]."审核提款<br>ID:".$id;
+                    $new_log->about = $user["UserName"] . "审核提款<br>ID:" . $id;
                     $new_log->update_time = $current_time;
-                    $new_log->type = $user["UserName"]."审核提款";
+                    $new_log->type = $user["UserName"] . "审核提款";
                     $new_log->order_value = $gold;
                     $new_log->assets = $previousAmount;
                     $new_log->balance = $currentAmount;
@@ -398,17 +446,17 @@ class AdminPaymentController extends Controller
 
                 } else {
 
-                    $currentAmount = $previousAmount - (int)$gold;
-                
+                    $currentAmount = $previousAmount - (int) $gold;
+
                     User::where("UserName", $username)
                         ->update([
-                            'Money' => (int)$currentAmount,
-                            'Credit' => (int)$currentAmount,
+                            'Money' => (int) $currentAmount,
+                            'Credit' => (int) $currentAmount,
                         ]);
                 }
             } else {
                 $username = $sys_800["UserName"];
-                $previousAmount = Utils::GetField($username,'Money');
+                $previousAmount = Utils::GetField($username, 'Money');
                 $currentAmount = $previousAmount;
 
                 Sys800::where("ID", $id)->update([
@@ -419,9 +467,8 @@ class AdminPaymentController extends Controller
                     "Date" => $current_time,
                     "previousAmount" => $previousAmount,
                     "currentAmount" => $currentAmount,
-                    "Notes" => $cancel_result
+                    "Notes" => $cancel_result,
                 ]);
-
 
             }
 
@@ -431,7 +478,7 @@ class AdminPaymentController extends Controller
 
             $response["data"] = $currentAmount;
             $response['message'] = "Cash Data rejected successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -442,10 +489,11 @@ class AdminPaymentController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function deleteCash(Request $request) {
+    public function deleteCash(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -468,7 +516,7 @@ class AdminPaymentController extends Controller
             Sys800::where("ID", $id)->delete();
 
             $response['message'] = "Cash Data deleted successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -479,10 +527,11 @@ class AdminPaymentController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function saveCash(Request $request) {
+    public function saveCash(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -517,23 +566,23 @@ class AdminPaymentController extends Controller
             $user = User::where("UserName", $name)->first();
 
             if (!isset($user)) {
-                $response["message"] = "查无此会员(".$name.")!";
+                $response["message"] = "查无此会员(" . $name . ")!";
                 return response()->json($response, $response['status']);
             }
 
-            $agents=$user['Agents'];
-            $world=$user['World'];
-            $corprator=$user['Corprator'];
-            $super=$user['Super'];
-            $admin=$user['Admin'];
-            $alias=$user['Alias'];
+            $agents = $user['Agents'];
+            $world = $user['World'];
+            $corprator = $user['Corprator'];
+            $super = $user['Super'];
+            $admin = $user['Admin'];
+            $alias = $user['Alias'];
             $username = $name;
 
             if ($type == "T") {
                 $assets = Utils::GetField($name, "Money");
                 $balance = $assets - $gold;
                 $user_id = Utils::GetField($name, "id");
-                $Order_Code = 'TK'.date("YmdHis",time()+12*3600).mt_rand(1000,9999);
+                $Order_Code = 'TK' . date("YmdHis", time() + 12 * 3600) . mt_rand(1000, 9999);
                 $sys_800 = new Sys800;
                 $data = array(
                     "Payway" => "W",
@@ -558,7 +607,7 @@ class AdminPaymentController extends Controller
                 );
 
                 $sys_800->create($data);
-            
+
                 // $q1 = User::where("UserName", $username)
                 //     ->update([
                 //         'Money' => (int)$balance,
@@ -583,14 +632,14 @@ class AdminPaymentController extends Controller
             } else {
 
                 $user_id = Utils::GetField($name, "id");
-                $Order_Code = 'TK'.date("YmdHis",time()+12*3600).mt_rand(1000,9999);
+                $Order_Code = 'TK' . date("YmdHis", time() + 12 * 3600) . mt_rand(1000, 9999);
 
                 $Type2 = 0;
-                if($memo=='彩金' or $memo=='返水' or $type=='ZS'){
-                    $Type2=2;
-                    $type='S';
-                }else{
-                    $Type2=1;
+                if ($memo == '彩金' or $memo == '返水' or $type == 'ZS') {
+                    $Type2 = 2;
+                    $type = 'S';
+                } else {
+                    $Type2 = 1;
                 }
                 $sys_800 = new Sys800;
 
@@ -622,27 +671,27 @@ class AdminPaymentController extends Controller
 
             $lv = "M";
 
-            switch ($level){
+            switch ($level) {
                 case 'M':
-                    $lv='管理员';
+                    $lv = '管理员';
                     break;
                 case 'A':
-                    $lv='公司';
+                    $lv = '公司';
                     break;
                 case 'B':
-                    $lv='股东';
+                    $lv = '股东';
                     break;
                 case 'C':
-                    $lv='总代理';
+                    $lv = '总代理';
                     break;
                 case 'D':
-                    $lv='代理商';
+                    $lv = '代理商';
                     break;
             }
 
             $ip_addr = Utils::get_ip();
             $browser_ip = Utils::get_browser_ip();
-            $loginfo='执行批量充值';
+            $loginfo = '执行批量充值';
 
             $web_mem_log_data = new WebMemLogData;
             $web_mem_log_data->create([
@@ -660,7 +709,7 @@ class AdminPaymentController extends Controller
 
             $response["data"] = $currentAmount;
             $response['message'] = "Cash Data saved successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -671,10 +720,11 @@ class AdminPaymentController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function saveBulkCash(Request $request) {
+    public function saveBulkCash(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -698,10 +748,10 @@ class AdminPaymentController extends Controller
             $gold = $request_data["gold"];
             $memo = $request_data["memo"];
 
-            $names=str_replace("\r","|",$names);
-            $names=str_replace("\n","|",$names);
-            $names=str_replace("||","|",$names);
-            $names=str_replace("||","|",$names);
+            $names = str_replace("\r", "|", $names);
+            $names = str_replace("\n", "|", $names);
+            $names = str_replace("||", "|", $names);
+            $names = str_replace("||", "|", $names);
 
             $name_array = explode("|", $names);
 
@@ -709,26 +759,26 @@ class AdminPaymentController extends Controller
 
             $current_time = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
 
-            foreach($name_array as $name) {
+            foreach ($name_array as $name) {
 
                 $user = User::where("UserName", $name)->first();
 
                 if (!isset($user)) {
-                    $response["message"] = "查无此会员(".$name.")!";
+                    $response["message"] = "查无此会员(" . $name . ")!";
                     return response()->json($response, $response['status']);
                 }
 
-                $agents=$user['Agents'];
-                $world=$user['World'];
-                $corprator=$user['Corprator'];
-                $super=$user['Super'];
-                $admin=$user['Admin'];
-                $alias=$user['Alias'];
+                $agents = $user['Agents'];
+                $world = $user['World'];
+                $corprator = $user['Corprator'];
+                $super = $user['Super'];
+                $admin = $user['Admin'];
+                $alias = $user['Alias'];
                 $username = $name;
                 $assets = Utils::GetField($name, "Money");
                 $balance = $assets + $gold;
                 $user_id = Utils::GetField($name, "id");
-                $Order_Code = 'CK'.date("YmdHis",time()+12*3600).mt_rand(1000,9999);
+                $Order_Code = 'CK' . date("YmdHis", time() + 12 * 3600) . mt_rand(1000, 9999);
                 $sys_800 = new Sys800;
                 $data = array(
                     "Payway" => "W",
@@ -753,11 +803,11 @@ class AdminPaymentController extends Controller
                 );
 
                 $sys_800->create($data);
-            
+
                 $q1 = User::where("UserName", $username)
                     ->update([
-                        'Money' => (int)$balance,
-                        'Credit' => (int)$balance,
+                        'Money' => (int) $balance,
+                        'Credit' => (int) $balance,
                     ]);
 
                 if ($q1 == 1) {
@@ -765,7 +815,7 @@ class AdminPaymentController extends Controller
                     $new_log = new MoneyLog;
                     $new_log->user_id = $user_id;
                     $new_log->order_num = $Order_Code;
-                    $new_log->about = $user["UserName"]."后台批量存款";
+                    $new_log->about = $user["UserName"] . "后台批量存款";
                     $new_log->update_time = $current_time;
                     $new_log->type = $memo;
                     $new_log->order_value = $gold;
@@ -777,7 +827,7 @@ class AdminPaymentController extends Controller
 
             }
             $response['message'] = "Cash Bulk Data saved successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -788,11 +838,11 @@ class AdminPaymentController extends Controller
         return response()->json($response, $response['status']);
     }
 
-
-    public function getPaymentMethod(Request $request) {
+    public function getPaymentMethod(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -817,21 +867,21 @@ class AdminPaymentController extends Controller
 
             $role = "";
 
-            switch ($lv){
+            switch ($lv) {
                 case 'M':
-                    $role='Admin';
-                    break;  
+                    $role = 'Admin';
+                    break;
                 case 'A':
-                    $role='Super';
+                    $role = 'Super';
                     break;
                 case 'B':
-                    $role='Corprator';
+                    $role = 'Corprator';
                     break;
                 case 'C':
-                    $role='World';
+                    $role = 'World';
                     break;
                 case 'D':
-                    $role='Agents';
+                    $role = 'Agents';
                     break;
             }
 
@@ -854,7 +904,7 @@ class AdminPaymentController extends Controller
 
             $response["data"] = $result;
             $response['message'] = "Payment Method Data fetched successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -865,10 +915,11 @@ class AdminPaymentController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function addPaymentMethod(Request $request) {
+    public function addPaymentMethod(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -924,9 +975,9 @@ class AdminPaymentController extends Controller
                 WebPaymentData::where("ID", $ID)
                     ->update($new_data);
             }
-            
+
             $response['message'] = "Payment Method Data saved successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -935,12 +986,13 @@ class AdminPaymentController extends Controller
         }
 
         return response()->json($response, $response['status']);
-    } 
+    }
 
-    public function usePaymentMethod(Request $request) {
+    public function usePaymentMethod(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -963,9 +1015,9 @@ class AdminPaymentController extends Controller
             $Switch = $request_data["Switch"];
 
             WebPaymentData::where("ID", $ID)->update(["Switch" => $Switch]);
-            
+
             $response['message'] = "Payment Method Data updated successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -976,10 +1028,11 @@ class AdminPaymentController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function deletePaymentMethod(Request $request) {
+    public function deletePaymentMethod(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -1000,9 +1053,9 @@ class AdminPaymentController extends Controller
             $ID = $request_data["ID"];
 
             WebPaymentData::where("ID", $ID)->delete();
-            
+
             $response['message'] = "Payment Method Data deleted successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -1011,12 +1064,13 @@ class AdminPaymentController extends Controller
         }
 
         return response()->json($response, $response['status']);
-    } 
+    }
 
-    public function getUser(Request $request) {
+    public function getUser(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -1037,10 +1091,10 @@ class AdminPaymentController extends Controller
             $name = $request_data["name"];
 
             $result = User::where("UserName", $name)->first(["Alias", "Money"]);
-            
+
             $response["data"] = $result;
             $response['message'] = "User Data fetched successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -1049,6 +1103,5 @@ class AdminPaymentController extends Controller
         }
 
         return response()->json($response, $response['status']);
-    } 
+    }
 }
-

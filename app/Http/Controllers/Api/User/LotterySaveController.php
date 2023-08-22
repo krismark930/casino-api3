@@ -3,27 +3,27 @@
 namespace App\Http\Controllers\api\user;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Exception;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use DB;
-use Carbon\Carbon;
+use App\Models\LotteryUserConfig;
 use App\Models\OrderLottery;
 use App\Models\OrderLotterySub;
-use App\Models\LotteryUserConfig;
 use App\Models\User;
 use App\Models\Web\MoneyLog;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class LotterySaveController extends Controller
 {
-    public function saveB5(Request $request) {
+    public function saveB5(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
-        try {   
+        try {
 
             $rules = [
                 "g_type" => "required|string",
@@ -50,7 +50,7 @@ class LotterySaveController extends Controller
             // $selected_list = json_decode($selected_list, true);
             $user = $request->user();
             $assets = $user["Money"];
-            $balance = (int)$user["Money"] - $total_bet_amount;
+            $balance = (int) $user["Money"] - $total_bet_amount;
 
             $order_lottery = new OrderLottery;
             $order_lottery->user_id = $user["id"];
@@ -58,7 +58,7 @@ class LotterySaveController extends Controller
             $order_lottery->Gtype = $g_type;
 
             $lottery_type = "";
-                
+
             switch ($g_type) {
                 case "CQ":
                     $lottery_type = "重庆时时彩";
@@ -90,7 +90,7 @@ class LotterySaveController extends Controller
                     break;
             }
 
-            $order_lottery->rtype_str = "快速-".$lottery_type;
+            $order_lottery->rtype_str = "快速-" . $lottery_type;
             $order_lottery->bet_info = "bet_info";
             $order_lottery->bet_money = $total_bet_amount;
             $order_lottery->win = $total_win_amount;
@@ -99,16 +99,16 @@ class LotterySaveController extends Controller
 
             $order_lottery->save();
 
-            $order_lottery->order_num = $current_date.$order_lottery["id"];
+            $order_lottery->order_num = $current_date . $order_lottery["id"];
 
             if ($order_lottery->save()) {
 
                 $q1 = User::where("id", $user["id"])
-                    ->decrement('Money', $total_bet_amount);
+                    ->decrement('Money', $total_bet_amount)->decrement('withdrawal_condition', $total_bet_amount);
 
                 //会员金额操作成功
 
-                if($q1 == 1) {
+                if ($q1 == 1) {
 
                     $new_log = new MoneyLog;
                     $new_log->user_id = $user["id"];
@@ -125,7 +125,7 @@ class LotterySaveController extends Controller
 
             }
 
-            foreach($selected_list as $item) {
+            foreach ($selected_list as $item) {
                 $lottery_user_config = LotteryUserConfig::where("userid", $user["id"])->first();
                 $order_lottery_sub = new OrderLotterySub;
                 $order_lottery_sub->username = $user["UserName"];
@@ -134,38 +134,38 @@ class LotterySaveController extends Controller
                 $order_lottery_sub->number = $item["number"];
                 $order_lottery_sub->bet_rate = $item["odds"];
                 $order_lottery_sub->bet_money = $item["betAmount"];
-                $order_lottery_sub->win = $item["winableAmount"];                
+                $order_lottery_sub->win = $item["winableAmount"];
                 switch ($g_type) {
                     case "CQ":
-                        $order_lottery_sub->fs = (int)$item["betAmount"] * $lottery_user_config["cq_bet_reb"];
+                        $order_lottery_sub->fs = (int) $item["betAmount"] * $lottery_user_config["cq_bet_reb"];
                         break;
                     case "FFC5":
-                        $order_lottery_sub->fs = (int)$item["betAmount"] * $lottery_user_config["ffc5_bet_reb"];
+                        $order_lottery_sub->fs = (int) $item["betAmount"] * $lottery_user_config["ffc5_bet_reb"];
                         break;
                     case "TXSSC":
-                        $order_lottery_sub->fs = (int)$item["betAmount"] * $lottery_user_config["txssc_bet_reb"];
+                        $order_lottery_sub->fs = (int) $item["betAmount"] * $lottery_user_config["txssc_bet_reb"];
                         break;
                     case "TWSSC":
-                        $order_lottery_sub->fs = (int)$item["betAmount"] * $lottery_user_config["twssc_bet_reb"];
+                        $order_lottery_sub->fs = (int) $item["betAmount"] * $lottery_user_config["twssc_bet_reb"];
                         break;
                     case "AZXY5":
-                        $order_lottery_sub->fs = (int)$item["betAmount"] * $lottery_user_config["azxy5_bet_reb"];
+                        $order_lottery_sub->fs = (int) $item["betAmount"] * $lottery_user_config["azxy5_bet_reb"];
                         break;
                     case "JX":
-                        $order_lottery_sub->fs = (int)$item["betAmount"] * $lottery_user_config["jx_bet_reb"];
+                        $order_lottery_sub->fs = (int) $item["betAmount"] * $lottery_user_config["jx_bet_reb"];
                         break;
                     case "TJ":
-                        $order_lottery_sub->fs = (int)$item["betAmount"] * $lottery_user_config["tj_bet_reb"];
+                        $order_lottery_sub->fs = (int) $item["betAmount"] * $lottery_user_config["tj_bet_reb"];
                         break;
                 }
                 $order_lottery_sub->balance = $balance;
                 $order_lottery_sub->save();
-                $order_lottery_sub->order_sub_num = $current_date.$order_lottery_sub->id;
+                $order_lottery_sub->order_sub_num = $current_date . $order_lottery_sub->id;
                 $order_lottery_sub->save();
             }
 
             $response['message'] = "B5 Order Data saved successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -176,13 +176,14 @@ class LotterySaveController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function saveB3(Request $request) {
+    public function saveB3(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
-        try {   
+        try {
 
             $rules = [
                 "g_type" => "required|string",
@@ -209,7 +210,7 @@ class LotterySaveController extends Controller
             // $selected_list = json_decode($selected_list, true);
             $user = $request->user();
             $assets = $user["Money"];
-            $balance = (int)$user["Money"] - $total_bet_amount;
+            $balance = (int) $user["Money"] - $total_bet_amount;
 
             $order_lottery = new OrderLottery;
             $order_lottery->user_id = $user["id"];
@@ -217,7 +218,7 @@ class LotterySaveController extends Controller
             $order_lottery->Gtype = $g_type;
 
             $lottery_type = "";
-                
+
             switch ($g_type) {
                 case "D3":
                     $lottery_type = "3D彩";
@@ -233,7 +234,7 @@ class LotterySaveController extends Controller
                     break;
             }
 
-            $order_lottery->rtype_str = "快速-".$lottery_type;
+            $order_lottery->rtype_str = "快速-" . $lottery_type;
             $order_lottery->bet_info = "bet_info";
             $order_lottery->bet_money = $total_bet_amount;
             $order_lottery->win = $total_win_amount;
@@ -242,16 +243,16 @@ class LotterySaveController extends Controller
 
             $order_lottery->save();
 
-            $order_lottery->order_num = $current_date.$order_lottery["id"];
+            $order_lottery->order_num = $current_date . $order_lottery["id"];
 
             if ($order_lottery->save()) {
 
                 $q1 = User::where("id", $user["id"])
-                    ->decrement('Money', $total_bet_amount);
+                    ->decrement('Money', $total_bet_amount)->decrement('withdrawal_condition', $total_bet_amount);
 
                 //会员金额操作成功
 
-                if($q1 == 1) {
+                if ($q1 == 1) {
 
                     $new_log = new MoneyLog;
                     $new_log->user_id = $user["id"];
@@ -268,7 +269,7 @@ class LotterySaveController extends Controller
 
             }
 
-            foreach($selected_list as $item) {
+            foreach ($selected_list as $item) {
                 $lottery_user_config = LotteryUserConfig::where("userid", $user["id"])->first();
                 $order_lottery_sub = new OrderLotterySub;
                 $order_lottery_sub->username = $user["UserName"];
@@ -277,26 +278,26 @@ class LotterySaveController extends Controller
                 $order_lottery_sub->number = $item["number"];
                 $order_lottery_sub->bet_rate = $item["odds"];
                 $order_lottery_sub->bet_money = $item["betAmount"];
-                $order_lottery_sub->win = $item["winableAmount"];                
+                $order_lottery_sub->win = $item["winableAmount"];
                 switch ($g_type) {
                     case "D3":
-                        $order_lottery_sub->fs = (int)$item["betAmount"] * $lottery_user_config["d3_bet_reb"];
+                        $order_lottery_sub->fs = (int) $item["betAmount"] * $lottery_user_config["d3_bet_reb"];
                         break;
                     case "P3":
-                        $order_lottery_sub->fs = (int)$item["betAmount"] * $lottery_user_config["p3_bet_reb"];
+                        $order_lottery_sub->fs = (int) $item["betAmount"] * $lottery_user_config["p3_bet_reb"];
                         break;
                     case "T3":
-                        $order_lottery_sub->fs = (int)$item["betAmount"] * $lottery_user_config["t3_bet_reb"];
+                        $order_lottery_sub->fs = (int) $item["betAmount"] * $lottery_user_config["t3_bet_reb"];
                         break;
                 }
                 $order_lottery_sub->balance = $balance;
                 $order_lottery_sub->save();
-                $order_lottery_sub->order_sub_num = $current_date.$order_lottery_sub->id;
+                $order_lottery_sub->order_sub_num = $current_date . $order_lottery_sub->id;
                 $order_lottery_sub->save();
             }
 
             $response['message'] = "B3 Order Data saved successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -305,15 +306,16 @@ class LotterySaveController extends Controller
         }
 
         return response()->json($response, $response['status']);
-    }  
+    }
 
-    public function saveOther(Request $request) {
+    public function saveOther(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
-        try {   
+        try {
 
             $rules = [
                 "g_type" => "required|string",
@@ -340,7 +342,7 @@ class LotterySaveController extends Controller
             // $selected_list = json_decode($selected_list, true);
             $user = $request->user();
             $assets = $user["Money"];
-            $balance = (int)$user["Money"] - $total_bet_amount;
+            $balance = (int) $user["Money"] - $total_bet_amount;
 
             $order_lottery = new OrderLottery;
             $order_lottery->user_id = $user["id"];
@@ -348,7 +350,7 @@ class LotterySaveController extends Controller
             $order_lottery->Gtype = $g_type;
 
             $lottery_type = "";
-                
+
             switch ($g_type) {
                 case "GD11":
                     $lottery_type = "广东11选5";
@@ -384,7 +386,7 @@ class LotterySaveController extends Controller
                     break;
             }
 
-            $order_lottery->rtype_str = "快速-".$lottery_type;
+            $order_lottery->rtype_str = "快速-" . $lottery_type;
             $order_lottery->bet_info = "bet_info";
             $order_lottery->bet_money = $total_bet_amount;
             $order_lottery->win = $total_win_amount;
@@ -393,16 +395,16 @@ class LotterySaveController extends Controller
 
             $order_lottery->save();
 
-            $order_lottery->order_num = $current_date.$order_lottery["id"];
+            $order_lottery->order_num = $current_date . $order_lottery["id"];
 
             if ($order_lottery->save()) {
 
                 $q1 = User::where("id", $user["id"])
-                    ->decrement('Money', $total_bet_amount);
+                    ->decrement('Money', $total_bet_amount)->decrement('withdrawal_condition', $total_bet_amount);
 
                 //会员金额操作成功
 
-                if($q1 == 1) {
+                if ($q1 == 1) {
 
                     $new_log = new MoneyLog;
                     $new_log->user_id = $user["id"];
@@ -419,7 +421,7 @@ class LotterySaveController extends Controller
 
             }
 
-            foreach($selected_list as $item) {
+            foreach ($selected_list as $item) {
                 $lottery_user_config = LotteryUserConfig::where("userid", $user["id"])->first();
                 $order_lottery_sub = new OrderLotterySub;
                 $order_lottery_sub->username = $user["UserName"];
@@ -428,41 +430,41 @@ class LotterySaveController extends Controller
                 $order_lottery_sub->number = $item["number"];
                 $order_lottery_sub->bet_rate = $item["odds"];
                 $order_lottery_sub->bet_money = $item["betAmount"];
-                $order_lottery_sub->win = $item["winableAmount"];                
+                $order_lottery_sub->win = $item["winableAmount"];
                 switch ($g_type) {
                     case "GD11":
-                        $order_lottery_sub->fs = (int)$item["betAmount"] * $lottery_user_config["gd11_bet_reb"];
+                        $order_lottery_sub->fs = (int) $item["betAmount"] * $lottery_user_config["gd11_bet_reb"];
                         break;
                     case "AZXY10":
-                        $order_lottery_sub->fs = (int)$item["betAmount"] * $lottery_user_config["azxy10_bet_reb"];
+                        $order_lottery_sub->fs = (int) $item["betAmount"] * $lottery_user_config["azxy10_bet_reb"];
                         break;
                     case "CQSF":
-                        $order_lottery_sub->fs = (int)$item["betAmount"] * $lottery_user_config["cqsf_bet_reb"];
+                        $order_lottery_sub->fs = (int) $item["betAmount"] * $lottery_user_config["cqsf_bet_reb"];
                         break;
                     case "GDSF":
-                        $order_lottery_sub->fs = (int)$item["betAmount"] * $lottery_user_config["gdsf_bet_reb"];
+                        $order_lottery_sub->fs = (int) $item["betAmount"] * $lottery_user_config["gdsf_bet_reb"];
                         break;
                     case "GXSF":
-                        $order_lottery_sub->fs = (int)$item["betAmount"] * $lottery_user_config["gxsf_bet_reb"];
+                        $order_lottery_sub->fs = (int) $item["betAmount"] * $lottery_user_config["gxsf_bet_reb"];
                         break;
                     case "TJSF":
-                        $order_lottery_sub->fs = (int)$item["betAmount"] * $lottery_user_config["tjsf_bet_reb"];
+                        $order_lottery_sub->fs = (int) $item["betAmount"] * $lottery_user_config["tjsf_bet_reb"];
                         break;
                     case "BJPK":
-                        $order_lottery_sub->fs = (int)$item["betAmount"] * $lottery_user_config["bjpk_bet_reb"];
+                        $order_lottery_sub->fs = (int) $item["betAmount"] * $lottery_user_config["bjpk_bet_reb"];
                         break;
                     case "XYFT":
-                        $order_lottery_sub->fs = (int)$item["betAmount"] * $lottery_user_config["xyft_bet_reb"];
+                        $order_lottery_sub->fs = (int) $item["betAmount"] * $lottery_user_config["xyft_bet_reb"];
                         break;
                 }
                 $order_lottery_sub->balance = $balance;
                 $order_lottery_sub->save();
-                $order_lottery_sub->order_sub_num = $current_date.$order_lottery_sub->id;
+                $order_lottery_sub->order_sub_num = $current_date . $order_lottery_sub->id;
                 $order_lottery_sub->save();
             }
 
             $response['message'] = "Other Order Data saved successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -471,5 +473,5 @@ class LotterySaveController extends Controller
         }
 
         return response()->json($response, $response['status']);
-    }    
+    }
 }

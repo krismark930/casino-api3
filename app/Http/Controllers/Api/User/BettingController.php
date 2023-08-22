@@ -1303,6 +1303,8 @@ class BettingController extends Controller
 
             $user["Money"] = $assets - $gold;
 
+            $user["withdrawal_condition"] = $user["withdrawal_condition"] - $gold <= 0 ? 0 : $user["withdrawal_condition"] - $gold;
+
             if ($user->save()) {
                 $money_log = new MoneyLog();
 
@@ -3105,6 +3107,8 @@ class BettingController extends Controller
 
             $user["Money"] = $assets - $gold;
 
+            $user["withdrawal_condition"] = $user["withdrawal_condition"] - $gold <= 0 ? 0 : $user["withdrawal_condition"] - $gold;
+
             if ($user->save()) {
                 $money_log = new MoneyLog();
 
@@ -3359,6 +3363,8 @@ class BettingController extends Controller
             $datetime = date("Y-m-d H:i:s");
 
             $user["Money"] = $assets - $gold;
+
+            $user["withdrawal_condition"] = $user["withdrawal_condition"] - $gold <= 0 ? 0 : $user["withdrawal_condition"] - $gold;
 
             if ($user->save()) {
                 $money_log = new MoneyLog();
@@ -4729,6 +4735,8 @@ class BettingController extends Controller
 
             $user["Money"] = $assets - $gold;
 
+            $user["withdrawal_condition"] = $user["withdrawal_condition"] - $gold <= 0 ? 0 : $user["withdrawal_condition"] - $gold;
+
             if ($user->save()) {
                 $money_log = new MoneyLog();
 
@@ -5108,6 +5116,8 @@ class BettingController extends Controller
             $datetime = date("Y-m-d H:i:s");
 
             $user["Money"] = $assets - $gold;
+
+            $user["withdrawal_condition"] = $user["withdrawal_condition"] - $gold <= 0 ? 0 : $user["withdrawal_condition"] - $gold;
 
             if ($user->save()) {
                 $money_log = new MoneyLog();

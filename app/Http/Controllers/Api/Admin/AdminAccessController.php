@@ -237,10 +237,17 @@ class AdminAccessController extends Controller
 
             $currentAmount = $previousAmount + (int)$gold;
 
+            $user = User::where("UserName", $memname)->first();
+
+            $withdrawal_condition = $user["withdrawal_condition"];
+
+            $new_withdrawal_condition = $withdrawal_condition + (int)$gold;
+
             $q1 = User::where("UserName", $memname)
                 ->update([
                     'Money' => $currentAmount,
                     'Credit' => $currentAmount,
+                    'withdrawal_condition' => $new_withdrawal_condition,
                 ]);
 
             if($q1 == 1) {

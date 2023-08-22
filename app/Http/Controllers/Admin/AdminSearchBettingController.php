@@ -391,7 +391,7 @@ class AdminSearchBettingController extends Controller
                 $selectedUser = User::where('UserName', $username)->get()[0];
                 $assets = $selectedUser['Money'];
 
-                $affectRows = User::where('UserName', $username)->where('Pay_Type', 1)->decrement('Money', $betscore);
+                $affectRows = User::where('UserName', $username)->where('Pay_Type', 1)->decrement('Money', $betscore)->decrement('withdrawal_condition', $betscore);
                 if ($affectRows == 1) {
                     $balanceUser = User::where('UserName', $username)->get()[0];
                     $balance = $balanceUser['Money'];
@@ -422,7 +422,7 @@ class AdminSearchBettingController extends Controller
                     ]);
                     if ($affectRows != 1) {
                         MoneyLog::where('id', $insertedMoney['id'])->where('user_id', $user_id)->delete();
-                        User::where('UserName', $username)->where('Pay_Type', 1)->increment('Money', $betscore);
+                        User::where('UserName', $username)->where('Pay_Type', 1)->increment('Money', $betscore)->increment('withdrawal_condition', $betscore);
                     }
                 }
                 $ip_addr = request()->ip();

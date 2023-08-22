@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Utils\LYPAY\payConfig;
+use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Carbon\Carbon;
-use App\Utils\LYPAY\payConfig;
 
 class PaymentMethodController extends Controller
 {
@@ -18,7 +19,7 @@ class PaymentMethodController extends Controller
     {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -59,7 +60,9 @@ class PaymentMethodController extends Controller
             $mch_id = $PayConfig['Business'];
             $PayKey = $PayConfig['Keys'];
 
-            if ($paytype == 1)    $trade_type = '10';
+            if ($paytype == 1) {
+                $trade_type = '10';
+            }
 
             if ($paytype == 2) {
                 if ($Config->isMobile()) {
@@ -77,15 +80,21 @@ class PaymentMethodController extends Controller
                 }
             }
 
-            if ($paytype == 4)    $trade_type = '12';
+            if ($paytype == 4) {
+                $trade_type = '12';
+            }
 
             if ($paytype == 5) {
                 $trade_type = '05';
             }
 
-            if ($paytype == 7)    $trade_type = '07';
+            if ($paytype == 7) {
+                $trade_type = '07';
+            }
 
-            if ($paytype == 8)    $trade_type = '11';
+            if ($paytype == 8) {
+                $trade_type = '11';
+            }
 
             $trade_type = '23';
 
@@ -108,7 +117,7 @@ class PaymentMethodController extends Controller
                 'CMB' => '03080000',
                 'CIB' => '03090000',
                 'SPDB' => '03100000',
-                'PSBC' => '04030000'
+                'PSBC' => '04030000',
             );
             $bank_id = $bankArray[$bankcode];
             $return_url = env("USER_URL") . "/deposit";
@@ -126,7 +135,7 @@ class PaymentMethodController extends Controller
                 'notify_url' => $notify_url,
                 'return_url' => $return_url,
                 'time_start' => $time_start,
-                'nonce_str' => $nonce_str
+                'nonce_str' => $nonce_str,
             );
             $signStr = "";
             $PayInfo2 = $PayInfo;
@@ -137,7 +146,7 @@ class PaymentMethodController extends Controller
                     if ($key == 'notify_url' or $key == 'return_url') {
                         $value = urlencode($value);
                     }
-                    $signStr = $signStr .  $key  . '='  . $value .  '&';
+                    $signStr = $signStr . $key . '=' . $value . '&';
                 }
             }
 
@@ -156,7 +165,7 @@ class PaymentMethodController extends Controller
             $response["data"] = $result;
             $response["config"] = $PayInfo;
             $response['message'] = "LY PayInfo Data fetched successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -171,7 +180,7 @@ class PaymentMethodController extends Controller
     {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -193,8 +202,11 @@ class PaymentMethodController extends Controller
 
             $pp = file_get_contents("php://input");
 
-            if ($pp <> "") {
-                $tmpfile = $_SERVER['DOCUMENT_ROOT'] . "/tmp/post_" . date("Ymd") . ".txt";
+            if ($pp != "") {
+                if (!Storage::exists('public/tmp')) {
+                    Storage::makeDirectory("public/tmp");
+                }
+                $tmpfile = storage_path('app/public/tmp/post_') . date("Ymd") . ".txt";
                 $f = fopen($tmpfile, 'a');
                 fwrite($f, $t . "\r\nnotify\r\n" . $pp . "\r\n");
                 fclose($f);
@@ -202,15 +214,15 @@ class PaymentMethodController extends Controller
 
             $request_data = $request->all();
 
-            $mch_id = $request_data['mch_id'];  //商户号
-            $out_trade_no = $request_data['out_trade_no'];  //商户订单号
-            $trade_no = $request_data['trade_no'];  //系统定单号
-            $trade_type = $request_data['trade_type'];  //订单日期
-            $trade_state = $request_data['trade_state'];  //SUCCESS—支付成功
-            $total_fee = $request_data['total_fee'];  //金额，以分为单位
+            $mch_id = $request_data['mch_id']; //商户号
+            $out_trade_no = $request_data['out_trade_no']; //商户订单号
+            $trade_no = $request_data['trade_no']; //系统定单号
+            $trade_type = $request_data['trade_type']; //订单日期
+            $trade_state = $request_data['trade_state']; //SUCCESS—支付成功
+            $total_fee = $request_data['total_fee']; //金额，以分为单位
             $nonce_str = $request_data['nonce_str'];
             $time_end = $request_data['time_end'];
-            $sign = $request_data['sign'];  //签名
+            $sign = $request_data['sign']; //签名
 
             $Music = $Config->GetMusic($mch_id);
             $PayKey = $Config->GetPayKey($mch_id);
@@ -227,7 +239,7 @@ class PaymentMethodController extends Controller
                 'total_fee' => $total_fee,
                 'trade_no' => $trade_no,
                 'trade_state' => $trade_state,
-                'trade_type' => $trade_type
+                'trade_type' => $trade_type,
             );
 
             $SignKeys = explode(",", "mch_id,nonce_str,out_trade_no,time_end,total_fee,trade_no,trade_state,trade_type");
@@ -236,7 +248,7 @@ class PaymentMethodController extends Controller
 
             foreach ($PayInfo as $key => $value) {
                 if (in_array($key, $SignKeys)) {
-                    $signStr = $signStr .  $key  . '='  . $value .  '&';
+                    $signStr = $signStr . $key . '=' . $value . '&';
                 }
             }
 
@@ -252,7 +264,7 @@ class PaymentMethodController extends Controller
             }
 
             $response['message'] = "LY Notify Data fetched successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();

@@ -853,6 +853,8 @@ class BKBettingController extends Controller
 
             $user["Money"] = $assets - $gold;
 
+            $user["withdrawal_condition"] = $user["withdrawal_condition"] - $gold <= 0 ? 0 : $user["withdrawal_condition"] - $gold;
+
             if ($user->save()) {
                 $money_log = new MoneyLog();
 
@@ -1468,6 +1470,8 @@ class BKBettingController extends Controller
 
             $user["Money"] = $assets - $gold;
 
+            $user["withdrawal_condition"] = $user["withdrawal_condition"] - $gold <= 0 ? 0 : $user["withdrawal_condition"] - $gold;
+
             if ($user->save()) {
                 $money_log = new MoneyLog();
 
@@ -1725,6 +1729,8 @@ class BKBettingController extends Controller
 
             $user["Money"] = $assets - $gold;
 
+            $user["withdrawal_condition"] = $user["withdrawal_condition"] - $gold <= 0 ? 0 : $user["withdrawal_condition"] - $gold;
+
             if ($user->save()) {
                 $money_log = new MoneyLog();
 
@@ -1877,7 +1883,7 @@ class BKBettingController extends Controller
             $w_tg_mid = $match_sports['TG_MID'];
 
             if (strpos($w_tg_team, '角球') or strpos($w_mb_team, '角球') or strpos($w_tg_team, '点球') or strpos($w_mb_team, '点球')) {  // Block corner and penalty betting
-                if (in_array($user_name, $badname_jq)) {
+                if (in_array($user_name, $bad_name_jq)) {
                     $response['message'] = attention("This match is closed. Please try again!", "", "zh-cn");
                     return response()->json($response, $response['status']);
                 }
@@ -2279,6 +2285,8 @@ class BKBettingController extends Controller
             $datetime = date("Y-m-d H:i:s");
 
             $user["Money"] = $assets - $gold;
+
+            $user["withdrawal_condition"] = $user["withdrawal_condition"] - $gold <= 0 ? 0 : $user["withdrawal_condition"] - $gold;
 
             if ($user->save()) {
                 $money_log = new MoneyLog();

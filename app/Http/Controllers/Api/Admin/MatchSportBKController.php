@@ -3,15 +3,19 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Sport;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class MatchSportBKController extends Controller
 {
-    public function saveBKDefaultToday(Request $request) {
+    public function saveBKDefaultToday(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -19,11 +23,11 @@ class MatchSportBKController extends Controller
             $request_data = $request->all();
             $new_data = [
                 "Type" => $request_data["Type"],
-                "LID" => $request_data["LID"] ?? "",                
+                "LID" => $request_data["LID"] ?? "",
                 "ECID" => $request_data["ECID"] ?? "",
                 "M_Date" => $request_data["M_Date"] ?? date("Y-m-d"),
                 "M_Time" => $request_data["M_Time"] ?? date("H:i:s"),
-                "M_Start" => $request_data["M_Start"] ?? date("Y-m-d")." ".date("H:i:s"),
+                "M_Start" => $request_data["M_Start"] ?? date("Y-m-d") . " " . date("H:i:s"),
                 "MB_Team" => $request_data["MB_Team"],
                 "TG_Team" => $request_data["TG_Team"],
                 "MB_Team_tw" => $request_data["MB_Team_tw"],
@@ -54,23 +58,26 @@ class MatchSportBKController extends Controller
             if (isset($sport)) {
                 Sport::where("MID", $request_data['MID'])->update($new_data);
                 $response['message'] = 'BK Data updated successfully!';
-                $response['success'] = TRUE;
+                $response['success'] = true;
                 $response['status'] = STATUS_OK;
             } else {
                 $sport = new Sport;
                 $sport->create($new_data);
                 $response['message'] = 'BK Today Data added successfully!';
-                $response['success'] = TRUE;
+                $response['success'] = true;
                 $response['status'] = STATUS_OK;
             }
 
             $MB_LetB_Rate = $request_data["MB_LetB_Rate"];
             $TG_LetB_Rate = $request_data["TG_LetB_Rate"];
 
-            $t=date("Y-m-d H:i:s");
-            $tmpfile=$_SERVER['DOCUMENT_ROOT']."/tmp/matchsport_bk_".date("Ymd").".txt";
-            $f=fopen($tmpfile,'a');
-            fwrite($f,$t."\r\n$MB_LetB_Rate\r\n$TG_LetB_Rate\r\n");
+            $t = date("Y-m-d H:i:s");
+            if (!Storage::exists('public/tmp')) {
+                Storage::makeDirectory("public/tmp");
+            }
+            $tmpfile = storage_path('app/public/tmp/matchsport_bk_') . date("Ymd") . ".txt";
+            $f = fopen($tmpfile, 'a');
+            fwrite($f, $t . "\r\n$MB_LetB_Rate\r\n$TG_LetB_Rate\r\n");
             fclose($f);
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -81,10 +88,11 @@ class MatchSportBKController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function saveBKDefaultInplay(Request $request) {
+    public function saveBKDefaultInplay(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -97,7 +105,7 @@ class MatchSportBKController extends Controller
                 "ECID" => $request_data["ECID"] ?? "",
                 "M_Date" => $request_data["M_Date"] ?? date("Y-m-d"),
                 "M_Time" => $request_data["M_Time"] ?? date("H:i:s"),
-                "M_Start" => $request_data["M_Start"] ?? date("Y-m-d")." ".date("H:i:s"),
+                "M_Start" => $request_data["M_Start"] ?? date("Y-m-d") . " " . date("H:i:s"),
                 "MB_Team" => $request_data["MB_Team"],
                 "TG_Team" => $request_data["TG_Team"],
                 "MB_Team_tw" => $request_data["MB_Team_tw"],
@@ -132,13 +140,13 @@ class MatchSportBKController extends Controller
             if (isset($sport)) {
                 Sport::where("MID", $request_data['MID'])->update($new_data);
                 $response['message'] = 'BK Data updated successfully!';
-                $response['success'] = TRUE;
+                $response['success'] = true;
                 $response['status'] = STATUS_OK;
             } else {
                 $sport = new Sport;
                 $sport->create($new_data);
                 $response['message'] = 'BK Inplay Data added successfully!';
-                $response['success'] = TRUE;
+                $response['success'] = true;
                 $response['status'] = STATUS_OK;
             }
         } catch (Exception $e) {
@@ -150,10 +158,11 @@ class MatchSportBKController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function saveBKDefaultParlay(Request $request) {
+    public function saveBKDefaultParlay(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -165,7 +174,7 @@ class MatchSportBKController extends Controller
                 "ECID" => $request_data["ECID"] ?? "",
                 "M_Date" => $request_data["M_Date"] ?? date("Y-m-d"),
                 "M_Time" => $request_data["M_Time"] ?? date("H:i:s"),
-                "M_Start" => $request_data["M_Start"] ?? date("Y-m-d")." ".date("H:i:s"),
+                "M_Start" => $request_data["M_Start"] ?? date("Y-m-d") . " " . date("H:i:s"),
                 "MB_Team" => $request_data["MB_Team"],
                 "TG_Team" => $request_data["TG_Team"],
                 "MB_Team_tw" => $request_data["MB_Team_tw"],
@@ -196,13 +205,13 @@ class MatchSportBKController extends Controller
             if (isset($sport)) {
                 Sport::where("MID", $request_data['MID'])->update($new_data);
                 $response['message'] = 'BK Data updated successfully!';
-                $response['success'] = TRUE;
+                $response['success'] = true;
                 $response['status'] = STATUS_OK;
             } else {
                 $sport = new Sport;
                 $sport->create($new_data);
                 $response['message'] = 'BK Today Data added successfully!';
-                $response['success'] = TRUE;
+                $response['success'] = true;
                 $response['status'] = STATUS_OK;
             }
         } catch (Exception $e) {
@@ -214,10 +223,11 @@ class MatchSportBKController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function getBKData(Request $request) {
+    public function getBKData(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -225,7 +235,7 @@ class MatchSportBKController extends Controller
             $sports = Sport::where("Type", "FT")->where("M_Start", ">=", $newDate)->get();
             $response['data'] = $sports;
             $response['message'] = 'Match Sport Data fetched successfully!';
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -236,10 +246,11 @@ class MatchSportBKController extends Controller
         return response()->json($response, $response['status']);
     }
 
-    public function getBKInPlayData(Request $request) {
+    public function getBKInPlayData(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -247,7 +258,7 @@ class MatchSportBKController extends Controller
             $sports = Sport::where("Type", "FT")->where("M_Date", date("Y-m-d"))->where("isSub", 1)->where("RB_Show", 1)->where("M_Start", ">=", $newDate)->get();
             $response['data'] = $sports;
             $response['message'] = 'Match Sport Data fetched successfully!';
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
