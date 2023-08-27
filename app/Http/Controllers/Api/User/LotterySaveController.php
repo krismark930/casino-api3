@@ -104,7 +104,9 @@ class LotterySaveController extends Controller
             if ($order_lottery->save()) {
 
                 $q1 = User::where("id", $user["id"])
-                    ->decrement('Money', $total_bet_amount)->decrement('withdrawal_condition', $total_bet_amount);
+                    ->decrement('Money', $total_bet_amount);
+                $q1 = User::where("id", $user["id"])
+                    ->decrement('withdrawal_condition', $total_bet_amount);
 
                 //会员金额操作成功
 
@@ -248,7 +250,10 @@ class LotterySaveController extends Controller
             if ($order_lottery->save()) {
 
                 $q1 = User::where("id", $user["id"])
-                    ->decrement('Money', $total_bet_amount)->decrement('withdrawal_condition', $total_bet_amount);
+                    ->decrement('Money', $total_bet_amount);
+
+                $q1 = User::where("id", $user["id"])
+                    ->decrement('withdrawal_condition', $total_bet_amount);
 
                 //会员金额操作成功
 
@@ -400,12 +405,16 @@ class LotterySaveController extends Controller
             if ($order_lottery->save()) {
 
                 $q1 = User::where("id", $user["id"])
-                    ->decrement('Money', $total_bet_amount)->decrement('withdrawal_condition', $total_bet_amount);
+                    ->decrement('Money', $total_bet_amount);
+
+                $q1 = User::where("id", $user["id"])
+                    ->decrement('withdrawal_condition', $total_bet_amount);
 
                 //会员金额操作成功
 
                 if ($q1 == 1) {
 
+                    
                     $new_log = new MoneyLog;
                     $new_log->user_id = $user["id"];
                     $new_log->order_num = $order_lottery->order_num;

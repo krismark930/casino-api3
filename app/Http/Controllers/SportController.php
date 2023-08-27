@@ -3031,7 +3031,8 @@ class SportController extends Controller
                     $m_result = $rrow['M_Result'];
                     if ($rrow['Pay_Type'] == 1) { //结算之后的现金返回 - Cash back after settlement
                         if ($m_result == '') {
-                            User::where('UserName', $username)->where('Pay_Type', 1)->increment('Money', $betscore)->increment('withdrawal_condition', $betscore);
+                            User::where('UserName', $username)->where('Pay_Type', 1)->increment('Money', $betscore);
+                            User::where('UserName', $username)->where('Pay_Type', 1)->increment('withdrawal_condition', $betscore);
                             Utils::MoneyToSsc($username);
                         } else {
                             User::where('UserName', $username)->where('Pay_Type', 1)->decrement('Money', $m_result);
@@ -3064,7 +3065,8 @@ class SportController extends Controller
                     if ($rrow['Pay_Type'] == 1) { //结算之后的现金返回
                         if ($rrow['Checked'] == 1) {
                             $cash = $betscore + $m_result;
-                            User::where('UserName', $username)->where('Pay_Type', 1)->decrement('Money', $cash)->decrement('withdrawal_condition', $betscore);
+                            User::where('UserName', $username)->where('Pay_Type', 1)->decrement('Money', $cash);
+                            User::where('UserName', $username)->where('Pay_Type', 1)->decrement('withdrawal_condition', $betscore);
                             Utils::MoneyToSsc($username);
                         }
                     }

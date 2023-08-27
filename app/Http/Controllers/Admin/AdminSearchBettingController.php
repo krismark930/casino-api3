@@ -391,7 +391,8 @@ class AdminSearchBettingController extends Controller
                 $selectedUser = User::where('UserName', $username)->get()[0];
                 $assets = $selectedUser['Money'];
 
-                $affectRows = User::where('UserName', $username)->where('Pay_Type', 1)->decrement('Money', $betscore)->decrement('withdrawal_condition', $betscore);
+                $affectRows = User::where('UserName', $username)->where('Pay_Type', 1)->decrement('Money', $betscore);
+                $affectRows = User::where('UserName', $username)->where('Pay_Type', 1)->decrement('withdrawal_condition', $betscore);
                 if ($affectRows == 1) {
                     $balanceUser = User::where('UserName', $username)->get()[0];
                     $balance = $balanceUser['Money'];

@@ -17,6 +17,8 @@ use App\Models\Web\MoneyLog;
 use App\Models\WebPaymentData;
 use App\Models\Web\Bank;
 use App\Models\Web\SysConfig;
+use App\Models\Web\UserAccount;
+use App\Models\Web\UserBankAccount;
 use App\Models\Web\WebMemLogData;
 
 class AdminBankController extends Controller
@@ -297,6 +299,90 @@ class AdminBankController extends Controller
         }
 
         return response()->json($response, $response['status']);
-    } 
+    }
+
+    public function getUserBankData(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+
+            $rules = [
+                "id" => "required|numeric",
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                $errorResponse = validation_error_response($validator->errors()->toArray());
+                return response()->json($errorResponse, $response['status']);
+            }
+
+            $request_data = $request->all();
+            $user_id = $request_data["id"];
+
+            $user_bank_account = UserBankAccount::where("user_id", $user_id)->get();
+            $crypto_account = UserAccount::where("user_id", $user_id)->get();
+
+            $response["data"] = array(
+                "bank_account" => $user_bank_account[0],
+                "crypto_account" => $crypto_account[0]
+            );
+            $response['message'] = "User Bank Data fetched successfully!";
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    }
+
+    public function updateUserBankData(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+
+            $rules = [
+                "bank_account" => "required",
+                "crypto_account" => "required",
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                $errorResponse = validation_error_response($validator->errors()->toArray());
+                return response()->json($errorResponse, $response['status']);
+            }
+
+            $request_data = $request->all();
+            $bank_account = $request_data["bank_account"];
+            $crypto_account = $request_data["crypto_account"];
+
+            UserBankAccount::where("user_id", $bank_account["user_id"])->update([
+                "bank_account" => $bank_account["bank_account"]
+            ]);
+
+            UserAccount::where("user_id", $crypto_account["user_id"])->update([
+                "bank_address" => $crypto_account["bank_address"]
+            ]);
+            $response['message'] = "User Bank Data updated successfully!";
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    }
 }
 
