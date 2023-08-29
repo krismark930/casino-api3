@@ -327,8 +327,8 @@ class AdminBankController extends Controller
             $crypto_account = UserAccount::where("user_id", $user_id)->get();
 
             $response["data"] = array(
-                "bank_account" => $user_bank_account[0],
-                "crypto_account" => $crypto_account[0]
+                "bank_account" => $user_bank_account[0] ?? array(),
+                "crypto_account" => $crypto_account[0] ?? array()
             );
             $response['message'] = "User Bank Data fetched successfully!";
             $response['success'] = TRUE;
@@ -351,8 +351,8 @@ class AdminBankController extends Controller
         try {
 
             $rules = [
-                "bank_account" => "required",
-                "crypto_account" => "required",
+                // "bank_account" => "required",
+                // "crypto_account" => "required",
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -363,16 +363,24 @@ class AdminBankController extends Controller
             }
 
             $request_data = $request->all();
-            $bank_account = $request_data["bank_account"];
-            $crypto_account = $request_data["crypto_account"];
+            $bank_account = $request_data["bank_account"] ?? "";
+            $crypto_account = $request_data["crypto_account"] ?? "";
 
-            UserBankAccount::where("user_id", $bank_account["user_id"])->update([
-                "bank_account" => $bank_account["bank_account"]
-            ]);
+            if ($bank_account != "") {
 
-            UserAccount::where("user_id", $crypto_account["user_id"])->update([
-                "bank_address" => $crypto_account["bank_address"]
-            ]);
+                UserBankAccount::where("user_id", $bank_account["user_id"])->update([
+                    "bank_account" => $bank_account["bank_account"]
+                ]);
+
+            }
+
+            if ($crypto_account != "") {
+
+                UserAccount::where("user_id", $crypto_account["user_id"])->update([
+                    "bank_address" => $crypto_account["bank_address"]
+                ]);
+
+            }
             $response['message'] = "User Bank Data updated successfully!";
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;

@@ -79,6 +79,31 @@ class DepositController extends Controller {
         return response()->json($response, $response['status']);
     }
 
+    /* get admin bank info. */
+    public function getAdminBank(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+
+            $request_data = $request->all();
+            $result = Bank::all();
+            $response["data"] = $result;
+            $response['message'] = "Admin Bank List fetched successfully!";
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    }
+
     /* Deposit function. */
     public function addMoney(Request $request) {
         $user = User::find($request->userId);
