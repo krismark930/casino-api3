@@ -2923,6 +2923,7 @@ class UserManagementController extends Controller
             $user = User::find($id);
 
             $money = $user["Money"];
+            $bonus_money = $user["bonus_amount"] ?? 0;
             $agent = $user["Agents"];
             $world = $user["World"];
             $corprator = $user["Corprator"];
@@ -2971,6 +2972,7 @@ class UserManagementController extends Controller
                     "currentAmount" => $newmoney,
                     "AddDate" => $current_time,
                     "Type" => "S",
+                    "Type2" => "1",
                     "UserName" => $username,
                     "Agents" => $agent,
                     "World" => $world,
@@ -2998,6 +3000,51 @@ class UserManagementController extends Controller
                 $new_log->about = $user["UserName"]."人工加款";
                 $new_log->update_time = $current_time;
                 $new_log->type = $user["UserName"]."人工加款";
+                $new_log->order_value = $more_money;
+                $new_log->assets = $money;
+                $new_log->balance = $newmoney;
+                $new_log->save();
+            }
+
+            if ($more_money != "" && $operation_type == "3") {
+
+                $newmoney = (int)$bonus_money + (int)$more_money;
+
+                $data = array(
+                    "Payway" => "W",
+                    "Gold" => $more_money,
+                    "previousAmount" => $bonus_money,
+                    "currentAmount" => $newmoney,
+                    "AddDate" => $current_time,
+                    "Type" => "S",
+                    "Type2" => "6",
+                    "UserName" => $username,
+                    "Agents" => $agent,
+                    "World" => $world,
+                    "Corprator" => $corprator,
+                    "Super" => $super,
+                    "Admin" => $admin,
+                    "CurType" => "RMB",
+                    "Name" => $alias,
+                    "User" => $loginname,
+                    "Checked" => 1,
+                    "Date" => $current_time,
+                    "Order_Code" => $Order_Code,
+                    "created_at" => $current_time,
+                    "Notes" => "",
+                );
+
+                $sys_800->create($data);
+
+                $user["bonus_amount"] = $newmoney;
+                $user->save();
+
+                $new_log = new MoneyLog();
+                $new_log->user_id = $user["id"];
+                $new_log->order_num = $Order_Code;
+                $new_log->about = $user["UserName"]."彩金加款";
+                $new_log->update_time = $current_time;
+                $new_log->type = $user["UserName"]."彩金加款";
                 $new_log->order_value = $more_money;
                 $new_log->assets = $money;
                 $new_log->balance = $newmoney;
@@ -3049,6 +3096,52 @@ class UserManagementController extends Controller
                 $new_log->save();
 
                 $user["Money"] = $newmoney;
+                $user->save();
+            }
+
+            if ($more_money != "" && $operation_type == "4") {
+                // $sql = "insert into web_sys800_data set Checked=1,Payway='AG',Gold='$kk',AddDate='$date',Type='T',UserName='會員$user',Agents='$agent',Admin='$admin',CurType='RMB',Date='$datetime',Bank_Address='新余额:$newmoney',Bank_Account='旧余额:$money',Order_Code='會員提款'";
+                // DB::select($sql);
+
+                $newmoney = (int)$bonus_money - (int)$more_money;
+
+                $data = array(
+                    "Payway" => "W",
+                    "Gold" => $more_money,
+                    "previousAmount" => $bonus_money,
+                    "currentAmount" => $newmoney,
+                    "AddDate" => $current_time,
+                    "Type" => "T",
+                    "UserName" => $username,
+                    "Agents" => $agent,
+                    "World" => $world,
+                    "Corprator" => $corprator,
+                    "Super" => $super,
+                    "Admin" => $admin,
+                    "CurType" => "RMB",
+                    "Name" => $alias,
+                    "User" => $login_user["UserName"],
+                    "Date" => $current_time,
+                    "Order_Code" => $Order_Code,
+                    "created_at" => $current_time,
+                    "Checked" => 1,
+                    "Notes" => "",
+                );
+
+                $sys_800->create($data);
+
+                $new_log = new MoneyLog();
+                $new_log->user_id = $user["id"];
+                $new_log->order_num = $Order_Code;
+                $new_log->about = $user["UserName"]."彩金扣款";
+                $new_log->update_time = $current_time;
+                $new_log->type = $user["UserName"]."彩金扣款";
+                $new_log->order_value = $more_money;
+                $new_log->assets = $money;
+                $new_log->balance = $newmoney;
+                $new_log->save();
+
+                $user["bonus_amount"] = $newmoney;
                 $user->save();
             }
 

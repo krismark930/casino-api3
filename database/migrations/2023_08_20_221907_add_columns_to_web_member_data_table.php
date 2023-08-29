@@ -14,6 +14,7 @@ class AddColumnsToWebMemberDataTable extends Migration
     public function up()
     {
         Schema::table('web_member_data', function (Blueprint $table) {
+            $table->float("bonus_amount", 15, 2)->nullable();
             $table->float("deposit_amount", 15, 2)->nullable();
             $table->float("consumption_amount", 15, 2)->nullable();
             $table->float("withdrawal_condition", 15, 2)->nullable();

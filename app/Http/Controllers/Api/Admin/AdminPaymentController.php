@@ -248,6 +248,7 @@ class AdminPaymentController extends Controller
                         "currentAmount" => $new_withdrawal_condition,
                         "AddDate" => $current_time,
                         "Type" => "S",
+                        "Type2" => 6,
                         "UserName" => $username,
                         "Agents" => $agent,
                         "World" => $world,

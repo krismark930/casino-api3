@@ -963,6 +963,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'CORS'], function ($router) {
 Route::group(['prefix' => 'deposit', 'middleware' => ['CORS', 'auth:api']], function ($router) {
     Route::post('/getBank', [DepositController::class, 'getBank'])->name('web.deposit.getBank');
     Route::post('/get-crypto', [DepositController::class, 'getCrypto']);
+    Route::post('/get-admin-bank', [DepositController::class, 'getAdminBank']);
     Route::post('/addMoney', [DepositController::class, 'addMoney'])->name('web.deposit.addMoney');
 });
 Route::group(['prefix' => 'transfer', 'middleware' => 'CORS'], function ($router) {

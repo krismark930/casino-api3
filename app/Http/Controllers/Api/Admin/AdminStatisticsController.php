@@ -243,7 +243,7 @@ class AdminStatisticsController extends Controller
             if($overdate=='')  $overdate=date("Y-m-d");
 
             if($username<>'') $tj=$tj." and UserName like '%$username%'";
-            $sql = "select distinct Agents from web_sys800_data where AddDate>='$startdate' and AddDate<='$overdate'  $tj and Type2<>3 order by ID desc";  //获取代理商
+            $sql = "select distinct Agents from web_sys800_data where AddDate>='$startdate' and AddDate<='$overdate'  $tj and Type2<>3 and Type2<>6 order by ID desc";  //获取代理商
             $result = DB::select($sql);
             $Agent_arr=array();
             foreach($result as $item) {
@@ -251,13 +251,13 @@ class AdminStatisticsController extends Controller
                 array_push($Agent_arr, array("label" => $item["Agents"], "value" => $item["Agents"]));
             }
 
-            $sql = "select * from web_sys800_data where AddDate>='$startdate' and AddDate<='$overdate'  $tj $TJ_Agent and Type2<>3 order by ID desc";
+            $sql = "select * from web_sys800_data where AddDate>='$startdate' and AddDate<='$overdate'  $tj $TJ_Agent and Type2<>3 and Type2<>6 order by ID desc";
             $data=DB::select($sql);
             $CK=0;$TK=0;
 
             foreach($data as $row) {
                 $row = get_object_vars($row);
-                if($row['Type']=='S' and $row['Cancel']==0) $CK=$CK+(int)$row['Gold'];
+                if($row['Type']=='S' && $row['Cancel']==0 && (int)$row["Type2"] == 1) $CK=$CK+(int)$row['Gold'];
                 if($row['Type']=='T' and $row['Cancel']==0) $TK=$TK+(int)$row['Gold'];
                 $Phone=$row['Phone'];
                 if(strlen($Phone)>=8){
