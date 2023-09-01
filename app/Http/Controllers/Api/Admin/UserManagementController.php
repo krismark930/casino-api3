@@ -3148,6 +3148,8 @@ class UserManagementController extends Controller
             $Order_Code = 'TK' . date("YmdHis", time() + 12 * 3600) . mt_rand(1000, 9999);
             $sys_800 = new Sys800;
 
+            // Add money to the wash amount
+
             if ($withdraw_more_money != "" && $withdraw_condition_type == "1") {
 
                 $newmoney = (int)$withdrawal_condition + (int)$withdraw_more_money;
@@ -3159,6 +3161,7 @@ class UserManagementController extends Controller
                     "currentAmount" => $newmoney,
                     "AddDate" => $current_time,
                     "Type" => "S",
+                    "Type2" => "5", // wash amount type
                     "UserName" => $username,
                     "Agents" => $agent,
                     "World" => $world,
