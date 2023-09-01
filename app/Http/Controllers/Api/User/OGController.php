@@ -309,6 +309,8 @@ class OGController extends Controller
                 if (!isset($game)) {
                     $web_report_zr = new WebReportZr;
                     $web_report_zr->create($new_data);
+
+                    User::where("UserName", $UserName)->decrement("withdrawal_condition", $validBetAmount);
                 } else {
                     WebReportZr::where("billNo", $billNo)
                         ->where("platformType", $platformType)
