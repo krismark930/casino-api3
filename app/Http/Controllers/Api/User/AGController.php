@@ -286,6 +286,8 @@ class AGController extends Controller
                         if (!isset($web_report_zr)) {
                             $web_report_zr = new WebReportZr;
                             $web_report_zr->create($new_data);
+
+                            User::where("UserName", $UserName)->decrement("withdrawal_condition", $validBetAmount);
                         } else {
                             WebReportZr::where("billNo", $billNo)
                                 ->where("platformType", $platformType)
@@ -402,6 +404,8 @@ class AGController extends Controller
                         if (!isset($web_report_zr)) {
                             $web_report_zr = new WebReportZr;
                             $web_report_zr->create($new_data);
+
+                            User::where("UserName", $UserName)->decrement("withdrawal_condition", $validBetAmount);
                         } else {
                             WebReportZr::where("billNo", $billNo)
                                 ->where("platformType", $platformType)
@@ -528,6 +532,8 @@ class AGController extends Controller
                         if (!isset($web_report_zr)) {
                             $web_report_zr = new WebReportZr;
                             $web_report_zr->create($new_data);
+
+                            User::where("UserName", $UserName)->decrement("withdrawal_condition", $validBetAmount);
                         } else {
                             WebReportZr::where("billNo", $billNo)
                                 ->where("platformType", $platformType)
@@ -651,6 +657,8 @@ class AGController extends Controller
                         if (!isset($web_report_htr)) {
                             $web_report_htr = new WebReportHtr();
                             $web_report_htr->create($new_data);
+
+                            User::where("UserName", $UserName)->decrement("withdrawal_condition", $betAmount);
                         } else {
                             WebReportHtr::where("tradeNo", $tradeNo)
                                 ->where("platformType", $platformType)
@@ -779,6 +787,8 @@ class AGController extends Controller
                     if (!isset($web_report_zr)) {
                         $web_report_zr = new WebReportZr;
                         $web_report_zr->create($new_data);
+
+                        User::where("UserName", $UserName)->decrement("withdrawal_condition", $validBetAmount);
                     } else {
                         WebReportZr::where("billNo", $billNo)
                             ->where("platformType", $platformType)
@@ -855,6 +865,8 @@ class AGController extends Controller
                     if (!isset($web_report_zr)) {
                         $web_report_zr = new WebReportZr;
                         $web_report_zr->create($new_data);
+
+                        User::where("UserName", $UserName)->decrement("withdrawal_condition", $validBetAmount);
                     } else {
                         WebReportZr::where("billNo", $billNo)
                             ->where("platformType", $platformType)
@@ -956,6 +968,8 @@ class AGController extends Controller
                     if (!isset($web_report_zr)) {
                         $web_report_zr = new WebReportZr;
                         $web_report_zr->create($new_data);
+
+                        User::where("UserName", $UserName)->decrement("withdrawal_condition", $validBetAmount);
                     } else {
                         WebReportZr::where("billNo", $billNo)
                             ->where("platformType", $platformType)
@@ -1032,6 +1046,8 @@ class AGController extends Controller
                     if (!isset($web_report_zr)) {
                         $web_report_zr = new WebReportZr;
                         $web_report_zr->create($new_data);
+
+                        User::where("UserName", $UserName)->decrement("withdrawal_condition", $validBetAmount);
                     } else {
                         WebReportZr::where("billNo", $billNo)
                             ->where("platformType", $platformType)
@@ -1134,6 +1150,8 @@ class AGController extends Controller
                 if (!isset($web_report_zr)) {
                     $web_report_zr = new WebReportZr;
                     $web_report_zr->create($new_data);
+
+                    User::where("UserName", $UserName)->decrement("withdrawal_condition", $validBetAmount);
                 } else {
                     WebReportZr::where("billNo", $billNo)
                         ->where("platformType", $platformType)
@@ -1243,6 +1261,8 @@ class AGController extends Controller
                     if (!isset($web_report_zr)) {
                         $web_report_zr = new WebReportZr;
                         $web_report_zr->create($new_data);
+
+                        User::where("UserName", $UserName)->decrement("withdrawal_condition", $validBetAmount);
                     } else {
                         WebReportZr::where("billNo", $billNo)
                             ->where("platformType", $platformType)
@@ -1319,6 +1339,8 @@ class AGController extends Controller
                     if (!isset($web_report_zr)) {
                         $web_report_zr = new WebReportZr;
                         $web_report_zr->create($new_data);
+
+                        User::where("UserName", $UserName)->decrement("withdrawal_condition", $validBetAmount);
                     } else {
                         WebReportZr::where("billNo", $billNo)
                             ->where("platformType", $platformType)
@@ -1419,6 +1441,8 @@ class AGController extends Controller
                     if (!isset($web_report_zr)) {
                         $web_report_zr = new WebReportZr;
                         $web_report_zr->create($new_data);
+
+                        User::where("UserName", $UserName)->decrement("withdrawal_condition", $validBetAmount);
                     } else {
                         WebReportZr::where("billNo", $billNo)
                             ->where("platformType", $platformType)
@@ -1495,6 +1519,8 @@ class AGController extends Controller
                     if (!isset($web_report_zr)) {
                         $web_report_zr = new WebReportZr;
                         $web_report_zr->create($new_data);
+
+                        User::where("UserName", $UserName)->decrement("withdrawal_condition", $validBetAmount);
                     } else {
                         WebReportZr::where("billNo", $billNo)
                             ->where("platformType", $platformType)
@@ -1594,6 +1620,8 @@ class AGController extends Controller
                     if (!isset($web_report_zr)) {
                         $web_report_zr = new WebReportZr;
                         $web_report_zr->create($new_data);
+
+                        User::where("UserName", $UserName)->decrement("withdrawal_condition", $validBetAmount);
                     } else {
                         WebReportZr::where("billNo", $billNo)
                             ->where("platformType", $platformType)
@@ -1670,6 +1698,8 @@ class AGController extends Controller
                     if (!isset($web_report_zr)) {
                         $web_report_zr = new WebReportZr;
                         $web_report_zr->create($new_data);
+
+                        User::where("UserName", $UserName)->decrement("withdrawal_condition", $validBetAmount);
                     } else {
                         WebReportZr::where("billNo", $billNo)
                             ->where("platformType", $platformType)
@@ -1770,6 +1800,8 @@ class AGController extends Controller
                     if (!isset($web_report_htr)) {
                         $web_report_htr = new WebReportHtr();
                         $web_report_htr->create($new_data);
+
+                        User::where("UserName", $UserName)->decrement("withdrawal_condition", $betAmount);
                     } else {
                         WebReportHtr::where("tradeNo", $tradeNo)
                             ->where("platformType", $platformType)
@@ -1847,6 +1879,8 @@ class AGController extends Controller
                     if (!isset($web_report_htr)) {
                         $web_report_htr = new WebReportHtr();
                         $web_report_htr->create($new_data);
+
+                        User::where("UserName", $UserName)->decrement("withdrawal_condition", $betAmount);
                     } else {
                         WebReportHtr::where("tradeNo", $tradeNo)
                             ->where("platformType", $platformType)

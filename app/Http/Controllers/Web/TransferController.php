@@ -142,7 +142,7 @@ class TransferController extends Controller {
                 $bbin_money = $user["BBIN_Money"];
                 $money2 = $BBINUtils->getMoney_BBIN($BBIN_username, $BBIN_password); //获取真人余额
                 Utils::ProcessUpdate($username);  //防止并发
-                $result = DB::update("update web_member_data set Money=Money-$money, BBIN_Money=$money2, withdrawal_condition=withdrawal_condition-$money where Username='$username'");
+                $result = DB::update("update web_member_data set Money=Money-$money, BBIN_Money=$money2 where Username='$username'");
 
                 if($result){
                     $balance = $assets-$money;
@@ -385,7 +385,7 @@ class TransferController extends Controller {
                 Utils::ProcessUpdate($username);  //防止并发
                 $money2= $AGUtils->getMoney($ag_username, $ag_password); //获取真人余额
 
-                $result = DB::update("update web_member_data set Money=Money-$money, AG_Money=$money2, withdrawal_condition=withdrawal_condition-$money where Username='$username'");
+                $result = DB::update("update web_member_data set Money=Money-$money, AG_Money=$money2 where Username='$username'");
 
                 if($result){
                     $balance = Utils::GetField($username,'Money');
@@ -628,7 +628,7 @@ class TransferController extends Controller {
                 $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
                 $money2= $OGUtils->OG_Money($og_username); //获取真人余额
-                $result = DB::update("update web_member_data set Money=Money-$money, OG_Money=$money2, withdrawal_condition=withdrawal_condition-$money where Username='$username'");
+                $result = DB::update("update web_member_data set Money=Money-$money, OG_Money=$money2 where Username='$username'");
 
                 if($result){
                     $balance = Utils::GetField($username,'Money');
@@ -871,7 +871,7 @@ class TransferController extends Controller {
                 $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
                 $money2= $MGUtils->getMoney_MG($MG_username, $MG_password); //获取真人余额
-                $result = DB::update("update web_member_data set Money=Money-$money, MG_Money=$money2, withdrawal_condition=withdrawal_condition-$money where Username='$username'");
+                $result = DB::update("update web_member_data set Money=Money-$money, MG_Money=$money2 where Username='$username'");
 
                 if($result){
                     $balance = Utils::GetField($username,'Money');
@@ -1119,7 +1119,7 @@ class TransferController extends Controller {
                 $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
                 $money2 = $PTUtils->getMoney_PT($PT_username, $PT_password); //获取真人余额
-                $result = DB::update("update web_member_data set Money=Money-$money, PT_Money=$money2, withdrawal_condition=withdrawal_condition-$money where Username='$username'");
+                $result = DB::update("update web_member_data set Money=Money-$money, PT_Money=$money2 where Username='$username'");
 
                 if($result){
                     $balance = Utils::GetField($username,'Money');
@@ -1350,7 +1350,7 @@ class TransferController extends Controller {
                 $user_id=Utils::GetField($username,'id');
                 Utils::ProcessUpdate($username);  //防止并发
                 $money2= $KYUtils->KY_Money2($ky_username); //获取真人余额
-                $result = DB::update("update web_member_data set Money=Money-$money, KY_Money=$money2, withdrawal_condition=withdrawal_condition-$money where Username='$username'");
+                $result = DB::update("update web_member_data set Money=Money-$money, KY_Money=$money2 where Username='$username'");
 
                 if($result){
                     $balance = Utils::GetField($username,'Money');

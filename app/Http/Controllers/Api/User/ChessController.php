@@ -180,11 +180,16 @@ class ChessController extends Controller
                     $GameData2['ChannelID'] = $GameData['list']['ChannelID'][$i];
                     $GameData2['LineCode'] = str_replace($agent . '_', '', $GameData['list']['LineCode'][$i]);
                     $game = WebReportKy::where("GameID", $GameData2["GameID"])->first();
+
+                    $user = User::where("KY_User", $GameData2['Accounts'])->first();
+                    $UserName = $user["UserName"];
                     if (isset($game)) {
                         WebReportKy::where("GameID", $GameData2["GameID"])->update($GameData2);
                     } else {
                         $web_report_ky = new WebReportKy;
                         $web_report_ky->create($GameData2);
+
+                        User::where("UserName", $UserName)->decrement("withdrawal_condition", $GameData2['AllBet']);
                     }
 
                     // $balance = $KYUtils->KY_Money2($GameData['list']['Accounts'][$i]);
