@@ -980,4 +980,59 @@ class UserController extends Controller {
 
         return response()->json($response, $response['status']);
     }
+
+    public function changePassword(Request $request){
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        $rules = [
+            'LoginName' => 'required|string',
+            'password' => 'required|min:6',
+            'new_password' => 'required|min:6',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            $errorResponse = validation_error_response($validator->errors()->toArray());
+            return response()->json($errorResponse, $response['status']);
+        }
+
+        try {
+
+            $user = $request->user();
+
+            $request_data = $request->all();
+
+            $password = $request_data["password"];
+
+            $new_passowrd = $request_data["new_password"];
+
+            $login_name = $request_data["LoginName"];
+
+            if(Hash::check($password, $user["password"])) {
+                User::where("LoginName", $login_name)->update([
+                    "Password" =>  Hash::make($new_passowrd),
+                ]);
+
+            } else {
+
+                $response['message'] = 'wrong password';
+                return response()->json($response, $response['status']);
+
+            }
+
+            $response['message'] = 'password changed successfully';
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    }
 }

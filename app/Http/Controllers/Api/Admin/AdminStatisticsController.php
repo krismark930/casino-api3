@@ -243,7 +243,7 @@ class AdminStatisticsController extends Controller
             if($overdate=='')  $overdate=date("Y-m-d");
 
             if($username<>'') $tj=$tj." and UserName like '%$username%'";
-            $sql = "select distinct Agents from web_sys800_data where AddDate>='$startdate' and AddDate<='$overdate'  $tj and Type2<>3 and Type2<>6 order by ID desc";  //获取代理商
+            $sql = "select distinct Agents from web_sys800_data where AddDate>='$startdate' and AddDate<='$overdate'  $tj and Type2<>3 and Type2<>6 and Type2<>5 order by ID desc";  //获取代理商
             $result = DB::select($sql);
             $Agent_arr=array();
             foreach($result as $item) {
@@ -251,7 +251,7 @@ class AdminStatisticsController extends Controller
                 array_push($Agent_arr, array("label" => $item["Agents"], "value" => $item["Agents"]));
             }
 
-            $sql = "select * from web_sys800_data where AddDate>='$startdate' and AddDate<='$overdate'  $tj $TJ_Agent and Type2<>3 and Type2<>6 order by ID desc";
+            $sql = "select * from web_sys800_data where AddDate>='$startdate' and AddDate<='$overdate'  $tj $TJ_Agent and Type2<>3 and Type2<>6 and Type2<>5 order by ID desc";
             $data=DB::select($sql);
             $CK=0;$TK=0;
 

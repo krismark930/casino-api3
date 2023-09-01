@@ -912,6 +912,7 @@ Route::group(['prefix' => 'users', 'middleware' => 'CORS'], function ($router) {
     Route::post('/login', [UserController::class, 'login'])->name('login.user');
     Route::post('/view-profile', [UserController::class, 'viewProfile'])->name('profile.user');
     Route::get('/logout', [UserController::class, 'logout'])->name('logout.user');
+    Route::post('/password-change', [UserController::class, 'changePassword']);
 });
 
 /* Sports routes */
