@@ -55,7 +55,7 @@ class HumanManagementController extends Controller
 
             if ($date == "") {
 
-                $result = WebReportZr::where("playerName", "like", "%$player_name%");
+                $result = WebReportZr::where("UserName", $user_name);
 
                 if ($platform_type != "") {
                     if ($platform_type == "AGIN") {
@@ -166,13 +166,12 @@ class HumanManagementController extends Controller
 
             if ($date == "") {
 
-                $result = WebReportZr::where("playerName", "like", "%$player_name%");
+                $result = WebReportKy::where("Accounts", $player_name)->get();
 
                 $total_count = count($result);
 
                 $response["data"] = $result;
                 $response["total_count"] = $total_count;
-                $response["ky_type"] = array();
                 $response['message'] = "Human Query KY Data fetched successfully!";
                 $response['success'] = TRUE;
                 $response['status'] = STATUS_OK;
