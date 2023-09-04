@@ -1117,7 +1117,7 @@ class AdminReportController extends Controller
         try {
 
             $rules = [
-                "period" => "required|numeric",
+                "period" => "required",
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -1129,6 +1129,7 @@ class AdminReportController extends Controller
 
             $request_data = $request->all();
             $period = $request_data["period"];
+            $user_name = $request_data["user_name"] ?? "";
 
             $sum_data = array();
 
@@ -1143,7 +1144,11 @@ class AdminReportController extends Controller
             $z_userds=0;
             $z_daids=0;
 
-            $ka_tan = KaTan::where("kithe", $period)->get();
+            if ($period == "count_user") {
+                $ka_tan = KaTan::where("username", $user_name)->get();
+            } else {
+                $ka_tan = KaTan::where("kithe", $period)->get();
+            }
 
             $no = 1;
 
@@ -2304,7 +2309,7 @@ class AdminReportController extends Controller
         try {
 
             $rules = [
-                "period" => "required|numeric",
+                "period" => "required",
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -2316,6 +2321,7 @@ class AdminReportController extends Controller
 
             $request_data = $request->all();
             $period = $request_data["period"];
+            $user_name = $request_data["user_name"];
 
             $sum_data = array();
 
@@ -2330,7 +2336,15 @@ class AdminReportController extends Controller
             $z_userds=0;
             $z_daids=0;
 
-            $ka_tan = MacaoKatan::where("kithe", $period)->get();
+            if ($period == "count_user") {
+
+                $ka_tan = MacaoKatan::where("username", $user_name)->get();
+
+            } else {
+
+                $ka_tan = MacaoKatan::where("kithe", $period)->get();
+
+            }
 
             $no = 1;
 

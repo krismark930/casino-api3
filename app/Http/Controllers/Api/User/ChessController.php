@@ -189,7 +189,7 @@ class ChessController extends Controller
                         $web_report_ky = new WebReportKy;
                         $web_report_ky->create($GameData2);
 
-                        User::where("UserName", $UserName)->decrement("withdrawal_condition", $GameData2['AllBet']);
+                        User::where("UserName", $UserName)->decrement("withdrawal_condition", (int)$GameData2['AllBet']);
                     }
 
                     // $balance = $KYUtils->KY_Money2($GameData['list']['Accounts'][$i]);

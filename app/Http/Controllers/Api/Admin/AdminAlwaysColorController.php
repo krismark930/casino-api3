@@ -973,10 +973,10 @@ class AdminAlwaysColorController extends Controller
         try {
 
             $rules = [
-                "gtype" => "required|string",
-                "s_time" => "required|string",
-                "e_time" => "required|string",
-                "user_group" => "required|string"
+                // "gtype" => "required|string",
+                // "s_time" => "required|string",
+                // "e_time" => "required|string",
+                // "user_group" => "required|string"
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -989,9 +989,9 @@ class AdminAlwaysColorController extends Controller
             $request_data = $request->all();
 
             $type = $request_data["gtype"] ?? "";
-            $s_time = $request_data["s_time"];
-            $e_time = $request_data["e_time"];
-            $user_group = $request_data["user_group"];
+            $s_time = $request_data["s_time"] ?? "";
+            $e_time = $request_data["e_time"] ?? ""; 
+            $user_group = $request_data["user_group"] ?? "";
             $user_ignore_group = $request_data["user_ignore_group"] ?? "";
             $page_no = $request_data["page"] ?? 1;
             $limit = $request_data["limit"] ?? 20;

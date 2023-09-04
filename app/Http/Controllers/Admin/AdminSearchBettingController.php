@@ -3,19 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Web\Report;
-use App\Models\Web\System;
-use App\Utils\Utils;
-use App\Models\Sport;
 use App\Models\Config;
+use App\Models\Sport;
 use App\Models\User;
 use App\Models\Web\MoneyLog;
+use App\Models\Web\Report;
 use App\Models\Web\WebMemLogData;
+use App\Utils\Utils;
 use Auth;
 use Exception;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class AdminSearchBettingController extends Controller
 {
@@ -24,97 +21,126 @@ class AdminSearchBettingController extends Controller
     {
         // Web Report Data
         $user = Auth::guard("admin")->user();
-        $page = $request['page'];
+        $page = $request['page'] ?? 1;
         $m_date = $request['m_date'] ?? date('Y-m-d');
         $sort = $request['sort'] ?? 'BetTime';
-        $active = $request['ball'];
-        $m_name = $request['username'];
+        $active = $request['ball'] ?? "";
+        $m_name = $request['username'] ?? "";
         // $checkout = $request['checkout'];
         $type = $request['type'];
         $result_type = $request['result_type'];
-        $start_time = $m_date." 00:00:00";
-        $end_time = $m_date." 23:59:59";
+        $start_time = $m_date . " 00:00:00";
+        $end_time = $m_date . " 23:59:59";
+
+        $user_name = $request["user_name"] ?? "";
+        $mids = Report::where('M_Name', $user_name)->get();
 
         $data = array();
 
-        // $mids = Report::whereBetween('BetTime',array($start_time, $end_time));
+        if ($user_name != "") {
+            $mids = Report::where('M_Name', $user_name);
 
-        $mids = Report::where("M_Date", $m_date);
-
-        if ($active == 1) {
-            $mids = $mids->where("Gtype", "FT");
-        } else if ($active == 2) {
-            $mids = $mids->where("Gtype", "BK");
-        }
-
-        if ($sort == 'Cancel') {
-            $mids = $mids->where('Cancel', 1);
-        }
-        if ($sort == 'Danger') {
-            $mids = $mids->where('Danger', 1);
-        }
-
-        // if($active) {
-        //     $mids = $mids->where('Active', $active);
-        // }
-
-        if ($m_name) {
-            $mids = $mids->where('M_Name', 'like', '%' . trim($m_name) . '%');
-        }
-
-        if ($user['Level']) {
-            switch ($user['Level']) {
-                case 'A':
-                    $mids = $mids->where('Super', $user['UserName']);
-                    break;
-                case 'B':
-                    $mids = $mids->where('Corprator', $user['UserName']);
-                    break;
-                case 'C':
-                    $mids = $mids->where('World', $user['UserName']);
-                    break;
-                case 'D':
-                    $mids = $mids->where('Agents', $user['UserName']);
-                    break;
-                default:
-                    break;
+            if ($user['Level']) {
+                switch ($user['Level']) {
+                    case 'A':
+                        $mids = $mids->where('Super', $user['UserName']);
+                        break;
+                    case 'B':
+                        $mids = $mids->where('Corprator', $user['UserName']);
+                        break;
+                    case 'C':
+                        $mids = $mids->where('World', $user['UserName']);
+                        break;
+                    case 'D':
+                        $mids = $mids->where('Agents', $user['UserName']);
+                        break;
+                    default:
+                        break;
+                }
             }
-        }
 
-        if($result_type != "all") {
-            switch($result_type) {
-                case "Y":
-                    $mids = $mids->where('M_Result', '!=', '');
-                    break;
-                case "N":
-                    $mids = $mids->where('M_Result', '');
-                    break;
-                case "W":
-                    $mids = $mids->where('M_Result', '>', '0');
-                    break;
-                case "W>=500":
-                    $mids = $mids->where('M_Result', '>', '0')->where('BetScore', '>=', '500');
-                    break;
-                case ">=100":
-                    $mids = $mids->where('BetScore', '>=', '100');
-                    break;
-                case ">=500":
-                    $mids = $mids->where('BetScore', '>=', '500');
-                    break;
-                case ">=1000":
-                    $mids = $mids->where('BetScore', '>=', '1000');
-                    break;
-                case ">=5000":
-                    $mids = $mids->where('BetScore', '>=', '5000');
-                    break;
-                case ">=10000":
-                    $mids = $mids->where('BetScore', '>=', '10000');
-                    break;
+        } else {
+
+            // $mids = Report::whereBetween('BetTime',array($start_time, $end_time));
+
+            $mids = Report::where("M_Date", $m_date);
+
+            if ($active == 1) {
+                $mids = $mids->where("Gtype", "FT");
+            } else if ($active == 2) {
+                $mids = $mids->where("Gtype", "BK");
             }
-        }
 
-        if($type) {
-            $mids = $mids->where('Ptype', $type);
+            if ($sort == 'Cancel') {
+                $mids = $mids->where('Cancel', 1);
+            }
+            if ($sort == 'Danger') {
+                $mids = $mids->where('Danger', 1);
+            }
+
+            // if($active) {
+            //     $mids = $mids->where('Active', $active);
+            // }
+
+            if ($m_name) {
+                $mids = $mids->where('M_Name', 'like', '%' . trim($m_name) . '%');
+            }
+
+            if ($user['Level']) {
+                switch ($user['Level']) {
+                    case 'A':
+                        $mids = $mids->where('Super', $user['UserName']);
+                        break;
+                    case 'B':
+                        $mids = $mids->where('Corprator', $user['UserName']);
+                        break;
+                    case 'C':
+                        $mids = $mids->where('World', $user['UserName']);
+                        break;
+                    case 'D':
+                        $mids = $mids->where('Agents', $user['UserName']);
+                        break;
+                    default:
+                        break;
+                }
+            }
+    
+            if ($result_type != "all") {
+                switch ($result_type) {
+                    case "Y":
+                        $mids = $mids->where('M_Result', '!=', '');
+                        break;
+                    case "N":
+                        $mids = $mids->where('M_Result', '');
+                        break;
+                    case "W":
+                        $mids = $mids->where('M_Result', '>', '0');
+                        break;
+                    case "W>=500":
+                        $mids = $mids->where('M_Result', '>', '0')->where('BetScore', '>=', '500');
+                        break;
+                    case ">=100":
+                        $mids = $mids->where('BetScore', '>=', '100');
+                        break;
+                    case ">=500":
+                        $mids = $mids->where('BetScore', '>=', '500');
+                        break;
+                    case ">=1000":
+                        $mids = $mids->where('BetScore', '>=', '1000');
+                        break;
+                    case ">=5000":
+                        $mids = $mids->where('BetScore', '>=', '5000');
+                        break;
+                    case ">=10000":
+                        $mids = $mids->where('BetScore', '>=', '10000');
+                        break;
+                }
+            }
+    
+            if ($type) {
+                $mids = $mids->where('Ptype', $type);
+            }
+
         }
 
         // if($checkout == '0') {
@@ -122,9 +148,11 @@ class AdminSearchBettingController extends Controller
         // }
 
         $totalCount = $mids->count();
-        $mids = $mids->offset(($page - 1) * 20)->limit(20)->orderBy($sort, "desc")->get();
-
-        // return $mids;
+        if ($user_name != "") {
+            $mids = $mids->get();
+        } else {
+            $mids = $mids->offset(($page - 1) * 20)->limit(20)->orderBy($sort, "desc")->get();
+        }
 
         foreach ($mids as $row) {
 
@@ -133,7 +161,10 @@ class AdminSearchBettingController extends Controller
                 $mid_array = array_filter(explode(',', $row['MID']));
                 $item = Sport::whereIn('MID', $mid_array)->first();
             }
-            if (!isset($item)) continue;
+            if (!isset($item)) {
+                continue;
+            }
+
             if ($item["Type"] == "BK") {
                 // if ($item["Retime"] != "" && $item["Retime"] != "半场") {
                 //     $minute = explode(":", $item["Retime"])[0];
@@ -146,11 +177,20 @@ class AdminSearchBettingController extends Controller
                 $retime = $item['Retime'] ?? 0;
             }
             $time = $row['BetTime'];
-            if ($retime == 0)    $retime = "";
-            if ($retime == -1)   $retime = "中场";
+            if ($retime == 0) {
+                $retime = "";
+            }
+
+            if ($retime == -1) {
+                $retime = "中场";
+            }
+
             if ($item['M_Start'] != "") {
                 $aa = floor((strtotime($time) - strtotime($item['M_Start'])) / 60);
-                if ($aa > 240 || $aa < 0)    $aa = "";
+                if ($aa > 240 || $aa < 0) {
+                    $aa = "";
+                }
+
             }
 
             $time = strtotime($row['BetTime']);
@@ -182,7 +222,10 @@ class AdminSearchBettingController extends Controller
                 } else {
                     $state = "<font color=blue>结算注单</font>";
                     $sport = Sport::where("MID", $row["MID"])->first("isSub");
-                    if ($sport['isSub'] == 1) $state .= '<br><font color=red>副盘</font>';
+                    if ($sport['isSub'] == 1) {
+                        $state .= '<br><font color=red>副盘</font>';
+                    }
+
                 }
             } else {
                 $state = '<font color=red>未结算</font>';
@@ -274,7 +317,6 @@ class AdminSearchBettingController extends Controller
                 $M_Result = "<font>" . $row["M_Result"] . "</font>";
             }
 
-
             //  state
             if ($row['Active'] == 0) {
             } else if ($row['Active'] == 1) {
@@ -341,7 +383,7 @@ class AdminSearchBettingController extends Controller
             "set",
             "user",
             "pass",
-            "insert"
+            "insert",
         );
         $b = array("", "", "", "", "", "", "", "", "", "");
         $host = str_replace($a, $b, strtolower(request()->server('HTTP_HOST')));
@@ -349,7 +391,7 @@ class AdminSearchBettingController extends Controller
         if (request()->server("HTTPS") == 'on' or request()->server('SERVER_PORT') == 443) {
             $https = 'https://';
         } else {
-            if (request()->server('HTTP_X_FORWARDED_PROTO') <> '') {
+            if (request()->server('HTTP_X_FORWARDED_PROTO') != '') {
                 $https = request()->server('HTTP_X_FORWARDED_PROTO') . '://';
             } else {
                 $https = 'http://';
@@ -372,7 +414,7 @@ class AdminSearchBettingController extends Controller
         try {
             Report::where('ID', $id)->where('MID', $gid)->update([
                 'Danger' => '0',
-                'Confirmed' => '0'
+                'Confirmed' => '0',
             ]);
             $res = Report::where('Cancel', '1')->where('MID', $gid)->where('ID', $id)->get();
             if (count($res)) {
@@ -471,7 +513,6 @@ class AdminSearchBettingController extends Controller
                 $orderId = $res['OrderID'];
                 $balance = $m_result == '' ? $betscore : -$m_result;
 
-
                 $affectRows = Report::where('id', $id)->update([
                     'VGOLD' => '0',
                     'M_Result' => '0',
@@ -568,27 +609,30 @@ class AdminSearchBettingController extends Controller
             $Mtype = $res['Mtype'];
             $LineType = $res['LineType'];
             $TurnRate = $res['TurnRate'] * $BetScore / 100;
-            if (in_array($LineType, $arr_line)) $M_Rate--;
+            if (in_array($LineType, $arr_line)) {
+                $M_Rate--;
+            }
+
             $Gwin = $res['Gwin'];
-            if ($confirmed == 11) {  //全赢
+            if ($confirmed == 11) { //全赢
                 // $balance = $BetScore + $BetScore * $M_Rate + $TurnRate;
                 $balance = $BetScore + $G_Win + $TurnRate;
                 $VGold = $BetScore;
                 $memo = $loginname . '判为全赢';
-            } else if ($confirmed == 12) {  //全输
+            } else if ($confirmed == 12) { //全输
                 $balance = $TurnRate;
                 $VGold = $BetScore;
                 $memo = $loginname . '判为全输';
-            } elseif ($confirmed == 13) {  //赢一半
+            } elseif ($confirmed == 13) { //赢一半
                 // $balance = $BetScore + $BetScore * $M_Rate / 2 + $TurnRate;
                 $balance = $BetScore + $G_Win / 2 + $TurnRate;
                 $VGold = $BetScore / 2;
                 $memo = $loginname . '判为赢一半';
-            } else if ($confirmed == 14) {  //输一半
+            } else if ($confirmed == 14) { //输一半
                 $balance = $BetScore / 2 + $TurnRate;
                 $VGold = $BetScore / 2;
                 $memo = $loginname . '判为输一半';
-            } else if ($confirmed == 15) {  //和局
+            } else if ($confirmed == 15) { //和局
                 $balance = $BetScore;
                 $VGold = 0;
                 $memo = $loginname . '判为和局';

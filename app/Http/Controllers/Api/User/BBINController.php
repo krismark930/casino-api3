@@ -283,7 +283,7 @@ class BBINController extends Controller
                             $web_report_zr = new WebReportZr;
                             $web_report_zr->create($new_data);
 
-                            User::where("UserName", $UserName)->decrement("withdrawal_condition", $betAmount);
+                            User::where("UserName", $UserName)->decrement("withdrawal_condition", (int)$betAmount);
                         } else {
                             WebReportZr::where("billNo", $billNo)
                                 ->where("platformType", $platformType)
