@@ -132,20 +132,34 @@ class UserInfoController extends Controller
                 ->where("Checked", 1)
                 ->where("Cancel", 0)
                 ->where("Username", $username)
-                ->sum("gold");
+                ->sum("Gold");
+            
+            $deposit_amount = Sys800::where("Type", "S")
+            ->where("Type2", 1)
+            ->where("Checked", 1)
+            ->where("Cancel", 0)
+            ->where("Username", $username)
+            ->sum("Gold");
+            
+            $withdraw_amount = Sys800::where("Type", "T")
+            ->where("Type2", 1)
+            ->where("Checked", 1)
+            ->where("Cancel", 0)
+            ->where("Username", $username)
+            ->sum("Gold");
 
             $ckzs = Sys800::where("Type", "S")
                 ->where("Checked", 1)
                 ->where("Cancel", 0)
                 ->where("Username", $username)
-                ->sum("gold");
+                ->sum("Gold");
 
             $cjzs = Sys800::where("Type", "S")
                 ->where("Bank_Account", 'like', "%彩金%")
                 ->where("Checked", 1)
                 ->where("Cancel", 0)
                 ->where("Username", $username)
-                ->sum("gold");
+                ->sum("Gold");
 
             $hszs = Sys800::where("Type", "S")
                 ->where(function ($query) {
@@ -155,25 +169,25 @@ class UserInfoController extends Controller
                 ->where("Checked", 1)
                 ->where("Cancel", 0)
                 ->where("Username", $username)
-                ->sum("gold");
+                ->sum("Gold");
 
             $qkzs = Sys800::where("Type", "T")
                 ->where("Cancel", 0)
                 ->where("Username", $username)
-                ->sum("gold");
+                ->sum("Gold");
 
             $qkzs_nocheck = Sys800::where("Type", "T")
                 ->where("Checked", 0)
                 ->where("Cancel", 0)
                 ->where("Username", $username)
-                ->sum("gold");
+                ->sum("Gold");
 
             $qkzs2 = Sys800::where("Type", "T")
                 ->where("Type2", 3)
                 ->where("Checked", 1)
                 ->where("Cancel", 0)
                 ->where("Username", $username)
-                ->sum("gold");
+                ->sum("Gold");
 
             $zzzs = WebReportData::where("M_Name", $username)
                 ->where("Cancel", 0)
@@ -303,6 +317,8 @@ class UserInfoController extends Controller
                 "other_lottery_bet_money" => $other_lottery_bet_money,
                 "hongKong_six_mark_bet_money" => $hongKong_six_mark_bet_money,
                 "macao_six_mark_bet_money" => $macao_six_mark_bet_money,
+                "deposit_amount" => $deposit_amount,
+                "withdraw_amount" => $withdraw_amount,
             );
 
             $response["data"] = $data;
