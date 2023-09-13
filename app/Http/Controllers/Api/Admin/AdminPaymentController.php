@@ -248,7 +248,7 @@ class AdminPaymentController extends Controller
                         "currentAmount" => $new_withdrawal_condition,
                         "AddDate" => $current_time,
                         "Type" => "S",
-                        "Type2" => 6,
+                        "Type2" => 6, // 洗码金额加款
                         "UserName" => $username,
                         "Agents" => $agent,
                         "World" => $world,
@@ -281,7 +281,7 @@ class AdminPaymentController extends Controller
 
                     $new_log = new MoneyLog;
                     $new_log->user_id = $user_id;
-                    $new_log->order_num = $sys_800["Order_Code"];
+                    $new_log->order_num = $Order_Code;
                     $new_log->about = $user["UserName"] . "审核存款";
                     $new_log->update_time = $current_time;
                     $new_log->type = "存款";

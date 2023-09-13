@@ -251,8 +251,17 @@ class AdminStatisticsController extends Controller
                 array_push($Agent_arr, array("label" => $item["Agents"], "value" => $item["Agents"]));
             }
 
-            $sql = "select * from web_sys800_data where AddDate>='$startdate' and AddDate<='$overdate'  $tj $TJ_Agent and Type2<>3 and Type2<>6 and Type2<>5 order by ID desc";
-            $data=DB::select($sql);
+            if ($Type == 'C') {
+
+                $sql = "select * from web_sys800_data where AddDate>='$startdate' and AddDate<='$overdate'  $tj $TJ_Agent order by ID desc";
+                $data=DB::select($sql);
+
+            } else {
+
+                $sql = "select * from web_sys800_data where AddDate>='$startdate' and AddDate<='$overdate'  $tj $TJ_Agent and Type2<>3 and Type2<>6 and Type2<>5 order by ID desc";
+                $data=DB::select($sql);
+
+            }
             $CK=0;$TK=0;
 
             foreach($data as $row) {

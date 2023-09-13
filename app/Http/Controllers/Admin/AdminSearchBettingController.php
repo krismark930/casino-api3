@@ -10,9 +10,9 @@ use App\Models\Web\MoneyLog;
 use App\Models\Web\Report;
 use App\Models\Web\WebMemLogData;
 use App\Utils\Utils;
-use Auth;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminSearchBettingController extends Controller
 {
