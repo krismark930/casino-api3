@@ -4,19 +4,19 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Web\MoneyLog;
-use Illuminate\Http\Request;
-use Exception;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
-use App\Models\WebSystemData;
-use App\Utils\Utils;
 use App\Models\WebAgent;
+use App\Models\WebSystemData;
+use App\Models\Web\MoneyLog;
 use App\Models\Web\Sys800;
 use App\Models\Web\WebMemLogData;
+use App\Utils\Utils;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class UserManagementController extends Controller
 {
@@ -24,7 +24,7 @@ class UserManagementController extends Controller
     {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -63,14 +63,13 @@ class UserManagementController extends Controller
 
             $total_count = $result->count();
 
-
             $result = $result->offset(($page_no - 1) * $limit)
                 ->take($limit)->orderby($sort, $orderby)->get();
 
             $response["total_count"] = $total_count;
             $response["data"] = $result;
             $response['message'] = "Sub User Data fetched successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -93,7 +92,6 @@ class UserManagementController extends Controller
 
         $web_mem_log_data->save();
 
-
         return response()->json($response, $response['status']);
     }
 
@@ -101,7 +99,7 @@ class UserManagementController extends Controller
     {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -175,7 +173,7 @@ class UserManagementController extends Controller
             $web_mem_log_data->save();
 
             $response['message'] = "Sub User Data added successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -190,7 +188,7 @@ class UserManagementController extends Controller
     {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -224,7 +222,7 @@ class UserManagementController extends Controller
             ]);
 
             $response['message'] = "Sub User Data updated successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -239,7 +237,7 @@ class UserManagementController extends Controller
     {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -266,7 +264,7 @@ class UserManagementController extends Controller
             ]);
 
             $response['message'] = "Sub User Data suspended successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -281,7 +279,7 @@ class UserManagementController extends Controller
     {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -304,7 +302,7 @@ class UserManagementController extends Controller
             $web_system_data = WebSystemData::where("id", $id)->delete();
 
             $response['message'] = "Sub User Data deleted successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -319,7 +317,7 @@ class UserManagementController extends Controller
     {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -347,7 +345,7 @@ class UserManagementController extends Controller
 
             $web_system_data = WebSystemData::where("id", $id)->update([
                 "Competence" => $Competence,
-                "Style" => $Style
+                "Style" => $Style,
             ]);
 
             $login_info = '查看子帐号权限';
@@ -366,7 +364,7 @@ class UserManagementController extends Controller
             $web_mem_log_data->save();
 
             $response['message'] = "Sub User Data permissioned successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -381,7 +379,7 @@ class UserManagementController extends Controller
     {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -416,7 +414,6 @@ class UserManagementController extends Controller
             $search = $request_data["search"] ?? "";
             $dlg_option = $request_data['dlg_option'] ?? "";
 
-
             $row = WebSystemData::find(1);
 
             $admin_url = array_filter(explode(";", $row['Admin_Url']));
@@ -429,9 +426,8 @@ class UserManagementController extends Controller
                 $web = 'web_agents_data';
             }
 
-
-            $ManageMember = $row['ManageMember'];  //代理商会员管理权限
-            $ManageCredit = $row['ManageCredit'];  //代理商额度管理权限
+            $ManageMember = $row['ManageMember']; //代理商会员管理权限
+            $ManageCredit = $row['ManageCredit']; //代理商额度管理权限
             $name = $row['UserName'];
             $passw = $row['Level'];
             $subUser = $row['SubUser'];
@@ -440,7 +436,9 @@ class UserManagementController extends Controller
             } else {
                 $name = $row['SubName'];
             }
-            if ($name == "admin8888") $name = "admin";
+            if ($name == "admin8888") {
+                $name = "admin";
+            }
 
             // return $name;
 
@@ -529,7 +527,7 @@ class UserManagementController extends Controller
             }
 
             if ($search != '') {
-                if ($data == 'web_agents_data') {  //代理商没有机器码
+                if ($data == 'web_agents_data') { //代理商没有机器码
                     $search = "and (UserName like '%$search%' or LoginName like '%$search%' or Alias like '%$search%' or AddDate like '%$search%')";
                 } else {
                     $search = "and (UserName like '%$search%' or LoginName like '%$search%' or Alias like '%$search%' or MachineCode='$search' or AddDate like '%$search%')";
@@ -640,15 +638,25 @@ class UserManagementController extends Controller
             $offset = ($page - 1) * $limit;
             $mysql = $sql . " limit $offset,$limit;";
 
-
             $result = DB::select($mysql);
 
+            $result_1 = array();
+
+            foreach ($result as $row) {
+                $row = get_object_vars($row);
+                $sys_800 = Sys800::where("Type", "T")->where("UserName", $row["UserName"])->where("Cancel", 0)->select(DB::raw("SUM(Gold) as withdraw_money"))->get();
+                // return $result[0]["withdraw_money"];
+                $withdraw_money = $sys_800[0]["withdraw_money"];
+                $row["Credit"] = $row["Money"] - $withdraw_money;
+                array_push($result_1, $row);
+            }
+
             $response["total_count"] = $total_count;
-            $response["data"] = $result;
+            $response["data"] = $result_1;
             $response["parents"] = $parents_array;
             $response["web"] = $web;
             $response['message'] = "Company Data fetched successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -663,7 +671,7 @@ class UserManagementController extends Controller
     {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -683,7 +691,6 @@ class UserManagementController extends Controller
             $request_data = $request->all();
             $lv = $request_data["lv"];
             $parents_id = $request_data["parents_id"] ?? "";
-
 
             $row = WebSystemData::find(1);
 
@@ -753,7 +760,7 @@ class UserManagementController extends Controller
             $response["erow"] = $erow[0]->credit ?? 0;
             $response["parents"] = $parents;
             $response['message'] = "Company Info fetched successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -768,7 +775,7 @@ class UserManagementController extends Controller
     {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -804,7 +811,6 @@ class UserManagementController extends Controller
             $alias = $_REQUEST['Alias'] ?? ""; //名称
             $usedate = $_REQUEST['usedate'] ?? "";
             $address = $_REQUEST['address'] ?? "";
-
 
             $row = WebSystemData::find(1);
 
@@ -1681,13 +1687,15 @@ class UserManagementController extends Controller
                 $FS_FS_Scene = $row_1['FS_FS_Scene'];
 
                 $type = 'C';
-                if ($AddDate == "") $AddDate = date('Y-m-d H:i:s'); //新增日期
+                if ($AddDate == "") {
+                    $AddDate = date('Y-m-d H:i:s');
+                }
+                //新增日期
                 $ip_addr = "127.0.0.1";
-                $notes = "";  //来源
+                $notes = ""; //来源
 
                 $username = trim($username);
                 $password = trim($password);
-
 
                 $msql = "select * from web_member_data where UserName='$username'";
                 $mresult = DB::select($msql);
@@ -2048,7 +2056,6 @@ class UserManagementController extends Controller
                 } else if ($lv == 'D') {
                     $abcd = 80;
                 }
-
 
                 $row_2 = get_object_vars(DB::select("select Credit from $data where UserName='$parents_id'")[0]);
 
@@ -2483,9 +2490,8 @@ class UserManagementController extends Controller
                 }
             }
 
-
             $response['message'] = "Company Data added successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -2500,7 +2506,7 @@ class UserManagementController extends Controller
     {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -2530,8 +2536,8 @@ class UserManagementController extends Controller
             $gold = $request_data["maxcredit"] ?? "";
             $pasd = Hash::make($request_data["password"]);
             $alias = $request_data["alias"] ?? "";
-            $ManageMember2 = $request_data['ManageMember'] ?? "";  //代理商会员管理权限
-            $ManageCredit2 = $request_data['ManageCredit'] ?? "";  //代理商额度管理权限
+            $ManageMember2 = $request_data['ManageMember'] ?? ""; //代理商会员管理权限
+            $ManageCredit2 = $request_data['ManageCredit'] ?? ""; //代理商额度管理权限
             $D_Point = $request_data['D_Point'] ?? "";
             $super = $request_data['Super'] ?? "";
             $corprator = $request_data['Corprator'] ?? "";
@@ -2601,7 +2607,7 @@ class UserManagementController extends Controller
             }
 
             $response['message'] = "Company Data updated successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -2616,7 +2622,7 @@ class UserManagementController extends Controller
     {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -2662,7 +2668,7 @@ class UserManagementController extends Controller
             DB::select($mysql);
 
             $response['message'] = "Agent Data moved successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -2677,7 +2683,7 @@ class UserManagementController extends Controller
     {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -2796,7 +2802,7 @@ class UserManagementController extends Controller
             }
 
             $response['message'] = "Company Data updated successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -2811,14 +2817,14 @@ class UserManagementController extends Controller
     {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
 
             $rules = [
                 "agent" => "required|string",
-                "Money" => "required|numeric"
+                "Money" => "required|numeric",
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -2854,7 +2860,7 @@ class UserManagementController extends Controller
             }
 
             $response['message'] = "Agent Money updated successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -2869,7 +2875,7 @@ class UserManagementController extends Controller
     {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -2901,8 +2907,8 @@ class UserManagementController extends Controller
             $fanshui_zr = $_REQUEST['fanshui_zr'] ?? ""; //真人反水
             $fanshui_dz = $_REQUEST['fanshui_dz'] ?? ""; //电子反水
             $fanshui_ky = $_REQUEST['fanshui_ky'] ?? ""; //电子反水
-            $question = $_REQUEST['question'] ?? "";  //提示问题 
-            $answer = $_REQUEST['answer'] ?? "";  //答案
+            $question = $_REQUEST['question'] ?? ""; //提示问题
+            $answer = $_REQUEST['answer'] ?? ""; //答案
 
             $VIP = $_REQUEST['VIP'] ?? ""; //VIP
             $Phone = $_REQUEST['Phone'] ?? ""; //手机号码
@@ -2941,7 +2947,7 @@ class UserManagementController extends Controller
             if ($username != "") {
 
                 User::where("id", $id)->update([
-                    "UserName" => $username
+                    "UserName" => $username,
                 ]);
             }
 
@@ -2963,7 +2969,7 @@ class UserManagementController extends Controller
 
             if ($more_money != "" && $operation_type == "1") {
 
-                $newmoney = (int)$money + (int)$more_money;
+                $newmoney = (int) $money + (int) $more_money;
 
                 $data = array(
                     "Payway" => "W",
@@ -2997,9 +3003,9 @@ class UserManagementController extends Controller
                 $new_log = new MoneyLog();
                 $new_log->user_id = $user["id"];
                 $new_log->order_num = $Order_Code;
-                $new_log->about = $user["UserName"]."人工加款";
+                $new_log->about = $user["UserName"] . "人工加款";
                 $new_log->update_time = $current_time;
-                $new_log->type = $user["UserName"]."人工加款";
+                $new_log->type = $user["UserName"] . "人工加款";
                 $new_log->order_value = $more_money;
                 $new_log->assets = $money;
                 $new_log->balance = $newmoney;
@@ -3008,7 +3014,7 @@ class UserManagementController extends Controller
 
             if ($more_money != "" && $operation_type == "3") {
 
-                $newmoney = (int)$bonus_money + (int)$more_money;
+                $newmoney = (int) $bonus_money + (int) $more_money;
 
                 $data = array(
                     "Payway" => "W",
@@ -3017,7 +3023,7 @@ class UserManagementController extends Controller
                     "currentAmount" => $newmoney,
                     "AddDate" => $current_time,
                     "Type" => "S",
-                    "Type2" => "6",
+                    "Type2" => "2",
                     "UserName" => $username,
                     "Agents" => $agent,
                     "World" => $world,
@@ -3042,9 +3048,9 @@ class UserManagementController extends Controller
                 $new_log = new MoneyLog();
                 $new_log->user_id = $user["id"];
                 $new_log->order_num = $Order_Code;
-                $new_log->about = $user["UserName"]."彩金加款";
+                $new_log->about = $user["UserName"] . "彩金加款";
                 $new_log->update_time = $current_time;
-                $new_log->type = $user["UserName"]."彩金加款";
+                $new_log->type = $user["UserName"] . "彩金加款";
                 $new_log->order_value = $more_money;
                 $new_log->assets = $money;
                 $new_log->balance = $newmoney;
@@ -3057,7 +3063,7 @@ class UserManagementController extends Controller
                 // $sql = "insert into web_sys800_data set Checked=1,Payway='AG',Gold='$kk',AddDate='$date',Type='T',UserName='會員$user',Agents='$agent',Admin='$admin',CurType='RMB',Date='$datetime',Bank_Address='新余额:$newmoney',Bank_Account='旧余额:$money',Order_Code='會員提款'";
                 // DB::select($sql);
 
-                $newmoney = (int)$money - (int)$more_money;
+                $newmoney = (int) $money - (int) $more_money;
 
                 $data = array(
                     "Payway" => "W",
@@ -3087,9 +3093,9 @@ class UserManagementController extends Controller
                 $new_log = new MoneyLog();
                 $new_log->user_id = $user["id"];
                 $new_log->order_num = $Order_Code;
-                $new_log->about = $user["UserName"]."人工扣款";
+                $new_log->about = $user["UserName"] . "人工扣款";
                 $new_log->update_time = $current_time;
-                $new_log->type = $user["UserName"]."人工扣款";
+                $new_log->type = $user["UserName"] . "人工扣款";
                 $new_log->order_value = $more_money;
                 $new_log->assets = $money;
                 $new_log->balance = $newmoney;
@@ -3103,7 +3109,7 @@ class UserManagementController extends Controller
                 // $sql = "insert into web_sys800_data set Checked=1,Payway='AG',Gold='$kk',AddDate='$date',Type='T',UserName='會員$user',Agents='$agent',Admin='$admin',CurType='RMB',Date='$datetime',Bank_Address='新余额:$newmoney',Bank_Account='旧余额:$money',Order_Code='會員提款'";
                 // DB::select($sql);
 
-                $newmoney = (int)$bonus_money - (int)$more_money;
+                $newmoney = (int) $bonus_money - (int) $more_money;
 
                 $data = array(
                     "Payway" => "W",
@@ -3133,9 +3139,9 @@ class UserManagementController extends Controller
                 $new_log = new MoneyLog();
                 $new_log->user_id = $user["id"];
                 $new_log->order_num = $Order_Code;
-                $new_log->about = $user["UserName"]."彩金扣款";
+                $new_log->about = $user["UserName"] . "彩金扣款";
                 $new_log->update_time = $current_time;
-                $new_log->type = $user["UserName"]."彩金扣款";
+                $new_log->type = $user["UserName"] . "彩金扣款";
                 $new_log->order_value = $more_money;
                 $new_log->assets = $money;
                 $new_log->balance = $newmoney;
@@ -3152,7 +3158,7 @@ class UserManagementController extends Controller
 
             if ($withdraw_more_money != "" && $withdraw_condition_type == "1") {
 
-                $newmoney = (int)$withdrawal_condition + (int)$withdraw_more_money;
+                $newmoney = (int) $withdrawal_condition + (int) $withdraw_more_money;
 
                 $data = array(
                     "Payway" => "W",
@@ -3186,9 +3192,9 @@ class UserManagementController extends Controller
                 $new_log = new MoneyLog();
                 $new_log->user_id = $user["id"];
                 $new_log->order_num = $Order_Code;
-                $new_log->about = $user["UserName"]."洗码金额加款";
+                $new_log->about = $user["UserName"] . "洗码金额加款";
                 $new_log->update_time = $current_time;
-                $new_log->type = $user["UserName"]."洗码金额加款";
+                $new_log->type = $user["UserName"] . "洗码金额加款";
                 $new_log->order_value = $withdraw_more_money;
                 $new_log->assets = $withdrawal_condition;
                 $new_log->balance = $newmoney;
@@ -3199,7 +3205,7 @@ class UserManagementController extends Controller
 
             if ($withdraw_more_money != "" && $withdraw_condition_type == "2") {
 
-                $newmoney = (int)$withdrawal_condition - (int)$withdraw_more_money;
+                $newmoney = (int) $withdrawal_condition - (int) $withdraw_more_money;
 
                 $data = array(
                     "Payway" => "W",
@@ -3229,9 +3235,9 @@ class UserManagementController extends Controller
                 $new_log = new MoneyLog();
                 $new_log->user_id = $user["id"];
                 $new_log->order_num = $Order_Code;
-                $new_log->about = $user["UserName"]."洗码金额扣款";
+                $new_log->about = $user["UserName"] . "洗码金额扣款";
                 $new_log->update_time = $current_time;
-                $new_log->type = $user["UserName"]."洗码金额扣款";
+                $new_log->type = $user["UserName"] . "洗码金额扣款";
                 $new_log->order_value = $withdraw_more_money;
                 $new_log->assets = $withdrawal_condition;
                 $new_log->balance = $newmoney;
@@ -3254,7 +3260,7 @@ class UserManagementController extends Controller
             $web_mem_log_data->save();
 
             $response['message'] = "Member data updated successfully!";
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
