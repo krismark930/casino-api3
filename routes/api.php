@@ -216,6 +216,27 @@ Route::group(['prefix' => 'user', 'middleware' => ['CORS']], function ($router) 
         Route::post('/birth-history', [KakitheController::class, 'getMacaoBirthHistory']);
     });
 
+    // new macao six mark
+
+    Route::group(['prefix' => 'new-macao-ka-tan', 'middleware' => 'auth:api'], function ($router) {
+        Route::post('/save', [KatanController::class, 'saveNewMacaoKatan']);
+        Route::post('/parlay/save', [KatanController::class, 'saveNewMacaoKatanParlay']);
+        Route::post('/even-code/save', [KatanController::class, 'saveNewMacaoKatanEven']);
+        Route::post('/compatible/save', [KatanController::class, 'saveNewMacaoKatanCompatible']);
+        Route::post('/zodaic-even/save', [KatanController::class, 'saveNewMacaoKatanZodiacEven']);
+        Route::post('/mantissa-even/save', [KatanController::class, 'saveNewMacaoKatanMantissaEven']);
+        Route::post('/miss-all/save', [KatanController::class, 'saveNewMacaoKatanMissAll']);
+        Route::post('/bet-result/main', [KatanController::class, 'getNewMacaoMainBetResult']);
+        Route::post('/bet-result/sub', [KatanController::class, 'getNewMacaoSubBetResult']);
+    });
+
+    Route::group(['prefix' => 'new-macao-ka-kithe'], function ($router) {
+        Route::post('/game-status', [KakitheController::class, 'getNewMacaoCurrentGameStatus']);
+        Route::post('/game-version', [KakitheController::class, 'getNewMacaoGameVersion']);
+        Route::post('/game-result', [KakitheController::class, 'getNewMacaoGameResult']);
+        Route::post('/birth-history', [KakitheController::class, 'getNewMacaoBirthHistory']);
+    });
+
     // always color
 
     Route::group(['prefix' => 'lottery-schedule'], function ($router) {
@@ -527,6 +548,33 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], func
         Route::post('/single-quota/update', [AdminSixMarkSettingController::class, 'updateMacaoSingleQuota']);
         Route::post('/water-setting/get', [AdminSixMarkSettingController::class, 'getMacaoWaterSetting']);
         Route::post('/water-setting/update', [AdminSixMarkSettingController::class, 'updateMacaoWatherSetting']);
+    });
+
+    // new macao six mark
+
+    Route::group(['prefix' => 'new-macao-ka-kithe'], function ($router) {
+        Route::post('/all', [KitheController::class, 'getNewMacaoKakitheAll']);
+        Route::post('/lottery-status', [KitheController::class, 'getNewMacaoLotteryStatus']);
+        Route::post('/game-result/save', [KitheController::class, 'saveNewMacaoGameResult']);
+        Route::post('/handicap/update', [KitheController::class, 'updateNewMacaoHandicap']);
+        Route::post('/best/update', [KitheController::class, 'updateNewMacaoBest']);
+        Route::post('/update', [KitheController::class, 'updateNewMacaoKakithe']);
+        Route::post('/status/update', [KitheController::class, 'updateNewMacaoKakitheStatus']);
+        Route::post('/delete', [KitheController::class, 'deleteNewMacaoKakithe']);
+        Route::post('/restore', [KitheController::class, 'restoreNewMacaoKakithe']);
+        Route::post('/edit', [KitheController::class, 'editNewMacaoKakithe']);
+        Route::post('/win', [KitheController::class, 'winNewMacaoKakithe']);
+    });
+
+    Route::group(['prefix' => 'new-macao-ya-kithe'], function ($router) {
+        Route::post('/all', [YakitheController::class, 'getNewMacaoYakitheAll']);
+        Route::post('/item', [YakitheController::class, 'getNewMacaoYakitheItemById']);
+        Route::post('/update', [YakitheController::class, 'updateNewMacaoYakithe']);
+    });
+
+    Route::group(['prefix' => 'new-macao-ka-dan'], function ($router) {
+        Route::post('/superior', [AdminKamemController::class, 'getNewMacaoKadanSuperior']);
+        Route::post('/add', [AdminKamemController::class, 'addMacaoKadan']);
     });
 
     // always color lottery

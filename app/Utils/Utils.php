@@ -11,6 +11,7 @@ use App\Models\Kamem;
 use App\Models\KasxNumber;
 use App\Models\Kacolor;
 use App\Models\Config;
+use App\Models\NewMacaoKakithe;
 use App\Models\OrderLotterySub;
 use App\Models\OrderLottery;
 use App\Models\Web\MoneyLog;
@@ -3423,6 +3424,19 @@ class Utils
     {
         $Current_Kithe_Num = 1;
         $Current_KitheTable = MacaoKakithe::where("na", 0)->first(["id", "nn", "nd", "na", "n1", "n2", "n3", "n4", "n5", "n6", "lx", "kitm", "kitm1", "kizt", "kizt1", "kizm", "kizm1", "kizm6", "kizm61", "kigg", "kigg1", "kilm", "kilm1", "kisx", "kisx1", "kibb", "kibb1", "kiws", "kiws1", "zfb", "zfbdate", "zfbdate1", "best"]);
+        if ($Current_KitheTable["na"] == 0 || $Current_KitheTable["n1"] == 0 || $Current_KitheTable["n2"] == 0 || $Current_KitheTable["n3"] == 0 || $Current_KitheTable["n4"] == 0 || $Current_KitheTable["n5"] == 0 || $Current_KitheTable["n6"] == 0) {
+            $Current_Kithe_Num = $Current_KitheTable["nn"];
+        } else {
+            $Current_Kithe_Num = $Current_KitheTable["nn"] + 1;
+        }
+
+        return $Current_Kithe_Num;
+    }
+
+    static function getNewCurrentMacaoKitheNum()
+    {
+        $Current_Kithe_Num = 1;
+        $Current_KitheTable = NewMacaoKakithe::where("na", 0)->first(["id", "nn", "nd", "na", "n1", "n2", "n3", "n4", "n5", "n6", "lx", "kitm", "kitm1", "kizt", "kizt1", "kizm", "kizm1", "kizm6", "kizm61", "kigg", "kigg1", "kilm", "kilm1", "kisx", "kisx1", "kibb", "kibb1", "kiws", "kiws1", "zfb", "zfbdate", "zfbdate1", "best"]);
         if ($Current_KitheTable["na"] == 0 || $Current_KitheTable["n1"] == 0 || $Current_KitheTable["n2"] == 0 || $Current_KitheTable["n3"] == 0 || $Current_KitheTable["n4"] == 0 || $Current_KitheTable["n5"] == 0 || $Current_KitheTable["n6"] == 0) {
             $Current_Kithe_Num = $Current_KitheTable["nn"];
         } else {

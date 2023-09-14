@@ -8,7 +8,6 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
-use DB;
 use App\Models\Kamem;
 use App\Models\KaTan;
 use App\Models\MacaoKatan;
@@ -16,8 +15,10 @@ use App\Models\Kaguan;
 use App\Models\Kazi;
 use App\Models\Kaquota;
 use App\Models\Kaguands;
+use App\Models\NewMacaoKatan;
 use Carbon\Carbon;
 use App\Utils\Utils;
+use Illuminate\Support\Facades\DB;
 
 class AdminKamemController extends Controller
 {
@@ -1568,6 +1569,63 @@ class AdminKamemController extends Controller
         return response()->json($response, $response['status']);
     }
 
+    public function getNewMacaoKadanSuperior(Request $request) {
+
+        $response = [];
+        $response['success'] = FALSE;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+
+            $request_data = $request->all();
+            $zongid = $request_data["zong_id"] ?? "";
+
+            $kadan_superior = Kaguan::where("lx", 2)->get(["id", "kauser", "sf", "cs"]);
+
+            $data = array();
+
+            foreach($kadan_superior as $item) {
+                $result1 = Kaguan::select(DB::raw("SUM(cs) As sum_m"))
+                    ->where("lx", 3)
+                    ->where("zongid", $item["id"])
+                    ->first();
+                $mumul = 0;
+                if (isset($result1)) {
+                    $mumul = $result1["sum_m"];
+                }
+                $result2 = NewMacaoKatan::select(DB::raw("SUM(sum_m) As sum_m"))
+                    ->where("username", $item["kauser"])
+                    ->first();
+                $mkmkl = 0;
+                if (isset($result2)) {
+                    $mkmkl = $result2["sum_m"];
+                }
+                $cscs = $item["cs"] - $mumul - $mkmkl;
+                array_push($data, array("label" => $item["kauser"] . "--" . $cscs, "value" => $item["id"]));
+            }
+
+            if ($zongid != "") {
+                $result = Kaquota::where("userid", $zongid)
+                    ->where("lx", 0)
+                    ->where("flag", 0)
+                    ->get();
+            } else {
+                $result = Kaguands::where("lx", 0)->get();
+            }
+            $response["data"] = $data;
+            $response["other_data"] = $result;
+            $response['message'] = "Kadan Superior Data fetched successfully!";
+            $response['success'] = TRUE;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    }
+
     public function addMacaoKadan(Request $request) {
 
         $response = [];
@@ -1709,7 +1767,7 @@ class AdminKamemController extends Controller
         }
 
         return response()->json($response, $response['status']);
-    }  
+    }
 
     public function getMacaoKazongSuperior(Request $request) {
 
