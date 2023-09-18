@@ -1,31 +1,35 @@
 <?php
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
+
 use App\Models\User;
-use Auth;
-use Illuminate\Support\Facades\Hash;
-use App\Utils\Utils;
 use App\Models\WebAgent;
 use App\Models\WebMemberLogs;
+use App\Utils\Utils;
+use Auth;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-class UserController extends Controller {
+class UserController extends Controller
+{
 
     protected $user;
 
-    public function __construct() {
+    public function __construct()
+    {
 
-        $this->middleware("auth:api",["except" => ["login","register"]]);
+        $this->middleware("auth:api", ["except" => ["login", "register"]]);
 
         $this->user = new User;
     }
 
-    public function register(Request $request){
+    public function register(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
@@ -54,13 +58,13 @@ class UserController extends Controller {
 
             $inviter_id = 0;
 
-            if($inviter <> ''){
-                $inviter_id = User::where('invite_url', '/login'.'/'.$inviter)->first()->id;
+            if ($inviter != '') {
+                $inviter_id = User::where('invite_url', '/login' . '/' . $inviter)->first()->id;
             }
 
-            $InviteUrl = 'IU'.date("YmdHis",time()+12*3600).mt_rand(100, 999);
+            $InviteUrl = 'IU' . date("YmdHis", time() + 12 * 3600) . mt_rand(100, 999);
 
-            if ( $intro == '' || $intro == null){
+            if ($intro == '' || $intro == null) {
                 $agent = 'ddm999';
             } else {
                 $agent = $intro;
@@ -287,7 +291,7 @@ class UserController extends Controller {
             $BS_PD_Bet = $web_agent['BS_PD_Bet'];
             $BS_PD_Scene = $web_agent['BS_PD_Scene'];
             $BS_Turn_T = $web_agent['BS_Turn_T'];
-            $BS_T_Bet = $web_agent['BS_T_Bet']; 
+            $BS_T_Bet = $web_agent['BS_T_Bet'];
             $BS_T_Scene = $web_agent['BS_T_Scene'];
             $BS_Turn_P = $web_agent['BS_Turn_P'];
             $BS_P_Bet = $web_agent['BS_P_Bet'];
@@ -298,7 +302,6 @@ class UserController extends Controller {
             $BS_Turn_P3 = $web_agent['BS_Turn_P3'];
             $BS_P3_Bet = $web_agent['BS_P3_Bet'];
             $BS_P3_Scene = $web_agent['BS_P3_Scene'];
-
 
             $TN_Turn_R_A = $web_agent['TN_Turn_R_A'];
             $TN_Turn_R_B = $web_agent['TN_Turn_R_B'];
@@ -346,7 +349,6 @@ class UserController extends Controller {
             $TN_P3_Bet = $web_agent['TN_P3_Bet'];
             $TN_P3_Scene = $web_agent['TN_P3_Scene'];
 
-
             $VB_Turn_R_A = $web_agent['VB_Turn_R_A'];
             $VB_Turn_R_B = $web_agent['VB_Turn_R_B'];
             $VB_Turn_R_C = $web_agent['VB_Turn_R_C'];
@@ -392,7 +394,6 @@ class UserController extends Controller {
             $VB_Turn_P3 = $web_agent['VB_Turn_P3'];
             $VB_P3_Bet = $web_agent['VB_P3_Bet'];
             $VB_P3_Scene = $web_agent['VB_P3_Scene'];
-
 
             $OP_Turn_R_A = $web_agent['OP_Turn_R_A'];
             $OP_Turn_R_B = $web_agent['OP_Turn_R_B'];
@@ -470,7 +471,6 @@ class UserController extends Controller {
             $OP_P3_Bet = $web_agent['OP_P3_Bet'];
             $OP_P3_Scene = $web_agent['OP_P3_Scene'];
 
-
             $FU_Turn_OU_A = $web_agent['FU_Turn_OU_A'];
             $FU_Turn_OU_B = $web_agent['FU_Turn_OU_B'];
             $FU_Turn_OU_C = $web_agent['FU_Turn_OU_C'];
@@ -491,7 +491,7 @@ class UserController extends Controller {
             $FS_FS_Bet = $web_agent['FS_FS_Bet'];
             $FS_FS_Scene = $web_agent['FS_FS_Scene'];
 
-            $opentype = 'C';  //返水盘口
+            $opentype = 'C'; //返水盘口
             $opentype2 = $opentype; //会员盘口
 
             $ip_addr = Utils::get_ip();
@@ -506,7 +506,7 @@ class UserController extends Controller {
             $users = User::where("LoginIP", $ip_addr)->get();
 
             if (count($users) > 100) {
-                $response['message'] = '您已经注册过了，请不要重复注册！';                
+                $response['message'] = '您已经注册过了，请不要重复注册！';
                 return response()->json($response, $response['status']);
             }
 
@@ -517,7 +517,7 @@ class UserController extends Controller {
             $user["UserName"] = $user_name;
             $user["LoginName"] = $login_name;
             $user["password"] = Hash::make($password);
-            $user["invite_url"] = '/login'.'/'.$InviteUrl;
+            $user["invite_url"] = '/login' . '/' . $InviteUrl;
             $user["inviter_id"] = $inviter_id;
             $user["Credit"] = 0;
             $user["Money"] = 0;
@@ -559,13 +559,13 @@ class UserController extends Controller {
             $user["FT_VOU_Scene"] = $FT_VOU_Scene;
             $user["FT_Turn_RE"] = 1;
             $user["FT_RE_Bet"] = $FT_RE_Bet;
-            $user["FT_RE_Scene"] = $FT_RE_Scene;                
+            $user["FT_RE_Scene"] = $FT_RE_Scene;
             $user["FT_Turn_ROU"] = 1;
             $user["FT_ROU_Bet"] = $FT_ROU_Bet;
             $user["FT_ROU_Scene"] = $FT_ROU_Scene;
             $user["FT_Turn_VRE"] = 1;
             $user["FT_VRE_Bet"] = $FT_VRE_Bet;
-            $user["FT_VRE_Scene"] = $FT_VRE_Scene;                
+            $user["FT_VRE_Scene"] = $FT_VRE_Scene;
             $user["FT_Turn_VROU"] = 1;
             $user["FT_VROU_Bet"] = $FT_VROU_Bet;
             $user["FT_VROU_Scene"] = $FT_VROU_Scene;
@@ -601,25 +601,25 @@ class UserController extends Controller {
             $user["BK_R_Scene"] = $BK_R_Scene;
             $user["BK_Turn_OU"] = 1;
             $user["BK_OU_Bet"] = $BK_OU_Bet;
-            $user["BK_OU_Scene"] = $BK_OU_Scene;                
+            $user["BK_OU_Scene"] = $BK_OU_Scene;
             $user["BK_Turn_VR"] = 1;
             $user["BK_VR_Bet"] = $BK_VR_Bet;
             $user["BK_VR_Scene"] = $BK_VR_Scene;
             $user["BK_Turn_VOU"] = 1;
             $user["BK_VOU_Bet"] = $BK_VOU_Bet;
-            $user["BK_VOU_Scene"] = $BK_VOU_Scene;                
+            $user["BK_VOU_Scene"] = $BK_VOU_Scene;
             $user["BK_Turn_RE"] = 1;
             $user["BK_RE_Bet"] = $BK_RE_Bet;
-            $user["BK_RE_Scene"] = $BK_RE_Scene;                
+            $user["BK_RE_Scene"] = $BK_RE_Scene;
             $user["BK_Turn_ROU"] = 1;
             $user["BK_ROU_Bet"] = $BK_ROU_Bet;
-            $user["BK_ROU_Scene"] = $BK_ROU_Scene;                
+            $user["BK_ROU_Scene"] = $BK_ROU_Scene;
             $user["BK_Turn_VRE"] = 1;
             $user["BK_VRE_Bet"] = $BK_VRE_Bet;
-            $user["BK_VRE_Scene"] = $BK_VRE_Scene;                
+            $user["BK_VRE_Scene"] = $BK_VRE_Scene;
             $user["BK_Turn_VROU"] = 1;
             $user["BK_VROU_Bet"] = $BK_VROU_Bet;
-            $user["BK_VROU_Scene"] = $BK_VROU_Scene;                
+            $user["BK_VROU_Scene"] = $BK_VROU_Scene;
             $user["BK_Turn_EO"] = 1;
             $user["BK_EO_Bet"] = $BK_EO_Bet;
             $user["BK_EO_Scene"] = $BK_EO_Scene;
@@ -628,35 +628,35 @@ class UserController extends Controller {
             $user["BK_PR_Scene"] = $BK_PR_Scene;
             $user["BK_Turn_P3"] = $BK_Turn_P3;
             $user["BK_P3_Bet"] = $BK_P3_Bet;
-            $user["BK_P3_Scene"] = $BK_P3_Scene;                
+            $user["BK_P3_Scene"] = $BK_P3_Scene;
             $user["BS_Turn_R"] = 1;
             $user["BS_R_Bet"] = $BS_R_Bet;
-            $user["BS_R_Scene"] = $BS_R_Scene;                
+            $user["BS_R_Scene"] = $BS_R_Scene;
             $user["BS_Turn_OU"] = 1;
             $user["BS_OU_Scene"] = $BS_OU_Scene;
-            $user["BS_OU_Bet"] = $BS_OU_Bet;                
-            $user["BS_Turn_VR"] = "BS_Turn_VR_".$opentype;
+            $user["BS_OU_Bet"] = $BS_OU_Bet;
+            $user["BS_Turn_VR"] = "BS_Turn_VR_" . $opentype;
             $user["BS_VR_Bet"] = $BS_VR_Bet;
-            $user["BS_VR_Scene"] = $BS_VR_Scene;                
-            $user["BS_Turn_VOU"] = "BS_Turn_VOU_".$opentype;
+            $user["BS_VR_Scene"] = $BS_VR_Scene;
+            $user["BS_Turn_VOU"] = "BS_Turn_VOU_" . $opentype;
             $user["BS_VOU_Scene"] = $BS_VOU_Scene;
-            $user["BS_VOU_Bet"] = $BS_VOU_Bet;                
-            $user["BS_Turn_RE"] = "BS_Turn_RE_".$opentype;
+            $user["BS_VOU_Bet"] = $BS_VOU_Bet;
+            $user["BS_Turn_RE"] = "BS_Turn_RE_" . $opentype;
             $user["BS_RE_Bet"] = $BS_RE_Bet;
-            $user["BS_RE_Scene"] = $BS_RE_Scene;                
-            $user["BS_Turn_ROU"] = "BS_Turn_ROU_".$opentype;
+            $user["BS_RE_Scene"] = $BS_RE_Scene;
+            $user["BS_Turn_ROU"] = "BS_Turn_ROU_" . $opentype;
             $user["BS_ROU_Bet"] = $BS_ROU_Bet;
-            $user["BS_ROU_Scene"] = $BS_ROU_Scene;                
-            $user["BS_Turn_VRE"] = "BS_Turn_VRE_".$opentype;
+            $user["BS_ROU_Scene"] = $BS_ROU_Scene;
+            $user["BS_Turn_VRE"] = "BS_Turn_VRE_" . $opentype;
             $user["BS_VRE_Bet"] = $BS_VRE_Bet;
-            $user["BS_VRE_Scene"] = $BS_VRE_Scene;                
-            $user["BS_Turn_VROU"] = "BS_Turn_VROU_".$opentype;
+            $user["BS_VRE_Scene"] = $BS_VRE_Scene;
+            $user["BS_Turn_VROU"] = "BS_Turn_VROU_" . $opentype;
             $user["BS_VROU_Bet"] = $BS_VROU_Bet;
             $user["BS_VROU_Scene"] = $BS_VROU_Scene;
-            $user["BS_Turn_EO"] = "BS_Turn_VROU_".$opentype;
+            $user["BS_Turn_EO"] = "BS_Turn_VROU_" . $opentype;
             $user["BS_EO_Bet"] = $BS_EO_Bet;
-            $user["BS_EO_Scene"] = $BS_EO_Scene;                
-            $user["BS_Turn_1X2"] = "BS_Turn_1X2_".$opentype;
+            $user["BS_EO_Scene"] = $BS_EO_Scene;
+            $user["BS_Turn_1X2"] = "BS_Turn_1X2_" . $opentype;
             $user["BS_1X2_Bet"] = $BS_1X2_Bet;
             $user["BS_1X2_Scene"] = $BS_1X2_Scene;
             $user["BS_Turn_M"] = $BS_Turn_M;
@@ -666,7 +666,7 @@ class UserController extends Controller {
             $user["BS_PD_Bet"] = $BS_PD_Bet;
             $user["BS_PD_Scene"] = $BS_PD_Scene;
             $user["BS_Turn_T"] = $BS_Turn_T;
-            $user["BS_T_Bet"] = $BS_T_Bet;  
+            $user["BS_T_Bet"] = $BS_T_Bet;
             $user["BS_T_Scene"] = $BS_T_Scene;
             $user["BS_Turn_P"] = $BS_Turn_P;
             $user["BS_P_Bet"] = $BS_P_Bet;
@@ -676,20 +676,20 @@ class UserController extends Controller {
             $user["BS_PR_Scene"] = $BS_PR_Scene;
             $user["BS_Turn_P3"] = $BS_Turn_P3;
             $user["BS_P3_Bet"] = $BS_P3_Bet;
-            $user["BS_P3_Scene"] = $BS_P3_Scene;                
-            $user["TN_Turn_R"] = "TN_Turn_R_".$opentype;
+            $user["BS_P3_Scene"] = $BS_P3_Scene;
+            $user["TN_Turn_R"] = "TN_Turn_R_" . $opentype;
             $user["TN_R_Bet"] = $TN_R_Bet;
-            $user["TN_R_Scene"] = $TN_R_Scene;                
-            $user["TN_Turn_OU"] = "TN_Turn_OU_".$opentype;
+            $user["TN_R_Scene"] = $TN_R_Scene;
+            $user["TN_Turn_OU"] = "TN_Turn_OU_" . $opentype;
             $user["TN_OU_Bet"] = $TN_OU_Bet;
-            $user["TN_OU_Scene"] = $TN_OU_Scene;                
-            $user["TN_Turn_RE"] = "TN_Turn_RE_".$opentype;
+            $user["TN_OU_Scene"] = $TN_OU_Scene;
+            $user["TN_Turn_RE"] = "TN_Turn_RE_" . $opentype;
             $user["TN_RE_Bet"] = $TN_RE_Bet;
-            $user["TN_RE_Scene"] = $TN_RE_Scene;                
-            $user["TN_Turn_ROU"] = "TN_Turn_ROU_".$opentype;
+            $user["TN_RE_Scene"] = $TN_RE_Scene;
+            $user["TN_Turn_ROU"] = "TN_Turn_ROU_" . $opentype;
             $user["TN_ROU_Bet"] = $TN_ROU_Bet;
-            $user["TN_ROU_Scene"] = $TN_ROU_Scene;                
-            $user["TN_Turn_EO"] = "TN_Turn_EO_".$opentype;
+            $user["TN_ROU_Scene"] = $TN_ROU_Scene;
+            $user["TN_Turn_EO"] = "TN_Turn_EO_" . $opentype;
             $user["TN_EO_Bet"] = $TN_EO_Bet;
             $user["TN_EO_Scene"] = $TN_EO_Scene;
             $user["TN_Turn_M"] = $TN_Turn_M;
@@ -706,20 +706,20 @@ class UserController extends Controller {
             $user["TN_PR_Scene"] = $TN_PR_Scene;
             $user["TN_Turn_P3"] = $TN_Turn_P3;
             $user["TN_P3_Bet"] = $TN_P3_Bet;
-            $user["TN_P3_Scene"] = $TN_P3_Scene;                
-            $user["VB_Turn_R"] = "VB_Turn_R_".$opentype;
+            $user["TN_P3_Scene"] = $TN_P3_Scene;
+            $user["VB_Turn_R"] = "VB_Turn_R_" . $opentype;
             $user["VB_R_Bet"] = $VB_R_Bet;
-            $user["VB_R_Scene"] = $VB_R_Scene;                
-            $user["VB_Turn_OU"] = "VB_Turn_OU_".$opentype;
+            $user["VB_R_Scene"] = $VB_R_Scene;
+            $user["VB_Turn_OU"] = "VB_Turn_OU_" . $opentype;
             $user["VB_OU_Bet"] = $VB_OU_Bet;
-            $user["VB_OU_Scene"] = $VB_OU_Scene;                
-            $user["VB_Turn_RE"] = "VB_Turn_RE_".$opentype;
+            $user["VB_OU_Scene"] = $VB_OU_Scene;
+            $user["VB_Turn_RE"] = "VB_Turn_RE_" . $opentype;
             $user["VB_RE_Bet"] = $VB_RE_Bet;
-            $user["VB_RE_Scene"] = $VB_RE_Scene;                
-            $user["VB_Turn_ROU"] = "VB_Turn_ROU_".$opentype;
+            $user["VB_RE_Scene"] = $VB_RE_Scene;
+            $user["VB_Turn_ROU"] = "VB_Turn_ROU_" . $opentype;
             $user["VB_ROU_Bet"] = $VB_ROU_Bet;
-            $user["VB_ROU_Scene"] = $VB_ROU_Scene;                
-            $user["VB_Turn_EO"] = "VB_Turn_EO_".$opentype;
+            $user["VB_ROU_Scene"] = $VB_ROU_Scene;
+            $user["VB_Turn_EO"] = "VB_Turn_EO_" . $opentype;
             $user["VB_EO_Bet"] = $VB_EO_Bet;
             $user["VB_EO_Scene"] = $VB_EO_Scene;
             $user["VB_Turn_M"] = $VB_Turn_M;
@@ -736,32 +736,32 @@ class UserController extends Controller {
             $user["VB_PR_Scene"] = $VB_PR_Scene;
             $user["VB_Turn_P3"] = $VB_Turn_P3;
             $user["VB_P3_Bet"] = $VB_P3_Bet;
-            $user["VB_P3_Scene"] = $VB_P3_Scene;                
-            $user["OP_Turn_R"] = "OP_Turn_R_".$opentype;
+            $user["VB_P3_Scene"] = $VB_P3_Scene;
+            $user["OP_Turn_R"] = "OP_Turn_R_" . $opentype;
             $user["OP_R_Bet"] = $OP_R_Bet;
-            $user["OP_R_Scene"] = $OP_R_Scene;                
-            $user["OP_Turn_OU"] = "OP_Turn_OU_".$opentype;
+            $user["OP_R_Scene"] = $OP_R_Scene;
+            $user["OP_Turn_OU"] = "OP_Turn_OU_" . $opentype;
             $user["OP_OU_Bet"] = $OP_OU_Bet;
-            $user["OP_OU_Scene"] = $OP_OU_Scene;                
-            $user["OP_Turn_VR"] = "OP_Turn_VR_".$opentype;
+            $user["OP_OU_Scene"] = $OP_OU_Scene;
+            $user["OP_Turn_VR"] = "OP_Turn_VR_" . $opentype;
             $user["OP_VR_Bet"] = $OP_VR_Bet;
-            $user["OP_VR_Scene"] = $OP_VR_Scene;                
-            $user["OP_Turn_VOU"] = "OP_Turn_VOU_".$opentype;
+            $user["OP_VR_Scene"] = $OP_VR_Scene;
+            $user["OP_Turn_VOU"] = "OP_Turn_VOU_" . $opentype;
             $user["OP_VOU_Bet"] = $OP_VOU_Bet;
-            $user["OP_VOU_Scene"] = $OP_VOU_Scene;                
-            $user["OP_Turn_RE"] = "OP_Turn_RE_".$opentype;
+            $user["OP_VOU_Scene"] = $OP_VOU_Scene;
+            $user["OP_Turn_RE"] = "OP_Turn_RE_" . $opentype;
             $user["OP_RE_Bet"] = $OP_RE_Bet;
-            $user["OP_RE_Scene"] = $OP_RE_Scene;                
-            $user["OP_Turn_ROU"] = "OP_Turn_ROU_".$opentype;
+            $user["OP_RE_Scene"] = $OP_RE_Scene;
+            $user["OP_Turn_ROU"] = "OP_Turn_ROU_" . $opentype;
             $user["OP_ROU_Bet"] = $OP_ROU_Bet;
-            $user["OP_ROU_Scene"] = $OP_ROU_Scene;                
-            $user["OP_Turn_VRE"] = "OP_Turn_VRE_".$opentype;
+            $user["OP_ROU_Scene"] = $OP_ROU_Scene;
+            $user["OP_Turn_VRE"] = "OP_Turn_VRE_" . $opentype;
             $user["OP_VRE_Bet"] = $OP_VRE_Bet;
-            $user["OP_VRE_Scene"] = $OP_VRE_Scene;                
-            $user["OP_Turn_VROU"] = "OP_Turn_VROU_".$opentype;
+            $user["OP_VRE_Scene"] = $OP_VRE_Scene;
+            $user["OP_Turn_VROU"] = "OP_Turn_VROU_" . $opentype;
             $user["OP_VROU_Bet"] = $OP_VROU_Bet;
-            $user["OP_VROU_Scene"] = $OP_VROU_Scene;                
-            $user["OP_Turn_EO"] = "OP_Turn_EO_".$opentype;
+            $user["OP_VROU_Scene"] = $OP_VROU_Scene;
+            $user["OP_Turn_EO"] = "OP_Turn_EO_" . $opentype;
             $user["OP_EO_Bet"] = $OP_EO_Bet;
             $user["OP_EO_Scene"] = $OP_EO_Scene;
             $user["OP_Turn_M"] = $OP_Turn_M;
@@ -784,11 +784,11 @@ class UserController extends Controller {
             $user["OP_PR_Scene"] = $OP_PR_Scene;
             $user["OP_Turn_P3"] = $OP_Turn_P3;
             $user["OP_P3_Bet"] = $OP_P3_Bet;
-            $user["OP_P3_Scene"] = $OP_P3_Scene;                
-            $user["FU_Turn_OU"] = "FU_Turn_OU_".$opentype;
+            $user["OP_P3_Scene"] = $OP_P3_Scene;
+            $user["FU_Turn_OU"] = "FU_Turn_OU_" . $opentype;
             $user["FU_OU_Bet"] = $FU_OU_Bet;
-            $user["FU_OU_Scene"] = $FU_OU_Scene;                
-            $user["FU_Turn_EO"] = "FU_Turn_EO_".$opentype;
+            $user["FU_OU_Scene"] = $FU_OU_Scene;
+            $user["FU_Turn_EO"] = "FU_Turn_EO_" . $opentype;
             $user["FU_EO_Bet"] = $FU_EO_Bet;
             $user["FU_EO_Scene"] = $FU_EO_Scene;
             $user["FU_Turn_PD"] = $FU_Turn_PD;
@@ -805,10 +805,10 @@ class UserController extends Controller {
             $user["Phone"] = $phone_number ?? "";
 
             $user->save();
-            
+
             $response['data'] = $user;
             $response['message'] = 'User registerd successfully!';
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
 
         } catch (Exception $e) {
@@ -820,15 +820,18 @@ class UserController extends Controller {
         return response()->json($response, $response['status']);
     }
 
-    public function login( Request $request) {
+    public function login(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         $rules = [
             'LoginName' => 'required|string',
             'password' => 'required|min:6',
+            'browser_ip' => 'required|string',
+            'broswer_url' => 'required|string',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -839,17 +842,21 @@ class UserController extends Controller {
         }
 
         try {
-        
-            $credentials = $request->only(["LoginName","password"]);
 
-            $user = User::where('LoginName',$credentials['LoginName'])->first();
+            $request_data = $request->all();
+            $client_ip = $request_data["browser_ip"];
+            $client_url = $request_data["broswer_url"];
+
+            $credentials = $request->only(["LoginName", "password"]);
+
+            $user = User::where('LoginName', $credentials['LoginName'])->first();
 
             if (!isset($user)) {
                 $response['message'] = 'Please enter valid registered LoginName.';
                 return response()->json($response, $response['status']);
             }
 
-            if(!auth()->attempt($credentials)) {
+            if (!auth()->attempt($credentials)) {
 
                 if (intval($user['ErrorTimes']) >= 8) {
                     $response['message'] = 'Due to too many wrong passwords, your account has been locked!';
@@ -861,18 +868,18 @@ class UserController extends Controller {
                 $new_data = [
                     "UserName" => $credentials['LoginName'],
                     "Status" => 0,
-                    "LoginIP" => Utils::get_ip(),
+                    "LoginIP" => $client_ip,
                     "DateTime" => $datetime,
-                    "Contect" => '登录失败(pass:'.$credentials['password'].')',
-                    "Url" => Utils::get_browser_ip()
+                    "Contect" => '登录失败(pass:' . $credentials['password'] . ')',
+                    "Url" => Utils::get_browser_ip(),
                 ];
 
                 $web_member_logs = new WebMemberLogs;
 
                 $web_member_logs->create($new_data);
 
-                User::where('LoginName',$credentials['LoginName'])
-                    ->update(["ErrorTimes" => (int)$user["ErrorTimes"] + 1]);
+                User::where('LoginName', $credentials['LoginName'])
+                    ->update(["ErrorTimes" => (int) $user["ErrorTimes"] + 1]);
 
                 $response['message'] = 'Incorrect name or password';
                 return response()->json($response, $response['status']);
@@ -891,14 +898,14 @@ class UserController extends Controller {
 
             $str = time();
 
-            $uid=strtolower(substr(md5($str),0,10).substr(md5($credentials['LoginName']),0,10).'ra'.rand(0,9));
-            $ip_addr=Utils::get_ip();
+            $uid = strtolower(substr(md5($str), 0, 10) . substr(md5($credentials['LoginName']), 0, 10) . 'ra' . rand(0, 9));
+            $ip_addr = Utils::get_ip();
             $browser_ip = Utils::get_browser_ip();
-            $date=date("Y-m-d");
-            $datetime=date("Y-m-d H:i:s");
-            $MachineCode=substr(strtoupper(md5('newhg'.$str.mt_rand(1,9999))),8,20);
+            $date = date("Y-m-d");
+            $datetime = date("Y-m-d H:i:s");
+            $MachineCode = substr(strtoupper(md5('newhg' . $str . mt_rand(1, 9999))), 8, 20);
 
-            User::where('LoginName',$credentials['LoginName'])
+            User::where('LoginName', $credentials['LoginName'])
                 ->where("Status", "<=", 1)
                 ->update([
                     "Oid" => $uid,
@@ -908,26 +915,26 @@ class UserController extends Controller {
                     "LoginTime" => now(),
                     "OnlineTime" => now(),
                     "Online" => 1,
-                    "LoginIP" => $ip_addr,                    
-                    "Url" => $browser_ip,
+                    "LoginIP" => $client_ip,
+                    "Url" => $client_url,
                 ]);
 
             $new_data = [
                 "UserName" => $credentials['LoginName'],
                 "Status" => 1,
-                "LoginIP" => Utils::get_ip(),
+                "LoginIP" => $client_ip,
                 "DateTime" => $datetime,
                 "Contect" => '登录成功',
-                "Url" => Utils::get_browser_ip()
+                "Url" => Utils::get_browser_ip(),
             ];
 
             $web_member_logs = new WebMemberLogs;
-                          
+
             $web_member_logs->create($new_data);
 
             $response['message'] = "Login successfully";
             $response['data'] = $user;
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
 
         } catch (\Exception $e) {
@@ -940,17 +947,23 @@ class UserController extends Controller {
         return response()->json($response, $response['status']);
     }
 
-    public function viewProfile(Request $request) {
+    public function viewProfile(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
 
         try {
             $user = $request->user();
             $user = User::where("UserName", $user["UserName"])->first();
+
+            User::where('UserName', $user["UserName"])
+                ->update([
+                    "OnlineTime" => now(),
+                ]);
             $response['data'] = $user;
             $response['message'] = 'Profile detail fetched successfully';
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -961,16 +974,17 @@ class UserController extends Controller {
         return response()->json($response, $response['status']);
     }
 
-    public function logout(Request $request){
-        
-        $response = [];
-        $response['success'] = FALSE;
+    public function logout(Request $request)
+    {
 
-        try {        
+        $response = [];
+        $response['success'] = false;
+
+        try {
             $user = $request->user()->token();
             $user->revoke();
             $response['message'] = 'Logout successfully';
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
@@ -981,10 +995,11 @@ class UserController extends Controller {
         return response()->json($response, $response['status']);
     }
 
-    public function changePassword(Request $request){
+    public function changePassword(Request $request)
+    {
 
         $response = [];
-        $response['success'] = FALSE;
+        $response['success'] = false;
         $response['status'] = STATUS_BAD_REQUEST;
 
         $rules = [
@@ -1012,9 +1027,9 @@ class UserController extends Controller {
 
             $login_name = $request_data["LoginName"];
 
-            if(Hash::check($password, $user["password"])) {
+            if (Hash::check($password, $user["password"])) {
                 User::where("LoginName", $login_name)->update([
-                    "Password" =>  Hash::make($new_passowrd),
+                    "Password" => Hash::make($new_passowrd),
                 ]);
 
             } else {
@@ -1025,7 +1040,7 @@ class UserController extends Controller {
             }
 
             $response['message'] = 'password changed successfully';
-            $response['success'] = TRUE;
+            $response['success'] = true;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
             $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
