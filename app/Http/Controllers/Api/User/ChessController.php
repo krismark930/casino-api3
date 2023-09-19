@@ -111,6 +111,7 @@ class ChessController extends Controller
                 }
                 $KY_User = strtoupper($KY_User);
                 $result = $KYUtils->Add_KY_member($KY_User);
+                return $result;
                 if ($result == 1) {
                     User::where("UserName", $username)->update(["KY_User" => $KY_User]);
                 } else {
