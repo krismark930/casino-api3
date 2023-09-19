@@ -104,10 +104,10 @@ class DES
         return $t2 .  ceil( ($t1 * 1000) );
     }
 
-    public function getOrderId($agent){
+    public function getOrderId($agent, $user_name){
         list($usec, $sec) = explode(" ", microtime());
         $msec=round($usec*1000);
-        return $agent.date("YmdHis").$msec;
+        return $agent.date("YmdHis").$msec.$user_name;
     }
 }
 ?>

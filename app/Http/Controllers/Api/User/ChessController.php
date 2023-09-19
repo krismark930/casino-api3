@@ -95,7 +95,7 @@ class ChessController extends Controller
             }
 
             $KY_User = $user["KY_User"];
-            $username = $user['LoginName'];
+            $login_name = $user['LoginName'];
 
             $login_url = "";
 
@@ -104,17 +104,17 @@ class ChessController extends Controller
 
             if ($KY_User == null || $KY_User == "") {
                 $AG_User = ltrim(trim($sysConfig['AG_User']));
-                if (!preg_match("/^[A-Za-z0-9]{4,12}$/", $username)) {
+                if (!preg_match("/^[A-Za-z0-9]{4,12}$/", $login_name)) {
                     $KY_User = $AG_User . '_' . $KYUtils->getpassword_KY(10);
                 } else {
-                    $KY_User = $AG_User . '_' . trim($user['UserName']) . $KYUtils->getpassword_KY(1);
+                    $KY_User = $AG_User . '_' . trim($login_name) . $KYUtils->getpassword_KY(1);
                 }
                 $KY_User = strtoupper($KY_User);
                 $result = $KYUtils->Add_KY_member($KY_User);
                 $response["result"] = $result;
                 return response()->json($response, 200);
                 if ($result == 1) {
-                    User::where("UserName", $username)->update(["KY_User" => $KY_User]);
+                    User::where("LoginName", $login_name)->update(["KY_User" => $KY_User]);
                 } else {
                     $response["message"] = '网络异常，请与在线客服联系！';
                     return response()->json($response, $response['status']);
