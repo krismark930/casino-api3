@@ -72,7 +72,7 @@ class KYUtils
         $aes = new DES();
         $lineCode = $_SERVER['HTTP_HOST'];
         $timestamp = str_pad($aes->getMillisecond(), 13, 0); //时间戳
-        $orderid = $aes->getOrderId($this->agent); //订单号
+        $orderid = $aes->getOrderId($this->agent, $username); //订单号
         $loginip = $this->getip_KY();
         $params = "s=0&account=$username&money=0&orderid=$orderid&ip=$loginip&lineCode=$lineCode&KindID=0";
         $aes->set_key($this->aesKey);
@@ -114,7 +114,7 @@ class KYUtils
         $aes = new DES();
         $lineCode = $_SERVER['HTTP_HOST'];
         $timestamp = str_pad($aes->getMillisecond(), 13, 0); //时间戳
-        $orderid = $aes->getOrderId($this->agent); //订单号
+        $orderid = $aes->getOrderId($this->agent, $username); //订单号
         $result = array();
         $result['billno'] = $orderid;
         if ($tp == 'IN') {
@@ -228,7 +228,7 @@ class KYUtils
         $aes = new DES();
         $lineCode = $_SERVER['HTTP_HOST'];
         $timestamp = str_pad($aes->getMillisecond(), 13, 0); //时间戳
-        $orderid = $aes->getOrderId($this->agent); //订单号
+        $orderid = $aes->getOrderId($this->agent, $username); //订单号
         $loginip = $this->getip_KY();
         $params = "s=0&account=$username&money=0&orderid=$orderid&ip=$loginip&lineCode=$lineCode&KindID=$KindID";
         $aes->set_key($this->aesKey);
