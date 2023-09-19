@@ -307,6 +307,7 @@ class OGUtils
                 DB::update("update sys_config set OG_Token='$this->OG_Token',OG_CJ_Time='$Token_Uptime'");
             }
         }
+        return $json_data;
     }
 
     function GetGameData($start_date, $end_date)

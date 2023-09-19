@@ -216,7 +216,7 @@ class OGController extends Controller
 
             $sysConfig = SysConfig::all()->first();
             $OGUtils = new OGUtils($sysConfig);
-            $OGUtils->GetToken();
+            return $OGUtils->GetToken();
 
             $response['message'] = "OG Game Token saved successfully!";
             $response['success'] = TRUE;
