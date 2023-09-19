@@ -95,7 +95,7 @@ class ChessController extends Controller
             }
 
             $KY_User = $user["KY_User"];
-            $username = $user['UserName'];
+            $username = $user['LoginName'];
 
             $login_url = "";
 
