@@ -165,7 +165,7 @@ class OGController extends Controller
             $user = $request->user();
 
             $og_username = $user["OG_User"];
-            $username = $user['[LoginName'];
+            $username = $user['LoginName'];
             $OG_Limit1 = $user['OG_Limit1'];
             $OG_Limit2 = $user['OG_Limit2'];
 
