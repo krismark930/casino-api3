@@ -165,7 +165,7 @@ class OGController extends Controller
             $user = $request->user();
 
             $og_username = $user["OG_User"];
-            $username = $user['UserName'];
+            $username = $user['[LoginName'];
             $OG_Limit1 = $user['OG_Limit1'];
             $OG_Limit2 = $user['OG_Limit2'];
 
@@ -211,14 +211,11 @@ class OGController extends Controller
         $response['status'] = STATUS_BAD_REQUEST;
 
         try {
-
-            $login_url = "";
-
             $sysConfig = SysConfig::all()->first();
             $OGUtils = new OGUtils($sysConfig);
-            return $OGUtils->GetToken();
-
+            $result =  $OGUtils->GetToken();
             $response['message'] = "OG Game Token saved successfully!";
+            $response['result'] = $result;
             $response['success'] = TRUE;
             $response['status'] = STATUS_OK;
         } catch (Exception $e) {
