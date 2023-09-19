@@ -68,7 +68,7 @@ class OGUtils
             }
             $tmpfile = storage_path('app/public/tmp/og_')  . date("Ymd") . ".txt";
             $f = fopen($tmpfile, 'a');
-            fwrite($f, $t . "\r\n会员开户\r\n$htmlcode\r\n\r\n");
+            fwrite($f, $t . "\r\n会员开户\r\n$htmlcode$username\r\n\r\n");
             fclose($f);
             return 0;
         } else {
