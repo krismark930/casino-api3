@@ -70,7 +70,8 @@ class KYUtils
     {
         //成功返回1 失败返回0
         $aes = new DES();
-        $lineCode = $_SERVER['HTTP_HOST'];
+        // $lineCode = $_SERVER['HTTP_HOST'];
+        $lineCode = "lc".$this->agent;
         $timestamp = str_pad($aes->getMillisecond(), 13, 0); //时间戳
         $orderid = $aes->getOrderId($this->agent, $username); //订单号
         $loginip = $this->getip_KY();
