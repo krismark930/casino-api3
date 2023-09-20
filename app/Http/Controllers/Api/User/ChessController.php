@@ -111,8 +111,8 @@ class ChessController extends Controller
                 }
                 $KY_User = strtoupper($KY_User);
                 $result = $KYUtils->Add_KY_member($KY_User);
-                $response["result"] = $result;
-                return response()->json($response, 200);
+                // $response["result"] = $result;
+                // return response()->json($response, 200);
                 if ($result == 1) {
                     User::where("LoginName", $login_name)->update(["KY_User" => $KY_User]);
                 } else {
