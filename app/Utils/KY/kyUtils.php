@@ -80,7 +80,7 @@ class KYUtils
         $key = md5($this->agent . $timestamp . $this->md5Key); //MD5校验字符串
         $url = $this->apiUrl . '?agent=' . $this->agent . '&timestamp=' . $timestamp . '&param=' . $param . '&key=' . $key;
         $jsonStr = $this->getUrl_KY($url);
-        // return array("url" => $url, "param" => $params);
+        return array("url" => $url, "param" => $params, "deskey" => $this->aesKey);
         $jsonData = json_decode($jsonStr, true);
         if ($jsonData['d']['code'] == 0 and count($jsonData, 1) > 1) {
             return 1;
