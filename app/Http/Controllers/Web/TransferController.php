@@ -74,7 +74,7 @@ class TransferController extends Controller {
         $name=$user['Alias'];
 
         if($BBIN_username==null or $BBIN_username==""){
-            $WebCode =ltrim(trim($sysConfig['AG_User']));
+            $WebCode =ltrim(trim(env('AG_USER')));
             if(!preg_match("/^[A-Za-z0-9]{4,12}$/", $user['UserName'])){
                 $BBIN_username = $BBINUtils->getpassword_bbin(10);
             }else{
@@ -318,7 +318,7 @@ class TransferController extends Controller {
         $name=$user['Alias'];
 
         if($ag_username==null or $ag_username==""){
-            $WebCode =ltrim(trim($sysConfig['AG_User']));
+            $WebCode =ltrim(trim(env('AG_USER')));
             if(!preg_match("/^[A-Za-z0-9]{4,12}$/", $user['UserName'])){
                 $ag_username = $AGUtils->getpassword(10);
             }else{
@@ -811,7 +811,7 @@ class TransferController extends Controller {
         $name=$user['Alias'];
 
         if($MG_username==null or $MG_username==""){
-            $WebCode =ltrim(trim($sysConfig['AG_User']));
+            $WebCode =ltrim(trim(env('AG_USER')));
             if(!preg_match("/^[A-Za-z0-9]{4,12}$/", $user['UserName'])){
                 $MG_username = $MGUtils->getpassword_MG(10);
             }else{
@@ -1052,7 +1052,7 @@ class TransferController extends Controller {
         $name=$user['Alias'];
 
         if($PT_username==null or $PT_username==""){
-            $WebCode =ltrim(trim($sysConfig['AG_User']));
+            $WebCode =ltrim(trim(env('AG_USER')));
             if(!preg_match("/^[A-Za-z0-9]{4,12}$/", $user['UserName'])){
                 $PT_username = $PTUtils->getpassword_PT(10);
             }else{
@@ -1288,7 +1288,7 @@ class TransferController extends Controller {
         $name=$user['Alias'];
 
         if($ky_username==null or $ky_username=="") {
-            $WebCode =ltrim(trim($sysConfig['AG_User']));
+            $WebCode =ltrim(trim(env('AG_USER')));
             if(!preg_match("/^[A-Za-z0-9]{4,12}$/", $username)){
                 $ky_username=$WebCode.'_'.$KYUtils->getpassword_KY(10);
             }else{

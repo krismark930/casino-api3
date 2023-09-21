@@ -213,12 +213,14 @@ class UserManagementController extends Controller
             $Passwd = $request_data["Passwd"];
             $Alias = $request_data["Alias"];
             $id = $request_data["id"];
+            $AddDate = Carbon::now("Asia/Hong_Kong")->format("Y-m-d H:i:s");
 
             $web_system_data = WebSystemData::where("id", $id)->update([
                 "UserName" => $UserName,
                 "Alias" => $Alias,
                 "password" => Hash::make($Passwd),
                 "Passwd" => $Passwd,
+                "AddDate" => $AddDate,
             ]);
 
             $response['message'] = "Sub User Data updated successfully!";
@@ -258,9 +260,11 @@ class UserManagementController extends Controller
             $request_data = $request->all();
             $Status = $request_data["Status"];
             $id = $request_data["id"];
+            $AddDate = Carbon::now("Asia/Hong_Kong")->format("Y-m-d H:i:s");
 
             $web_system_data = WebSystemData::where("id", $id)->update([
                 "Status" => $Status,
+                "AddDate" => $AddDate,
             ]);
 
             $response['message'] = "Sub User Data suspended successfully!";
@@ -342,10 +346,12 @@ class UserManagementController extends Controller
             $id = $request_data["id"];
 
             $loginname = $user["UserName"];
+            $AddDate = Carbon::now("Asia/Hong_Kong")->format("Y-m-d H:i:s");
 
             $web_system_data = WebSystemData::where("id", $id)->update([
                 "Competence" => $Competence,
                 "Style" => $Style,
+                "AddDate" => $AddDate,
             ]);
 
             $login_info = '查看子帐号权限';

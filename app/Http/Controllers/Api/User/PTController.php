@@ -138,7 +138,7 @@ class PTController extends Controller
             $PTUtils = new PTUtils($sysConfig);
 
             if ($PT_username==null || $PT_username=="") {
-                $WebCode =ltrim(trim($sysConfig['AG_User']));
+                $WebCode =ltrim(trim(env('AG_USER')));
                 if(!preg_match("/^[A-Za-z0-9]{4,12}$/", $user['UserName'])){ 
                     $PT_username=$PTUtils->getpassword_PT(10);
                 }else{
