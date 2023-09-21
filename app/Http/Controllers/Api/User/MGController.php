@@ -141,7 +141,7 @@ class MGController extends Controller
 
             if ($MG_username==null || $MG_username=="") {
 
-                $WebCode =ltrim(trim($sysConfig['AG_User']));
+                $WebCode =ltrim(trim(env('AG_USER')));
 
                 if(!preg_match("/^[A-Za-z0-9]{4,12}$/", $user['UserName'])){ 
                     $MG_username=$MGUtils->getpassword_MG(10);

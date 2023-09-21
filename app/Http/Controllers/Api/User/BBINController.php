@@ -140,7 +140,7 @@ class BBINController extends Controller
             $BBINUtils = new BBINUtils($sysConfig);
 
             if ($BBIN_username == null || $BBIN_username == "") {
-                $WebCode = ltrim(trim($sysConfig['AG_User']));
+                $WebCode = ltrim(trim(env('AG_USER')));
                 if (!preg_match("/^[A-Za-z0-9]{4,12}$/", $user['UserName'])) {
                     $BBIN_username = $BBINUtils->getpassword_bbin(10);
                 } else {

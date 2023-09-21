@@ -103,7 +103,7 @@ class ChessController extends Controller
             $KYUtils = new KYUtils($sysConfig);
 
             if ($KY_User == null || $KY_User == "") {
-                $AG_User = ltrim(trim($sysConfig['AG_User']));
+                $AG_User = ltrim(trim(env('AG_USER')));
                 if (!preg_match("/^[A-Za-z0-9]{4,12}$/", $login_name)) {
                     $KY_User = $AG_User . '_' . $KYUtils->getpassword_KY(10);
                 } else {

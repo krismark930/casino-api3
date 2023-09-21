@@ -152,7 +152,7 @@ class AGController extends Controller
             } else {
                 $AGUtils = new AGUtils($sysConfig);
                 if ($ag_username == null || $ag_username == "") {
-                    $WebCode = ltrim(trim($sysConfig['AG_User']));
+                    $WebCode = ltrim(trim(env('AG_USER')));
                     if (!preg_match("/^[A-Za-z0-9]{4,12}$/", $user['UserName'])) {
                         $ag_username = $WebCode . '_' . $AGUtils->getpassword(10);
                     } else {
