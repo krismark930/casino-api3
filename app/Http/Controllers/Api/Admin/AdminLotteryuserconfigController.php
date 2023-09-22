@@ -15,6 +15,7 @@ use App\Models\Web\Sys800;
 use App\Models\Web\WebMemLogData;
 use App\Models\Web\MoneyLog;
 use App\Utils\Utils;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class AdminLotteryuserconfigController extends Controller
@@ -460,6 +461,7 @@ class AdminLotteryuserconfigController extends Controller
                         "Bank_Account" => "彩票返水",
                         "Order_Code" => $Order_Code,
                         "Music" => 1,
+                        "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                     );
 
                     $sys_800 = new Sys800;

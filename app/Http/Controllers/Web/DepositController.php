@@ -146,7 +146,7 @@ class DepositController extends Controller {
             "Bank_Address" => $request->bankAddress ?? "",
             "Bank_Account" => $request->bankAccount ?? "",
             "Order_Code" => $Order_Code,
-            "created_at" => date("Y-m-d H:i:s")
+            "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
         ];
         $deposit = new Sys800;
         if ($deposit->create($data)){
@@ -173,7 +173,7 @@ class DepositController extends Controller {
                     "Bank_Address" => "彩金",
                     "Bank_Account" => "彩金",
                     "Order_Code" => $Order_Code,
-                    "created_at" => date("Y-m-d H:i:s")
+                    "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                 ];
 
                 $deposit = new Sys800;

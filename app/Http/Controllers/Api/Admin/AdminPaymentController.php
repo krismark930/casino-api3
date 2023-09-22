@@ -98,14 +98,14 @@ class AdminPaymentController extends Controller
             }
 
             if ($rtype == 'S' || $rtype == "T") {
-                $result = $result->where("web_sys800_data.Type", $rtype)->where("web_sys800_data.Type2", 1);
+                $result = $result->where("web_sys800_data.Type", $rtype)->where("web_sys800_data.Type2", 1)->where("web_sys800_data.Cancel", "!=", 1);
             } else if ($rtype == "") {
                 $result = $result->where("web_sys800_data.Type2", "!=", 3);
-            } else if ($rtype = "F") {
+            } else if ($rtype == "F") {
                 $result = $result->where("web_sys800_data.Type2", 2);
             } else if ($rtype == "Q") {
                 $result = $result->where("web_sys800_data.Cancel", 1);
-            } else if ($rtype = "C") {
+            } else if ($rtype == "C") {
                 $result = $result->where("web_sys800_data.Checked", 0);
             }
 
@@ -129,14 +129,16 @@ class AdminPaymentController extends Controller
                 }
 
                 if ($item->Type2 == 1) {
-                    $item->Type2 = "正常";
+                    $item->Type2 = "存款";
                 } else if ($item->Type2 == 2) {
-                    $item->Type2 = "赠送";
+                    $item->Type2 = "彩金";
                 } else if ($item->Type2 == 3) {
                     $item->Type2 = "转换";
+                } else if ($item->Type2 == 6) {
+                    $item->Type2 = "洗码金额";
                 }
 
-                $item->Alias = Utils::GetField($item->UserName, "Alias");
+                $item->LoginName = Utils::GetField($item->UserName, "LoginName");
 
                 if (strtoupper($item->Bank_Address) == 'USDT' && $item->Type == 'T') {
                     $sys_config = SysConfig::query()->first(["USDT"]);
@@ -263,6 +265,7 @@ class AdminPaymentController extends Controller
                         "Order_Code" => $Order_Code,
                         "created_at" => $current_time,
                         "Notes" => "洗码金额加款",
+                        "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                     );
 
                     $sys_800->create($data);
@@ -356,6 +359,7 @@ class AdminPaymentController extends Controller
             $currentAmount = $user["Money"];
 
             $response["data"] = $currentAmount;
+            $response["type"] = $sys_800["Type"];
             $response['message'] = "Cash Data reviewed successfully!";
             $response['success'] = true;
             $response['status'] = STATUS_OK;
@@ -605,6 +609,7 @@ class AdminPaymentController extends Controller
                     // "Date" => $current_time,
                     "Order_Code" => $Order_Code,
                     "Notes" => $memo,
+                    "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                 );
 
                 $sys_800->create($data);
@@ -662,6 +667,7 @@ class AdminPaymentController extends Controller
                     // "Date" => $current_time,
                     "Order_Code" => $Order_Code,
                     "Notes" => $memo,
+                    "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                 );
 
                 $sys_800->create($data);
@@ -801,6 +807,7 @@ class AdminPaymentController extends Controller
                     // "Date" => $current_time,
                     "Order_Code" => $Order_Code,
                     "Notes" => $memo,
+                    "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                 );
 
                 $sys_800->create($data);

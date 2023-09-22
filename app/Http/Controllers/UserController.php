@@ -6,6 +6,7 @@ use App\Models\WebAgent;
 use App\Models\WebMemberLogs;
 use App\Utils\Utils;
 use Auth;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -526,11 +527,11 @@ class UserController extends Controller
             $user["Sports"] = $sports;
             $user["Lottery"] = $lottery;
             $user["AddDate"] = $AddDate;
-            $user["EditDate"] = date('Y-m-d');
-            $user["LoginDate"] = date('Y-m-d');
-            $user["LoginTime"] = date('Y-m-d H:i:s');
-            $user["LogoutTime"] = date('Y-m-d H:i:s');
-            $user["OnlineTime"] = date('Y-m-d H:i:s');
+            $user["EditDate"] = Carbon::now('Asia/Hong_Kong')->format('Y-m-d');
+            $user["LoginDate"] = Carbon::now('Asia/Hong_Kong')->format('Y-m-d');
+            $user["LoginTime"] = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
+            $user["LogoutTime"] = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
+            $user["OnlineTime"] = Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s');
             $user["Status"] = 0;
             $user["CurType"] = "RMB";
             $user["Pay_Type"] = 1;
@@ -912,8 +913,8 @@ class UserController extends Controller
                     "MachineCode" => $MachineCode,
                     "ErrorTimes" => 0,
                     "LoginDate" => $date,
-                    "LoginTime" => now(),
-                    "OnlineTime" => now(),
+                    "LoginTime" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
+                    "OnlineTime" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                     "Online" => 1,
                     "LoginIP" => $client_ip,
                     "Url" => $client_url,
@@ -959,7 +960,7 @@ class UserController extends Controller
 
             User::where('UserName', $user["UserName"])
                 ->update([
-                    "OnlineTime" => now(),
+                    "OnlineTime" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                 ]);
             $response['data'] = $user;
             $response['message'] = 'Profile detail fetched successfully';

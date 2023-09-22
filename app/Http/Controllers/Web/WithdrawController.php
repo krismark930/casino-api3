@@ -8,6 +8,7 @@ use App\Models\Web\MoneyLog;
 use App\Models\Web\Sys800;
 use App\Models\Web\SysConfig;
 use App\Utils\Utils;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -95,6 +96,7 @@ class WithdrawController extends Controller
             "Bank_Address" => $bank_Address ? $bank_Address : '',
             "Bank_Account" => $bank_account,
             "Order_Code" => $Order_Code,
+            "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
         ];
         $deposit = new Sys800;
         $result = $deposit->create($data);

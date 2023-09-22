@@ -2998,6 +2998,7 @@ class UserManagementController extends Controller
                     "Date" => $current_time,
                     "Order_Code" => $Order_Code,
                     "created_at" => $current_time,
+                    "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                     "Notes" => "",
                 );
 
@@ -3187,6 +3188,7 @@ class UserManagementController extends Controller
                     "Date" => $current_time,
                     "Order_Code" => $Order_Code,
                     "created_at" => $current_time,
+                    "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                     "Notes" => "洗码金额加款",
                 );
 
