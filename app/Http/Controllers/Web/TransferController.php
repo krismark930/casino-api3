@@ -24,6 +24,8 @@ use App\Utils\MG\mgUtils;
 use App\Utils\PT\ptUtils;
 use App\Utils\KY\kyUtils;
 use App\Utils\Utils;
+use Carbon\Carbon;
+
 class TransferController extends Controller {
 
     public function __construct() {
@@ -174,6 +176,7 @@ class TransferController extends Controller {
                         "Bank_Address" => $bank_Address,
                         "Bank_Account" => $bank_account,
                         "Order_Code" => $Order_Code,
+                        "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                         "Checked" => 1,
                         "Music" => 1,
                     ];
@@ -231,6 +234,7 @@ class TransferController extends Controller {
                     "Bank_Account" => $bank_account,
                     "Music" => 1,
                     "Order_Code" => $Order_Code,
+                    "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                 ];
                 $sys800 = new Sys800;
                 $deposit = $sys800->create($data);
@@ -417,6 +421,7 @@ class TransferController extends Controller {
                         "Bank_Address" => $bank_Address,
                         "Bank_Account" => $bank_account,
                         "Order_Code" => $Order_Code,
+                        "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                         "Checked" => 1,
                         "Music" => 1,
                     ];
@@ -473,6 +478,7 @@ class TransferController extends Controller {
                     "Name" => $name,
                     "User" => $username,
                     "Bank_Account" => $bank_account,
+                    "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                     "Music" => 1,
                     "Order_Code" => $Order_Code,
                 ];
@@ -660,6 +666,7 @@ class TransferController extends Controller {
                         "Bank_Address" => $bank_Address,
                         "Bank_Account" => $bank_account,
                         "Order_Code" => $Order_Code,
+                        "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                         "Checked" => 1,
                         "Music" => 1,
                     ];
@@ -716,6 +723,7 @@ class TransferController extends Controller {
                     "Name" => $name,
                     "User" => $username,
                     "Bank_Account" => $bank_account,
+                    "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                     "Music" => 1,
                     "Order_Code" => $Order_Code,
                 ];
@@ -903,6 +911,7 @@ class TransferController extends Controller {
                         "Bank_Address" => $bank_Address,
                         "Bank_Account" => $bank_account,
                         "Order_Code" => $Order_Code,
+                        "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                         "Checked" => 1,
                         "Music" => 1,
                     ];
@@ -959,6 +968,7 @@ class TransferController extends Controller {
                     "Name" => $name,
                     "User" => $username,
                     "Bank_Account" => $bank_account,
+                    "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                     "Music" => 1,
                     "Order_Code" => $Order_Code,
                 ];
@@ -1151,6 +1161,7 @@ class TransferController extends Controller {
                         "Bank_Address" => $bank_Address,
                         "Bank_Account" => $bank_account,
                         "Order_Code" => $Order_Code,
+                        "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                         "Checked" => 1,
                         "Music" => 1,
                     ];
@@ -1209,6 +1220,7 @@ class TransferController extends Controller {
                     "Name" => $name,
                     "User" => $username,
                     "Bank_Account" => $bank_account,
+                    "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                     "Music" => 1,
                     "Order_Code" => $Order_Code,
                 ];
@@ -1382,6 +1394,7 @@ class TransferController extends Controller {
                         "Bank_Address" => $bank_Address,
                         "Bank_Account" => $bank_account,
                         "Order_Code" => $Order_Code,
+                        "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                         "Checked" => 1,
                         "Music" => 1,
                     ];
@@ -1438,6 +1451,7 @@ class TransferController extends Controller {
                     "Name" => $name,
                     "User" => $username,
                     "Bank_Account" => $bank_account,
+                    "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                     "Music" => 1,
                     "Order_Code" => $Order_Code,
                 ];

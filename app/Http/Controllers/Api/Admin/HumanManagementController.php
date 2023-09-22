@@ -600,6 +600,7 @@ class HumanManagementController extends Controller
                         "Bank_Account" => "真人返水",
                         "Order_Code" => $Order_Code,
                         "Music" => 1,
+                        "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                     );
 
                     $sys_800 = new Sys800;
@@ -736,6 +737,7 @@ class HumanManagementController extends Controller
                         "loginname" => $user["UserName"],
                         "Bank_Account" => "电子返水",
                         "Order_Code" => $Order_Code,
+                        "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                         "Music" => 1,
                     );
 
@@ -864,6 +866,7 @@ class HumanManagementController extends Controller
                         "loginname" => $user["UserName"],
                         "Bank_Account" => "棋牌返水",
                         "Order_Code" => $Order_Code,
+                        "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                         "Music" => 1,
                     );
 
@@ -992,6 +995,7 @@ class HumanManagementController extends Controller
                         "loginname" => $user["UserName"],
                         "Bank_Account" => "捕鱼返水",
                         "Order_Code" => $Order_Code,
+                        "created_at" => Carbon::now('Asia/Hong_Kong')->format('Y-m-d H:i:s'),
                         "Music" => 1,
                     );
 
