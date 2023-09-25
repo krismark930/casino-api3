@@ -147,9 +147,51 @@ class WithdrawController extends Controller
     {
         if ($request->type == "transfer") {
             $withdrawHistory = Sys800::where('UserName', $request->username)->where('Type2', $request->type2)->orderBy('id', 'desc')->get();
+            foreach($withdrawHistory as $item) {                
+                if ($item->Type == "S") {
+                    $item->status = "存入";
+                } else if ($item->Type == "T") {
+                    $item->status = "提出";
+                }
+
+                if ($item->Cancel == 1) {
+                    $item->status = "已拒绝";
+                }
+
+                if ($item->Type2 == 1) {
+                    $item->status = "存款";
+                } else if ($item->Type2 == 2) {
+                    $item->status = "彩金";
+                } else if ($item->Type2 == 3) {
+                    $item->status = "转换";
+                } else if ($item->Type2 == 6) {
+                    $item->status = "洗码金额";
+                }
+            }
             return response()->json(['success' => true, 'historyList' => $withdrawHistory]);
         }
         $withdrawHistory = Sys800::where('UserName', $request->username)->where('Type', $request->type)->where('Type2', $request->type2)->orderBy('id', 'desc')->get();
+        foreach($withdrawHistory as $item) {                
+            if ($item->Type == "S") {
+                $item->status = "存入";
+            } else if ($item->Type == "T") {
+                $item->status = "提出";
+            }
+
+            if ($item->Cancel == 1) {
+                $item->status = "已拒绝";
+            }
+
+            if ($item->Type2 == 1) {
+                $item->status = "存款";
+            } else if ($item->Type2 == 2) {
+                $item->status = "彩金";
+            } else if ($item->Type2 == 3) {
+                $item->status = "转换";
+            } else if ($item->Type2 == 6) {
+                $item->status = "洗码金额";
+            }
+        }
         return response()->json(['success' => true, 'historyList' => $withdrawHistory]);
     }
 }

@@ -21,8 +21,10 @@ class User extends Authenticatable
     protected $fillable = [
         'UserName',
         'password',
-        'invite_url',
-        'inviter_id'
+        'referral_url',
+        'domain_url',
+        'referral_path',
+        'referral_code',
     ];
 
     /**

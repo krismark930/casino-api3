@@ -771,6 +771,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CORS', 'auth:admin']], func
         Route::post('/update-money-agency', [UserManagementController::class, 'updateMoneyAgency']);
         Route::post('/update-member', [UserManagementController::class, 'updateMember']);
         Route::post('/update-agency', [UserManagementController::class, 'updateAgency']);
+        Route::post('/update-domain', [UserManagementController::class, 'updateDomain']);
         Route::post('/user-bank', [AdminBankController::class, 'getUserBankData']);
         Route::post('/user-bank/update', [AdminBankController::class, 'updateUserBankData']);
     });

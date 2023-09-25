@@ -207,6 +207,8 @@ class AdminPaymentController extends Controller
                 return response()->json($response, $response['status']);
             }
 
+            $review_type = $sys_800["Type"];
+
             if ($sys_800["Type"] == "S") {
                 $username = $sys_800["UserName"];
                 $previousAmount = Utils::GetField($username, 'Money');
@@ -359,7 +361,7 @@ class AdminPaymentController extends Controller
             $currentAmount = $user["Money"];
 
             $response["data"] = $currentAmount;
-            $response["type"] = $sys_800["Type"];
+            $response["type"] = $review_type;
             $response['message'] = "Cash Data reviewed successfully!";
             $response['success'] = true;
             $response['status'] = STATUS_OK;

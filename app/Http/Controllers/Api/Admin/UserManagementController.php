@@ -3278,4 +3278,46 @@ class UserManagementController extends Controller
 
         return response()->json($response, $response['status']);
     }
+
+    public function updateDomain(Request $request)
+    {
+
+        $response = [];
+        $response['success'] = false;
+        $response['status'] = STATUS_BAD_REQUEST;
+
+        try {
+
+            $rules = [
+                "id" => "required|numeric",
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                $errorResponse = validation_error_response($validator->errors()->toArray());
+                return response()->json($errorResponse, $response['status']);
+            }
+
+            $request_data = $request->all();
+
+            $domain_url = $request_data["domain_url"];
+            $id = $request_data["id"];
+
+            $user = User::find($id);
+            $user->domain_url = $domain_url;
+
+            $user->save();
+
+            $response['message'] = "Domain data updated successfully!";
+            $response['success'] = true;
+            $response['status'] = STATUS_OK;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage() . ' Line No ' . $e->getLine() . ' in File' . $e->getFile();
+            Log::error($e->getTraceAsString());
+            $response['status'] = STATUS_GENERAL_ERROR;
+        }
+
+        return response()->json($response, $response['status']);
+    }
 }

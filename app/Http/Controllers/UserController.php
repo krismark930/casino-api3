@@ -50,20 +50,29 @@ class UserController extends Controller
 
             $request_data = $request->all();
 
-            $inviter = $request_data['inviter_id'];
+            $referral_code = $request_data['referral_code'];
             $user_name = $request_data['UserName'];
             $login_name = $request_data['login_name'];
             $password = $request_data["password"];
             $intro = $request_data["intro"] ?? "";
             $phone_number = $request_data["phone_number"] ?? "";
 
-            $inviter_id = 0;
+            $referral_id = 0;
 
-            if ($inviter != '') {
-                $inviter_id = User::where('invite_url', '/login' . '/' . $inviter)->first()->id;
+            $referral_path = "";
+
+            if ($referral_code != '') {
+                $referral_id = User::where('referral_url', '/login' . '/' . $referral_code)->first()->id;
+                $referral_path = User::where('referral_url', '/login' . '/' . $referral_code)->first()->referral_path;
             }
 
-            $InviteUrl = 'IU' . date("YmdHis", time() + 12 * 3600) . mt_rand(100, 999);
+            $alphabet = str_split('ABCDEFGHJKMNOPQRSTUVWXYZ');
+
+            $random_index = rand(0, 23);
+
+            $random_char = $alphabet[$random_index];
+
+            $referral_code = $random_char . $referral_id;
 
             if ($intro == '' || $intro == null) {
                 $agent = 'ddm999';
@@ -515,11 +524,14 @@ class UserController extends Controller
 
             $user = new User();
 
+            // return $referral_path . "_" . $referral_id;
+
             $user["UserName"] = $user_name;
             $user["LoginName"] = $login_name;
             $user["password"] = Hash::make($password);
-            $user["invite_url"] = '/login' . '/' . $InviteUrl;
-            $user["inviter_id"] = $inviter_id;
+            $user["referral_url"] = '/login' . '/' . $referral_code;
+            $user["referral_path"] = $referral_id == 0 ? $user["referral_path"] : $referral_path . "_" . $referral_id;
+            $user["referral_code"] = $referral_code;
             $user["Credit"] = 0;
             $user["Money"] = 0;
             $user["withdrawal_condition"] = 0;

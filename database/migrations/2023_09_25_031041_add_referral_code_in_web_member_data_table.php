@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddInviterIdWebMemberDataTable extends Migration
+class AddReferralCodeInWebMemberDataTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddInviterIdWebMemberDataTable extends Migration
     public function up()
     {
         Schema::table('web_member_data', function (Blueprint $table) {
-            $table->string('referral_path')->nullable();
+            $table->string("referral_code")->nullable();
         });
     }
 
@@ -26,7 +26,7 @@ class AddInviterIdWebMemberDataTable extends Migration
     public function down()
     {
         Schema::table('web_member_data', function (Blueprint $table) {
-            $table->dropColumn('referral_path');
+            $table->dropColumn('referral_code');
         });
     }
 }
