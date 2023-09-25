@@ -240,7 +240,8 @@ class OGUtils
     }
 
     function OG_Limit($username = 'default', $min = 10, $max = 10000)
-    {  //修改限红
+    {
+        //修改限红
         $OG_Host = str_replace('https://', '', $this->ApiUrl);
         $OG_Host = str_replace('http://', '', $OG_Host);
         $header = array();
@@ -263,7 +264,6 @@ class OGUtils
         }
         $htmlcode = $this->curl_info_s($url, null, null, $postdata, $this->ApiUrl, $header);
         $json_data = json_decode($htmlcode, true);
-        //print_r($json_data);exit;
         if ($json_data['status'] <> 'success') {
             $t = date("Y-m-d H:i:s");
             if (!Storage::exists('public/tmp')) {

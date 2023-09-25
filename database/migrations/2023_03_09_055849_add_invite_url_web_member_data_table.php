@@ -14,7 +14,7 @@ class AddInviteUrlWebMemberDataTable extends Migration
     public function up()
     {
         Schema::table('web_member_data', function (Blueprint $table) {
-            $table->string('invite_url',50);
+            $table->string('referral_url', 255);
         });
     }
 
@@ -26,7 +26,7 @@ class AddInviteUrlWebMemberDataTable extends Migration
     public function down()
     {
         Schema::table('web_member_data', function (Blueprint $table) {
-            $table->dropColumn('invite_url');
+            $table->dropColumn('referral_url');
         });
     }
 }
